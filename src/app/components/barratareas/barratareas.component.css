@@ -1,0 +1,32 @@
+.toolbar{
+    display: block;
+/*background-color: #f44336;*/
+    box-shadow: 0 4px 20px 0px rgb(0 0 0 / 14%), 0 7px 10px -5px rgb(244 67 54 / 40%);
+}
+
+.toolbar button{
+margin-top:15px;
+margin-left:10px;
+}
+
+button{
+    border: 0;
+    font-weight: bold;
+    margin-top: -15px !important;
+    color: red;
+    margin-left: 4px !important;
+}
+
+.mat-tab-label-active{
+    font-weight: bold;
+    box-shadow: inset 0px -4px 1px rgb(0 0 0 / 10%), -1px 0 0 2px rgb(255 255 255), 0.3em 0.3em 10px rgb(0 0 0 / 31%);
+    background-color: white;
+}
+
+
+ .mat-tab-link{
+    height: 28px;
+    font-size: 11px;
+    padding-top: 2px;
+    padding: 6px 4px;
+ }

@@ -1,0 +1,37 @@
+<mat-card *ngIf="data.clase=='Usuario'">
+    <mat-card-content>
+          <form  [formGroup]="form">
+      <h3 mb-10>Agregar Usuario</h3>
+        <mat-form-field appearance="fill">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput  [(ngModel)]="data.nombre" type="text" required formControlName="nombre">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput required type="email" [(ngModel)]="data.correo" formControlName="correo">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Estado</mat-label>
+            <mat-select required [(ngModel)]="data.estado" formControlName="estado">
+              <mat-option value="0">Inactivo</mat-option>
+              <mat-option value="1">Activo</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div mat-dialog-actions>
+            <button  mat-raised-button [mat-dialog-close]="false" color="primary">Cancelar</button>
+            <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="form.invalid">Confirmar</button>
+            </div>
+          </form>
+        </mat-card-content>
+  </mat-card>
+<div *ngIf="data.clase=='DelUsuario'">
+  <h1 mat-dialog-title>Eliminar registro</h1>
+<div mat-dialog-content>
+  ¿Desea eliminar el registro?
+  {{data.usuario.nombres}}
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button  mat-dialog-close>No</button>
+  <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Si</button>
+</div>
+</div>

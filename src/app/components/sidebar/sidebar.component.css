@@ -1,0 +1,26 @@
+::ng-deep .sidebar .nav p.submenu-nuevo.active {
+    background-color: #d99090 !important;
+    box-shadow: 0 4px 20px 0px rgb(0 0 0 / 14%), 0 7px 10px -5px rgb(244 67 54 / 40%);
+    color: white;
+    border-radius: 23px;
+}
+
+::ng-deep .sidebar .nav li.active i.icon-mas{
+    transform: rotate(90deg) !important;
+
+}
+::ng-deep .sidebar .nav p.submenu-nuevo{
+background-color: #c7bbbb !important;
+    color: lightslategray;
+    border-radius: 23px;
+}
+
+ul > li.nav-item.active > ul.nav-subitem
+{
+display: block !important;
+}
+
+ul.nav  li ul.nav-subitem {
+    display: none;
+};
+

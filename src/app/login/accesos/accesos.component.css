@@ -1,0 +1,14 @@
+.body{
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+mat-spinner{
+    margin: 0 auto;
+}
+
+mat-card{
+    width: 320px;
+}

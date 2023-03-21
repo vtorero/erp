@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+:host ::ng-deep  .sidebar .nav p.active{
+    background-color: red !important;
+}
+
+.example-button-row{
+    background-color: white;
+}

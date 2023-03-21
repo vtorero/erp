@@ -1,0 +1,36 @@
+<nav mat-tab-nav-bar>
+  <a mat-tab-link *ngFor="let link of tabs;let index = index"  [routerLink]="link"  routerLinkActive #rla="routerLinkActive"  [active]="rla.isActive"> {{link|uppercase|slice:1:15}}
+    <button *ngIf="LINK !== '/dashboard'" style="color:red" mat-icon-button (click)="closeTab(index)">
+
+      <i class="material-icons" style="margin-top: 13px;font-size: 20px;">highlight_off</i>
+    </button>
+
+  </a>
+</nav>
+<!--
+<mat-tab-group>
+			<mat-tab  #rla="routerLinkActive" *ngFor="let tab of tabs; let index = index"
+    [active]="isViewInitialized && isLinkActive(rla)"
+    routerLinkActive >
+			<ng-template mat-tab-label>
+				<div class="col" style="margin-left: 20px;" (click)="go(tab)"> {{tab}}</div>
+				<button *ngIf="tab !== '/dashboard'" style="color:red" mat-icon-button (click)="closeTab(index)">
+        <mat-icon>(x)</mat-icon>
+      </button>
+    </ng-template>
+
+    <span [ngSwitch]="tab.tabType">
+      <div *ngSwitchCase="0" style="height: calc(100% - 30px);">
+        Case 2
+      </div>
+      <div *ngSwitchCase="1" style="height: calc(100% - 8px);">
+        Case 1
+      </div>
+      <div *ngSwitchDefault>
+        Default
+      </div>
+    </span>
+
+  </mat-tab>
+
+</mat-tab-group>-->
