@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
 })
 export class UsuarioComponent implements OnInit {
   position = new FormControl('below');
+  buscador:boolean=false;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
@@ -35,7 +36,19 @@ export class UsuarioComponent implements OnInit {
     this.renderDataTable();
   }
 
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.dataSource.filter = filterValue;
+}
 
+openBusqueda(){
+  if(this.buscador){
+    this.buscador=false;
+  }else{
+    this.buscador=true;
+  }
+}
 
   selected(row) {
     this.selectedRowIndex=row;
