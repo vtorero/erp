@@ -24,7 +24,8 @@ export const ROUTES: RouteInfo[] = [
     { path: '/productos', title: 'Productos',  icon:'library_books', class: '' ,child:[]},
     { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' ,child:[]},
     { path: '/maps', title: 'Maps',  icon:'location_on', class: '' ,child:[]},
-    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'}]}
+    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
+    {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'}]}
 ];
 
 @Component({

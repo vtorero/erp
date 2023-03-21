@@ -13,6 +13,7 @@ import { ProductosComponent } from './inventarios/productos/productos.component'
 import { SeguridadComponent } from './seguridad/seguridad/seguridad.component';
 import { UsuarioComponent } from './seguridad/usuario/usuario.component';
 import { OpenDialogComponent } from './dialog/open-dialog/open-dialog.component';
+import { SucursalesComponent } from './seguridad/sucursales/sucursales.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { OpenDialogComponent } from './dialog/open-dialog/open-dialog.component'
     SeguridadComponent,
     UsuarioComponent,
     OpenDialogComponent,
+    SucursalesComponent,
 
 
 

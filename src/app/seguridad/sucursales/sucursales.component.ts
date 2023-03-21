@@ -1,7 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,13 +11,12 @@ import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.componen
 import { Usuario } from 'app/modelos/usuario';
 
 @Component({
-  selector: 'app-productos',
-  templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css']
+  selector: 'app-sucursales',
+  templateUrl: './sucursales.component.html',
+  styleUrls: ['./sucursales.component.css']
 })
 
-
-export class ProductosComponent implements OnInit {
+export class SucursalesComponent implements OnInit {
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;

@@ -12,6 +12,7 @@ import { AccesosComponent } from '../../login/accesos/accesos.component';
 import { ProductosComponent } from '../../inventarios/productos/productos.component';
 import { SeguridadComponent } from '../../seguridad/seguridad/seguridad.component';
 import { UsuarioComponent } from '../../seguridad/usuario/usuario.component';
+import { SucursalesComponent } from '../../seguridad/sucursales/sucursales.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -59,6 +60,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
     { path: 'seguridad',      component: UsuarioComponent },
     { path: 'usuarios',      component: UsuarioComponent },
+    { path: 'sucursales',      component: SucursalesComponent },
     { path: 'productos',      component: ProductosComponent },
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },
