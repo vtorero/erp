@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { Usuario } from '../../modelos/usuario';
-import {TooltipPosition} from '@angular/material/tooltip';
 import { FormControl } from '@angular/forms';
 
 
