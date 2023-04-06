@@ -39,18 +39,26 @@
 
                     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
                         <!--  Columna ID-->
-                        <ng-container matColumnDef="nombres">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Completo</mat-header-cell>
-                              <mat-cell *matCellDef="let row"> {{row.nombres}} </mat-cell>
+                        <ng-container matColumnDef="id">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                          <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+                    </ng-container>
+                        <ng-container matColumnDef="nombre">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                              <mat-cell *matCellDef="let row"> {{row.nombre}} </mat-cell>
                         </ng-container>
                        <!-- Columna Apellido -->
                         <ng-container matColumnDef="email">
                               <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
                               <mat-cell *matCellDef="let row">{{row.email}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="estado">
+                        <ng-container matColumnDef="rol">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Rol</mat-header-cell>
+                          <mat-cell *matCellDef="let row">{{row.rol}} </mat-cell>
+                    </ng-container>
+                        <ng-container matColumnDef="avatar">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
-                          <mat-cell *matCellDef="let row">{{row.estado}} </mat-cell>
+                          <mat-cell *matCellDef="let row">{{row.avatar}} </mat-cell>
                     </ng-container>
 
                           <!-- Columna Nacionalidad -->
