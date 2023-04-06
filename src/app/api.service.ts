@@ -19,6 +19,14 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  loginUser(usuario: string, password: string) {
+    const url = Global.BASE_API_URL + 'api.php/login';
+    return this._http.post(url,{
+        usuario: usuario,
+        password: password
+    }, { headers: this.headers }).pipe(map(data => data));
+}
+
   getMaxId(tabla: string) {
     return this._http
       .get("api.php/correlativo/" + tabla, { headers: this.headers })
