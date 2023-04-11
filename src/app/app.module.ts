@@ -14,6 +14,7 @@ import { SeguridadComponent } from './seguridad/seguridad/seguridad.component';
 import { UsuarioComponent } from './seguridad/usuario/usuario.component';
 import { OpenDialogComponent } from './dialog/open-dialog/open-dialog.component';
 import { SucursalesComponent } from './seguridad/sucursales/sucursales.component';
+import { ProveedoresComponent } from './proveedores/proveedores.component';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { SucursalesComponent } from './seguridad/sucursales/sucursales.component
     UsuarioComponent,
     OpenDialogComponent,
     SucursalesComponent,
+    ProveedoresComponent,
 
 
 

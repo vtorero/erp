@@ -55,6 +55,7 @@ setTimeout(() => {
 }
 
 loginUser(usuario,password){
+  this.loading=true;
   event.preventDefault();
     if(usuario){
         this.api.loginUser(usuario,password).subscribe(data=>{
@@ -64,8 +65,8 @@ loginUser(usuario,password){
             localStorage.removeItem("currentUser");
             localStorage.removeItem("currentNombre");
             localStorage.removeItem("currentAvatar");
-            localStorage.removeItem("currentEmpresa"); 
-            sessionStorage.removeItem("hashsession"); 
+            localStorage.removeItem("currentEmpresa");
+            sessionStorage.removeItem("hashsession");
             localStorage.setItem("currentId",data['data'][0]['id']);
             localStorage.setItem("currentUser",data['data'][0]['nombre']);
             localStorage.setItem("currentNombre",data['data'][0]['nombre']);
@@ -76,9 +77,9 @@ loginUser(usuario,password){
 
           }else{
             this.error();
-        
+
           }
-          
+
         });
   }
 //this.router.navigate(['dash']);

@@ -38,6 +38,21 @@ $app->get("/usuarios",function() use($db,$app){
 
     });
 
+ /*proveedores*/
+
+ $app->get("/proveedores",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $resultado = $db->query("SELECT *  FROM proveedores order by id desc");
+    $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo  $respuesta;
+
+    });
+
 /** delete usuario */
 
  $app->delete("/usuario/:id",function($id) use($db,$app){
