@@ -23,7 +23,7 @@ export class UsuarioComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['nombres', 'email', 'estado'];
+  displayedColumns = ['id','nombre', 'email', 'rol','avatar'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
