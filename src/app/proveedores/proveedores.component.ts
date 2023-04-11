@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { Usuario } from 'app/modelos/usuario';
+import { AddProveedorComponent } from '../dialog/add-proveedor/add-proveedor.component';
 
 @Component({
   selector: 'app-proveedores',
@@ -74,7 +75,7 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(OpenDialogComponent, {
+    const dialog= this.dialog.open(AddProveedorComponent, {
       width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
@@ -97,7 +98,7 @@ openBusqueda(){
   }
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
-  const dialogo2=this.dialog.open(OpenDialogComponent, {
+  const dialogo2=this.dialog.open(AddProveedorComponent, {
     width: '400px',
     enterAnimationDuration,
     exitAnimationDuration,
@@ -115,8 +116,8 @@ openBusqueda(){
 
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    const dialogo1 =this.dialog.open(OpenDialogComponent, {
-      width: '400px',
+    const dialogo1 =this.dialog.open(AddProveedorComponent, {
+      width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
       data: {

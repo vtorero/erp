@@ -27,6 +27,13 @@ export class ApiService {
     }, { headers: this.headers }).pipe(map(data => data));
 }
 
+getProveedor(ruc: string) {
+  return this._http.get(Global.BASE_API_SUNAT + 'ruc/' + ruc + '?token=' + Global.TOKEN_API_PERU,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
+
+
   getMaxId(tabla: string) {
     return this._http
       .get("api.php/correlativo/" + tabla, { headers: this.headers })
