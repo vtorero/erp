@@ -77,7 +77,7 @@ openBusqueda(){
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
     const dialog= this.dialog.open(AddProveedorComponent, {
-      width: '400px',
+      width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
       data: this.selectedRowIndex
@@ -95,7 +95,7 @@ openBusqueda(){
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddProveedorComponent, {
-    width: '400px',
+    width: 'auto',
     enterAnimationDuration,
     exitAnimationDuration,
     data: {
