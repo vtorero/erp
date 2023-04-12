@@ -32,8 +32,8 @@
            <div class="col-md-12">
             <div class="card">
                 <div class="card-header card-header-danger">
-                    <h4 class="card-title ">Usuarios</h4>
-                    <p class="card-category">Usuarios del Sistema</p>
+                    <h4 class="card-title ">Proveedores</h4>
+                    <p class="card-category">Proveedores del Sistema</p>
                 </div>
                 <div class="card-body">
 
@@ -43,6 +43,10 @@
                           <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="num_documento">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>RUC</mat-header-cell>
+                      <mat-cell *matCellDef="let row"> {{row.num_documento}}</mat-cell>
+                </ng-container>
                         <ng-container matColumnDef="nombre">
                               <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
                               <mat-cell *matCellDef="let row"> {{row.nombre}} </mat-cell>

@@ -371,6 +371,8 @@ $app->post("/proveedor",function() use($db,$app){
 
         $ruc=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
         $razon_social=(is_array($data->razon_social)) ? array_shift(str_replace("'","\'",$data->razon_social)):str_replace("'","\'",$data->razon_social);
+        $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
+        $codigo=(is_array($data->codigo))? array_shift($data->codigo): $data->codigo;
         $direccion=(is_array($data->direccion))? array_shift($data->direccion): $data->direccion;
         $departamento=(is_array($data->departamento))? array_shift($data->departamento): $data->departamento;
         $provincia=(is_array($data->provincia))? array_shift($data->provincia): $data->provincia;
@@ -378,8 +380,10 @@ $app->post("/proveedor",function() use($db,$app){
         $num_documento=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
 
 
-        $query ="INSERT INTO proveedores (razon_social, direccion, num_documento, departamento,provincia,distrito) VALUES ("
+        $query ="INSERT INTO proveedores (razon_social,nombre,codigo, direccion, num_documento, departamento,provincia,distrito) VALUES ("
       ."'{$razon_social}',"
+      ."'{$nombre}',"
+      ."'{$codigo}',"
       ."'{$direccion}',"
       ."'{$ruc}',"
       ."'{$departamento}',"

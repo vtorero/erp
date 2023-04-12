@@ -2,6 +2,7 @@ export class Proveedor {
     constructor(
         public codigo:string,
         public razon_social:string,
+        public nombre:string,
         public direccion:string,
         public departamento:string,
         public provincia:string,

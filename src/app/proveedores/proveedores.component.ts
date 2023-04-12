@@ -10,6 +10,7 @@ import { ApiService } from 'app/api.service';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { Usuario } from 'app/modelos/usuario';
 import { AddProveedorComponent } from '../dialog/add-proveedor/add-proveedor.component';
+import { Proveedor } from '../modelos/proveedor';
 
 @Component({
   selector: 'app-proveedores',
@@ -24,7 +25,7 @@ export class ProveedoresComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','nombre','codigo','razon_social','direccion','telefono','distrito'];
+  displayedColumns = ['id','num_documento','nombre','codigo','razon_social','direccion','telefono','distrito'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -79,13 +80,8 @@ openBusqueda(){
       width: '400px',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: {
-        id:this.selectedRowIndex.id,
-           nombre:this.selectedRowIndex.nombres,
-           correo:this.selectedRowIndex.email,
-           estado:this.selectedRowIndex.estado,
-           clase:'Usuario'
-      },
+      data: this.selectedRowIndex
+      ,
     });
     dialog.afterClosed().subscribe(ux => {
       if (ux!= undefined)
@@ -133,9 +129,9 @@ openBusqueda(){
 
   }
 
-  update(art:Usuario) {
+  update(art:Proveedor) {
     if(art){
-    this.api.actualizarUsuario(art).subscribe(
+    this.api.EditarProveedor(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         this.renderDataTable();
@@ -147,9 +143,9 @@ openBusqueda(){
 }
 
 
-  agregar(art:Usuario) {
+  agregar(art:Proveedor) {
     if(art){
-    this.api.guardarUsuario(art).subscribe(
+    this.api.GuardarProveedor(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         },
@@ -171,6 +167,7 @@ eliminar(art:Usuario) {
     this.renderDataTable();
 }
 }
+
 
 
   clickedRows = new Set<Usuario>();

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { Global } from "./global";
+import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
 
 @Injectable({
@@ -33,6 +34,19 @@ getProveedor(ruc: string) {
   ).pipe(map(result => result));
 }
 
+public EditarProveedor(datos: Proveedor): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.put(Global.BASE_API_URL + 'api.php/proveedor',
+    { json: json }, { headers: headers });
+}
+
+public GuardarProveedor(datos: Proveedor): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/proveedor',
+    { json: json }, { headers: headers });
+}
 
   getMaxId(tabla: string) {
     return this._http
