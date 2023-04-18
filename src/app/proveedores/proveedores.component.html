@@ -47,16 +47,7 @@
                       <mat-header-cell *matHeaderCellDef mat-sort-header>RUC</mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.num_documento}}</mat-cell>
                 </ng-container>
-                        <ng-container matColumnDef="nombre">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
-                              <mat-cell *matCellDef="let row"> {{row.nombre}} </mat-cell>
-                        </ng-container>
-                       <!-- Columna Apellido -->
-                        <ng-container matColumnDef="codigo">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
-                              <mat-cell *matCellDef="let row">{{row.codigo}} </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="razon_social">
+                       <ng-container matColumnDef="razon_social">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Razón social</mat-header-cell>
                           <mat-cell *matCellDef="let row">{{row.razon_social}} </mat-cell>
                     </ng-container>
@@ -80,7 +71,7 @@
                         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
 
                       </mat-table>
-                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10" [showFirstLastButtons]></mat-paginator>
 
                 </div>
             </div>

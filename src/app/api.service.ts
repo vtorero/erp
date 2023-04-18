@@ -48,6 +48,33 @@ public GuardarProveedor(datos: Proveedor): Observable<any> {
     { json: json }, { headers: headers });
 }
 
+public delProveedor(datos: Proveedor): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/del_proveedor",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public upd_proveedor(datos: Proveedor): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.put(
+    Global.BASE_API_URL + "api.php/proveedor",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+
   getMaxId(tabla: string) {
     return this._http
       .get("api.php/correlativo/" + tabla, { headers: this.headers })

@@ -1,40 +1,36 @@
-<div>
+<div *ngIf="data.clase!='DelProvedor'">
     <h1 mat-dialog-title>Agregar Proveedor</h1>
     <form #formGeneral="ngForm">
     <div mat-dialog-content>
         <div style="display: flex;flex-direction: column; margin:1rem auto; width: 600px; padding: 1rem;">
           <mat-form-field appearance="outline">
+            <mat-label>Nro Documento</mat-label>
               <input matInput [(ngModel)]="data.num_documento" ng-minlength="11" name="num_documento" type="text" placeholder="Ingrese Ruc" (focusout)="onLoadDatos($event)" required>
             </mat-form-field>
             <mat-form-field appearance="outline">
+              <mat-label>Razón Social</mat-label>
                 <input matInput [(ngModel)]="data.razon_social" name="razon_social" type="text" placeholder="Ingrese Razon Social" required>
             </mat-form-field>
             <div class="example-container">
-              <mat-form-field appearance="fill">
-                <mat-label>Ingrese el nombre</mat-label>
-                <input matInput [(ngModel)]="data.nombre" name="nombre" type="text" placeholder="Ingrese el nombre" required>
-
-              </mat-form-field>
-              <mat-form-field appearance="fill">
-                <mat-label>Ingrese código</mat-label>
-                <input matInput [(ngModel)]="data.codigo" name="codigo" type="text" placeholder="Ingrese el código" required>
-
-              </mat-form-field>
-
-            </div>
-              <mat-form-field appearance="outline">
-              <input matInput [(ngModel)]="data.estado" name="estado" type="text" placeholder="Estado" required>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
+                   </div>
+                <mat-form-field appearance="outline">
+                  <mat-label>Dirección</mat-label>
               <input matInput [(ngModel)]="data.direccion" name="direccion" type="text" placeholder="Dirección" required>
           </mat-form-field>
           <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="data.telefono" name="direccion" type="text" placeholder="Teléfono" required>
+    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Departamento</mat-label>
               <input matInput [(ngModel)]="data.departamento" name="departamento" type="text" placeholder="Departamento" required>
             </mat-form-field>
             <mat-form-field appearance="outline">
+              <mat-label>Provincia</mat-label>
               <input matInput [(ngModel)]="data.provincia" name="provincia" type="text" placeholder="Provincia" required>
           </mat-form-field>
           <mat-form-field appearance="outline">
+            <mat-label>Distrito</mat-label>
               <input matInput [(ngModel)]="data.distrito" type="text" name="distrito" placeholder="Distrito" required>
             </mat-form-field>
                 </div>
@@ -43,5 +39,14 @@
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>
         <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneral.form.valid" cdkFocusInitial>Confirmar</button>
+    </div>
+    </div>
+    <div *ngIf="data.clase=='DelProvedor'">
+      <h1 mat-dialog-title>Eliminar registro {{data.proveedor.razon_social}} ?</h1>
+    <div mat-dialog-content>
+          </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
     </div>
     </div>

@@ -27,7 +27,6 @@ export class AddProveedorComponent implements OnInit {
         console.log(data);
         this.data.razon_social=data['razonSocial']
         this.data.direccion=data['direccion']
-        this.data.estado=data['estado']
         this.data.departamento=data['departamento']
         this.data.provincia=data['provincia']
         this.data.distrito=data['distrito']

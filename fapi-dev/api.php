@@ -24,36 +24,6 @@ if (mysqli_connect_errno()) {
 }
 $data=array();
 
-/*usuarios*/
-$app->get("/usuarios",function() use($db,$app){
-    header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT *  FROM usuarios order by id desc");
-    $prods=array();
-        while ($fila = $resultado->fetch_array()) {
-
-            $prods[]=$fila;
-        }
-        $respuesta=json_encode($prods);
-        echo  $respuesta;
-
-    });
-
- /*proveedores*/
-
- $app->get("/proveedores",function() use($db,$app){
-    header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT *  FROM proveedores order by id desc");
-    $prods=array();
-        while ($fila = $resultado->fetch_array()) {
-
-            $prods[]=$fila;
-        }
-        $respuesta=json_encode($prods);
-        echo  $respuesta;
-
-    });
-
-/** delete usuario */
 
  $app->delete("/usuario/:id",function($id) use($db,$app){
     header("Content-type: application/json; charset=utf-8");
@@ -133,6 +103,110 @@ $app->post("/usuario_del",function() use($db,$app){
         echo  $respuesta;
 
 });
+
+
+ /*proveedores*/
+
+ $app->get("/proveedores",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $resultado = $db->query("SELECT *  FROM proveedores order by id desc");
+    $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo  $respuesta;
+
+    });
+
+
+/*Proveedores*/
+$app->get("/proveedores",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $resultado = $db->query("SELECT `id`, `razon_social`,`num_documento`, `direccion`,`departamento`,`provincia`,`distrito` FROM `proveedores` order by id desc");
+    $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo  $respuesta;
+
+});
+
+$app->post("/del_proveedor",function() use($db,$app){
+header("Content-type: application/json; charset=utf-8");
+$json = $app->request->getBody();
+$j = json_decode($json,true);
+$data = json_decode($j['json']);
+          $query ="DELETE FROM proveedores WHERE id='{$data->proveedor->id}'";
+          if($db->query($query)){
+$result = array("STATUS"=>true,"messaje"=>"Proveedor eliminado correctamente");
+}
+else{
+$result = array("STATUS"=>false,"messaje"=>"Error al eliminar el proveedor");
+}
+
+echo  json_encode($result);
+});
+
+
+
+$app->post("/proveedor",function() use($db,$app){
+header("Content-type: application/json; charset=utf-8");
+$json = $app->request->getBody();
+$j = json_decode($json,true);
+$data = json_decode($j['json']);
+
+$ruc=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
+$razon_social=(is_array($data->razon_social)) ? array_shift(str_replace("'","\'",$data->razon_social)):str_replace("'","\'",$data->razon_social);
+$direccion=(is_array($data->direccion))? array_shift($data->direccion): $data->direccion;
+$departamento=(is_array($data->departamento))? array_shift($data->departamento): $data->departamento;
+$provincia=(is_array($data->provincia))? array_shift($data->provincia): $data->provincia;
+$distrito=(is_array($data->distrito))? array_shift($data->distrito): $data->distrito;
+$num_documento=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
+
+try {
+$query ="INSERT INTO proveedores (razon_social,direccion, num_documento, departamento,provincia,distrito) VALUES ("
+."'{$razon_social}',"
+."'{$direccion}',"
+."'{$ruc}',"
+."'{$departamento}',"
+."'{$provincia}',"
+."'{$distrito}'".")";
+$db->query($query);
+  }
+catch(PDOException $e) {
+$result = array("STATUS"=>true,"messaje"=>$e->getMessage(),"string"=>$query);
+}
+
+
+
+echo  json_encode($result);
+});
+
+
+$app->put("/proveedor",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+       $json = $app->request->getBody();
+       $j = json_decode($json,true);
+       $data = json_decode($j['json']);
+       try {
+        $sql="call p_proveedor_upd({$data->id},'{$data->razon_social}','{$data->direccion}','{$data->num_documento}','{$data->telefono}','{$data->departamento}','{$data->provincia}','{$data->distrito}')";
+        $stmt = mysqli_prepare($db,$sql);
+        mysqli_stmt_execute($stmt);
+        $result = array("STATUS"=>true,"messaje"=>"Proveedor actualizado correctamente");
+       }
+        catch(PDOException $e) {
+            $result = array("STATUS"=>true,"messaje"=>$e->getMessage());
+             }
+        $respuesta=json_encode($result);
+        echo  $respuesta;
+
+});
+
+/*proveedores fin*/
 
 
 $app->get("/categorias",function() use($db,$app){
@@ -334,20 +408,6 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
          });
 
-/*Proveedores*/
-$app->get("/proveedores",function() use($db,$app){
-            header("Content-type: application/json; charset=utf-8");
-            $resultado = $db->query("SELECT `id`, `razon_social`,`num_documento`, `direccion`,`departamento`,`provincia`,`distrito` FROM `proveedores` order by id desc");
-            $prods=array();
-                while ($fila = $resultado->fetch_array()) {
-
-                    $prods[]=$fila;
-                }
-                $respuesta=json_encode($prods);
-                echo  $respuesta;
-
-});
-
 $app->get("/empresas",function() use($db,$app){
     header("Content-type: application/json;");
     $resultado = $db->query("SELECT id, razon_social,num_documento,direccion,telefono,departamento,provincia,distrito,estado FROM  empresas order by id desc");
@@ -363,54 +423,8 @@ $app->get("/empresas",function() use($db,$app){
 
 
 
-$app->post("/proveedor",function() use($db,$app){
-    header("Content-type: application/json; charset=utf-8");
-       $json = $app->request->getBody();
-       $j = json_decode($json,true);
-       $data = json_decode($j['json']);
-
-        $ruc=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
-        $razon_social=(is_array($data->razon_social)) ? array_shift(str_replace("'","\'",$data->razon_social)):str_replace("'","\'",$data->razon_social);
-        $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
-        $codigo=(is_array($data->codigo))? array_shift($data->codigo): $data->codigo;
-        $direccion=(is_array($data->direccion))? array_shift($data->direccion): $data->direccion;
-        $departamento=(is_array($data->departamento))? array_shift($data->departamento): $data->departamento;
-        $provincia=(is_array($data->provincia))? array_shift($data->provincia): $data->provincia;
-        $distrito=(is_array($data->distrito))? array_shift($data->distrito): $data->distrito;
-        $num_documento=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
 
 
-        $query ="INSERT INTO proveedores (razon_social,nombre,codigo, direccion, num_documento, departamento,provincia,distrito) VALUES ("
-      ."'{$razon_social}',"
-      ."'{$nombre}',"
-      ."'{$codigo}',"
-      ."'{$direccion}',"
-      ."'{$ruc}',"
-      ."'{$departamento}',"
-      ."'{$provincia}',"
-      ."'{$distrito}'".")";
-        $db->query($query);
-
-
-       $result = array("STATUS"=>true,"messaje"=>"Proveedor registrado correctamente","string"=>$query);
-        echo  json_encode($result);
-    });
-
-    $app->delete("/proveedor/:ruc",function($ruc) use($db,$app){
-        header("Content-type: application/json; charset=utf-8");
-           $json = $app->request->getBody();
-           $j = json_decode($json,true);
-           $data = json_decode($j['json']);
-                      $query ="DELETE FROM proveedores WHERE num_documento='{$ruc}'";
-                      if($db->query($query)){
-           $result = array("STATUS"=>true,"messaje"=>"Proveedor eliminado correctamente");
-           }
-           else{
-            $result = array("STATUS"=>false,"messaje"=>"Error al eliminar el proveedor");
-           }
-
-            echo  json_encode($result);
-        });
 
 /**Compras */
 

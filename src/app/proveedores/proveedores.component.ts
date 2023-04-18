@@ -25,7 +25,7 @@ export class ProveedoresComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','num_documento','nombre','codigo','razon_social','direccion','telefono','distrito'];
+  displayedColumns = ['id','num_documento','razon_social','direccion','telefono','distrito'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -99,8 +99,8 @@ openBusqueda(){
     enterAnimationDuration,
     exitAnimationDuration,
     data: {
-      clase:'DelUsuario',
-      usuario:this.selectedRowIndex
+      clase:'DelProvedor',
+      proveedor:this.selectedRowIndex
     },
   });
   dialogo2.afterClosed().subscribe(ux => {
@@ -155,10 +155,10 @@ openBusqueda(){
   }
 }
 
-eliminar(art:Usuario) {
+eliminar(art:Proveedor) {
   console.log("art",art);
   if(art){
-  this.api.eliminarUsuario(art).subscribe(
+  this.api.delProveedor(art).subscribe(
     data=>{
       this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
       },
