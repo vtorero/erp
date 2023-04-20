@@ -14,11 +14,11 @@ import { Proveedor } from '../../modelos/proveedor';
 
 @Component({
   selector: 'app-proveedores',
-  templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css']
+  templateUrl: './cliente.component.html',
+  styleUrls: ['./cliente.component.css']
 })
 
-export class ProductosComponent implements OnInit {
+export class ClienteComponent implements OnInit {
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;

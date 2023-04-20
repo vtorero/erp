@@ -18,13 +18,15 @@ declare interface Child {
 }
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '',child:[]},
+    { path: '/clientes', title: 'Clientes',  icon: 'person', class: '',child:[]},
     { path: '/proveedores', title: 'Proveedores',  icon: 'dashboard', class: '',child:[]},
-    { path: '/user-profile', title: 'User Profile',  icon:'person', class: '',child:[{pat:'/icons', tit: 'Iconos',  icn:'bubble_chart',cls:'person'}]},
-    { path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' ,child:[]},
-    { path: '/typography', title: 'Typography',  icon:'library_books', class: '' ,child:[]},
     { path: '/productos', title: 'Productos',  icon:'library_books', class: '' ,child:[]},
-    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' ,child:[]},
-    { path: '/maps', title: 'Maps',  icon:'location_on', class: '' ,child:[]},
+    //{ path: '/user-profile', title: 'User Profile',  icon:'person', class: '',child:[{pat:'/icons', tit: 'Iconos',  icn:'bubble_chart',cls:'person'}]},
+    //{ path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' ,child:[]},
+    //{ path: '/typography', title: 'Typography',  icon:'library_books', class: '' ,child:[]},
+
+    //{ path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' ,child:[]},
+    //{ path: '/maps', title: 'Maps',  icon:'location_on', class: '' ,child:[]},
     { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
     {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'}]}
 ];

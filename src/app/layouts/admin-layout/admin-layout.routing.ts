@@ -14,6 +14,7 @@ import { SeguridadComponent } from '../../seguridad/seguridad/seguridad.componen
 import { UsuarioComponent } from '../../seguridad/usuario/usuario.component';
 import { SucursalesComponent } from '../../seguridad/sucursales/sucursales.component';
 import { ProveedoresComponent } from '../../proveedores/proveedores.component';
+import { ClienteComponent } from '../../negocio/cliente/cliente.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -60,6 +61,7 @@ export const AdminLayoutRoutes: Routes = [
     // }
     { path: 'dashboard',      component: DashboardComponent },
     { path: 'proveedores',      component: ProveedoresComponent },
+    { path: 'clientes',      component: ClienteComponent },
     { path: 'seguridad',      component: UsuarioComponent },
     { path: 'usuarios',      component: UsuarioComponent },
     { path: 'sucursales',      component: SucursalesComponent },

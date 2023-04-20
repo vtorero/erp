@@ -17,9 +17,10 @@
                   <mat-label>Dirección</mat-label>
               <input matInput [(ngModel)]="data.direccion" name="direccion" type="text" placeholder="Dirección" required>
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" hintLabel="Max 9 carácteres">
             <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="data.telefono" name="direccion" type="text" placeholder="Teléfono" required>
+        <input matInput [(ngModel)]="data.telefono" name="direccion" type="text" maxlength="9" placeholder="Teléfono" required>
+        <mat-hint align="end">{{data.telefono.length}}</mat-hint>
     </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Departamento</mat-label>
