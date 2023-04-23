@@ -44,21 +44,21 @@
                           <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="num_documento">
-                      <mat-header-cell *matHeaderCellDef mat-sort-header>RUC</mat-header-cell>
-                      <mat-cell *matCellDef="let row"> {{row.num_documento}}</mat-cell>
+                    <ng-container matColumnDef="nombre">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                      <mat-cell *matCellDef="let row"> {{row.nombre}}</mat-cell>
                 </ng-container>
-                       <ng-container matColumnDef="razon_social">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>Razón social</mat-header-cell>
-                          <mat-cell *matCellDef="let row">{{row.razon_social}} </mat-cell>
+                       <ng-container matColumnDef="num_documento">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Documento</mat-header-cell>
+                          <mat-cell *matCellDef="let row">{{row.num_documento}} </mat-cell>
                     </ng-container>
-                        <ng-container matColumnDef="direccion">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</mat-header-cell>
-                          <mat-cell *matCellDef="let row">{{row.direccion}} </mat-cell>
+                        <ng-container matColumnDef="telefono">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
+                          <mat-cell *matCellDef="let row">{{row.telefono}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="telefono">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
-                        <mat-cell *matCellDef="let row">{{row.telefono}} </mat-cell>
+                    <ng-container matColumnDef="email">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                        <mat-cell *matCellDef="let row">{{row.email}} </mat-cell>
                   </ng-container>
                   <ng-container matColumnDef="distrito">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Distrito</mat-header-cell>

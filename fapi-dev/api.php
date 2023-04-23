@@ -1158,7 +1158,7 @@ $app->get("/nota/:id",function($id) use($db,$app){
 
 $app->get("/clientes",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT id, nombre, apellido, direccion,telefono,num_documento FROM clientes order by id desc");
+    $resultado = $db->query("SELECT * FROM clientes order by id desc");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
 

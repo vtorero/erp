@@ -25,7 +25,7 @@ export class ClienteComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','num_documento','razon_social','direccion','telefono','distrito'];
+  displayedColumns = ['id','nombre','num_documento','telefono','email','distrito'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -62,7 +62,7 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('proveedores').subscribe(x => {
+    this.api.getApi('clientes').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
       this.empTbSort.disableClear = true;
