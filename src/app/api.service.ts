@@ -4,6 +4,7 @@ import { map, Observable } from "rxjs";
 import { Global } from "./global";
 import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
+import { Clientes } from './modelos/clientes';
 
 @Injectable({
   providedIn: "root",
@@ -14,11 +15,18 @@ export class ApiService {
     "Content-type": "application/json",
   });
 
+  getMaxId(tabla: string) {
+    return this._http
+      .get("api.php/correlativo/" + tabla, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
+
   getApi(ruta: string) {
     return this._http
       .get(Global.BASE_API_URL + "api.php/" + ruta, { headers: this.headers })
       .pipe(map((result) => result));
   }
+/**usuario  */
 
   loginUser(usuario: string, password: string) {
     const url = Global.BASE_API_URL + 'api.php/login';
@@ -28,11 +36,60 @@ export class ApiService {
     }, { headers: this.headers }).pipe(map(data => data));
 }
 
+listarUsuarios() {
+  return this._http
+    .get(Global.BASE_API_URL + "api.php/usuarios", { headers: this.headers })
+    .pipe(map((result) => result));
+}
+
+public guardarUsuario(datos: Usuario): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/usuario",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public actualizarUsuario(datos: Usuario): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.put(
+    Global.BASE_API_URL + "api.php/usuario",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public eliminarUsuario(datos: Usuario): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/usuario_del",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+
+/** proveedor */
 getProveedor(ruc: string) {
   return this._http.get(Global.BASE_API_SUNAT + 'ruc/' + ruc + '?token=' + Global.TOKEN_API_PERU,
     { headers: this.headers }
   ).pipe(map(result => result));
 }
+
+
 
 public EditarProveedor(datos: Proveedor): Observable<any> {
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
@@ -74,58 +131,40 @@ public upd_proveedor(datos: Proveedor): Observable<any> {
   );
 }
 
+/**cliente */
 
-  getMaxId(tabla: string) {
-    return this._http
-      .get("api.php/correlativo/" + tabla, { headers: this.headers })
-      .pipe(map((result) => result));
-  }
+public EditarCliente(datos: Clientes): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.put(Global.BASE_API_URL + 'api.php/cliente',
+    { json: json }, { headers: headers });
+}
+
+public GuardarCliente(datos: Clientes): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/cliente',
+    { json: json }, { headers: headers });
+}
+
+public delCliente(datos:Clientes): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/del_cliente",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+
+
 /*Apis usuarios*/
 
-  listarUsuarios() {
-    return this._http
-      .get(Global.BASE_API_URL + "api.php/usuarios", { headers: this.headers })
-      .pipe(map((result) => result));
-  }
 
-  public guardarUsuario(datos: Usuario): Observable<any> {
-    let headers = new HttpHeaders().set(
-      "Content-Type",
-      "application/x-www-form-urlencoded"
-    );
-    let json = JSON.stringify(datos);
-    return this._http.post(
-      Global.BASE_API_URL + "api.php/usuario",
-      { json: json },
-      { headers: headers }
-    );
-  }
-
-  public actualizarUsuario(datos: Usuario): Observable<any> {
-    let headers = new HttpHeaders().set(
-      "Content-Type",
-      "application/x-www-form-urlencoded"
-    );
-    let json = JSON.stringify(datos);
-    return this._http.put(
-      Global.BASE_API_URL + "api.php/usuario",
-      { json: json },
-      { headers: headers }
-    );
-  }
-
-  public eliminarUsuario(datos: Usuario): Observable<any> {
-    let headers = new HttpHeaders().set(
-      "Content-Type",
-      "application/x-www-form-urlencoded"
-    );
-    let json = JSON.stringify(datos);
-    return this._http.post(
-      Global.BASE_API_URL + "api.php/usuario_del",
-      { json: json },
-      { headers: headers }
-    );
-  }
 
   /*dosimetria
 
