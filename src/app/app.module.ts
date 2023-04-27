@@ -17,6 +17,8 @@ import { SucursalesComponent } from './seguridad/sucursales/sucursales.component
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { AddProveedorComponent } from './dialog/add-proveedor/add-proveedor.component';
 import { ClienteComponent } from './negocio/cliente/cliente.component';
+import { VentasComponent } from './negocio/ventas/ventas.component';
+import { AddClienteComponent } from './dialog/add-cliente/add-cliente.component';
 
 @NgModule({
   imports: [
@@ -42,6 +44,8 @@ import { ClienteComponent } from './negocio/cliente/cliente.component';
     ProveedoresComponent,
     AddProveedorComponent,
     ClienteComponent,
+    VentasComponent,
+    AddClienteComponent,
 
 
 

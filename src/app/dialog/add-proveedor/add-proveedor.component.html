@@ -3,9 +3,10 @@
     <form #formGeneral="ngForm">
     <div mat-dialog-content>
         <div style="display: flex;flex-direction: column; margin:1rem auto; width: 600px; padding: 1rem;">
-          <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
             <mat-label>Nro Documento</mat-label>
-              <input matInput [(ngModel)]="data.num_documento" ng-minlength="11" name="num_documento" type="text" placeholder="Ingrese Ruc" (focusout)="onLoadDatos($event)" required>
+              <input matInput [(ngModel)]="data.num_documento" name="num_documento" maxlength="11" minlength="8" type="text" placeholder="Ingrese Ruc" (focusout)="onLoadDatos($event)" required>
+              <mat-hint align="end"> {{data.num_documento.length}}</mat-hint>
             </mat-form-field>
             <mat-form-field appearance="outline">
               <mat-label>Razón Social</mat-label>
@@ -17,7 +18,7 @@
                   <mat-label>Dirección</mat-label>
               <input matInput [(ngModel)]="data.direccion" name="direccion" type="text" placeholder="Dirección" required>
           </mat-form-field>
-          <mat-form-field appearance="outline" hintLabel="Max 9 carácteres">
+          <mat-form-field appearance="outline" hintLabel="Max 9 carácteres ">
             <mat-label>Teléfono</mat-label>
         <input matInput [(ngModel)]="data.telefono" name="direccion" type="text" maxlength="9" placeholder="Teléfono" required>
         <mat-hint align="end">{{data.telefono.length}}</mat-hint>

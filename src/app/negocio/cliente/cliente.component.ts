@@ -11,6 +11,7 @@ import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.componen
 import { Usuario } from 'app/modelos/usuario';
 import { AddProveedorComponent } from '../../dialog/add-proveedor/add-proveedor.component';
 import { Proveedor } from '../../modelos/proveedor';
+import { AddClienteComponent } from '../../dialog/add-cliente/add-cliente.component';
 
 @Component({
   selector: 'app-proveedores',
@@ -76,7 +77,7 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(AddProveedorComponent, {
+    const dialog= this.dialog.open(AddClienteComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
@@ -94,7 +95,7 @@ openBusqueda(){
   }
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
-  const dialogo2=this.dialog.open(AddProveedorComponent, {
+  const dialogo2=this.dialog.open(AddClienteComponent, {
     width: 'auto',
     enterAnimationDuration,
     exitAnimationDuration,
@@ -112,11 +113,13 @@ openBusqueda(){
 
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    const dialogo1 =this.dialog.open(AddProveedorComponent, {
+    const dialogo1 =this.dialog.open(AddClienteComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
       data: {
+        num_documento:'',
+        telefono:'',
         clase:'Usuario',
         usuario:this.selectedRowIndex
       },

@@ -20,7 +20,7 @@ export class AddProveedorComponent implements OnInit {
 
   ) { }
 
-    onLoadDatos(event:any){
+    /*onLoadDatos(event:any){
     if(event.target.value!=""){
     this.api.getProveedor(event.target.value).subscribe(data => {
       if(data) {
@@ -39,7 +39,7 @@ export class AddProveedorComponent implements OnInit {
   }else{
     this.toastr.open("Debe indicar el Numero de RUC","OK");
   }
- }
+ }*/
 
   ngOnInit() {
   }

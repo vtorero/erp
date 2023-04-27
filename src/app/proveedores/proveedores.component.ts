@@ -117,7 +117,9 @@ openBusqueda(){
       enterAnimationDuration,
       exitAnimationDuration,
       data: {
-        clase:'Usuario',
+        telefono:'',
+        num_documento:'',
+        clase:'add',
         usuario:this.selectedRowIndex
       },
     });
