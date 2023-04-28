@@ -1175,7 +1175,8 @@ $app->post("/cliente",function() use($db,$app){
        $j = json_decode($json,true);
        $data = json_decode($j['json']);
        try {
-        $query ="INSERT INTO clientes (nombre,apellido,direccion,telefono,num_documento) VALUES ('{$data->nombre}','{$data->apellido}','{$data->direccion}','{$data->telefono}','{$data->num_documento}')";
+        $query ="INSERT INTO clientes (num_documento,nombre,telefono,direccion,email,departamento,provincia,distrito,estado) 
+        VALUES ('{$data->num_documento}','{$data->nombre}','{$data->telefono}','{$data->direccion}','{$data->email}','{$data->departamento}','{$data->provincia}','{$data->distrito}',1)";
         $db->query($query);
         $result = array("STATUS"=>true,"messaje"=>"Ciente registrado correctamente");
           }
@@ -1187,7 +1188,7 @@ $app->post("/cliente",function() use($db,$app){
 
 $app->get("/clientes/:criterio",function($criterio) use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT `id`, `nombre`,`apellido`,`direccion`,`num_documento` FROM `clientes` where apellido like '%".$criterio."%' or nombre like '%".$criterio."%'");
+    $resultado = $db->query("SELECT `id`, `nombre`,`direccion`,`num_documento` FROM `clientes` where apellido like '%".$criterio."%' or nombre like '%".$criterio."%'");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
 
@@ -1217,7 +1218,7 @@ $app->put("/cliente",function() use($db,$app){
        $j = json_decode($json,true);
        $data = json_decode($j['json']);
        try {
-        $query ="UPDATE clientes SET nombre='{$data->nombre}',apellido='{$data->apellido}',direccion='{$data->direccion}',telefono='{$data->telefono}',num_documento='{$data->num_documento}' where id={$data->id}";
+        $query ="UPDATE clientes SET nombre='{$data->nombre}',direccion='{$data->direccion}',telefono='{$data->telefono}',num_documento='{$data->num_documento}',email='{$data->email}',departamento='{$data->departamento}',provincia='{$data->provincia}',distrito='{$data->distrito}' where id={$data->id}";
         $db->query($query);
         $result = array("STATUS"=>true,"messaje"=>"Ciente actualizado correctamente");
           }
@@ -1228,12 +1229,12 @@ $app->put("/cliente",function() use($db,$app){
 });
 
 
-$app->delete("/cliente/:dni",function($dni) use($db,$app){
+$app->post("/del_cliente",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
        $json = $app->request->getBody();
        $j = json_decode($json,true);
        $data = json_decode($j['json']);
-                  $query ="DELETE FROM clientes WHERE num_documento='{$dni}'";
+                  $query ="DELETE FROM clientes WHERE id='{$data->cliente->id}'";
                   if($db->query($query)){
        $result = array("STATUS"=>true,"messaje"=>"Cliente eliminado correctamente");
        }

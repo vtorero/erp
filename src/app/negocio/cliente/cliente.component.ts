@@ -9,9 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { Usuario } from 'app/modelos/usuario';
-import { AddProveedorComponent } from '../../dialog/add-proveedor/add-proveedor.component';
-import { Proveedor } from '../../modelos/proveedor';
 import { AddClienteComponent } from '../../dialog/add-cliente/add-cliente.component';
+import { Clientes } from 'app/modelos/clientes';
 
 @Component({
   selector: 'app-proveedores',
@@ -101,7 +100,7 @@ openBusqueda(){
     exitAnimationDuration,
     data: {
       clase:'DelProvedor',
-      proveedor:this.selectedRowIndex
+      cliente:this.selectedRowIndex
     },
   });
   dialogo2.afterClosed().subscribe(ux => {
@@ -121,7 +120,7 @@ openBusqueda(){
         num_documento:'',
         telefono:'',
         clase:'Usuario',
-        usuario:this.selectedRowIndex
+        cliente:this.selectedRowIndex
       },
     });
     dialogo1.afterClosed().subscribe(us => {
@@ -132,9 +131,9 @@ openBusqueda(){
 
   }
 
-  update(art:Proveedor) {
+  update(art:Clientes) {
     if(art){
-    this.api.EditarProveedor(art).subscribe(
+    this.api.EditarCliente(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         this.renderDataTable();
@@ -146,9 +145,9 @@ openBusqueda(){
 }
 
 
-  agregar(art:Proveedor) {
+  agregar(art:Clientes) {
     if(art){
-    this.api.GuardarProveedor(art).subscribe(
+    this.api.GuardarCliente(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         },
@@ -158,10 +157,10 @@ openBusqueda(){
   }
 }
 
-eliminar(art:Proveedor) {
+eliminar(art:Clientes) {
   console.log("art",art);
   if(art){
-  this.api.delProveedor(art).subscribe(
+  this.api.delCliente(art).subscribe(
     data=>{
       this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
       },
