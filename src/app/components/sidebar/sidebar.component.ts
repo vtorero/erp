@@ -18,6 +18,7 @@ declare interface Child {
 }
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '',child:[]},
+    { path: '/ventas', title: 'Venta Rápida',  icon: 'library_books', class: '',child:[]},
     { path: '/clientes', title: 'Clientes',  icon: 'person', class: '',child:[]},
     { path: '/proveedores', title: 'Proveedores',  icon: 'dashboard', class: '',child:[]},
     { path: '/productos', title: 'Productos',  icon:'library_books', class: '' ,child:[]},

@@ -15,6 +15,8 @@ import { UsuarioComponent } from '../../seguridad/usuario/usuario.component';
 import { SucursalesComponent } from '../../seguridad/sucursales/sucursales.component';
 import { ProveedoresComponent } from '../../proveedores/proveedores.component';
 import { ClienteComponent } from '../../negocio/cliente/cliente.component';
+import { Component } from '@angular/core';
+import { VentasComponent } from 'app/negocio/ventas/ventas.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -59,7 +61,8 @@ export const AdminLayoutRoutes: Routes = [
     //         component: UpgradeComponent
     //     }]
     // }
-    { path: 'dashboard',      component: DashboardComponent },
+    { path: 'dashboard', component: DashboardComponent },
+    {path:'ventas',component:VentasComponent},
     { path: 'proveedores',      component: ProveedoresComponent },
     { path: 'clientes',      component: ClienteComponent },
     { path: 'seguridad',      component: UsuarioComponent },
@@ -72,5 +75,5 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons',          component: IconsComponent },
     { path: 'maps',           component: MapsComponent },
     { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent },
+    { path: 'upgrade',        component: UpgradeComponent }
 ];
