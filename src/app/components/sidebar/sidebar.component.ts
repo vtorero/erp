@@ -21,7 +21,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/ventas', title: 'Venta Rápida',  icon: 'library_books', class: '',child:[]},
     { path: '/clientes', title: 'Clientes',  icon: 'person', class: '',child:[]},
     { path: '/proveedores', title: 'Proveedores',  icon: 'dashboard', class: '',child:[]},
-    { path: '/productos', title: 'Productos',  icon:'library_books', class: '' ,child:[]},
+    { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'}]},
     //{ path: '/user-profile', title: 'User Profile',  icon:'person', class: '',child:[{pat:'/icons', tit: 'Iconos',  icn:'bubble_chart',cls:'person'}]},
     //{ path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' ,child:[]},
     //{ path: '/typography', title: 'Typography',  icon:'library_books', class: '' ,child:[]},

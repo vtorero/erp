@@ -17,6 +17,7 @@ import { ProveedoresComponent } from '../../proveedores/proveedores.component';
 import { ClienteComponent } from '../../negocio/cliente/cliente.component';
 import { Component } from '@angular/core';
 import { VentasComponent } from 'app/negocio/ventas/ventas.component';
+import { MainInventarioComponent } from '../../inventarios/main-inventario/main-inventario.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -63,6 +64,7 @@ export const AdminLayoutRoutes: Routes = [
     // }
     { path: 'dashboard', component: DashboardComponent },
     {path:'ventas',component:VentasComponent},
+    {path:'inventarios',component:MainInventarioComponent},
     { path: 'proveedores',      component: ProveedoresComponent },
     { path: 'clientes',      component: ClienteComponent },
     { path: 'seguridad',      component: UsuarioComponent },

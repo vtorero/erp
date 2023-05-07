@@ -19,6 +19,7 @@ import { AddProveedorComponent } from './dialog/add-proveedor/add-proveedor.comp
 import { ClienteComponent } from './negocio/cliente/cliente.component';
 import { VentasComponent } from './negocio/ventas/ventas.component';
 import { AddClienteComponent } from './dialog/add-cliente/add-cliente.component';
+import { MainInventarioComponent } from './inventarios/main-inventario/main-inventario.component';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { AddClienteComponent } from './dialog/add-cliente/add-cliente.component'
     ClienteComponent,
     VentasComponent,
     AddClienteComponent,
+     MainInventarioComponent,
 
 
 
