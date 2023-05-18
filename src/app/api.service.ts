@@ -5,6 +5,7 @@ import { Global } from "./global";
 import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
 import { Clientes } from './modelos/clientes';
+import { Productos } from './modelos/producto';
 
 @Injectable({
   providedIn: "root",
@@ -160,7 +161,34 @@ public delCliente(datos:Clientes): Observable<any> {
   );
 }
 
+/*producto*/
 
+public GuardarProducto(datos: Productos): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/producto',
+    { json: json }, { headers: headers });
+}
+
+public EditarProducto(datos: Productos): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.put(Global.BASE_API_URL + 'api.php/producto',
+    { json: json }, { headers: headers });
+}
+
+public delProducto(datos: Productos): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/del_producto",
+    { json: json },
+    { headers: headers }
+  );
+}
 
 /*Apis usuarios*/
 

@@ -12,6 +12,7 @@ import { Usuario } from 'app/modelos/usuario';
 import { AddProveedorComponent } from '../dialog/add-proveedor/add-proveedor.component';
 import { Proveedor } from '../modelos/proveedor';
 
+
 @Component({
   selector: 'app-proveedores',
   templateUrl: './proveedores.component.html',
