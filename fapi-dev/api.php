@@ -116,6 +116,20 @@ $app->post("/usuario_del",function() use($db,$app){
         echo  $respuesta;
 
 });
+/*productos*/
+
+$app->get("/articulos",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $resultado = $db->query("SELECT *  FROM articulos order by id desc");
+    $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo  $respuesta;
+
+    });
 
 
  /*proveedores*/
@@ -1175,7 +1189,7 @@ $app->post("/cliente",function() use($db,$app){
        $j = json_decode($json,true);
        $data = json_decode($j['json']);
        try {
-        $query ="INSERT INTO clientes (num_documento,nombre,telefono,direccion,email,departamento,provincia,distrito,estado) 
+        $query ="INSERT INTO clientes (num_documento,nombre,telefono,direccion,email,departamento,provincia,distrito,estado)
         VALUES ('{$data->num_documento}','{$data->nombre}','{$data->telefono}','{$data->direccion}','{$data->email}','{$data->departamento}','{$data->provincia}','{$data->distrito}',1)";
         $db->query($query);
         $result = array("STATUS"=>true,"messaje"=>"Ciente registrado correctamente");
