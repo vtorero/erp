@@ -25,7 +25,6 @@ export const ROUTES: RouteInfo[] = [
     //{ path: '/user-profile', title: 'User Profile',  icon:'person', class: '',child:[{pat:'/icons', tit: 'Iconos',  icn:'bubble_chart',cls:'person'}]},
     //{ path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' ,child:[]},
     //{ path: '/typography', title: 'Typography',  icon:'library_books', class: '' ,child:[]},
-
     //{ path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' ,child:[]},
     //{ path: '/maps', title: 'Maps',  icon:'location_on', class: '' ,child:[]},
     { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
