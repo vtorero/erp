@@ -10,6 +10,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { AddProveedorComponent } from '../../dialog/add-proveedor/add-proveedor.component';
 import { Productos } from '../../modelos/producto';
+import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 
 @Component({
   selector: 'app-proveedores',
@@ -75,7 +76,7 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(AddProveedorComponent, {
+    const dialog= this.dialog.open(AddProductoComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
@@ -93,7 +94,7 @@ openBusqueda(){
   }
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
-  const dialogo2=this.dialog.open(AddProveedorComponent, {
+  const dialogo2=this.dialog.open(AddProductoComponent, {
     width: 'auto',
     enterAnimationDuration,
     exitAnimationDuration,
@@ -111,7 +112,7 @@ openBusqueda(){
 
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    const dialogo1 =this.dialog.open(AddProveedorComponent, {
+    const dialogo1 =this.dialog.open(AddProductoComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,

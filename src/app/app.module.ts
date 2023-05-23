@@ -20,6 +20,7 @@ import { ClienteComponent } from './negocio/cliente/cliente.component';
 import { VentasComponent } from './negocio/ventas/ventas.component';
 import { AddClienteComponent } from './dialog/add-cliente/add-cliente.component';
 import { MainInventarioComponent } from './inventarios/main-inventario/main-inventario.component';
+import { AddProductoComponent } from './dialog/add-producto/add-producto.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { MainInventarioComponent } from './inventarios/main-inventario/main-inve
     VentasComponent,
     AddClienteComponent,
      MainInventarioComponent,
+     AddProductoComponent,
 
 
 
