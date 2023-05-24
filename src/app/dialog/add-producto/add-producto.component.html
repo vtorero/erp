@@ -1,1 +1,54 @@
-<p>add-producto works!</p>
+<div *ngIf="data.clase!='DelProducto'">
+    <h1 mat-dialog-title>Agregar Producto</h1>
+    <form #formGeneral="ngForm">
+    <div mat-dialog-content>
+        <div style="display: flex;flex-direction: column; margin:1rem auto; width: 600px; padding: 1rem;">
+            <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+            <mat-label>Nro Documento</mat-label>
+              <input matInput [(ngModel)]="data.num_documento" name="num_documento" maxlength="11" minlength="8" type="text" placeholder="Ingrese Ruc" (focusout)="onLoadDatos($event)" required>
+              <mat-hint align="end"> {{data.num_documento.length}}</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Razón Social</mat-label>
+                <input matInput [(ngModel)]="data.razon_social" name="razon_social" type="text" placeholder="Ingrese Razon Social" required>
+            </mat-form-field>
+            <div class="example-container">
+                   </div>
+                <mat-form-field appearance="outline">
+                  <mat-label>Dirección</mat-label>
+              <input matInput [(ngModel)]="data.direccion" name="direccion" type="text" placeholder="Dirección" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" hintLabel="Max 9 carácteres ">
+            <mat-label>Teléfono</mat-label>
+        <input matInput [(ngModel)]="data.telefono" name="direccion" type="text" maxlength="9" placeholder="Teléfono" required>
+        <mat-hint align="end">{{data.telefono.length}}</mat-hint>
+    </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Departamento</mat-label>
+              <input matInput [(ngModel)]="data.departamento" name="departamento" type="text" placeholder="Departamento" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Provincia</mat-label>
+              <input matInput [(ngModel)]="data.provincia" name="provincia" type="text" placeholder="Provincia" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Distrito</mat-label>
+              <input matInput [(ngModel)]="data.distrito" type="text" name="distrito" placeholder="Distrito" required>
+            </mat-form-field>
+                </div>
+    </div>
+    </form>
+    <div mat-dialog-actions>
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneral.form.valid" cdkFocusInitial>Confirmar</button>
+    </div>
+    </div>
+    <div >
+      <h1 mat-dialog-title>Eliminar registro {{data.categoria}} ?</h1>
+    <div mat-dialog-content>
+          </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
+    </div>
+    </div>

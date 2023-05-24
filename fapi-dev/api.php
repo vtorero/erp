@@ -120,7 +120,7 @@ $app->post("/usuario_del",function() use($db,$app){
 
 $app->get("/articulos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT *  FROM articulos order by id desc");
+    $resultado = $db->query("SELECT *  FROM productos order by id desc");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
 

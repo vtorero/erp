@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from 'app/api.service';
+import { Productos } from '../../modelos/producto';
 
 @Component({
   selector: 'app-add-producto',
@@ -7,7 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddProductoComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private toastr: MatSnackBar,
+    public dialogRef: MatDialogRef<AddProductoComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Productos,
+    private api:ApiService
+
+
+  ) { }
 
   ngOnInit(): void {
   }

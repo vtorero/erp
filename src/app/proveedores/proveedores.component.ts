@@ -7,7 +7,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
-import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { Usuario } from 'app/modelos/usuario';
 import { AddProveedorComponent } from '../dialog/add-proveedor/add-proveedor.component';
 import { Proveedor } from '../modelos/proveedor';
