@@ -8,7 +8,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
-import { AddProveedorComponent } from '../../dialog/add-proveedor/add-proveedor.component';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 
@@ -81,7 +80,6 @@ openBusqueda(){
       enterAnimationDuration,
       exitAnimationDuration,
       data: this.selectedRowIndex
-      ,
     });
     dialog.afterClosed().subscribe(ux => {
       if (ux!= undefined)
@@ -116,10 +114,8 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: {
-        clase:'Usuario',
-        usuario:this.selectedRowIndex
-      },
+      data:this.selectedRowIndex
+
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
