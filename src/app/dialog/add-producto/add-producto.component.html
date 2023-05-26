@@ -12,7 +12,14 @@
               <mat-label>Categoria</mat-label>
                 <input matInput [(ngModel)]="data.categoria" name="categoria" type="text" placeholder="Categoria" required>
             </mat-form-field>
-
+            <mat-form-field appearance="outline">
+              <mat-label>Categoria</mat-label>
+              <mat-select [(ngModel)]="data.id_categoria" (ngModelChange)="handleCagetoria(data.id_categoria)">
+                <mat-option  *ngFor="let cat of dataSource" [value]="cat.id" >
+                  {{cat.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
                 </div>
     </div>
     </form>

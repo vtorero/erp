@@ -6,6 +6,7 @@ import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
 import { Clientes } from './modelos/clientes';
 import { Productos } from './modelos/producto';
+import { Categoria } from "./modelos/categoria";
 
 @Injectable({
   providedIn: "root",
@@ -168,6 +169,10 @@ public GuardarProducto(datos: Productos): Observable<any> {
   let json = JSON.stringify(datos);
   return this._http.post(Global.BASE_API_URL + 'api.php/producto',
     { json: json }, { headers: headers });
+}
+
+getCategoriaSelect(): Observable<Categoria[]> {
+  return this._http.get<Categoria[]>(Global.BASE_API_URL + 'api.php/categorias', { headers: this.headers });
 }
 
 public EditarProducto(datos: Productos): Observable<any> {

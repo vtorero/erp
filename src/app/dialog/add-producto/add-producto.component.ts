@@ -10,7 +10,8 @@ import { Productos } from '../../modelos/producto';
   styleUrls: ['./add-producto.component.css']
 })
 export class AddProductoComponent implements OnInit {
-
+dataSource:any;
+isLoaded:boolean=false
   constructor(
     private toastr: MatSnackBar,
     public dialogRef: MatDialogRef<AddProductoComponent>,
@@ -21,6 +22,14 @@ export class AddProductoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+  getCate(): void {
+    this.api.getCategoriaSelect().subscribe(data => {
+      if(data) {
+        this.dataSource = data;
+        this.isLoaded = true;
+      }
+    } );
   }
 
 }
