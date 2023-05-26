@@ -24,7 +24,7 @@ export class ProductosComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','codigo','nombre','categoria','categoria2','categoria3'];
+  displayedColumns = ['id','codigo','nombre','categoria','categoria2','categoria3','unidad'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
