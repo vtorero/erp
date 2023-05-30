@@ -278,6 +278,19 @@ $app->get("/categorias",function() use($db,$app){
 
             });
 
+            $app->get("/unidad",function() use($db,$app){
+                header("Content-type: application/json; charset=utf-8");
+                $resultado = $db->query("SELECT id, codigo,nombre  FROM  unidad  order by id");
+                $prods=array();
+                    while ($fila = $resultado->fetch_array()) {
+
+                        $prods[]=$fila;
+                    }
+                    $respuesta=json_encode($prods);
+                    echo  $respuesta;
+
+                });
+
 
         $app->get("/subcategorias",function() use($db,$app){
             header("Content-type: application/json; charset=utf-8");

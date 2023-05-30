@@ -12,6 +12,7 @@ import { Productos } from '../../modelos/producto';
 export class AddProductoComponent implements OnInit {
 dataSource:any;
 dataCategoria:any;
+dataUnidad:any;
 dataSubCategoria:any;
 dataFamilia:any;
 isLoaded:boolean=false
@@ -20,14 +21,13 @@ isLoaded:boolean=false
     public dialogRef: MatDialogRef<AddProductoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Productos,
     private api:ApiService
-
-
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getCate();
     this.getSubCategoria();
     this.getFamilia();
+    this.getunidad();
 
   }
   getCate(): void {
@@ -43,7 +43,7 @@ isLoaded:boolean=false
     this.api.getApi('sub_categorias').subscribe(data => {
       if(data) {
         this.dataSubCategoria = data;
-        console.log(this.dataCategoria)
+
       }
     } );
   }
@@ -52,9 +52,23 @@ isLoaded:boolean=false
     this.api.getApi('familia').subscribe(data => {
       if(data) {
         this.dataFamilia = data;
-        console.log(this.dataCategoria)
+
       }
     } );
+  }
+
+  getunidad(): void {
+    this.api.getApi('unidad').subscribe(data => {
+      if(data) {
+        this.dataUnidad = data;
+
+      }
+    } );
+  }
+
+
+  cancelar() {
+    this.dialogRef.close();
   }
 
 }
