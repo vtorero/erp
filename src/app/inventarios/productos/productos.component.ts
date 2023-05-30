@@ -76,7 +76,7 @@ openBusqueda(){
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
     const dialog= this.dialog.open(AddProductoComponent, {
-      width: 'auto',
+      width: '800px',
       enterAnimationDuration,
       exitAnimationDuration,
       data: this.selectedRowIndex

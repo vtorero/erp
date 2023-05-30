@@ -249,6 +249,36 @@ $app->get("/categorias",function() use($db,$app){
 
         });
 
+
+        $app->get("/sub_categorias",function() use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+            $resultado = $db->query("SELECT id, nombre  FROM  sub_categorias order by id");
+            $prods=array();
+                while ($fila = $resultado->fetch_array()) {
+
+                    $prods[]=$fila;
+                }
+                $respuesta=json_encode($prods);
+                echo  $respuesta;
+
+            });
+
+
+
+        $app->get("/familia",function() use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+            $resultado = $db->query("SELECT id, nombre  FROM  sub_sub_categorias order by id");
+            $prods=array();
+                while ($fila = $resultado->fetch_array()) {
+
+                    $prods[]=$fila;
+                }
+                $respuesta=json_encode($prods);
+                echo  $respuesta;
+
+            });
+
+
         $app->get("/subcategorias",function() use($db,$app){
             header("Content-type: application/json; charset=utf-8");
             $resultado = $db->query("SELECT s.id,c.id id_categoria,c.nombre categoria,s.nombre FROM sub_categorias s,categorias c WHERE s.id_categoria=c.id order by s.id");

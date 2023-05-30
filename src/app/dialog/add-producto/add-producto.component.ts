@@ -11,6 +11,9 @@ import { Productos } from '../../modelos/producto';
 })
 export class AddProductoComponent implements OnInit {
 dataSource:any;
+dataCategoria:any;
+dataSubCategoria:any;
+dataFamilia:any;
 isLoaded:boolean=false
   constructor(
     private toastr: MatSnackBar,
@@ -22,12 +25,34 @@ isLoaded:boolean=false
   ) { }
 
   ngOnInit(): void {
+    this.getCate();
+    this.getSubCategoria();
+    this.getFamilia();
+
   }
   getCate(): void {
-    this.api.getCategoriaSelect().subscribe(data => {
+    this.api.getApi('categorias').subscribe(data => {
       if(data) {
-        this.dataSource = data;
-        this.isLoaded = true;
+        this.dataCategoria = data;
+        console.log(this.dataCategoria)
+      }
+    } );
+  }
+
+  getSubCategoria(): void {
+    this.api.getApi('sub_categorias').subscribe(data => {
+      if(data) {
+        this.dataSubCategoria = data;
+        console.log(this.dataCategoria)
+      }
+    } );
+  }
+
+  getFamilia(): void {
+    this.api.getApi('familia').subscribe(data => {
+      if(data) {
+        this.dataFamilia = data;
+        console.log(this.dataCategoria)
       }
     } );
   }
