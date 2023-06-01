@@ -10,6 +10,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-proveedores',
@@ -23,6 +24,7 @@ export class ProductosComponent implements OnInit {
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
+  prod:Productos;
   selection = new SelectionModel(false, []);
   displayedColumns = ['id','codigo','nombre','categoria','categoria2','categoria3','unidad'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -110,19 +112,17 @@ openBusqueda(){
 
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+
     const dialogo1 =this.dialog.open(AddProductoComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:this.selectedRowIndex
-
+      data:new Productos('','','','','',0,'',0,'','','','','','','','Nuevo')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
        this.agregar(us)
      });
-
-
   }
 
   update(art:Productos) {

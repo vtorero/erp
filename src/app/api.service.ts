@@ -16,7 +16,11 @@ export class ApiService {
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
-
+  getSelectApi(tabla: string,criterio:string) {
+    return this._http.get(Global.BASE_API_URL + 'api.php/' + tabla+criterio,
+      { headers: this.headers }
+    ).pipe(map(result => result));
+  }
   getMaxId(tabla: string) {
     return this._http
       .get("api.php/correlativo/" + tabla, { headers: this.headers })

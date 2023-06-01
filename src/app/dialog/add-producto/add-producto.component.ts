@@ -11,17 +11,24 @@ import { Productos } from '../../modelos/producto';
 })
 export class AddProductoComponent implements OnInit {
 dataSource:any;
+imageSrc: string = '';
 dataCategoria:any;
 dataUnidad:any;
 dataSubCategoria:any;
 dataFamilia:any;
-isLoaded:boolean=false
+isLoaded:boolean=false;
+dataArray:any;
+
+
+
   constructor(
     private toastr: MatSnackBar,
     public dialogRef: MatDialogRef<AddProductoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Productos,
     private api:ApiService
-  ) {}
+  ) {
+
+  }
 
   ngOnInit(): void {
     this.getCate();
@@ -65,7 +72,24 @@ isLoaded:boolean=false
       }
     } );
   }
-
+  onKeyCategoria(value:string) {
+    this.dataArray = [];
+    this.Search('categoria',value);
+  }
+  Search(tabla:string,value: string) {
+    let criterio;
+    if (value) {
+      criterio = "/" + value
+    } else {
+      criterio ='';
+    }
+    console.log(value)
+    this.api.getSelectApi(tabla, criterio).subscribe(data => {
+      if (data) {
+        this.dataCategoria = data;
+      }
+    });
+  }
 
   cancelar() {
     this.dialogRef.close();
