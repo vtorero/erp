@@ -1,6 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,7 +9,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
-import { data } from 'jquery';
+
 
 @Component({
   selector: 'app-proveedores',
@@ -19,14 +18,14 @@ import { data } from 'jquery';
 })
 
 export class ProductosComponent implements OnInit {
-  position = new FormControl('below');
+
   buscador:boolean=false;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','codigo','nombre','categoria','categoria2','categoria3','unidad'];
+  displayedColumns = ['id','codigo','nombre','categoria','subcategoria','familia','unidad'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -77,17 +76,19 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(AddProductoComponent, {
-      width: '800px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data: this.selectedRowIndex
-    });
-    dialog.afterClosed().subscribe(ux => {
-      if (ux!= undefined)
-      this.update(ux)
+      this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
+        console.log("x",x[0])
+        const dialog= this.dialog.open(AddProductoComponent, {
+          width: '800px',
+          enterAnimationDuration,
+          exitAnimationDuration,
+          data: x[0]
+        });
+        dialog.afterClosed().subscribe(ux => {
+          if (ux!= undefined)
+          this.update(ux)
+      });
      });
-
   }else{
     this._snackBar.open('Debe seleccionar un registro','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
   }
@@ -117,7 +118,7 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','',0,'',0,'','','','','','','','Nuevo')
+      data:new Productos('','','','','','','',0,'',0,'','','','','','','','Nuevo')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

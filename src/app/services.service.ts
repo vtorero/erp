@@ -7,10 +7,11 @@ import { Injectable } from '@angular/core';
 export class ServicesService {
 
   constructor() {}
-  public ruta_a_guardar:string;
+  public ruta_a_guardar:string="";
   public rutas=[];
 
-  add(ruta:string): Array<string> {
+
+  add(ruta:never): Array<string> {
     var a = this.rutas.lastIndexOf(ruta);
     console.log("",a);
     if (this.rutas.lastIndexOf(ruta) == -1) {

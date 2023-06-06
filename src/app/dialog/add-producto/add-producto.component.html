@@ -1,4 +1,4 @@
-<div *ngIf="data.clase!='DelProducto'">
+
     <h1 mat-dialog-title>Agregar Producto</h1>
     <form #formGeneral="ngForm">
     <div mat-dialog-content>
@@ -19,21 +19,12 @@
         </mat-form-field>
       </div>
       <div class="col-12">
-        <mat-form-field appearance="outline">
-          <mat-label>Categoria</mat-label>
-                <mat-select name="id_categoria" #id_categoria="ngModel" (ngModel)="data.id_categoria">
-              <!--<input class="form-control" (keyup)="onKeyCategoria($event.target.value)" placeholder="Buscar categoria..">-->
-            <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Categoria</mat-label>
+        {{id_cate}}
           <input matInput class="form-control" (keyup)="onKeyCategoria($event.target.value)" placeholder="Buscar categoria..">
-          <mat-select>
-
-                      <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">
-              {{cat.nombre}}
-            </mat-option>
+        <mat-form-field appearance="outline">
+          <mat-label>Categoria </mat-label>
+                    <mat-select  [(ngModel)]="data.id_categoria" name="id_categoria" #id_categoria="ngModel"  required>
+                      <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
             </mat-select>
 
         </mat-form-field>
@@ -42,27 +33,26 @@
       <div class="col-12">
           <mat-form-field appearance="outline">
         <mat-label>Sub Categoria</mat-label>
-        <mat-select  [(ngModel)]="data.id_sub_categoria" name="id_subcategoria"  required>
+        <mat-select  [(ngModel)]="data.id_subcategoria" name="id_subcategoria" #id_subcategoria="ngModel" required>
           <mat-option  *ngFor="let subcat of dataSubCategoria" [value]="subcat.id" >
             {{subcat.nombre}}
           </mat-option>
-        </mat-select>
+          </mat-select>
+          <mat-error *ngIf="id_subcategoria.hasError('required')">Seleccionar</mat-error>
       </mat-form-field>
     </div>
     <div class="col-12">
       <mat-form-field appearance="outline">
         <mat-label>Familia</mat-label>
-        <mat-select [(ngModel)]="id_sub_sub_categoria" name="id_sub_sub_categoria" required>
-          <mat-option  *ngFor="let fam of dataFamilia" [value]="fam.id" >
-            {{fam.nombre}}
-          </mat-option>
+        <mat-select [(ngModel)]="data.id_familia" name="id_familia" #id_familia="ngModel" required>
+          <mat-option  *ngFor="let fam of dataFamilia" [value]="fam.id">{{fam.nombre}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div class="col-12">
       <mat-form-field appearance="outline">
         <mat-label>Unidad de medida</mat-label>
-        <mat-select [ngModel]="data.unidad" name="unidad" required>
+        <mat-select [ngModel]="data.unidad" #unidad="ngModel" name="unidad">
           <mat-option  *ngFor="let uni of dataUnidad" [value]="uni.codigo" >
             {{uni.nombre}}
           </mat-option>
@@ -73,8 +63,7 @@
 </div>
 <div class="col-4 justify-content-center">
   <div style="border:solid 1px #ccc;border-radius:10px;padding: 4px;text-align: center;"><img src="../../../assets/img/producto_defecto.png"></div>
-  <input
-      formControlName="file" id="file" type="file" class="form-control" (change)="onFileChange($event)">
+  <!--<input      formControlName="file" id="file" type="file" class="form-control" (change)="onFileChange($event)">-->
    </div>
 </div>
 

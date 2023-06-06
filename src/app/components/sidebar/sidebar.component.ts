@@ -42,7 +42,7 @@ export class SidebarComponent implements OnInit {
   constructor(private _serviceRutas:ServicesService) { }
 
 
-  cargarRuta(ruta:string){
+  cargarRuta(ruta:never){
     console.log("ruta Cargada");
   this._serviceRutas.add(ruta)
 

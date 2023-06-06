@@ -120,7 +120,9 @@ $app->post("/usuario_del",function() use($db,$app){
 
 $app->get("/articulos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT *  FROM productos order by id desc");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad
+    FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
+    right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id;");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
 
@@ -128,6 +130,20 @@ $app->get("/articulos",function() use($db,$app){
         }
         $respuesta=json_encode($prods);
         echo  $respuesta;
+
+    });
+
+
+    $app->get("/articulo/:id",function($id) use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $resultado = $db->query("SELECT p.*,p.id_sub_sub_categoria id_familia FROM productos p  WHERE id={$id}");
+        $prods=array();
+            while ($fila = $resultado->fetch_array()) {
+
+                $prods[]=$fila;
+            }
+            $respuesta=json_encode($prods);
+            echo  $respuesta;
 
     });
 

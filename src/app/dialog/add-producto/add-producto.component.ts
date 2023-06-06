@@ -18,11 +18,11 @@ dataSubCategoria:any;
 dataFamilia:any;
 isLoaded:boolean=false;
 dataArray:any;
-
+response:any;
+id_cate:any;
 
 
   constructor(
-    private toastr: MatSnackBar,
     public dialogRef: MatDialogRef<AddProductoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Productos,
     private api:ApiService
@@ -30,18 +30,26 @@ dataArray:any;
 
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.api.getSelectApi('articulo/',this.data.id).subscribe(x => {
+
+      this.response=x;
+      console.log("this response",this.response[0].id_categoria)
+      this.id_cate=this.response[0].id_categoria;
+    });
+
+
+
     this.getCate();
     this.getSubCategoria();
     this.getFamilia();
     this.getunidad();
-
   }
+
   getCate(): void {
     this.api.getApi('categorias').subscribe(data => {
       if(data) {
         this.dataCategoria = data;
-        console.log(this.dataCategoria)
       }
     } );
   }
@@ -50,7 +58,6 @@ dataArray:any;
     this.api.getApi('sub_categorias').subscribe(data => {
       if(data) {
         this.dataSubCategoria = data;
-
       }
     } );
   }
@@ -59,7 +66,6 @@ dataArray:any;
     this.api.getApi('familia').subscribe(data => {
       if(data) {
         this.dataFamilia = data;
-
       }
     } );
   }
