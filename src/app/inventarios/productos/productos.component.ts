@@ -100,8 +100,8 @@ openBusqueda(){
     enterAnimationDuration,
     exitAnimationDuration,
     data: {
-      clase:'DelProvedor',
-      proveedor:this.selectedRowIndex
+      clase:'DelProducto',
+      producto:this.selectedRowIndex
     },
   });
   dialogo2.afterClosed().subscribe(ux => {
@@ -118,7 +118,7 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','','','',0,'',0,'','','','','','','','Nuevo')
+      data:new Productos('','','','','','','',0,'',0,'','','','Nuevo')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

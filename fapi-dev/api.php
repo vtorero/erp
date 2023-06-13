@@ -148,6 +148,61 @@ $app->get("/articulos",function() use($db,$app){
     });
 
 
+    $app->post("/producto",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+           $json = $app->request->getBody();
+           $j = json_decode($json,true);
+           $data = json_decode($j['json']);
+
+
+            $query = "INSERT INTO `apitest`.`productos`(`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`nombre`,`unidad`)
+             values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->nombre}','{$data->codigo}','{$data->unidad}')";
+            $proceso=$db->query($query);
+            if($proceso){
+           $result = array("STATUS"=>true,"messaje"=>"Producto creada correctamente");
+            }else{
+            $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
+            }
+            echo  json_encode($result);
+        });
+
+
+        $app->put("/producto",function() use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+               $json = $app->request->getBody();
+               $j = json_decode($json,true);
+               $data = json_decode($j['json']);
+
+
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}' WHERE id={$data->id}";
+                $proceso=$db->query($query);
+                if($proceso){
+               $result = array("STATUS"=>true,"messaje"=>"Producto actualizado correctamente");
+                }else{
+                $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
+                }
+                echo  json_encode($result);
+            });
+
+
+            $app->post("/del_producto",function() use($db,$app){
+                header("Content-type: application/json; charset=utf-8");
+                   $json = $app->request->getBody();
+                   $j = json_decode($json,true);
+                   $data = json_decode($j['json']);
+
+                    $query = "DELETE FROM `productos` WHERE id={$data->producto->id}";
+                    $proceso=$db->query($query);
+                    if($proceso){
+                   $result = array("STATUS"=>true,"messaje"=>"Producto eliminado correctamente");
+                    }else{
+                    $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
+                    }
+                    echo  json_encode($result);
+                });
+
+
+
  /*proveedores*/
 
  $app->get("/proveedores",function() use($db,$app){
