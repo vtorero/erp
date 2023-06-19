@@ -96,7 +96,15 @@ id_cate:any;
       }
     });
   }
+  fileEvent(fileInput: Event) {
+    let file = (<HTMLInputElement>fileInput.target).files[0];
 
+    if (file.type == "image/jpeg" || file.type == "image/png") {
+ console.log(file);
+
+      //this.archivo = new Archivo(this.lastPK + 1, file.name, file.type);
+    }
+  }
   cancelar() {
     this.dialogRef.close();
   }
