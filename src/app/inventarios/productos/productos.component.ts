@@ -118,7 +118,7 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','','','',0,'',0,'','','','Nuevo')
+      data:new Productos('','','','','','','',0,'',0,'','','','Nuevo','','')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
@@ -128,6 +128,7 @@ openBusqueda(){
 
   update(art:Productos) {
     if(art){
+      console.log("art",art);
     this.api.EditarProducto(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});

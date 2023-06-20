@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from 'app/api.service';
 import { Productos } from '../../modelos/producto';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-add-producto',
@@ -20,6 +21,11 @@ isLoaded:boolean=false;
 dataArray:any;
 response:any;
 id_cate:any;
+archivo = {
+  nombre: null,
+  nombreArchivo: null,
+  base64textString: null
+}
 
 
   constructor(
@@ -96,17 +102,34 @@ id_cate:any;
       }
     });
   }
-  fileEvent(fileInput: Event) {
-    let file = (<HTMLInputElement>fileInput.target).files[0];
+  seleccionarArchivo(event) {
+    //let file = (<HTMLInputElement>fileInput.target).files[0];
+    var files = event.target.files;
+    var file = files[0];
 
-    if (file.type == "image/jpeg" || file.type == "image/png") {
- console.log(file);
+     this.data.nombre_imagen=file.name;
 
-      //this.archivo = new Archivo(this.lastPK + 1, file.name, file.type);
-    }
+     if(files && file) {
+       var reader = new FileReader();
+       reader.onload = this._handleReaderLoaded.bind(this);
+       reader.readAsBinaryString(file);
+     }
+
+
+
   }
+
+  _handleReaderLoaded(readerEvent) {
+    var binaryString = readerEvent.target.result;
+    //this.archivo.base64textString =
+    this.data.imagen=btoa(binaryString);
+
+  }
+
   cancelar() {
     this.dialogRef.close();
   }
+
+
 
 }

@@ -173,8 +173,15 @@ $app->get("/articulos",function() use($db,$app){
                $j = json_decode($json,true);
                $data = json_decode($j['json']);
 
+               $archivo = $data->imagen;
+               $archivo = base64_decode($archivo);
 
-                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}' WHERE id={$data->id}";
+                $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
+                file_put_contents($filePath, $archivo);
+
+
+
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
                 $proceso=$db->query($query);
                 if($proceso){
                $result = array("STATUS"=>true,"messaje"=>"Producto actualizado correctamente");
