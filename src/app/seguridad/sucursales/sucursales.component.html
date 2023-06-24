@@ -39,18 +39,18 @@
 
                     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
                         <!--  Columna ID-->
-                        <ng-container matColumnDef="nombres">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre Completo</mat-header-cell>
-                              <mat-cell *matCellDef="let row"> {{row.nombres}} </mat-cell>
+                        <ng-container matColumnDef="nombre">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                              <mat-cell *matCellDef="let row"> {{row.nombre}} </mat-cell>
                         </ng-container>
                        <!-- Columna Apellido -->
-                        <ng-container matColumnDef="email">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
-                              <mat-cell *matCellDef="let row">{{row.email}} </mat-cell>
+                        <ng-container matColumnDef="direccion">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>Dirección</mat-header-cell>
+                              <mat-cell *matCellDef="let row">{{row.direccion}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="estado">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
-                          <mat-cell *matCellDef="let row">{{row.estado}} </mat-cell>
+                        <ng-container matColumnDef="telefono">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
+                          <mat-cell *matCellDef="let row">{{row.telefono}} </mat-cell>
                     </ng-container>
 
                           <!-- Columna Nacionalidad -->

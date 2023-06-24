@@ -32,6 +32,12 @@ export class ApiService {
       .get(Global.BASE_API_URL + "api.php/" + ruta, { headers: this.headers })
       .pipe(map((result) => result));
   }
+
+  getApiTabla(criterio){
+    return this._http
+      .get(Global.BASE_API_URL + "api.php/tabla" + criterio, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
 /**usuario  */
 
   loginUser(usuario: string, password: string) {

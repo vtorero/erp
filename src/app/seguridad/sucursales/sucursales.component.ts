@@ -23,7 +23,7 @@ export class SucursalesComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['nombres', 'email', 'estado'];
+  displayedColumns = ['nombre', 'direccion', 'telefono'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -60,7 +60,7 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.listarUsuarios().subscribe(x => {
+    this.api.getApiTabla('/sucursales').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
       this.empTbSort.disableClear = true;

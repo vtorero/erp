@@ -37,6 +37,21 @@ $app->get("/usuarios",function() use($db,$app){
 
     });
 
+    $app->get("/tabla/:tabla",function($tabla) use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $resultado = $db->query("SELECT *  FROM {$tabla} order by id desc");
+        $prods=array();
+            while ($fila = $resultado->fetch_array()) {
+
+                $prods[]=$fila;
+            }
+            $respuesta=json_encode($prods);
+            echo  $respuesta;
+
+        });
+
+
+
 
  $app->delete("/usuario/:id",function($id) use($db,$app){
     header("Content-type: application/json; charset=utf-8");

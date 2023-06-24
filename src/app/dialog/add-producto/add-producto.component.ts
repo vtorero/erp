@@ -21,6 +21,7 @@ isLoaded:boolean=false;
 dataArray:any;
 response:any;
 id_cate:any;
+AddImagen:boolean=false;
 archivo = {
   nombre: null,
   nombreArchivo: null,
@@ -104,13 +105,12 @@ archivo = {
   }
   seleccionarArchivo(event) {
     this.isLoaded=true;
+    this.AddImagen=true;
     var files = event.target.files;
     var file = files[0];
-
-
+    this.data.nombre_imagen=file.name;
      if(files && file) {
-      this.data.nombre_imagen=file.name;
-       var reader = new FileReader();
+             var reader = new FileReader();
        reader.onload = this._handleReaderLoaded.bind(this);
        reader.readAsBinaryString(file);
      }
@@ -121,8 +121,7 @@ archivo = {
 
   _handleReaderLoaded(readerEvent) {
     var binaryString = readerEvent.target.result;
-    //this.archivo.base64textString =
-    this.data.imagen=btoa(binaryString);
+     this.data.imagen=btoa(binaryString);
 
   }
 
