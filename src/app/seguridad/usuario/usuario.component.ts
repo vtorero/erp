@@ -112,8 +112,6 @@ openBusqueda(){
    });
 
 }
-
-
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
     const dialogo1 =this.dialog.open(OpenDialogComponent, {
       width: '400px',
