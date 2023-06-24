@@ -48,5 +48,4 @@ export class AddClienteComponent implements OnInit {
   cancelar() {
     this.dialogRef.close();
   }
-
 }

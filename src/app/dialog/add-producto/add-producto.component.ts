@@ -114,9 +114,6 @@ archivo = {
        reader.onload = this._handleReaderLoaded.bind(this);
        reader.readAsBinaryString(file);
      }
-
-
-
   }
 
   _handleReaderLoaded(readerEvent) {
