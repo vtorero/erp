@@ -77,7 +77,6 @@ openBusqueda(){
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
       this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
-        console.log("x",x[0])
         const dialog= this.dialog.open(AddProductoComponent, {
           width: '800px',
           enterAnimationDuration,

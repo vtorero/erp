@@ -103,13 +103,13 @@ archivo = {
     });
   }
   seleccionarArchivo(event) {
-    //let file = (<HTMLInputElement>fileInput.target).files[0];
+    this.isLoaded=true;
     var files = event.target.files;
     var file = files[0];
 
-     this.data.nombre_imagen=file.name;
 
      if(files && file) {
+      this.data.nombre_imagen=file.name;
        var reader = new FileReader();
        reader.onload = this._handleReaderLoaded.bind(this);
        reader.readAsBinaryString(file);
