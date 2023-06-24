@@ -31,7 +31,6 @@ constructor(private api:ApiService,  private fb:FormBuilder,
 
         estado:['',Validators.required],
       });
-
     }
   getProductos(): void {
     this.api.getApi('productos').subscribe(data => {
