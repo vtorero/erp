@@ -4,7 +4,6 @@
 mat-row.hovered {
     background: rgb(146, 107, 107);
 }
-
 mat-row.highlighted {
   background: #999;
 }
