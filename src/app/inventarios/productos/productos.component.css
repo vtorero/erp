@@ -7,3 +7,5 @@ mat-row.hovered {
 mat-row.highlighted {
   background: #999;
 }
+mat-header-cell{font-size: 11px; font-weight: 700;}
+mat-cell{font-size: 12px;}
