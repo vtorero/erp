@@ -205,6 +205,13 @@ public delProducto(datos: Productos): Observable<any> {
   );
 }
 
+public BuscarProducto(criterio:string): Observable<any> {
+
+  //return this._http.get<Categoria[]>(Global.BASE_API_URL + 'api.php/categorias', { headers: this.headers });
+  return this._http.get(Global.BASE_API_URL + 'api.php/articulos/' + criterio, { headers: this.headers });
+}
+
+
 /*Apis usuarios*/
 
 

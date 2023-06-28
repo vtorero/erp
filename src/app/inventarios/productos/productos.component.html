@@ -67,6 +67,10 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>Unidad</mat-header-cell>
               <mat-cell *matCellDef="let row">{{row.unidad}} </mat-cell>
         </ng-container>
+        <ng-container matColumnDef="precio">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let row"> S/ {{row.precio}} </mat-cell>
+    </ng-container>
 
                         <!-- Columna Nacionalidad -->
 

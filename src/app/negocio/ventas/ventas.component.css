@@ -1,2 +1,15 @@
+.container-fluid{
+    background-color: white !important;
+}
 mat-header-cell{font-size: 11px; font-weight: 700;}
+
 mat-cell{font-size: 12px;}
+
+mat-spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0 auto;
+    }
+

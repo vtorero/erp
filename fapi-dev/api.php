@@ -132,10 +132,26 @@ $app->post("/usuario_del",function() use($db,$app){
 
 });
 /*productos*/
+$app->get("/articulos/:criterio",function($criterio) use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.imagen
+    FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
+    right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id where p.nombre like '%{$criterio}%' order by id;");
+    $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo  $respuesta;
+
+    });
+
+
 
 $app->get("/articulos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen
     FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
     right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id;");
     $prods=array();
@@ -191,12 +207,17 @@ $app->get("/articulos",function() use($db,$app){
                $archivo = $data->imagen;
                $archivo = base64_decode($archivo);
 
+               if(isset($data->nombre_imagen)){
                 $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
                 file_put_contents($filePath, $archivo);
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio},imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
+            }else{
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio} WHERE id={$data->id}";
+            }
 
 
 
-                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
+
                 $proceso=$db->query($query);
                 if($proceso){
                $result = array("STATUS"=>true,"messaje"=>"Producto actualizado correctamente");

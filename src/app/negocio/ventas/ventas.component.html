@@ -3,7 +3,19 @@
 <div class="container-fluid">
     <div class="row">
       <div class="col-6">
-        One of three columns
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar producto</mat-label>
+          <input matInput width="500" placeholder="Buscar producto"(keyup)="applyFilter($event.target.value)">
+       </mat-form-field>
+
+<div class="row">
+  <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
+      <div class="col-12 col-md-4 col-lg-4" *ngFor="let item of dataSource; let i=index">
+        <img src="http://35.231.78.51/erp-api/upload/{{item.imagen}}"><br>
+        {{item.nombre}}
+
+      </div>
+    </div>
       </div>
       <div class="col-6">
         One of three columns
