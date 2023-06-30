@@ -7,12 +7,15 @@
           <mat-label>Buscar producto</mat-label>
           <input matInput width="500" placeholder="Buscar producto"(keyup)="applyFilter($event.target.value)">
        </mat-form-field>
-
-<div class="row">
-  <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
-      <div class="col-12 col-md-4 col-lg-4" *ngFor="let item of dataSource; let i=index">
-        <img src="http://35.231.78.51/erp-api/upload/{{item.imagen}}"><br>
-        {{item.nombre}}
+       <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
+<div class="row" *ngIf="!loading">
+  
+      <div class="col-12 col-md-4 col-lg-4 position-relative" *ngFor="let item of dataSource; let i=index" style="height: 160px;">
+         <div class="imagen">
+          <img src="http://35.231.78.51/erp-api/upload/{{item.imagen}}" width="160"><br>
+        </div>
+       <div class="titulo position-absolute">{{item.nombre}}</div>
+        
 
       </div>
     </div>
