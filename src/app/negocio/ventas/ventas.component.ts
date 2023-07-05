@@ -4,6 +4,8 @@ import { filter, finalize, map } from 'rxjs';
 import { ApiService } from 'app/api.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { NumberSymbol } from '@angular/common';
+import { DataRowOutlet } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-ventas',
@@ -15,6 +17,7 @@ export class VentasComponent implements OnInit {
   selectedRowIndex:any;
   dataSource: any;
   loading:boolean=false;
+  dataRecibo:any[]
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(
@@ -59,6 +62,16 @@ applyFilter(filterValue: string) {
   this.loading=false
 }
 
+}
+
+enviarProducto(id:number,nombre:string,precio:number){
+  console.log(id);
+  console.log(nombre);
+  console.log(precio)
+  var numbers = new Array(id,precio);
+
+  this.dataRecibo=numbers
+  console.log(this.dataRecibo)
 }
 
 

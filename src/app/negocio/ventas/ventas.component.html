@@ -8,20 +8,64 @@
           <input matInput width="500" placeholder="Buscar producto"(keyup)="applyFilter($event.target.value)">
        </mat-form-field>
        <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
-<div class="row" *ngIf="!loading">
-  
-      <div class="col-12 col-md-4 col-lg-4 position-relative" *ngFor="let item of dataSource; let i=index" style="height: 160px;">
+       <div class="resultado">
+       <div class="row" *ngIf="!loading">
+
+      <div class="col-12 col-md-4 col-lg-4 position-relative"  (click)="enviarProducto(item.id,item.nombre,item.precio)" *ngFor="let item of dataSource; let i=index" style="height: 220px;cursor: pointer;">
+        <div class="precio"><div class="texto">S/ {{item.precio}}</div></div>
          <div class="imagen">
           <img src="http://35.231.78.51/erp-api/upload/{{item.imagen}}" width="160"><br>
         </div>
        <div class="titulo position-absolute">{{item.nombre}}</div>
-        
-
       </div>
+    </div>
     </div>
       </div>
       <div class="col-6">
-        One of three columns
+        <div class="card-body">
+          <div class="table-responsive">
+              <table class="table">
+                  <thead class=" text-primary">
+                      <th>
+                          Codigo
+                      </th>
+                      <th>
+                          Producto
+                      </th>
+                      <th>
+                          Cantidad
+                      </th>
+                      <th>
+                          Precio
+                      </th>
+                      <th>
+                          Total
+                      </th>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let item of dataRecibo; let i=index">
+                          <td>
+                              {{item[0]}}
+                          </td>
+                          <td>
+                              {{item.nombre}}
+                          </td>
+                          <td>
+                              S/ {{item[1]}}
+                          </td>
+                          <td>
+
+                          </td>
+                          <td class="text-primary">
+                              S/ {{item.precio}}
+                          </td>
+                      </tr>
+
+
+                  </tbody>
+              </table>
+          </div>
+      </div>
       </div>
     </div>
   </div>

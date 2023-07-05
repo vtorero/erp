@@ -134,7 +134,7 @@ $app->post("/usuario_del",function() use($db,$app){
 /*productos*/
 $app->get("/articulos/:criterio",function($criterio) use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.imagen
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen
     FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
     right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id where p.nombre like '%{$criterio}%' order by id;");
     $prods=array();
