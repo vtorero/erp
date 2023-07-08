@@ -43,15 +43,15 @@
                       </th>
                   </thead>
                   <tbody>
-                      <tr *ngFor="let item of dataRecibo; let i=index">
+                      <tr *ngFor="let item of dataTabla; let i=index">
                           <td>
-                              {{item[0]}}
+                              {{item.id}}
                           </td>
                           <td>
                               {{item.nombre}}
                           </td>
                           <td>
-                              S/ {{item[1]}}
+                              S/ {{item.precio}}
                           </td>
                           <td>
 

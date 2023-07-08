@@ -7,12 +7,19 @@ import { Usuario } from "./modelos/usuario";
 import { Clientes } from './modelos/clientes';
 import { Productos } from './modelos/producto';
 import { Categoria } from "./modelos/categoria";
+import { Details } from './modelos/details';
+
+
+
 
 @Injectable({
   providedIn: "root",
 })
+
 export class ApiService {
+
   constructor(public _http: HttpClient) {}
+  public articulos=[];
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
@@ -211,6 +218,15 @@ public BuscarProducto(criterio:string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/articulos/' + criterio, { headers: this.headers });
 }
 
+
+addLinea(elemento:Details){
+this.articulos.push(elemento);
+return this.getLinea()
+}
+
+getLinea(){
+  return this.articulos;
+}
 
 /*Apis usuarios*/
 
