@@ -40,6 +40,7 @@ export class VentasComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderDataTable()
+    this.dataTabla = this.api.getLinea();
   }
 
 
