@@ -1,3 +1,32 @@
+.flex-container {
+    /* We first create a flex layout context */
+    display: flex;
+
+    /* Then we define the flow direction
+       and if we allow the items to wrap
+     * Remember this is the same as:
+     * flex-direction: row;
+     * flex-wrap: wrap;
+     */
+    flex-flow: row wrap;
+
+    /* Then we define how is distributed the remaining space */
+    justify-content: space-around;
+
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .flex-item {
+    padding: 5px;
+    width: 150px;
+    height: 240px;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+
 .container-fluid{
     background-color: white !important;
 }
@@ -16,9 +45,9 @@
 }
 
 .titulo{
-    top: 110px;
+    top: 10px;
     text-align: center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.4);
     /* opacity: 0.4; */
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -27,26 +56,23 @@
     font-weight: bold;
     height: 70px !IMPORTANT;
     display: block;
-    WIDTH: 140px;
     color: white;
-    margin-left: 30px;
+    margin:0 auto;
 }
 .precio{
-    text-align: right;
-    padding-right: 85px;
+    text-align: center;
     font-weight: bold;
 }
 .precio .texto{
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.6);
     width: 90px;
     text-align: center;
-    float: right;
     border-radius: 5px;
     color: white;
 }
 
 .imagen{
-    margin-left: 30px;
+    margin:10px auto;
 }
 mat-header-cell{font-size: 11px; font-weight: 700;}
 
