@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component,  OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'app/api.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Details } from '../../modelos/details';
-import { MatTableDataSource } from '@angular/material/table';
+
 
 
 
@@ -30,7 +30,7 @@ export class VentasComponent implements OnInit {
   exampleArray: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
-  displayedColumns = ['id', 'nombre', 'precio'];
+  displayedColumns = ['id', 'nombre','precio'];
 
   constructor(
 
