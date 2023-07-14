@@ -1,3 +1,7 @@
+.table td{
+    font-size: 11px;
+}
+
 .flex-container {
     /* We first create a flex layout context */
     display: flex;
@@ -29,6 +33,16 @@
 
 .container-fluid{
     background-color: white !important;
+}
+
+.boleta{
+    overflow: auto; /*// you can use 'overflow: scroll;' and always have reserved space for scrollabar*/
+    overflow-x: hidden;
+    height: 65vh;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 }
 
 .resultado{

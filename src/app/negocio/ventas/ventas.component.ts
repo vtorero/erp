@@ -81,7 +81,7 @@ applyFilter(filterValue: string) {
 
 
 enviarProducto(id:string,nombre:string,precio:number){
-const ele = new Details(id,nombre,precio)
+const ele = new Details(id,nombre,1,precio)
   this.api.addLinea(ele)
   this.dataTabla = this.api.getLinea();
   console.log(this.dataTabla)
