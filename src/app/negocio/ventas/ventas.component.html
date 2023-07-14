@@ -10,11 +10,9 @@
        <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
        <div class="resultado">
        <ul class="flex-container" *ngIf="!loading">
-      <li class="flex-item" (click)="enviarProducto(item.id,item.nombre,item.precio)" *ngFor="let item of dataSource; let i=index" style="cursor: pointer;">
+      <li class="flex-item" (click)="enviarProducto(item.id,item.nombre,item.precio)" *ngFor="let item of dataSource; let i=index"
+       style="cursor: pointer;background-image: url(http://35.231.78.51/erp-api/upload/{{item.imagen}});background-size: 90%;background-repeat: no-repeat;">
         <div class="precio"><div class="texto">S/ {{item.precio}}</div></div>
-         <div class="imagen">
-          <img src="http://35.231.78.51/erp-api/upload/{{item.imagen}}" width="160"><br>
-        </div>
        <div class="titulo">{{item.nombre}}</div>
        </li>
     </ul>

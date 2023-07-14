@@ -20,9 +20,9 @@
 
   .flex-item {
     padding: 5px;
-    width: 150px;
-    height: 240px;
-    margin-top: 20px;
+    width: 155px;
+    height: 160px;
+    margin-top: 5px;
     text-align: center;
   }
 
@@ -48,27 +48,29 @@
     top: 10px;
     text-align: center;
     background-color: rgba(0,0,0,0.4);
-    /* opacity: 0.4; */
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    font-size: 13px;
-    line-height: 26px;
-    font-weight: bold;
-    height: 70px !IMPORTANT;
+    font-size: 11px;
+    line-height: 18px;
+    height: 70px !important;
     display: block;
     color: white;
-    margin:0 auto;
+    margin: 50px auto;
+    font-weight: 600;
+    padding-top: 5px;
 }
 .precio{
     text-align: center;
-    font-weight: bold;
+    font-size: 12px;
+  
 }
 .precio .texto{
     background: rgba(0,0,0,0.6);
-    width: 90px;
+    width: 67px;
     text-align: center;
     border-radius: 5px;
     color: white;
+    margin:0 auto;
 }
 
 .imagen{
