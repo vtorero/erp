@@ -3,8 +3,17 @@ import { ApiService } from 'app/api.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Details } from '../../modelos/details';
+import { AddProductoComponent } from 'app/dialog/add-producto/add-producto.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ModPrecioComponent } from '../../dialog/mod-precio/mod-precio.component';
 
 
+interface Elemento {
+  id:number;
+  nombre: string;
+  cantidad: number;
+  precio:number;
+}
 
 
 
@@ -26,14 +35,14 @@ export class VentasComponent implements OnInit {
   dataTabla:any;
   dataToDisplay = [];
   loading:boolean=false;
-  dataRecibo:Array<Details>;
+  dataRecibo:Details[] = []
   exampleArray: any[] = [];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   displayedColumns = ['id', 'nombre','precio'];
 
   constructor(
-
+    public dialog: MatDialog,
     private api: ApiService,
 
   ) { }
@@ -78,14 +87,59 @@ applyFilter(filterValue: string) {
 }
 
 }
-
-
-enviarProducto(id:string,nombre:string,precio:number){
-const ele = new Details(id,nombre,1,precio)
-  this.api.addLinea(ele)
-  this.dataTabla = this.api.getLinea();
-  console.log(this.dataTabla)
+existeElemento(array: Details[], elemento: Details): boolean {
+  return array.some(item => item.id === elemento.id);
 }
 
+sumarCantidadSiExiste(array: Details[], elemento: Details, cantidad: number): void {
+  if (this.existeElemento(array, elemento)) {
+    // Si el elemento ya existe, sumarle la cantidad
+    array.forEach(item => {
+      if (item.id === elemento.id) {
+        item.cantidad += cantidad;
+      }
+    });
+  } else {
+    // Si el elemento no existe, agregarlo al array
+    array.push({ id:elemento.id,nombre:elemento.nombre,precio:elemento.precio,cantidad: cantidad });
+  }
+    // Si el elemento no existe, agregarlo al array
+
+  }
+
+
+
+enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad},1);
+ console.log("datarecob",this.dataRecibo)
+}
+
+
+openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number){
+  const dialogo2=this.dialog.open(ModPrecioComponent, {
+    width: 'auto',
+    enterAnimationDuration,
+    exitAnimationDuration,
+    data: {
+      clase:'modPrecio',
+      producto:id,
+      precio:precio
+    },
+  });
+  dialogo2.afterClosed().subscribe(ux => {
+    console.log("dddd",ux);
+    console.log("array",this.dataRecibo);
+
+    this.dataRecibo.map(function(dato){
+      console.log(precio)
+      if(dato.id == id){
+        dato.precio = ux.precio
+      }
+   });
+
+
+   });
+
+}
 
 }

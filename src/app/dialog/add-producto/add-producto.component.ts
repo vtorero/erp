@@ -39,7 +39,6 @@ archivo = {
 
   ngOnInit() {
     this.api.getSelectApi('articulo/',this.data.id).subscribe(x => {
-
       this.response=x;
       console.log("this response",this.response[0].id_categoria)
       this.id_cate=this.response[0].id_categoria;
