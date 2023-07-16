@@ -6,6 +6,8 @@ import { Details } from '../../modelos/details';
 import { AddProductoComponent } from 'app/dialog/add-producto/add-producto.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ModPrecioComponent } from '../../dialog/mod-precio/mod-precio.component';
+import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.component';
+import { ThisReceiver } from '@angular/compiler';
 
 
 interface Elemento {
@@ -33,6 +35,7 @@ export class VentasComponent implements OnInit {
   selectedRowIndex:any;
   dataSource: any;
   dataTabla:any;
+  totalMonto:number=0;
   dataToDisplay = [];
   loading:boolean=false;
   dataRecibo:Details[] = []
@@ -98,46 +101,65 @@ sumarCantidadSiExiste(array: Details[], elemento: Details, cantidad: number): vo
       if (item.id === elemento.id) {
         item.cantidad += cantidad;
       }
+
     });
   } else {
     // Si el elemento no existe, agregarlo al array
     array.push({ id:elemento.id,nombre:elemento.nombre,precio:elemento.precio,cantidad: cantidad });
+
   }
+  this.sumarMonto(array)
     // Si el elemento no existe, agregarlo al array
 
   }
 
-
+  sumarMonto(array: Details[]){
+    this.totalMonto=0;
+ array.forEach(item =>{this.totalMonto+=item.cantidad*item.precio})
+  }
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad},1);
  console.log("datarecob",this.dataRecibo)
+
+}
+
+cancelar() {
+  this.dialog.closeAll();
+
 }
 
 
 openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number){
-  const dialogo2=this.dialog.open(ModPrecioComponent, {
-    width: 'auto',
-    enterAnimationDuration,
-    exitAnimationDuration,
-    data: {
-      clase:'modPrecio',
-      producto:id,
-      precio:precio
-    },
+  const dialogo2=this.dialog.open(ModPrecioComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modPrecio',producto:id,precio:precio},
   });
-  dialogo2.afterClosed().subscribe(ux => {
-    console.log("dddd",ux);
-    console.log("array",this.dataRecibo);
-
+   dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){
-      console.log(precio)
       if(dato.id == id){
+        if(ux.precio!=precio){
         dato.precio = ux.precio
       }
+      }
    });
+   this.sumarMonto(this.dataRecibo)
+  });
 
+}
 
+openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number){
+  const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modCantidad',producto:id,cantidad:cantidad},
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    this.dataRecibo.map(function(dato){
+      if(dato.id == id){
+        if(ux.cantidad!=cantidad){
+        dato.cantidad = ux.cantidad
+      }
+      }
+   });
+   this.sumarMonto(this.dataRecibo)
    });
 
 }

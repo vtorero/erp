@@ -49,10 +49,10 @@
                               {{item.nombre}}
                           </td>
                           <td>
-                            {{item.cantidad}}
+                            <a style="cursor:pointer;" (click)="openCantidad('20ms','20ms',item.id,item.cantidad)">{{item.cantidad}}</a>
                           </td>
                           <td>
-                            S/ <a style="cursor:pointer;" (click)="openPrecio('20ms','20ms',item.id,item.precio)">{{item.precio}}</a>
+                             <a style="cursor:pointer;" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.precio}}</a>
                           </td>
                           <td class="text-primary">
                               S/ {{item.cantidad * item.precio}}
@@ -63,6 +63,7 @@
                   </tbody>
               </table>
           </div>
+          {{totalMonto}}
       </div>
       </div>
     </div>
