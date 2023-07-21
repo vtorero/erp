@@ -23,6 +23,7 @@ import { MainInventarioComponent } from './inventarios/main-inventario/main-inve
 import { AddProductoComponent } from './dialog/add-producto/add-producto.component';
 import { ModPrecioComponent } from './dialog/mod-precio/mod-precio.component';
 import { ModCantidadComponent } from './dialog/mod-cantidad/mod-cantidad.component';
+import { ModDescuentoComponent } from './dialog/mod-descuento/mod-descuento.component';
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { ModCantidadComponent } from './dialog/mod-cantidad/mod-cantidad.compone
      AddProductoComponent,
      ModPrecioComponent,
      ModCantidadComponent,
+     ModDescuentoComponent,
 
 
 

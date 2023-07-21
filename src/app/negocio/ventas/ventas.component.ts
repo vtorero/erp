@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModPrecioComponent } from '../../dialog/mod-precio/mod-precio.component';
 import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.component';
 import { ThisReceiver } from '@angular/compiler';
+import { element } from 'protractor';
+import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 
 
 interface Elemento {
@@ -15,6 +17,7 @@ interface Elemento {
   nombre: string;
   cantidad: number;
   precio:number;
+  descuento:number
 }
 
 
@@ -94,7 +97,7 @@ existeElemento(array: Details[], elemento: Details): boolean {
   return array.some(item => item.id === elemento.id);
 }
 
-sumarCantidadSiExiste(array: Details[], elemento: Details, cantidad: number): void {
+sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,desc: number): void {
   if (this.existeElemento(array, elemento)) {
     // Si el elemento ya existe, sumarle la cantidad
     array.forEach(item => {
@@ -105,7 +108,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Details, cantidad: number): vo
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,precio:elemento.precio,cantidad: cantidad });
+    array.push({ id:elemento.id,nombre:elemento.nombre,cantidad:cantidad,precio:elemento.precio,descuento:desc});
 
   }
   this.sumarMonto(array)
@@ -119,7 +122,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Details, cantidad: number): vo
   }
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad},1);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,descuento:0},1,0);
  console.log("datarecob",this.dataRecibo)
 
 }
@@ -129,10 +132,9 @@ cancelar() {
 
 }
 
-
-openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number){
-  const dialogo2=this.dialog.open(ModPrecioComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-  data: {clase:'modPrecio',producto:id,precio:precio},
+openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
+  const dialogo2=this.dialog.open(ModDescuentoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modPrecio',producto:id,precio:precio,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){
@@ -147,9 +149,28 @@ openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:numb
 
 }
 
-openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number){
+
+
+openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
+  const dialogo2=this.dialog.open(ModPrecioComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modPrecio',producto:id,precio:precio,nombre:nombre},
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    this.dataRecibo.map(function(dato){
+      if(dato.id == id){
+        if(ux.precio!=precio){
+        dato.precio = ux.precio
+      }
+      }
+   });
+   this.sumarMonto(this.dataRecibo)
+  });
+
+}
+
+openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
   const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-  data: {clase:'modCantidad',producto:id,cantidad:cantidad},
+  data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){

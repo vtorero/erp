@@ -1,6 +1,15 @@
 .table td{
     font-size: 11px;
 }
+.numero_edicion{
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: darkblue;
+
+}
 
 .flex-container {
     /* We first create a flex layout context */
@@ -76,7 +85,7 @@
 .precio{
     text-align: center;
     font-size: 12px;
-  
+
 }
 .precio .texto{
     background: rgba(0,0,0,0.6);

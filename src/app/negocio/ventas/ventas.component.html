@@ -37,6 +37,9 @@
                           Precio
                       </th>
                       <th>
+                        % Descuento
+                    </th>
+                      <th>
                           Total
                       </th>
                   </thead>
@@ -49,11 +52,14 @@
                               {{item.nombre}}
                           </td>
                           <td>
-                            <a style="cursor:pointer;" (click)="openCantidad('20ms','20ms',item.id,item.cantidad)">{{item.cantidad}}</a>
+                            <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad}}</a>
+                          </td>
+                         <td>
+                             <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.precio}}</a>
                           </td>
                           <td>
-                             <a style="cursor:pointer;" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.precio}}</a>
-                          </td>
+                            <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.descuento}}</a>
+                         </td>
                           <td class="text-primary">
                               S/ {{item.cantidad * item.precio}}
                           </td>
