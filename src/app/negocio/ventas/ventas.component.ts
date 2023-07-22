@@ -137,10 +137,12 @@ openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:n
   data: {clase:'modPrecio',producto:id,precio:precio,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
+    console.log("ux",ux)
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
-        if(ux.precio!=precio){
-        dato.precio = ux.precio
+        if(ux.descuento>0){
+        dato.precio = ux.precio-(ux.precio*(ux.descuento/100));
+        dato.descuento=ux.descuento;
       }
       }
    });

@@ -55,10 +55,10 @@
                             <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad}}</a>
                           </td>
                          <td>
-                             <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.precio}}</a>
+                             <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio}}</a>
                           </td>
                           <td>
-                            <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio)">S/ {{item.descuento}}</a>
+                            <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">% {{item.descuento}}</a>
                          </td>
                           <td class="text-primary">
                               S/ {{item.cantidad * item.precio}}

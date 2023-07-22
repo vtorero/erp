@@ -1,1 +1,13 @@
-<p>mod-descuento works!</p>
+<small>{{data.nombre}}</small>
+<mat-form-field appearance="outline">
+    <mat-label>% Descuento</mat-label>
+      <input matInput [(ngModel)]="data.descuento" name="descuento" type="number">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Total</mat-label>
+          <input matInput  readonly name="total" type="number">
+        </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data"  cdkFocusInitial>Actualizar</button>
+    </div>
