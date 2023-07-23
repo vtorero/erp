@@ -5,11 +5,20 @@ import { Router } from '@angular/router';
 import { ApiService } from 'app/api.service';
 
 
+
+function activarEnvio(event){
+  console.log(event)
+
+  }
+
 @Component({
   selector: 'app-accesos',
   templateUrl: './accesos.component.html',
   styleUrls: ['./accesos.component.css']
 })
+
+
+
 
 
 
@@ -40,7 +49,7 @@ this.loginUser(usuario,password)
 
 }else{
 this.error();
-this.form.reset()
+//this.form.reset()
 
 }
 }
@@ -53,6 +62,7 @@ setTimeout(() => {
 }, 1500)
 
 }
+
 
 loginUser(usuario,password){
   this.loading=true;

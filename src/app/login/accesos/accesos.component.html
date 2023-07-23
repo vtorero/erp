@@ -1,3 +1,4 @@
+
 <div class="body">
     <div style="display:block"><mat-spinner *ngIf="loading" diameter="100"></mat-spinner></div>
     <mat-card *ngIf="!loading">
@@ -19,7 +20,8 @@
             <mat-icon matSuffix></mat-icon>
             <mat-hint></mat-hint>
         </mat-form-field>
-        <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Ingresar</button>
+        <div class="g-recaptcha mb-10" data-sitekey="6LeXLUonAAAAAE01suSHv1GYg7C8aIf2qD5Jfl-v" data-callback="enabledSubmit"></div>
+        <button class="btn btn-primary mt-2"  name="enviar" id="enviar" type="submit" color="primary" disabled>Ingresar</button>
       </form>
     </mat-card-content>
       </mat-card>
