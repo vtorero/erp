@@ -8,7 +8,7 @@ import { Details } from 'app/modelos/details';
   styleUrls: ['./mod-descuento.component.css']
 })
 export class ModDescuentoComponent implements OnInit {
-
+descuentoTotal:number=0;
   constructor(
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Details) {
@@ -20,6 +20,12 @@ export class ModDescuentoComponent implements OnInit {
   cancelar() {
 
     this.dialog.closeAll();
+
+  }
+
+  cambiaDescuento(descuento:number,precio:number){
+    console.log(descuento)
+this.descuentoTotal=precio-(precio*descuento/100);
 
   }
 

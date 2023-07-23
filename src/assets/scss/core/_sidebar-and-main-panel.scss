@@ -10,7 +10,7 @@
     bottom: 0;
     left: 0;
     z-index: 2;
-    width: 260px;
+    width: 160px;
     background: $white-color;
     @include shadow-big();
 
@@ -46,7 +46,7 @@
         position: relative;
         height: calc(100vh - 75px);
         overflow: auto;
-        width: 260px;
+        width: 160px;
         z-index: 4;
 
         padding-bottom: 30px;
@@ -468,7 +468,7 @@
         }
 
         .sidebar:hover{
-            width: 260px;
+            width: 160px;
 
             .logo{
                 a.logo-normal{
@@ -478,7 +478,7 @@
             }
 
             .sidebar-wrapper{
-                width: 260px;
+                width: 160px;
 
                 > .nav li > a p,
                 > .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-normal,

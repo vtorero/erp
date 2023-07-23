@@ -1,11 +1,11 @@
 <small>{{data.nombre}}</small>
 <mat-form-field appearance="outline">
     <mat-label>% Descuento</mat-label>
-      <input matInput [(ngModel)]="data.descuento" name="descuento" type="number">
+      <input matInput [(ngModel)]="data.descuento" (change)="cambiaDescuento(data.precio,data.descuento)" name="descuento" type="number">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Total</mat-label>
-          <input matInput  readonly name="total" type="number">
+          <input matInput  [(ngModel)]="descuentoTotal" readonly name="total" type="number">
         </mat-form-field>
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>

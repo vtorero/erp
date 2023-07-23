@@ -84,7 +84,6 @@ applyFilter(filterValue: string) {
   this.api.BuscarProducto(filterValue).subscribe(x => {
     this.dataSource=x;
     this.loading=false
-
   }
   )
 }else{
@@ -120,6 +119,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     this.totalMonto=0;
  array.forEach(item =>{this.totalMonto+=item.cantidad*item.precio})
   }
+
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,descuento:0},1,0);

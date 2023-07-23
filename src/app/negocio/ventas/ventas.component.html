@@ -42,6 +42,9 @@
                       <th>
                           Total
                       </th>
+                      <th>
+                        Eliminar
+                    </th>
                   </thead>
                   <tbody>
                       <tr *ngFor="let item of dataRecibo; let i=index">
@@ -63,13 +66,21 @@
                           <td class="text-primary">
                               S/ {{item.cantidad * item.precio}}
                           </td>
+                          <td class="text-primary">
+                            <button mat-icon-button color="primary" aria-label="Eliminar">
+                              <i class="material-icons">delete</i>
+                            </button>
+                        </td>
                       </tr>
 
 
                   </tbody>
               </table>
           </div>
-          {{totalMonto}}
+         <div class="row">
+<div class="col-6">usuario:</div>
+<div class="col-6 text-right">Total:<b>S/ {{totalMonto}}</b></div>
+         </div> 
       </div>
       </div>
     </div>
