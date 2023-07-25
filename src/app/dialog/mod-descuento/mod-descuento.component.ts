@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Details } from 'app/modelos/details';
+import { ApiService } from '../../api.service';
 
 @Component({
   selector: 'app-mod-descuento',
@@ -9,13 +10,16 @@ import { Details } from 'app/modelos/details';
 })
 export class ModDescuentoComponent implements OnInit {
 descuentoTotal:number=0;
+
   constructor(
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: Details) {
+    @Inject(MAT_DIALOG_DATA) public data: Details,
+    ) {
 
      }
 
   ngOnInit(): void {
+
   }
   cancelar() {
 
@@ -25,8 +29,10 @@ descuentoTotal:number=0;
 
   cambiaDescuento(descuento:number,precio:number){
     console.log(descuento)
-this.descuentoTotal=precio-(precio*descuento/100);
-
+     this.descuentoTotal=(descuento/100);
   }
+
+
+
 
 }

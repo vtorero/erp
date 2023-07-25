@@ -10,6 +10,7 @@ import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.com
 import { ThisReceiver } from '@angular/compiler';
 import { element } from 'protractor';
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
+import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 
 
 interface Elemento {
@@ -20,6 +21,10 @@ interface Elemento {
   descuento:number
 }
 
+interface Sucursal{
+  id:number;
+  nombre:string
+}
 
 
 
@@ -32,10 +37,9 @@ interface Elemento {
 
 
 export class VentasComponent implements OnInit {
-
-
-
   selectedRowIndex:any;
+  usuario:string;
+  sucursal:string='';
   dataSource: any;
   dataTabla:any;
   totalMonto:number=0;
@@ -54,6 +58,8 @@ export class VentasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.openTerminal('20ms','20ms');
+    this.usuario=localStorage.getItem("currentNombre");
     this.renderDataTable()
     this.dataTabla = this.api.getLinea();
   }
@@ -186,5 +192,16 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
    });
 
 }
+
+openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
+  const dialogo2=this.dialog.open(SelecTerminalComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {},
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    console.log(ux.id);
+    this.sucursal=ux.id
+    localStorage.setItem("sucursal",ux.id)
+   });
+  }
 
 }

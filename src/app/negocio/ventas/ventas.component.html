@@ -1,6 +1,6 @@
 <div class="content">
   <app-barratareas></app-barratareas>
-<div class="container-fluid">
+<div class="container-fluid" *ngIf="sucursal!=''">
     <div class="row">
       <div class="col-6">
         <mat-form-field appearance="outline">
@@ -78,9 +78,9 @@
               </table>
           </div>
          <div class="row">
-<div class="col-6">usuario:</div>
-<div class="col-6 text-right">Total:<b>S/ {{totalMonto}}</b></div>
-         </div> 
+<div class="col-6"><b>Usuario: {{usuario}} / Sucursal:</b></div>
+<div class="col-6 text-right"><b>Total:S/ {{totalMonto}}</b></div>
+         </div>
       </div>
       </div>
     </div>

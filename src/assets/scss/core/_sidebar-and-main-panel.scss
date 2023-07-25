@@ -192,11 +192,11 @@
         }
 
         i{
-            font-size: 24px;
+            font-size: 20px;
             float: left;
-            margin-right: 15px;
+            margin-right: 0px;
             line-height: 30px;
-            width: 30px;
+            width: 22px;
             text-align: center;
             color: #a9afbb;
         }
@@ -204,7 +204,7 @@
 
     .nav li a,
     .nav li .dropdown-menu a{
-          margin: 10px 15px 0;
+          margin: 10px 5px 0;
           border-radius: $border-radius-base;
           color: $black-color;
           padding-left: 10px;
