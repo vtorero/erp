@@ -1,6 +1,8 @@
+<form #formGeneral="ngForm">
 <div class="row">
     <div class="col-12 text-left">Seleccionar Terminal</div>
     <div class="col-12">
+
         <mat-form-field appearance="outline">
             <mat-label>Terminal</mat-label>
             <mat-select matInput matInput [(ngModel)]="data.id" name="id" required>
@@ -9,13 +11,13 @@
                 {{subcat.nombre}}
               </mat-option>
               </mat-select>
-              <!--<mat-error *ngIf="id_subcategoria.hasError('required')">Seleccionar</mat-error>-->
           </mat-form-field>
-    </div>
-    <div class="col-12 text-right">
-        <div mat-dialog-actions>
-            <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Ingresar</button>
         </div>
-
+        <div class="col-12">
+        <div mat-dialog-actions class="text-right">
+            <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial [disabled]="!formGeneral.form.valid" >Ingresar</button>
+        </div>
     </div>
+
 </div>
+</form>

@@ -40,6 +40,13 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  getApiTablaCriterio(tabla:string,criterio:string){
+    return this._http
+      .get(Global.BASE_API_URL + "api.php/tabla/" + tabla +'/'+ criterio, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
+
+
   getApiTabla(criterio){
     return this._http
       .get(Global.BASE_API_URL + "api.php/tabla" + criterio, { headers: this.headers })

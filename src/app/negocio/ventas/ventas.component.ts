@@ -3,12 +3,9 @@ import { ApiService } from 'app/api.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Details } from '../../modelos/details';
-import { AddProductoComponent } from 'app/dialog/add-producto/add-producto.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ModPrecioComponent } from '../../dialog/mod-precio/mod-precio.component';
 import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.component';
-import { ThisReceiver } from '@angular/compiler';
-import { element } from 'protractor';
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 
@@ -40,6 +37,7 @@ export class VentasComponent implements OnInit {
   selectedRowIndex:any;
   usuario:string;
   sucursal:string='';
+  sucursal_id:string='';
   dataSource: any;
   dataTabla:any;
   totalMonto:number=0;
@@ -58,7 +56,21 @@ export class VentasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    let suc=  localStorage.getItem("sucursal_id");
+    console.log("sss",suc);
+    if(suc==null){
     this.openTerminal('20ms','20ms');
+    }else{
+      this.sucursal_id=suc;
+      console.log("thissss",suc)
+        this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
+          console.log("!noooo",d)
+        this.sucursal=d[0]['nombre'];
+        localStorage.setItem("sucursal_id",this.sucursal_id);
+
+         });
+    }
+
     this.usuario=localStorage.getItem("currentNombre");
     this.renderDataTable()
     this.dataTabla = this.api.getLinea();
@@ -129,7 +141,6 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,descuento:0},1,0);
- console.log("datarecob",this.dataRecibo)
 
 }
 
@@ -194,14 +205,25 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
 }
 
 openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
+
   const dialogo2=this.dialog.open(SelecTerminalComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
   data: {},
   });
    dialogo2.afterClosed().subscribe(ux => {
-    console.log(ux.id);
-    this.sucursal=ux.id
-    localStorage.setItem("sucursal",ux.id)
+     this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
+
+      this.sucursal=d[0]['nombre'];
+      localStorage.setItem("sucursal_id",ux.id);
+       });
+
    });
+  }
+
+  borrarItem(id){
+    console.log(id)
+    this.dataRecibo.splice(id,1)
+    this.sumarMonto(this.dataRecibo)
+
   }
 
 }
