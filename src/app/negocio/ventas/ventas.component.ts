@@ -226,4 +226,8 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   }
 
+  Guardar(){
+    console.log(this.dataRecibo)
+  }
+
 }

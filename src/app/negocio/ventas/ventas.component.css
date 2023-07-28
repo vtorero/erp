@@ -1,6 +1,10 @@
 .table td{
     font-size: 11px;
 }
+.enviar{
+    width: 300px;
+    height: 40px;
+}
 .numero_edicion{
     cursor: pointer;
     display: block;

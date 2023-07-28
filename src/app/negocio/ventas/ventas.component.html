@@ -77,10 +77,19 @@
                   </tbody>
               </table>
           </div>
+          <hr>
          <div class="row">
 <div class="col-6"><b>Usuario: {{usuario}} / Sucursal: {{sucursal}}</b></div>
 <div class="col-6 text-right"><b>Total:S/ {{totalMonto}}</b></div>
-         </div>
+
+         <div class="col-6">
+
+                </div>
+          <div class="col-6">
+                 <button class="enviar float-right mt-3" mat-raised-button (click)="Guardar()" color="primary" dkFocusInitial [disabled]="!dataRecibo.length>0"><mat-icon class="mat-icon-rtl-mirror" svgIcon="thumb-up"></mat-icon> Guardar</button>
+               </div>
+          </div>
+
       </div>
       </div>
     </div>
