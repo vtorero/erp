@@ -29,7 +29,7 @@ descuentoTotal:number=0;
 
   cambiaDescuento(descuento:number,precio:number){
     console.log(descuento)
-     this.descuentoTotal=(descuento/100);
+     this.descuentoTotal=(precio*descuento/100);
   }
 
 

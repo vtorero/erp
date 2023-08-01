@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from 'app/api.service';
 import { Productos } from '../../modelos/producto';
-import { filter } from 'rxjs';
+
 
 @Component({
   selector: 'app-add-producto',
@@ -43,8 +42,6 @@ archivo = {
       console.log("this response",this.response[0].id_categoria)
       this.id_cate=this.response[0].id_categoria;
     });
-
-
 
     this.getCate();
     this.getSubCategoria();

@@ -1,0 +1,68 @@
+<h1 mat-dialog-title>Registrar venta</h1>
+<form #formGeneralDos="ngForm">
+    <div mat-dialog-content>
+        <div class="row">
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de Documento</mat-label>
+                    <mat-select name="id_documento" [(ngModel)]="id_documento"  #documento="ngModel"  required>
+                        <mat-option >Seleccionar</mat-option>
+                        <mat-option value="Boleta">Boleta</mat-option>
+                        <mat-option value="Factura">Factura</mat-option>
+                    </mat-select>
+
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Vendedor</mat-label>
+                    <mat-select name="id_categoria" required>
+                        <mat-option >Seleccionar</mat-option>
+                    </mat-select>
+
+                </mat-form-field>
+
+            </div>
+            <div class="col-12">
+                <input matInput class="form-control" placeholder="Buscar categoria..">
+                <mat-form-field appearance="outline">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select name="id_cliente">
+                        <mat-option  [value]="0">Sin cliente</mat-option>
+                        <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.nombre}}</mat-option>
+                    </mat-select>
+
+                </mat-form-field>
+
+            </div>
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Forma de pago</mat-label>
+                    <mat-select name="id_categoria" required>
+                        <mat-option >Seleccionar</mat-option>
+                    </mat-select>
+
+                </mat-form-field>
+            </div>
+            <div class="col-6">
+                <mat-form-field appearance="outline">
+                    <mat-label>Monto recibido</mat-label>
+                    <input matInput [(ngModel)]="montoRecibido" name="montoRecibido" (ngModelChange)="cambiaVuelto(montoRecibido,data.precio)"  type="number" placeholder="Monto" required>
+                </mat-form-field>
+                </div>
+            <div class="offset-8 col-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Vuelto</mat-label>
+                    <input matInput [(ngModel)]="montoVuelto" name="vuelto" type="number" placeholder="Precio" readonly="">
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="float-right">
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>
+    </div>
+</form>
+
+{{data.precio}}

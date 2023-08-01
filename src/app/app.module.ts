@@ -25,6 +25,7 @@ import { ModPrecioComponent } from './dialog/mod-precio/mod-precio.component';
 import { ModCantidadComponent } from './dialog/mod-cantidad/mod-cantidad.component';
 import { ModDescuentoComponent } from './dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from './dialog/selec-terminal/selec-terminal.component';
+import { RegistroVentaComponent } from './dialog/registro-venta/registro-venta.component';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import { SelecTerminalComponent } from './dialog/selec-terminal/selec-terminal.c
      ModCantidadComponent,
      ModDescuentoComponent,
      SelecTerminalComponent,
+     RegistroVentaComponent,
 
 
 

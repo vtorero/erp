@@ -8,6 +8,7 @@ import { ModPrecioComponent } from '../../dialog/mod-precio/mod-precio.component
 import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.component';
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
+import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
 
 
 interface Elemento {
@@ -206,8 +207,7 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
 
 openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
-  const dialogo2=this.dialog.open(SelecTerminalComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-  data: {},
+  const dialogo2=this.dialog.open(SelecTerminalComponent,{width: 'auto',enterAnimationDuration,exitAnimationDuration,disableClose: true , data: {},
   });
    dialogo2.afterClosed().subscribe(ux => {
      this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
@@ -219,6 +219,23 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
    });
   }
 
+  openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
+
+    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '550px',enterAnimationDuration,exitAnimationDuration ,
+    data: {precio:this.totalMonto
+    },
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+     /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
+
+        this.sucursal=d[0]['nombre'];
+        localStorage.setItem("sucursal_id",ux.id);
+         });*/
+
+     });
+    }
+
+
   borrarItem(id){
     console.log(id)
     this.dataRecibo.splice(id,1)
@@ -226,8 +243,6 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   }
 
-  Guardar(){
-    console.log(this.dataRecibo)
-  }
+
 
 }
