@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>Registrar venta</h1>
-<form #formGeneralDos="ngForm">
+<!--<form #formGeneralDos="ngForm">
     <div mat-dialog-content>
         <div class="row">
             <div class="col-6">
@@ -63,6 +63,23 @@
         <button mat-button (click)="cancelar()">Cancelar</button>
         <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>
     </div>
+</form>-->
+
+<form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
+<label>Nombre</label>
+    <input  class="form-control"  formControlName="name" placeholder="Nombre">
+    <span *ngIf="isValidField('name')" class="form-text text-danger">{{getFieldError('name')}}</span>
+    <div class="col-sm-9" formArrayName="modoPago">
+    <div class="mb-1" *ngFor="let pago of formasPago.controls; let i = index">
+    <div class="input-group">
+        <input [formControlName]="i"
+        class="form-control">
+        <button class="btn btn-outline-danger" type="button">Eliminar</button>
+    </div>
+    <span *ngIf="isValidFieldInArray(formasPago,i)" class="form-text text-danger">Campo requerido</span>
+</div>
+</div>
+<button class="btn btn-outline-danger" type="submit">Enviar</button>
 </form>
 
 {{data.precio}}
