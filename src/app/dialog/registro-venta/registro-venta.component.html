@@ -69,17 +69,49 @@
 <label>Nombre</label>
     <input  class="form-control"  formControlName="name" placeholder="Nombre">
     <span *ngIf="isValidField('name')" class="form-text text-danger">{{getFieldError('name')}}</span>
-    <div class="col-sm-9" formArrayName="modoPago">
-    <div class="mb-1" *ngFor="let pago of formasPago.controls; let i = index">
+
     <div class="input-group">
+        <select [formControl]="newMonto" class="form-control">
+            <option value="">Seleccionar</option>
+            <option value="yape">Yape</option>
+            <option value="deposito">Deposito</option>
+            </select>
+            <input class="form-control" [formControl]="newPago" placeholder="Agregar pago">
+    <button class="btn btn-outline-danger" type="button" (click)="Addpago()">Agregar</button>
+    </div>
+    <div class="col-6" formArrayName="modoPago">
+    <div class="mb-1" *ngFor="let pago of formasPago.controls; let i = index">
+  <div class="input-group">
         <input [formControlName]="i"
         class="form-control">
-        <button class="btn btn-outline-danger" type="button">Eliminar</button>
+        <button class="btn btn-outline-danger" type="button" (click)="onDeletePago(i)">Eliminar</button>
     </div>
     <span *ngIf="isValidFieldInArray(formasPago,i)" class="form-text text-danger">Campo requerido</span>
 </div>
 </div>
 <button class="btn btn-outline-danger" type="submit">Enviar</button>
 </form>
+<ul>
+    <li *ngFor="let monto of montosPago.value; let u = index">
+{{monto}}
+<select [formControl]="newMonto" value="{{monto}}" class="form-control">
+    <option value="">Seleccionar</option>
+    <option value="yape">Yape</option>
+    <option value="deposito">Deposito</option>
+    </select>
+   <pre>{{montosPago.valid | json }}</pre>
+        <pre>{{montosPago.value | json }}</pre>
+
+    </li>
+</ul>
+
+<ul>
+    <li *ngFor="let forma of formasPago.value; let u = index">
+{{forma}}
+        <pre>{{formasPago.value | json }}</pre>
+        <pre>{{formasPago.value | json }}</pre>
+
+    </li>
+</ul>
 
 {{data.precio}}

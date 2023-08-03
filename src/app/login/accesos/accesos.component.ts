@@ -54,7 +54,7 @@ this.error();
 }
 }
 
-fakeLoading(){
+/*fakeLoading(){
 this.loading=true;
 setTimeout(() => {
     this._router.navigate(['dashboard'])
@@ -62,7 +62,7 @@ setTimeout(() => {
 }, 1500)
 
 }
-
+*/
 
 loginUser(usuario,password){
   this.loading=true;

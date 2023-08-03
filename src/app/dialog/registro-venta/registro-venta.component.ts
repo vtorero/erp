@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-registro-venta',
@@ -15,15 +15,21 @@ export class RegistroVentaComponent implements OnInit {
 
 public MyForm:FormGroup = this.fb.group({
   name:['',[Validators.required,Validators.minLength(3)]],
-  modoPago:this.fb.array([
-    ['Yape',Validators.required],
-    ['BCP',Validators.required],
-  ])
+  modoPago: this.fb.array([]),
+  montoPago:this.fb.array([])
 })
+
+
+public newPago:FormControl = new FormControl('',[Validators.required]);
+public newMonto:FormControl = new FormControl('',[Validators.required]);
+
 dataClientes:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
 public id_documento:number=0
+
+
+
   constructor(public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Details,
     private api:ApiService,
@@ -31,10 +37,12 @@ public id_documento:number=0
     ) { }
 
 get formasPago(){
-
   return this.MyForm.get('modoPago') as FormArray;
-
 }
+get montosPago(){
+  return this.MyForm.get('montoPago') as FormArray;
+}
+
 
 isValidField(field:string):boolean | null{
 
@@ -48,7 +56,6 @@ isValidFieldInArray(formArray:FormArray,index:number){
 }
 
   getFieldError(field:string):string | null{
-
   if(!this.MyForm.controls[field]) return null;
   const errors = this.MyForm.controls[field].errors || {};
 
@@ -65,6 +72,39 @@ isValidFieldInArray(formArray:FormArray,index:number){
   }
 }
 
+Addpago(){
+  this.onAddToPago();
+  this.onAddToMonto();
+}
+
+onAddToMonto():void{
+  if(this.newPago.invalid) return;
+  const nuevoMonto =this.newMonto.value;
+  this.montosPago.push(
+    this.fb.control(nuevoMonto,Validators.required)
+  );
+
+  }
+
+onAddToPago():void{
+if(this.newPago.invalid) return;
+
+const nuevoPago =this.newPago.value;
+this.formasPago.push(
+  this.fb.control(nuevoPago,Validators.required)
+);
+
+}
+
+onDeleteMonto(index:number):void{
+  this.montosPago.removeAt(index);
+}
+
+
+onDeletePago(index:number):void{
+  this.onDeleteMonto(index);
+  this.formasPago.removeAt(index);
+}
 
    onSubmit():void{
     if(this.MyForm.invalid){
@@ -72,7 +112,7 @@ isValidFieldInArray(formArray:FormArray,index:number){
       return;
     }
     console.log(this.MyForm.value);
-    this.MyForm.reset();
+   // this.MyForm.reset();
    }
 
 
