@@ -12,16 +12,15 @@ import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@ang
 
 
 export class RegistroVentaComponent implements OnInit {
-
-public MyForm:FormGroup = this.fb.group({
-  name:['',[Validators.required,Validators.minLength(3)]],
-  modoPago: this.fb.array([]),
-  montoPago:this.fb.array([])
-})
-
-
-public newPago:FormControl = new FormControl('',[Validators.required]);
-public newMonto:FormControl = new FormControl('',[Validators.required]);
+  public MyForm = this.fb.group({
+    tipoDoc: ['', Validators.required],
+    vendedor: ['', Validators.required],
+    cliente: ['', Validators.required],
+    pagos: this.fb.array([this.fb.group({
+      tipoPago: ['Efectivo', Validators.required],
+      montoPago: [0, [Validators.required, Validators.min(0.1)]],
+    })])
+  });
 
 dataClientes:any;
 montoVuelto:any=0;
@@ -36,12 +35,10 @@ public id_documento:number=0
     private fb:FormBuilder
     ) { }
 
-get formasPago(){
-  return this.MyForm.get('modoPago') as FormArray;
-}
-get montosPago(){
-  return this.MyForm.get('montoPago') as FormArray;
-}
+    get Pagos() {
+      return this.MyForm.get('pagos') as FormArray;
+    }
+
 
 
 isValidField(field:string):boolean | null{
@@ -72,39 +69,19 @@ isValidFieldInArray(formArray:FormArray,index:number){
   }
 }
 
-Addpago(){
-  this.onAddToPago();
-  this.onAddToMonto();
-}
-
-onAddToMonto():void{
-  if(this.newPago.invalid) return;
-  const nuevoMonto =this.newMonto.value;
-  this.montosPago.push(
-    this.fb.control(nuevoMonto,Validators.required)
-  );
-
-  }
 
 onAddToPago():void{
-if(this.newPago.invalid) return;
-
-const nuevoPago =this.newPago.value;
-this.formasPago.push(
-  this.fb.control(nuevoPago,Validators.required)
-);
-
+  const PagoGroup = this.fb.group({
+		tipoPago: ['', Validators.required],
+    montoPago: ['', [Validators.required, Validators.min(0.1)]],
+	});
+	this.Pagos.push(PagoGroup);
 }
-
-onDeleteMonto(index:number):void{
-  this.montosPago.removeAt(index);
-}
-
 
 onDeletePago(index:number):void{
-  this.onDeleteMonto(index);
-  this.formasPago.removeAt(index);
+  this.Pagos.removeAt(index);
 }
+
 
    onSubmit():void{
     if(this.MyForm.invalid){

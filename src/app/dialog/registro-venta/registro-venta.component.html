@@ -1,11 +1,11 @@
 <h1 mat-dialog-title>Registrar venta</h1>
-<!--<form #formGeneralDos="ngForm">
+<form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <div mat-dialog-content>
         <div class="row">
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
-                    <mat-select name="id_documento" [(ngModel)]="id_documento"  #documento="ngModel"  required>
+                    <mat-select name="id_documento" formControlName="tipoDoc" required>
                         <mat-option >Seleccionar</mat-option>
                         <mat-option value="Boleta">Boleta</mat-option>
                         <mat-option value="Factura">Factura</mat-option>
@@ -16,8 +16,10 @@
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Vendedor</mat-label>
-                    <mat-select name="id_categoria" required>
-                        <mat-option >Seleccionar</mat-option>
+                    <mat-select name="vendedor" formControlName="vendedor"  required>
+                        <mat-option value="">Seleccionar</mat-option>
+                        <mat-option value="1">Vendedor 1</mat-option>
+                        <mat-option value="2">Vendedor 2</mat-option>
                     </mat-select>
 
                 </mat-form-field>
@@ -27,33 +29,45 @@
                 <input matInput class="form-control" placeholder="Buscar categoria..">
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
-                    <mat-select name="id_cliente">
-                        <mat-option  [value]="0">Sin cliente</mat-option>
+                    <mat-select name="id_cliente" formControlName="cliente">
+                        <mat-option  value="0">Sin cliente</mat-option>
                         <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>
 
             </div>
-            <div class="col-6">
+            <div formArrayName="pagos" style="width:100%">
+                <button class="btn btn-outline-danger" type="button" (click)="onAddToPago()">(+)</button>
+                <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
+            <div class="col-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Forma de pago</mat-label>
-                    <mat-select name="id_categoria" required>
-                        <mat-option >Seleccionar</mat-option>
+                    <mat-select name="tipopago" formControlName="tipoPago"  required>
+                        <mat-option value="">Seleccionar</mat-option>
+                        <mat-option value="Efectivo">Efectivo</mat-option>
+                        <mat-option value="Transferencia">Transferencia</mat-option>
+                        <mat-option value="Deposito">Deposito</mat-option>
+                        <mat-option value="Yape">Yape</mat-option>
                     </mat-select>
 
                 </mat-form-field>
             </div>
-            <div class="col-6">
+            <div class="col-5">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
-                    <input matInput [(ngModel)]="montoRecibido" name="montoRecibido" (ngModelChange)="cambiaVuelto(montoRecibido,data.precio)"  type="number" placeholder="Monto" required>
+                    <input matInput name="montoRecibido" formControlName="montoPago" (ngModelChange)="cambiaVuelto(montoRecibido,data.precio)"  type="number" placeholder="Monto" required>
                 </mat-form-field>
                 </div>
+                <div class="col-2">
+
+                </div>
+            </div>
+            </div>
             <div class="offset-8 col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Vuelto</mat-label>
-                    <input matInput [(ngModel)]="montoVuelto" name="vuelto" type="number" placeholder="Precio" readonly="">
+                    <input matInput  name="vuelto" type="number" placeholder="Precio" readonly="">
                 </mat-form-field>
             </div>
         </div>
@@ -61,57 +75,10 @@
 
     <div mat-dialog-actions class="float-right">
         <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>
+        <button mat-button type="submit">Enviar</button>
+        <!--<button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>-->
     </div>
-</form>-->
-
-<form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
-<label>Nombre</label>
-    <input  class="form-control"  formControlName="name" placeholder="Nombre">
-    <span *ngIf="isValidField('name')" class="form-text text-danger">{{getFieldError('name')}}</span>
-
-    <div class="input-group">
-        <select [formControl]="newMonto" class="form-control">
-            <option value="">Seleccionar</option>
-            <option value="yape">Yape</option>
-            <option value="deposito">Deposito</option>
-            </select>
-            <input class="form-control" [formControl]="newPago" placeholder="Agregar pago">
-    <button class="btn btn-outline-danger" type="button" (click)="Addpago()">Agregar</button>
-    </div>
-    <div class="col-6" formArrayName="modoPago">
-    <div class="mb-1" *ngFor="let pago of formasPago.controls; let i = index">
-  <div class="input-group">
-        <input [formControlName]="i"
-        class="form-control">
-        <button class="btn btn-outline-danger" type="button" (click)="onDeletePago(i)">Eliminar</button>
-    </div>
-    <span *ngIf="isValidFieldInArray(formasPago,i)" class="form-text text-danger">Campo requerido</span>
-</div>
-</div>
-<button class="btn btn-outline-danger" type="submit">Enviar</button>
 </form>
-<ul>
-    <li *ngFor="let monto of montosPago.value; let u = index">
-{{monto}}
-<select [formControl]="newMonto" value="{{monto}}" class="form-control">
-    <option value="">Seleccionar</option>
-    <option value="yape">Yape</option>
-    <option value="deposito">Deposito</option>
-    </select>
-   <pre>{{montosPago.valid | json }}</pre>
-        <pre>{{montosPago.value | json }}</pre>
-
-    </li>
-</ul>
-
-<ul>
-    <li *ngFor="let forma of formasPago.value; let u = index">
-{{forma}}
-        <pre>{{formasPago.value | json }}</pre>
-        <pre>{{formasPago.value | json }}</pre>
-
-    </li>
-</ul>
-
+<pre>{{MyForm.valid | json}}</pre>
+<pre>{{MyForm.value | json}}</pre>
 {{data.precio}}
