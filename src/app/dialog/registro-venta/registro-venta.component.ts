@@ -92,10 +92,18 @@ onDeletePago(index:number):void{
       this.MyForm.markAllAsTouched();
       return;
     }
-    console.log(this.MyForm.value);
+    this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
+      data=>{
+       // this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+       console.log("detalle",this.data.detalle);
        this.MyForm.reset();
        this.cancelar()
-   }
+
+        },
+      erro=>{console.log(erro)}
+        );
+      //this.renderDataTable();
+  }
 
 
   ngOnInit(): void {

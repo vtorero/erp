@@ -237,16 +237,20 @@ getLinea(){
 
 /*Apis usuarios*/
 
+public guardaVentas(datos,detalle){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  let det = JSON.stringify(detalle);
+  return this._http.post(Global.BASE_API_URL + 'api.php/venta',
+    { json: json,detalle:det }, { headers: headers });
+}
+
+/**
 
 
   /*dosimetria
 
-  public GuardarDosimetria(datos){
-    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    let json = JSON.stringify(datos);
-    return this._http.post(Global.BASE_API_URL + 'api.php/dosimetria',
-      { json: json }, { headers: headers });
-  }
+
   public GuardarDosimetriaMov(datos){
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let json = JSON.stringify(datos);

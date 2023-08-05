@@ -4,7 +4,8 @@ export class Details {
         public nombre: string,
         public cantidad:number,
         public precio: number,
-        public descuento: number
+        public descuento: number,
+        public detalle:any
 
 ){}
 }

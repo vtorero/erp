@@ -16,7 +16,8 @@ interface Elemento {
   nombre: string;
   cantidad: number;
   precio:number;
-  descuento:number
+  descuento:number,
+  detalle:any
 }
 
 interface Sucursal{
@@ -126,7 +127,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,cantidad:cantidad,precio:elemento.precio,descuento:desc});
+    array.push({ id:elemento.id,nombre:elemento.nombre,cantidad:cantidad,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -141,7 +142,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,descuento:0},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,descuento:0,detalle:null},1,0);
 
 }
 
@@ -222,16 +223,16 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
 
     const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,
-    data: {precio:this.totalMonto
+    data: {precio:this.totalMonto,
+           detalle:this.dataRecibo
     },
     });
      dialogo2.afterClosed().subscribe(ux => {
+      //while(this.dataRecibo.length){
+       // this.dataRecibo.pop();
+      //}
+      //this.totalMonto=0;
 
-      while(this.dataRecibo.length){
-        this.dataRecibo.pop();
-      }
-      this.totalMonto=0;
-      console.log(this.dataRecibo)
      /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
 
         this.sucursal=d[0]['nombre'];
