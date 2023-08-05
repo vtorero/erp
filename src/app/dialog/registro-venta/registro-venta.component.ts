@@ -15,11 +15,13 @@ export class RegistroVentaComponent implements OnInit {
   public MyForm = this.fb.group({
     tipoDoc: ['', Validators.required],
     vendedor: ['', Validators.required],
-    cliente: ['', Validators.required],
+    cliente: ['0', Validators.required],
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['Efectivo', Validators.required],
       montoPago: [0, [Validators.required, Validators.min(0.1)]],
-    })])
+    })]),
+    vuelto:[''],
+    comentario:['']
   });
 
 dataClientes:any;
@@ -33,6 +35,8 @@ public id_documento:number=0
     @Inject(MAT_DIALOG_DATA) public data: Details,
     private api:ApiService,
     private fb:FormBuilder
+
+
     ) { }
 
     get Pagos() {
@@ -89,12 +93,14 @@ onDeletePago(index:number):void{
       return;
     }
     console.log(this.MyForm.value);
-   // this.MyForm.reset();
+       this.MyForm.reset();
+       this.cancelar()
    }
 
 
   ngOnInit(): void {
     this.getCliente()
+
   }
 
   getCliente(): void {
@@ -106,12 +112,22 @@ onDeletePago(index:number):void{
   }
 
   cancelar() {
-
     this.dialog.closeAll();
+    this.data.precio=0
 
   }
 
-  cambiaVuelto(recibido:number,precio:number){
-     this.montoVuelto=(recibido-precio);
+  cambiaVuelto(precio:number){
+    console.log("preciooo",precio)
+let recibido =0
+    this.MyForm.value.pagos.forEach(element => {
+  if(  element.tipoPago=="Efectivo"){
+      console.log(element.tipoPago)
+      recibido+=element.montoPago;
+    }
+    });
+    const vuelto =this.MyForm.get('vuelto') as FormControl;
+    vuelto.setValue(recibido-precio)
+
   }
 }

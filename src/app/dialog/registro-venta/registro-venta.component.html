@@ -37,10 +37,9 @@
                 </mat-form-field>
 
             </div>
-            <div formArrayName="pagos" style="width:100%">
-                <button class="btn btn-outline-danger" type="button" (click)="onAddToPago()">(+)</button>
+            <div formArrayName="pagos">
                 <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
-            <div class="col-5">
+            <div class="col-7">
                 <mat-form-field appearance="outline">
                     <mat-label>Forma de pago</mat-label>
                     <mat-select name="tipopago" formControlName="tipoPago"  required>
@@ -53,21 +52,32 @@
 
                 </mat-form-field>
             </div>
-            <div class="col-5">
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
-                    <input matInput name="montoRecibido" formControlName="montoPago" (ngModelChange)="cambiaVuelto(montoRecibido,data.precio)"  type="number" placeholder="Monto" required>
+                    <input matInput name="montoRecibido" formControlName="montoPago"  value="0" (ngModelChange)="cambiaVuelto(data.precio)"  type="number" placeholder="Monto" required>
                 </mat-form-field>
                 </div>
-                <div class="col-2">
-
+                <div class="col-1">
+                    <button mat-icon-button color="warn" *ngIf="i==0"  (click)="onAddToPago()">
+                        <i class="material-icons">add_circle</i>
+                    </button>
+                    <button  mat-icon-button color="warn" *ngIf="i>0"  (click)="onDeletePago(i)">
+                        <i class="material-icons">delete</i>
+                    </button>
                 </div>
             </div>
             </div>
-            <div class="offset-8 col-4">
+            <div class="col-9">
+                <mat-form-field appearance="outline">
+                    <mat-label>Comentario</mat-label>
+                    <input matInput  name="comentario" formControlName="comentario"  type="text" placeholder="Comentario">
+                </mat-form-field>
+            </div>
+            <div class=" col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Vuelto</mat-label>
-                    <input matInput  name="vuelto" type="number" placeholder="Precio" readonly="">
+                    <input matInput  name="vuelto" formControlName="vuelto"  type="number" placeholder="Precio">
                 </mat-form-field>
             </div>
         </div>
@@ -75,10 +85,10 @@
 
     <div mat-dialog-actions class="float-right">
         <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-button type="submit">Enviar</button>
+        <button mat-button class="btn" type="submit" [disabled] = "!MyForm.valid" >Enviar</button>
         <!--<button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>-->
     </div>
 </form>
-<pre>{{MyForm.valid | json}}</pre>
-<pre>{{MyForm.value | json}}</pre>
-{{data.precio}}
+<!--<pre>{{MyForm.valid | json}}</pre>
+<pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>
+{{data.precio}}-->

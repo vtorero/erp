@@ -221,11 +221,17 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
 
-    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '550px',enterAnimationDuration,exitAnimationDuration ,
+    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,
     data: {precio:this.totalMonto
     },
     });
      dialogo2.afterClosed().subscribe(ux => {
+
+      while(this.dataRecibo.length){
+        this.dataRecibo.pop();
+      }
+      this.totalMonto=0;
+      console.log(this.dataRecibo)
      /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
 
         this.sucursal=d[0]['nombre'];
