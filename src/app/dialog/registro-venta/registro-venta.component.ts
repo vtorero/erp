@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
-import { FormArray, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-registro-venta',
@@ -100,7 +100,9 @@ onDeletePago(index:number):void{
        this.cancelar()
 
         },
-      erro=>{console.log(erro)}
+      erro=>{console.log(erro)
+        this.cancelar()
+      }
         );
       //this.renderDataTable();
   }

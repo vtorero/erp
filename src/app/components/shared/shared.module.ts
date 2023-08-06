@@ -22,7 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
-
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 
 
@@ -48,8 +48,7 @@ import {MatSortModule} from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-
-
+    CurrencyMaskModule
 
   ],
   exports:[
@@ -69,7 +68,8 @@ import {MatSortModule} from '@angular/material/sort';
     FormsModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    CurrencyMaskModule
   ]
 })
 export class SharedModule { }

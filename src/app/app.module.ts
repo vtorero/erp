@@ -26,6 +26,7 @@ import { ModCantidadComponent } from './dialog/mod-cantidad/mod-cantidad.compone
 import { ModDescuentoComponent } from './dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from './dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from './dialog/registro-venta/registro-venta.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   imports: [
@@ -37,7 +38,8 @@ import { RegistroVentaComponent } from './dialog/registro-venta/registro-venta.c
     AppRoutingModule,
     LoginModule,
     SharedModule,
-    ComponentsModule
+    ComponentsModule,
+    NgxMaskModule.forRoot()
 
   ],
   declarations: [
