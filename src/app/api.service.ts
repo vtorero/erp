@@ -242,7 +242,7 @@ public guardaVentas(datos,detalle){
   let json = JSON.stringify(datos);
   let det = JSON.stringify(detalle);
   return this._http.post(Global.BASE_API_URL + 'api.php/venta',
-    { json: json,detalle:det }, { headers: headers });
+    { json:json,detalle:det }, { headers: headers });
 }
 
 /**

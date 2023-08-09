@@ -28,6 +28,7 @@ import { SelecTerminalComponent } from './dialog/selec-terminal/selec-terminal.c
 import { RegistroVentaComponent } from './dialog/registro-venta/registro-venta.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { ListadoComponent } from './negocio/ventas/listado/listado.component';
+import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.component';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import { ListadoComponent } from './negocio/ventas/listado/listado.component';
      SelecTerminalComponent,
      RegistroVentaComponent,
      ListadoComponent,
+     ConfiguracionComponent,
 
 
 

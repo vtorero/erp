@@ -228,10 +228,10 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
     },
     });
      dialogo2.afterClosed().subscribe(ux => {
-      //while(this.dataRecibo.length){
-       // this.dataRecibo.pop();
-      //}
-      //this.totalMonto=0;
+      while(this.dataRecibo.length){
+       this.dataRecibo.pop();
+      }
+      this.totalMonto=0;
 
      /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
 

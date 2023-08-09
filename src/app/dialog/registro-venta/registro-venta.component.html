@@ -68,12 +68,13 @@
                 </div>
             </div>
             </div>
-            <div class="col-9">
+            <div class="col-7">
                 <mat-form-field appearance="outline">
                     <mat-label>Comentario</mat-label>
                     <input matInput  name="comentario" formControlName="comentario"  type="text" placeholder="Comentario">
                 </mat-form-field>
             </div>
+            <div class="col-2">Total: {{data.precio}}</div>
             <div class=" col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Vuelto</mat-label>
@@ -85,13 +86,11 @@
 
     <div mat-dialog-actions class="float-right">
         <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-button class="btn" type="submit" [disabled] = "!MyForm.valid" >Enviar</button>
-        <!--<button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneralDos.form.valid"  cdkFocusInitial>Registrar</button>-->
+        <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>
 </form>
 
 
 <!--<pre>{{impresoras| json}}</pre>
 
-<pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>
-{{data.precio}}-->
+<pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>-->

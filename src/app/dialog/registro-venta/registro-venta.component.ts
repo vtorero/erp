@@ -4,6 +4,7 @@ import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class RegistroVentaComponent implements OnInit {
       tipoPago: ['Efectivo', Validators.required],
       montoPago: [0, [Validators.required, Validators.min(0.1)]],
     })]),
-    vuelto:[''],
+    vuelto:['',Validators.required],
     comentario:[''],
     impresoras:[""]
   });
@@ -38,9 +39,8 @@ public id_documento:number=0
   constructor(public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Details,
     private api:ApiService,
-    private fb:FormBuilder
-
-
+    private fb:FormBuilder,
+    private _snackBar: MatSnackBar
     ) { }
 
     get Pagos() {
@@ -106,7 +106,7 @@ async getData() {
       this.MyForm.markAllAsTouched();
       return;
     }
-    const conector = new ConectorPluginV3;
+   /* const conector = new ConectorPluginV3;
     conector.Iniciar()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
     conector.EscribirTexto("esto es una prueba");
@@ -120,20 +120,21 @@ console.log(respuesta)
     }else{
       console.log("imprimio incorecto")
     }
+*/
 
-
-    /*this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
+    this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
-       // this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        this._snackBar.open(data['messaje'],"OK",{verticalPosition:'top',});
        console.log("detalle",this.data.detalle);
        this.MyForm.reset();
        this.cancelar()
 
         },
-      erro=>{console.log(erro)
+      error=>{console.log(error)
+        this._snackBar.open("Ocurrio un Error","OK",{verticalPosition:'bottom'});
         this.cancelar()
       }
-        );*/
+        );
       //this.renderDataTable();
   }
 
@@ -160,16 +161,33 @@ console.log(respuesta)
   }
 
   cambiaVuelto(precio:number){
-    console.log("preciooo",precio)
-let recibido =0
+
+  let efectivo=0;
+  let depositos=0;
+  let total=0;
     this.MyForm.value.pagos.forEach(element => {
-  if(  element.tipoPago=="Efectivo"){
+  if(element.tipoPago=="Efectivo"){
       console.log(element.tipoPago)
-      recibido+=element.montoPago;
+      efectivo+=element.montoPago;
+    }else{
+    depositos+=element.montoPago;
     }
     });
-    const vuelto =this.MyForm.get('vuelto') as FormControl;
-    vuelto.setValue(recibido-precio)
+ total=depositos+efectivo;
+if(depositos>precio){
+  const vuelto = this.MyForm.get('vuelto') as FormControl;
+  this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
+   vuelto.setValue('');
+}
+    if(efectivo<precio && total<precio){
+      const vuelto = this.MyForm.get('vuelto') as FormControl;
+      this._snackBar.open("El monto recibido no es suficiente","Aceptar",{verticalPosition:'bottom'});
+      vuelto.setValue('');
+  }else{
+    const vuelto = this.MyForm.get('vuelto') as FormControl;
+    this.MyForm.valid;
+    vuelto.setValue(efectivo-precio)
+  }
 
   }
 }
