@@ -3,6 +3,8 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
+import ConectorPluginV3 from 'app/services/ConectorImpresora';
+
 
 @Component({
   selector: 'app-registro-venta',
@@ -21,12 +23,14 @@ export class RegistroVentaComponent implements OnInit {
       montoPago: [0, [Validators.required, Validators.min(0.1)]],
     })]),
     vuelto:[''],
-    comentario:['']
+    comentario:[''],
+    impresoras:[""]
   });
 
 dataClientes:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
+impresoras:any;
 public id_documento:number=0
 
 
@@ -86,13 +90,39 @@ onDeletePago(index:number):void{
   this.Pagos.removeAt(index);
 }
 
+async getData() {
+  try {
+    this.impresoras = await ConectorPluginV3.obtenerImpresoras();
+    console.log(this.impresoras)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
 
    onSubmit():void{
     if(this.MyForm.invalid){
       this.MyForm.markAllAsTouched();
       return;
     }
-    this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
+    const conector = new ConectorPluginV3;
+    conector.Iniciar()
+    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+    conector.EscribirTexto("esto es una prueba");
+    conector.EscribirTexto("esto es una prueba");
+    conector.EscribirTexto("esto es una prueba");
+    conector.EscribirTexto("esto es una prueba");
+    conector.EscribirTexto("esto es una prueba");
+    const respuesta =   conector.imprimirEn(this.MyForm.controls['impresoras'].value);
+    if(respuesta){
+console.log(respuesta)
+    }else{
+      console.log("imprimio incorecto")
+    }
+
+
+    /*this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
        // this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
        console.log("detalle",this.data.detalle);
@@ -103,13 +133,15 @@ onDeletePago(index:number):void{
       erro=>{console.log(erro)
         this.cancelar()
       }
-        );
+        );*/
       //this.renderDataTable();
   }
 
 
   ngOnInit(): void {
     this.getCliente()
+    this.getData();
+
 
   }
 
