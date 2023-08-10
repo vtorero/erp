@@ -948,28 +948,10 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $data = json_decode($j['json']);
         $detalle = json_decode($j['detalle']);
         $valor_total=0;
-           //token desarrollo
-
-           var_dump($data);
-           var_dump($detalle[0]->nombre);
-           die();
-
-
-           if($data->comprobante=='Boleta'){
-
-            $sql_comp="SELECT AUTO_INCREMENT  as ultimo_id FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'no-whaste' AND TABLE_NAME = 'boletas'";
-            $datos=$db->query($sql_comp);
-            $ultimo_id_fact=array();
-            while ($d = $datos->fetch_object()) {
-                $ultimo_id_fact=$d;
-                }
-                $data->boleta->correlativo=$ultimo_id_fact->ultimo_id;
-           }
-
 
                 try {
 
-                   $sql="call p_venta('{$data->id_usuario}',{$data->id_vendedor},'{$data->cliente->id}','{$data->comprobante}','{$comprobante}','{$data->tipoDoc}','{$fecha}',{$valor_total},{$data->igv},'{$data->observacion}','{$data->boleta->formaPago->tipo}','{$fechaPago}')";
+                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}','{$data->tipoDoc}',{$data->total},0,'{$data->comentario}')";
                    $stmt = mysqli_prepare($db,$sql);
                     mysqli_stmt_execute($stmt);
                     $datos=$db->query("SELECT max(id) ultimo_id FROM ventas");
@@ -977,6 +959,8 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     while ($d = $datos->fetch_object()) {
                      $ultimo_id=$d;
                      }
+                     var_dump($ultimo_id);
+                     die();
                     foreach($data->detalleVenta as $valor){
                     /*inserta detalla*/
 
