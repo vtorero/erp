@@ -55,7 +55,7 @@
             <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
-                    <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ "  value="0" (ngModelChange)="cambiaVuelto(data.precio)"  type="text" required>
+                    <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>
                 </mat-form-field>
                 </div>
                 <div class="col-1">
@@ -74,7 +74,12 @@
                     <input matInput  name="comentario" formControlName="comentario"  type="text" placeholder="Comentario">
                 </mat-form-field>
             </div>
-            <div class="col-2">Total: {{data.precio}}</div>
+            <div class="col-2">
+            <mat-form-field appearance="outline">
+                <mat-label>Total</mat-label>
+                <input matInput  name="vuelto" mask="separator.2" prefix="S/ " formControlName="total" type="text" readonly>
+            </mat-form-field>
+                </div>
             <div class=" col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Vuelto</mat-label>

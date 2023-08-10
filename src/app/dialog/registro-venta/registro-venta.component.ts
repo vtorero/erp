@@ -5,6 +5,7 @@ import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { data } from 'jquery';
 
 
 @Component({
@@ -25,7 +26,10 @@ export class RegistroVentaComponent implements OnInit {
     })]),
     vuelto:['',Validators.required],
     comentario:[''],
-    impresoras:[""]
+    impresoras:[""],
+    total:[0],
+    usuario:[''],
+    sucursal:['']
   });
 
 dataClientes:any;
@@ -90,6 +94,9 @@ onDeletePago(index:number):void{
   this.Pagos.removeAt(index);
 }
 
+
+
+
 async getData() {
   try {
     this.impresoras = await ConectorPluginV3.obtenerImpresoras();
@@ -141,9 +148,13 @@ console.log(respuesta)
 
   ngOnInit(): void {
     this.getCliente()
-    this.getData();
-
-
+  //  this.getData();
+  const total = this.MyForm.get('total') as FormControl;
+  total.setValue(this.data.precio);
+  const usuario = this.MyForm.get('usuario') as FormControl;
+  usuario.setValue(localStorage.getItem("currentId"));
+  const sucursal = this.MyForm.get('sucursal') as FormControl;
+  sucursal.setValue(localStorage.getItem("sucursal_id"));
   }
 
   getCliente(): void {
@@ -179,11 +190,14 @@ if(depositos>precio){
   this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
    vuelto.setValue('');
 }
-    if(efectivo<precio && total<precio){
+    if(efectivo<precio && efectivo!=precio){
       const vuelto = this.MyForm.get('vuelto') as FormControl;
       this._snackBar.open("El monto recibido no es suficiente","Aceptar",{verticalPosition:'bottom'});
       vuelto.setValue('');
-  }else{
+  }else if(efectivo==precio){
+  const vuelto = this.MyForm.get('vuelto') as FormControl;
+  vuelto.setValue(efectivo-precio)
+}else{
     const vuelto = this.MyForm.get('vuelto') as FormControl;
     this.MyForm.valid;
     vuelto.setValue(efectivo-precio)
