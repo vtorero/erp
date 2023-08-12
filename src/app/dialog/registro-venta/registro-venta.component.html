@@ -88,7 +88,13 @@
             </div>
         </div>
     </div>
-
+    <mat-form-field appearance="outline">
+        <mat-label>Impresora</mat-label>
+        <mat-select name="impresoras" formControlName="impresoras" required>
+            <mat-option value="">Seleccionar</mat-option>
+            <mat-option *ngFor="let imp of impresoras" [value]="imp">{{imp}}</mat-option>
+    </mat-select>
+    </mat-form-field>
     <div mat-dialog-actions class="float-right">
         <button mat-button (click)="cancelar()">Cancelar</button>
         <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>

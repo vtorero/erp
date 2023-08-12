@@ -11,7 +11,7 @@
        <div class="resultado">
        <ul class="flex-container" *ngIf="!loading">
       <li class="flex-item" (click)="enviarProducto(item.id,item.nombre,1,item.precio)" *ngFor="let item of dataSource; let i=index"
-       style="cursor: pointer;background-image: url(http://35.231.78.51/erp-api/upload/{{item.imagen}});background-size: 90%;background-repeat: no-repeat;">
+       style="cursor: pointer;background-image: url(https://aprendeadistancia.online/erp/erp-api/upload/{{item.imagen}});background-size: 90%;background-repeat: no-repeat;">
         <div class="precio"><div class="texto">S/ {{item.precio}}</div></div>
        <div class="titulo">{{item.nombre}}</div>
        </li>

@@ -9,6 +9,8 @@ import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.com
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 
 interface Elemento {
@@ -19,12 +21,6 @@ interface Elemento {
   descuento:number,
   detalle:any
 }
-
-interface Sucursal{
-  id:number;
-  nombre:string
-}
-
 
 
 @Component({
@@ -83,12 +79,12 @@ export class VentasComponent implements OnInit {
 renderDataTable() {
   this.selectedRowIndex=null
   this.api.getApi('articulos').subscribe(x => {
-    //this.dataSource = new MatTableDataSource();
+   // this.dataSource = new MatTableDataSource();
      this.dataSource = x;
-/*   this.empTbSort.disableClear = true;
-    this.dataSource.sort = this.empTbSort;
-    this.dataSource.paginator = this.paginator;
-    */
+   //this.empTbSort.disableClear = true;
+    //this.dataSource.sort = this.empTbSort;
+    //this.dataSource.paginator = this.paginator;
+
     },
     error => {
       console.log('Error de conexion de datatable!' + error);

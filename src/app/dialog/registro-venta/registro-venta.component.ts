@@ -5,7 +5,8 @@ import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { data } from 'jquery';
+
+
 
 
 @Component({
@@ -113,7 +114,7 @@ async getData() {
       this.MyForm.markAllAsTouched();
       return;
     }
-   /* const conector = new ConectorPluginV3;
+    const conector = new ConectorPluginV3;
     conector.Iniciar()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
     conector.EscribirTexto("esto es una prueba");
@@ -121,13 +122,13 @@ async getData() {
     conector.EscribirTexto("esto es una prueba");
     conector.EscribirTexto("esto es una prueba");
     conector.EscribirTexto("esto es una prueba");
-    const respuesta =   conector.imprimirEn(this.MyForm.controls['impresoras'].value);
+    const respuesta =   conector.imprimirEn(this.MyForm.get('impresoras').value);
     if(respuesta){
+      console.log("imprimio correcto")
 console.log(respuesta)
     }else{
       console.log("imprimio incorecto")
     }
-*/
 
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
@@ -147,8 +148,8 @@ console.log(respuesta)
 
 
   ngOnInit(): void {
-    this.getCliente()
-  //  this.getData();
+    this.getCliente();
+    this.getData();
   const total = this.MyForm.get('total') as FormControl;
   total.setValue(this.data.precio);
   const usuario = this.MyForm.get('usuario') as FormControl;
