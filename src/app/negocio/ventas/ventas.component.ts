@@ -9,7 +9,7 @@ import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.com
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
-import { MatTableDataSource } from '@angular/material/table';
+;
 
 
 
@@ -39,6 +39,7 @@ export class VentasComponent implements OnInit {
   dataSource: any;
   dataTabla:any;
   totalMonto:number=0;
+  totalDescuento:number=0;
   dataToDisplay = [];
   loading:boolean=false;
   dataRecibo:Details[] = []
@@ -62,7 +63,6 @@ export class VentasComponent implements OnInit {
       this.sucursal_id=suc;
       console.log("thissss",suc)
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
-          console.log("!noooo",d)
         this.sucursal=d[0]['nombre'];
         localStorage.setItem("sucursal_id",this.sucursal_id);
 
@@ -77,8 +77,10 @@ export class VentasComponent implements OnInit {
 
 
 renderDataTable() {
+  this.loading=true;
   this.selectedRowIndex=null
   this.api.getApi('articulos').subscribe(x => {
+    this.loading=false;
    // this.dataSource = new MatTableDataSource();
      this.dataSource = x;
    //this.empTbSort.disableClear = true;
@@ -133,7 +135,8 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
   sumarMonto(array: Details[]){
     this.totalMonto=0;
- array.forEach(item =>{this.totalMonto+=item.cantidad*item.precio})
+
+ array.forEach(item =>{this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)})
   }
 
 
@@ -156,12 +159,14 @@ openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:n
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
         if(ux.descuento>0){
-        dato.precio = ux.precio-(ux.precio*(ux.descuento/100));
-        dato.descuento=ux.descuento;
+        //dato.precio = ux.precio-(ux.precio*(ux.descuento/100));
+        dato.descuento=(dato.precio*(ux.descuento/100));
+
       }
       }
    });
    this.sumarMonto(this.dataRecibo)
+   console.log("datarecibo",this.dataRecibo)
   });
 
 }
@@ -194,9 +199,11 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
       if(dato.id == id){
         if(ux.cantidad!=cantidad){
         dato.cantidad = ux.cantidad
+
       }
       }
    });
+   console.log("cantidad",this.dataRecibo)
    this.sumarMonto(this.dataRecibo)
    });
 
@@ -218,7 +225,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
 
-    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,
+    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
     data: {precio:this.totalMonto,
            detalle:this.dataRecibo
     },

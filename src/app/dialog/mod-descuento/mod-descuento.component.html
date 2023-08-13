@@ -5,7 +5,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>S/ Monto de descuento</mat-label>
-          <input matInput  [(ngModel)]="descuentoTotal" readonly name="total" type="number">
+          <input matInput   mask="separator.2" prefix="S/ " [(ngModel)]="descuentoTotal" readonly name="total" type="text">
         </mat-form-field>
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>

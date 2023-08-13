@@ -61,10 +61,10 @@
                              <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio}}</a>
                           </td>
                           <td>
-                            <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">% {{item.descuento}}</a>
+                            <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.descuento*item.cantidad}}</a>
                          </td>
                           <td class="text-primary">
-                              S/ {{item.cantidad * item.precio}}
+                              S/ {{item.cantidad * item.precio-(item.descuento*item.cantidad)}}
                           </td>
                           <td class="text-primary">
                             <button mat-icon-button color="primary" (click)="borrarItem(i)" aria-label="Eliminar">
