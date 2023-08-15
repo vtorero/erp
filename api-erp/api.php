@@ -332,20 +332,12 @@ $app->get("/articulos",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen
-
-    FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
-
-    right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id;");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id");
 
     $prods=array();
 
         while ($fila = $resultado->fetch_array()) {
-
-
-
             $prods[]=$fila;
-
         }
 
         $respuesta=json_encode($prods);
@@ -1889,74 +1881,36 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
     $app->post("/venta",function() use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
-
         $json = $app->request->getBody();
-
         $j = json_decode($json,true);
-
         $data = json_decode($j['json']);
-
         $detalle = json_decode($j['detalle']);
-
         $valor_total=0;
-
-
-
                 try {
-
-
-
                    $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}','{$data->tipoDoc}',{$data->total},0,'{$data->comentario}')";
-
                    $stmt = mysqli_prepare($db,$sql);
-
                     mysqli_stmt_execute($stmt);
-
                     $datos=$db->query("SELECT max(id) ultimo_id FROM ventas");
-
                     $ultimo_id=array();
-
                     while ($d = $datos->fetch_object()) {
-
                      $ultimo_id=$d;
-
                      }
 
-                     var_dump($ultimo_id);
-
-                     die();
-
-                    foreach($data->detalleVenta as $valor){
-
+                    foreach($detalle as $item){
                     /*inserta detalla*/
 
-
-
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$valor->codProducto},{$valor->codProductob->id},'{$valor->unidadmedida}',{$valor->cantidad},{$valor->peso},{$valor->mtoValorUnitario},0)";
-
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},0,{$item->descuento},{$item->precio})";
                     $stmt = mysqli_prepare($db,$proc);
-
                     mysqli_stmt_execute($stmt);
-
                     $stmt->close();
-
-                    $actualiza="call p_actualiza_inventario({$valor->codProductob->id},{$valor->codProducto},{$valor->cantidad},{$valor->peso},'{$valor->unidadmedida}')";
-
-                    $stmtb = mysqli_prepare($db,$actualiza);
-
-                    mysqli_stmt_execute($stmtb);
-
-                    $stmtb->close();
+                    //$actualiza="call p_actualiza_inventario({$valor->codProductob->id},{$valor->codProducto},{$valor->cantidad},{$valor->peso},'{$valor->unidadmedida}')";
+                    //$stmtb = mysqli_prepare($db,$actualiza);
+                    //mysqli_stmt_execute($stmtb);
+                    //$stmtb->close();
 
                     }
 
-
-
                        $result = array("STATUS"=>true,"messaje"=>"Venta registrada correctamente");
-
-
-
-
 
                     }
 

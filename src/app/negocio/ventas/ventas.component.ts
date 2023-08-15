@@ -155,7 +155,6 @@ openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:n
   data: {clase:'modPrecio',producto:id,precio:precio,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
-    console.log("ux",ux)
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
         if(ux.descuento>0){
