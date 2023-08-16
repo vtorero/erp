@@ -49,8 +49,7 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     MatPaginatorModule,
     MatSortModule,
     CurrencyMaskModule
-
-  ],
+    ],
   exports:[
     MatCardModule,
     MatFormFieldModule,

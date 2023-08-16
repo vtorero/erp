@@ -1,11 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 
 
 
@@ -45,7 +44,8 @@ public id_documento:number=0
     @Inject(MAT_DIALOG_DATA) public data: Details,
     private api:ApiService,
     private fb:FormBuilder,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+
     ) { }
 
     get Pagos() {
@@ -81,7 +81,6 @@ isValidFieldInArray(formArray:FormArray,index:number){
 
   }
 }
-
 
 onAddToPago():void{
   const PagoGroup = this.fb.group({
@@ -132,7 +131,10 @@ console.log(respuesta)
 
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
-        this._snackBar.open(data['messaje'],"OK",{verticalPosition:'top',});
+        this._snackBar.open(data['messaje'],"OK",{verticalPosition:'bottom'});
+
+
+
        console.log("detalle",this.data.detalle);
        this.MyForm.reset();
        this.cancelar()
@@ -191,7 +193,7 @@ if(depositos>precio){
   this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
    vuelto.setValue('');
 }
-    if(efectivo<precio && efectivo!=precio){
+    if(efectivo<0){
       const vuelto = this.MyForm.get('vuelto') as FormControl;
       this._snackBar.open("El monto recibido no es suficiente","Aceptar",{verticalPosition:'bottom'});
       vuelto.setValue('');

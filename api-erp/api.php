@@ -1836,7 +1836,7 @@ $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT v.id, v.tipoDoc,v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.nombre,' ',c.apellido) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante, DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,formaPago,DATE_FORMAT(v.fechaPago, '%Y-%m-%d') fechaPago ,observacion FROM ventas v,usuarios u,clientes c,vendedor ve where v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante in('Boleta') union all SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,formaPago,DATE_FORMAT(v.fechaPago, '%Y-%m-%d') fechaPago ,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante in('Factura','Factura Gratuita') order by id desc");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1");
 
     $prods=array();
 
@@ -1896,6 +1896,15 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                      $ultimo_id=$d;
                      }
 
+
+                     foreach($data->pagos as $pago){
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->montoPago})";
+
+                    $stmtP = mysqli_prepare($db,$procP);
+                    mysqli_stmt_execute($stmtP);
+                     }
+
+
                     foreach($detalle as $item){
                     /*inserta detalla*/
 
@@ -1910,7 +1919,10 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
                     }
 
-                       $result = array("STATUS"=>true,"messaje"=>"Venta registrada correctamente");
+
+
+
+                       $result = array("STATUS"=>true,"messaje"=>"Venta registrada correctamente con el número: ".$ultimo_id->ultimo_id);
 
                     }
 

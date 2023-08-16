@@ -9,7 +9,8 @@ import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.com
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
-;
+
+
 
 
 
@@ -51,6 +52,7 @@ export class VentasComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
+
 
   ) { }
 

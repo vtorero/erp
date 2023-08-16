@@ -42,7 +42,6 @@ import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.
     SharedModule,
     ComponentsModule,
     NgxMaskModule.forRoot()
-
   ],
   declarations: [
     AppComponent,
