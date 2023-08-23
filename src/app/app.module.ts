@@ -29,6 +29,8 @@ import { RegistroVentaComponent } from './dialog/registro-venta/registro-venta.c
 import { NgxMaskModule } from 'ngx-mask';
 import { ListadoComponent } from './negocio/ventas/listado/listado.component';
 import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.component';
+import { permisosComponent } from './seguridad/permisos/permisos.component';
+
 
 @NgModule({
   imports: [
@@ -65,9 +67,7 @@ import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.
      RegistroVentaComponent,
      ListadoComponent,
      ConfiguracionComponent,
-
-
-
+     permisosComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -29,7 +29,7 @@ export const ROUTES: RouteInfo[] = [
     //{ path: '/maps', title: 'Maps',  icon:'location_on', class: '' ,child:[]},
     { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'}]},
-    { path: '/configuracion', title: 'Configuración',  icon: 'dashboard', class: '',child:[]},
+    { path: '/configuracion/main', title: 'Configuración',  icon: 'dashboard', class: '',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'}]},
 ];
 
 @Component({
