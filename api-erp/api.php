@@ -212,6 +212,33 @@ $app->get("/usuarios",function() use($db,$app){
 
 /*update usuario*/
 
+/*permisos*/
+
+$app->get("/permisos",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT p.id, s.nombre sucursal,u.nombre ,p.estado,p.usuario,p.fecha_registro FROM aprendea_erp.permisos p inner join sucursales s inner join usuarios u
+    where p.id_sucursal=s.id and p.id_usuario=u.id;");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+
+
+    });
+
 
 
 $app->put("/usuario",function() use($db,$app){

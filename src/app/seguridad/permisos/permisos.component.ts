@@ -23,7 +23,7 @@ export class permisosComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','id_usuario', 'id_sucursal', 'usuario'];
+  displayedColumns = ['id','sucursal','nombre','usuario','estado','fecha_registro'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -60,7 +60,7 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApiTabla('/permisos').subscribe(x => {
+    this.api.getApi('/permisos').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
       this.empTbSort.disableClear = true;

@@ -44,18 +44,26 @@
                               <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
                         </ng-container>
                        <!-- Columna Apellido -->
-                        <ng-container matColumnDef="id_usuario">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>id_usuario</mat-header-cell>
-                              <mat-cell *matCellDef="let row">{{row.id_usuario}} </mat-cell>
+                        <ng-container matColumnDef="sucursal">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>Sucursal</mat-header-cell>
+                              <mat-cell *matCellDef="let row">{{row.sucursal}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="id_sucursal">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>id_sucursal</mat-header-cell>
-                            <mat-cell *matCellDef="let row">{{row.id_sucursal}} </mat-cell>
+                        <ng-container matColumnDef="nombre">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                            <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
                       </ng-container>
                         <ng-container matColumnDef="usuario">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
                           <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="estado">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{row.estado}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fecha_registro">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de registro</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
+            </ng-container>
 
                           <!-- Columna Nacionalidad -->
 
