@@ -1,0 +1,33 @@
+<div *ngIf="data.clase!='DelPermisos'">
+    <h1 mat-dialog-title>Configurar permisos</h1>
+    <form #formGeneral="ngForm">
+    <div mat-dialog-content>
+        <div style="display: flex;flex-direction: column; margin:1rem auto; width:350px; padding: 1rem;">
+            <mat-form-field appearance="outline">
+                <mat-label>Usuario</mat-label>
+                <mat-select  [(ngModel)]="data.id_usuario" name="id_usuario" #id_usuario="ngModel" required>
+                    <mat-option [value]="">Seleccionar</mat-option>
+                    <mat-option  *ngFor="let user of dataUsuarios" [value]="user.id">
+                    {{user.nombre}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="id_usuario.hasError('required')">Seleccionar</mat-error>
+              </mat-form-field>
+
+                </div>
+    </div>
+    </form>
+    <div mat-dialog-actions>
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneral.form.valid" cdkFocusInitial>Confirmar</button>
+    </div>
+    </div>
+    <div *ngIf="data.clase=='DelProvedor'">
+      <h1 mat-dialog-title>Eliminar registro {{data.cliente.nombre}} ?</h1>
+    <div mat-dialog-content>
+      </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
+    </div>
+    </div>
