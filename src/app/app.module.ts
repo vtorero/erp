@@ -30,6 +30,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { ListadoComponent } from './negocio/ventas/listado/listado.component';
 import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.component';
 import { permisosComponent } from './seguridad/permisos/permisos.component';
+import { AddPermisosComponent } from './dialog/add-permisos/add-permisos.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { permisosComponent } from './seguridad/permisos/permisos.component';
      RegistroVentaComponent,
      ListadoComponent,
      ConfiguracionComponent,
-     permisosComponent
+     permisosComponent,
+     AddPermisosComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
