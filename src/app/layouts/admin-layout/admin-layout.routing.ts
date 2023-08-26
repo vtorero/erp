@@ -21,6 +21,7 @@ import { ListadoComponent } from '../../negocio/ventas/listado/listado.component
 import { MainComponent } from 'app/negocio/ventas/main/main.component';
 import { ConfiguracionComponent } from '../../seguridad/configuracion/configuracion.component';
 import { permisosComponent } from '../../seguridad/permisos/permisos.component';
+import { CajasComponent } from 'app/seguridad/cajas/cajas.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -72,8 +73,8 @@ export const AdminLayoutRoutes: Routes = [
     {path:'venta-rapida',component:VentasComponent}]},
     {path:'configuracion',
     children:[{path:'main',component:ConfiguracionComponent}
-    ,{path:'permisos',component:permisosComponent}]
-    },
+    ,{path:'permisos',component:permisosComponent},
+    {path:'cajas',component:CajasComponent}]},
       {path:'inventarios',component:MainInventarioComponent},
     { path: 'proveedores',      component: ProveedoresComponent },
     { path: 'clientes',      component: ClienteComponent },

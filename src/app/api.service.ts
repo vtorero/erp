@@ -9,6 +9,7 @@ import { Productos } from './modelos/producto';
 import { Categoria } from "./modelos/categoria";
 import { Details } from './modelos/details';
 import { Permisos } from './modelos/permisos';
+import { Cajas } from './modelos/cajas';
 
 
 
@@ -77,6 +78,19 @@ public guardarUsuario(datos: Usuario): Observable<any> {
   let json = JSON.stringify(datos);
   return this._http.post(
     Global.BASE_API_URL + "api.php/usuario",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public guardarCajas(datos:Cajas): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/cajas",
     { json: json },
     { headers: headers }
   );

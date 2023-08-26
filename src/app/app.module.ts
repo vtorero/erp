@@ -31,6 +31,8 @@ import { ListadoComponent } from './negocio/ventas/listado/listado.component';
 import { ConfiguracionComponent } from './seguridad/configuracion/configuracion.component';
 import { permisosComponent } from './seguridad/permisos/permisos.component';
 import { AddPermisosComponent } from './dialog/add-permisos/add-permisos.component';
+import { CajasComponent } from './seguridad/cajas/cajas.component';
+import { AddCajasComponent } from './dialog/add-cajas/add-cajas.component';
 
 
 @NgModule({
@@ -69,7 +71,9 @@ import { AddPermisosComponent } from './dialog/add-permisos/add-permisos.compone
      ListadoComponent,
      ConfiguracionComponent,
      permisosComponent,
-     AddPermisosComponent
+     AddPermisosComponent,
+     CajasComponent,
+     AddCajasComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

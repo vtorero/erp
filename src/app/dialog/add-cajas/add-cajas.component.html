@@ -1,0 +1,41 @@
+<div *ngIf="data.clase!='DelPermisos'">
+    <h1 mat-dialog-title>Configurar permisos</h1>
+    <form #formGeneral="ngForm">
+    <div mat-dialog-content>
+        <div style="display: flex;flex-direction: column; margin:1rem auto; width:350px; padding: 1rem;">
+
+                <mat-label>Nombre</mat-label>
+                <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+                    <mat-label>Descripción caja</mat-label>
+                      <input matInput [(ngModel)]="data.nombre" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre Caja" required>
+
+                    </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Sucursal</mat-label>
+                <mat-select  [(ngModel)]="data.id_sucursal" name="id_sucursal" #id_sucursal="ngModel" required>
+                    <mat-option [value]="">Seleccionar</mat-option>
+                    <mat-option  *ngFor="let sucursal of dataSucursales" [value]="sucursal.id">
+                    {{sucursal.nombre}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="id_sucursal.hasError('required')">Seleccionar</mat-error>
+              </mat-form-field>
+
+                </div>
+    </div>
+    </form>
+    <div mat-dialog-actions>
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneral.form.valid" cdkFocusInitial>Confirmar</button>
+    </div>
+    </div>
+    <div *ngIf="data.clase=='DelProvedor'">
+      <h1 mat-dialog-title>Eliminar registro {{data.cliente.nombre}} ?</h1>
+    <div mat-dialog-content>
+      </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
+    </div>
+    </div>
