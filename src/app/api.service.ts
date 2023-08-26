@@ -8,6 +8,7 @@ import { Clientes } from './modelos/clientes';
 import { Productos } from './modelos/producto';
 import { Categoria } from "./modelos/categoria";
 import { Details } from './modelos/details';
+import { Permisos } from './modelos/permisos';
 
 
 
@@ -80,6 +81,21 @@ public guardarUsuario(datos: Usuario): Observable<any> {
     { headers: headers }
   );
 }
+
+
+public guardarPermisos(datos:Permisos): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/permisos",
+    { json: json },
+    { headers: headers }
+  );
+}
+
 
 public actualizarUsuario(datos: Usuario): Observable<any> {
   let headers = new HttpHeaders().set(

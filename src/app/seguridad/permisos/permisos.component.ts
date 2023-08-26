@@ -9,6 +9,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { AddPermisosComponent } from 'app/dialog/add-permisos/add-permisos.component';
 import { Usuario } from 'app/modelos/usuario';
+import { Permisos } from '../../modelos/permisos';
 
 @Component({
   selector: 'app-permisos',
@@ -120,7 +121,7 @@ openBusqueda(){
       enterAnimationDuration,
       exitAnimationDuration,
       data: {
-        clase:'Usuario',
+        clase:'Permisos',
         usuario:this.selectedRowIndex
       },
     });
@@ -146,9 +147,10 @@ openBusqueda(){
 }
 
 
-  agregar(art:Usuario) {
+  agregar(art:Permisos) {
     if(art){
-    this.api.guardarUsuario(art).subscribe(
+      art.usuario=localStorage.getItem("currentUser");
+    this.api.guardarPermisos(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         },

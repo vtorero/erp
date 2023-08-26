@@ -165,8 +165,50 @@ $app->get("/usuarios",function() use($db,$app){
     });
 
 
+/*Agregar permisos*/
 
- /*Agregar usuario*/
+$app->post("/permisos",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+       $json = $app->request->getBody();
+
+       $j = json_decode($json,true);
+
+       $data = json_decode($j['json']);
+
+       try {
+
+
+
+        $sql="call p_permisos('{$data->id_usuario}','{$data->id_sucursal}',1,'{$data->usuario}')";
+
+        $stmt = mysqli_prepare($db,$sql);
+
+        mysqli_stmt_execute($stmt);
+
+        $result = array("STATUS"=>true,"messaje"=>"Permiso registrado correctamente");
+
+        }
+
+        catch(PDOException $e) {
+
+
+
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+
+
+    }
+
+
+
+             echo  json_encode($result);
+
+});
+
+
+/*Agregar usuario*/
 
  $app->post("/usuario",function() use($db,$app){
 

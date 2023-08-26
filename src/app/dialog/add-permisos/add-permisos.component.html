@@ -13,6 +13,16 @@
                   </mat-select>
                   <mat-error *ngIf="id_usuario.hasError('required')">Seleccionar</mat-error>
               </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Sucursal</mat-label>
+                <mat-select  [(ngModel)]="data.id_sucursal" name="id_sucursal" #id_sucursal="ngModel" required>
+                    <mat-option [value]="">Seleccionar</mat-option>
+                    <mat-option  *ngFor="let sucursal of dataSucursales" [value]="sucursal.id">
+                    {{sucursal.nombre}}
+                  </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="id_usuario.hasError('required')">Seleccionar</mat-error>
+              </mat-form-field>
 
                 </div>
     </div>

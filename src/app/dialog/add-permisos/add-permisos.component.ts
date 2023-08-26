@@ -14,6 +14,7 @@ import { Permisos } from 'app/modelos/permisos';
 
 export class AddPermisosComponent implements OnInit {
 dataUsuarios:any;
+dataSucursales:any;
 
 constructor(
     private toastr: MatSnackBar,
@@ -22,6 +23,15 @@ constructor(
     private api:ApiService
 
   ) { }
+
+  getSucursal(): void {
+    this.api.getApiTabla('/sucursales').subscribe(data => {
+      if(data) {
+        this.dataSucursales = data;
+      }
+    } );
+  }
+
 
   getUsers(): void {
     this.api.getApi('usuarios').subscribe(data => {
@@ -34,6 +44,7 @@ constructor(
 
   ngOnInit() {
     this.getUsers();
+    this.getSucursal();
   }
   cancelar() {
     this.dialogRef.close();
