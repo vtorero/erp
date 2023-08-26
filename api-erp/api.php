@@ -35,7 +35,6 @@ $db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 
-
 mysqli_set_charset($db, 'utf8');
 
 if (mysqli_connect_errno()) {
@@ -164,6 +163,45 @@ $app->get("/usuarios",function() use($db,$app){
 
     });
 
+/**Agregar caja */
+
+
+$app->post("/cajas",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+       $json = $app->request->getBody();
+
+       $j = json_decode($json,true);
+
+       $data = json_decode($j['json']);
+
+       try {
+
+
+
+        $sql="call p_cajas('{$data->nombre}','{$data->id_sucursal}',1,'{$data->usuario}')";
+
+        $stmt = mysqli_prepare($db,$sql);
+
+        mysqli_stmt_execute($stmt);
+
+        $result = array("STATUS"=>true,"messaje"=>"Permiso registrado correctamente");
+
+        }
+
+        catch(PDOException $e) {
+
+
+
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+
+
+    }
+});
+
+
 
 /*Agregar permisos*/
 
@@ -253,6 +291,35 @@ $app->post("/permisos",function() use($db,$app){
 
 
 /*update usuario*/
+
+/**get cajas */
+
+$app->get("/cajas",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT c.id, c.nombre,s.nombre ,c.estado,c.usuario,c.fecha_registro FROM aprendea_erp.cajas c
+    inner join sucursales s");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+
+
+    });
+
+
 
 /*permisos*/
 
