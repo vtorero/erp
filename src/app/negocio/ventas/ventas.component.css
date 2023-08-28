@@ -51,7 +51,7 @@
 .boleta{
     overflow: auto; /*// you can use 'overflow: scroll;' and always have reserved space for scrollabar*/
     overflow-x: hidden;
-    height: 65vh;
+    height: 58vh;
     top: 0;
     left: 0;
     bottom: 0;

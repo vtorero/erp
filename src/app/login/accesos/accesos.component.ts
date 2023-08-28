@@ -43,15 +43,7 @@ loading = false;
 console.log(this.form)
 const usuario = this.form.value.usuario;
 const password = this.form.value.password;
-
-if(usuario=='admin' && password=='123'){
 this.loginUser(usuario,password)
-
-}else{
-this.error();
-//this.form.reset()
-
-}
 }
 
 /*fakeLoading(){
@@ -86,7 +78,9 @@ loginUser(usuario,password){
             this.router.navigate(['/dashboard']);
 
           }else{
+            
             this.error();
+          
 
           }
 
@@ -96,8 +90,9 @@ loginUser(usuario,password){
 }
 
 error(){
+  this.router.navigate(['/login']);
 this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-
+this.loading=false;
 }
 
   ngOnInit(): void {

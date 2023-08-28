@@ -11,6 +11,14 @@
             <input matInput required type="email" [(ngModel)]="data.correo" formControlName="correo">
           </mat-form-field>
           <mat-form-field appearance="fill">
+            <mat-label>Rol</mat-label>
+            <mat-select required [(ngModel)]="data.rol" formControlName="estado">
+              <mat-option value="">Seleccionar</mat-option>
+              <mat-option value="administrador">Administrador</mat-option>
+              <mat-option value="usuario">Usuario</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
             <mat-label>Estado</mat-label>
             <mat-select required [(ngModel)]="data.estado" formControlName="estado">
               <mat-option value="0">Inactivo</mat-option>

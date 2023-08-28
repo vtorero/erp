@@ -262,7 +262,7 @@ $app->post("/permisos",function() use($db,$app){
 
 
 
-        $sql="call p_usuario('{$data->nombre}','{$data->correo}',{$data->estado})";
+        $sql="call p_usuario('{$data->nombre}','{$data->correo}','{$data->rol}',{$data->estado})";
 
         $stmt = mysqli_prepare($db,$sql);
 
@@ -299,7 +299,7 @@ $app->get("/cajas",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
 
     $resultado = $db->query("SELECT c.id, c.nombre,s.nombre ,c.estado,c.usuario,c.fecha_registro FROM aprendea_erp.cajas c
-    inner join sucursales s");
+    inner join sucursales s on c.id_sucursal=s.id;");
 
     $prods=array();
 
