@@ -45,10 +45,7 @@
                     <mat-label>Forma de pago</mat-label>
                     <mat-select name="tipopago" formControlName="tipoPago"  required>
                         <mat-option value="">Seleccionar</mat-option>
-                        <mat-option value="Efectivo">Efectivo</mat-option>
-                        <mat-option value="Transferencia">Transferencia</mat-option>
-                        <mat-option value="Deposito">Deposito</mat-option>
-                        <mat-option value="Yape">Yape</mat-option>
+                        <mat-option *ngFor="let caj of dataCajas" [value]="caj.id">{{caj.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>

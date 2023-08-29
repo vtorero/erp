@@ -33,6 +33,7 @@ export class RegistroVentaComponent implements OnInit {
   });
 
 dataClientes:any;
+dataCajas:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
@@ -152,6 +153,7 @@ console.log(respuesta)
   ngOnInit(): void {
     this.getCliente();
     this.getData();
+    this.getCajas();
   const total = this.MyForm.get('total') as FormControl;
   total.setValue(this.data.precio);
   const usuario = this.MyForm.get('usuario') as FormControl;
@@ -167,6 +169,16 @@ console.log(respuesta)
       }
     } );
   }
+
+  getCajas(): void {
+    const idUsuario = localStorage.getItem("currentId")
+    this.api.getCajasUsuario(idUsuario).subscribe(data => {
+      if(data) {
+        this.dataCajas = data;
+      }
+    } );
+  }
+
 
   cancelar() {
     this.dialog.closeAll();

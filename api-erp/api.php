@@ -288,6 +288,32 @@ $app->post("/permisos",function() use($db,$app){
 
 });
 
+/**get cajas por usuario */
+$app->get("/cajas/:uid",function($uid) use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT c.id,c.nombre FROM cajas c inner JOIN sucursales s on c.id_sucursal=s.id inner JOIN permisos p on s.id=p.id_sucursal WHERE id_usuario='{$uid}'");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+
+
+    });
+
+
 
 
 /*update usuario*/

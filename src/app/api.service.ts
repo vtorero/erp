@@ -64,6 +64,13 @@ export class ApiService {
     }, { headers: this.headers }).pipe(map(data => data));
 }
 
+public getCajasUsuario(usuario: string): Observable<any> {
+  return this._http.get(Global.BASE_API_URL + 'api.php/cajas/' + usuario,
+    { headers: this.headers }
+  ).pipe(map(result => result))
+  
+}
+
 listarUsuarios() {
   return this._http
     .get(Global.BASE_API_URL + "api.php/usuarios", { headers: this.headers })
