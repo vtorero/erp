@@ -15,6 +15,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 
 
+
+
+
 export class RegistroVentaComponent implements OnInit {
   public MyForm = this.fb.group({
     tipoDoc: ['', Validators.required],
@@ -26,10 +29,11 @@ export class RegistroVentaComponent implements OnInit {
     })]),
     vuelto:['',Validators.required],
     comentario:[''],
-    impresoras:[""],
+    impresoras:[''],
     total:[0],
     usuario:[''],
-    sucursal:['']
+    sucursal:[''],
+    entrega: [''],
   });
 
 dataClientes:any;
@@ -65,7 +69,9 @@ isValidFieldInArray(formArray:FormArray,index:number){
   return formArray.controls[index].errors
   && formArray.controls[index].touched;
 }
-
+alerta(){
+console.log(this.data)
+}
   getFieldError(field:string):string | null{
   if(!this.MyForm.controls[field]) return null;
   const errors = this.MyForm.controls[field].errors || {};

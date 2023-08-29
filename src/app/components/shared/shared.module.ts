@@ -23,6 +23,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
@@ -48,7 +49,8 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    MatSlideToggleModule
     ],
   exports:[
     MatCardModule,
@@ -68,7 +70,8 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    MatSlideToggleModule
   ]
 })
 export class SharedModule { }
