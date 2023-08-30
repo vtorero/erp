@@ -5,6 +5,7 @@ import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 
 
 
@@ -69,8 +70,21 @@ isValidFieldInArray(formArray:FormArray,index:number){
   return formArray.controls[index].errors
   && formArray.controls[index].touched;
 }
+
+openDescuento(enterAnimationDuration: string, exitAnimationDuration: string){
+  const dialogo2=this.dialog.open(EntregaParcialComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: this.data,
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    console.log(ux);
+  });
+}
+
+
 alerta(){
+  this.openDescuento('20ms','20ms')
 console.log(this.data)
+
 }
   getFieldError(field:string):string | null{
   if(!this.MyForm.controls[field]) return null;

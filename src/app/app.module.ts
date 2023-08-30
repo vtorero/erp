@@ -33,6 +33,7 @@ import { permisosComponent } from './seguridad/permisos/permisos.component';
 import { AddPermisosComponent } from './dialog/add-permisos/add-permisos.component';
 import { CajasComponent } from './seguridad/cajas/cajas.component';
 import { AddCajasComponent } from './dialog/add-cajas/add-cajas.component';
+import { EntregaParcialComponent } from './dialog/entrega-parcial/entrega-parcial.component';
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { AddCajasComponent } from './dialog/add-cajas/add-cajas.component';
      permisosComponent,
      AddPermisosComponent,
      CajasComponent,
-     AddCajasComponent
+     AddCajasComponent,
+     EntregaParcialComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
