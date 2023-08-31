@@ -34,6 +34,7 @@ import { AddPermisosComponent } from './dialog/add-permisos/add-permisos.compone
 import { CajasComponent } from './seguridad/cajas/cajas.component';
 import { AddCajasComponent } from './dialog/add-cajas/add-cajas.component';
 import { EntregaParcialComponent } from './dialog/entrega-parcial/entrega-parcial.component';
+import { ModPendienteComponent } from './dialog/mod-pendiente/mod-pendiente.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { EntregaParcialComponent } from './dialog/entrega-parcial/entrega-parcia
      AddPermisosComponent,
      CajasComponent,
      AddCajasComponent,
-     EntregaParcialComponent
+     EntregaParcialComponent,
+     ModPendienteComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

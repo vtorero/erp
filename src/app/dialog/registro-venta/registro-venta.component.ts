@@ -71,7 +71,7 @@ isValidFieldInArray(formArray:FormArray,index:number){
   && formArray.controls[index].touched;
 }
 
-openDescuento(enterAnimationDuration: string, exitAnimationDuration: string){
+openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(EntregaParcialComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
   data: this.data,
   });
@@ -82,10 +82,9 @@ openDescuento(enterAnimationDuration: string, exitAnimationDuration: string){
 
 
 alerta(){
-  this.openDescuento('20ms','20ms')
-console.log(this.data)
-
+this.openEntrega('20ms','20ms')
 }
+
   getFieldError(field:string):string | null{
   if(!this.MyForm.controls[field]) return null;
   const errors = this.MyForm.controls[field].errors || {};

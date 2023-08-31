@@ -8,7 +8,7 @@
                 Producto
             </th>
             <th>
-                Cantidad
+                Pendientes
             </th>
 
         </thead>
@@ -21,7 +21,7 @@
                     {{item.nombre}}
                 </td>
                 <td>
-                  <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad}}</a>
+                  <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.pendiente,item.nombre)">{{item.pendiente}}</a>
                 </td>
 
 
@@ -30,4 +30,6 @@
 
         </tbody>
     </table>
+    <!--<button mat-button (click)="cancelar()">Cancelar</button>-->
+    <button mat-raised-button [mat-dialog-close]="data"  cdkFocusInitial>Ingresar</button>
 </div>
