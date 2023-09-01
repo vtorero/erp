@@ -1998,7 +1998,7 @@ $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
     $prods=array();
 
@@ -2049,7 +2049,10 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $detalle = json_decode($j['detalle']);
         $valor_total=0;
                 try {
-                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}','{$data->tipoDoc}',{$data->total},0,'{$data->comentario}')";
+                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}','{$data->entrega}','{$data->tipoDoc}',{$data->total}, 0,'{$data->comentario}')";
+
+
+
                    $stmt = mysqli_prepare($db,$sql);
                     mysqli_stmt_execute($stmt);
                     $datos=$db->query("SELECT max(id) ultimo_id FROM ventas");
@@ -2070,7 +2073,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     foreach($detalle as $item){
                     /*inserta detalla*/
 
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},0,{$item->descuento},{$item->precio})";
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
                     $stmt = mysqli_prepare($db,$proc);
                     mysqli_stmt_execute($stmt);
                     $stmt->close();

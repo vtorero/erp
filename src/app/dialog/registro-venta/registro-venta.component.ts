@@ -151,11 +151,9 @@ console.log(respuesta)
 
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
+        console.log("form",this.MyForm.value)
+        console.log("detallesss",this.data.detalle)
         this._snackBar.open(data['messaje'],"OK",{verticalPosition:'bottom'});
-
-
-
-       console.log("detalle",this.data.detalle);
        this.MyForm.reset();
        this.cancelar()
 
