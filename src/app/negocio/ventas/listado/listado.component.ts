@@ -10,6 +10,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Clientes } from 'app/modelos/clientes';
 import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.component';
+import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 
 @Component({
   selector: 'app-listado',
@@ -76,7 +77,7 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(AddClienteComponent, {
+    const dialog= this.dialog.open(VerVentaComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,

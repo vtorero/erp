@@ -35,6 +35,7 @@ import { CajasComponent } from './seguridad/cajas/cajas.component';
 import { AddCajasComponent } from './dialog/add-cajas/add-cajas.component';
 import { EntregaParcialComponent } from './dialog/entrega-parcial/entrega-parcial.component';
 import { ModPendienteComponent } from './dialog/mod-pendiente/mod-pendiente.component';
+import { VerVentaComponent } from './negocio/ventas/ver-venta/ver-venta.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { ModPendienteComponent } from './dialog/mod-pendiente/mod-pendiente.comp
      CajasComponent,
      AddCajasComponent,
      EntregaParcialComponent,
-     ModPendienteComponent
+     ModPendienteComponent,
+     VerVentaComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

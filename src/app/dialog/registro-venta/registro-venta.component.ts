@@ -76,13 +76,18 @@ openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
   data: this.data,
   });
    dialogo2.afterClosed().subscribe(ux => {
-    console.log(ux);
+    console.log("len",ux.pendiente);
+  
+  
+  
   });
 }
 
 
 alerta(){
+if(this.MyForm.value.entrega){
 this.openEntrega('20ms','20ms')
+}
 }
 
   getFieldError(field:string):string | null{

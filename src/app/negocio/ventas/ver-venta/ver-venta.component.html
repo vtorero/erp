@@ -1,0 +1,115 @@
+<div style="height: 500px;overflow-y: auto;overflow-x: hidden;">
+    <form #formGeneral="ngForm">
+      <div mat-dialog-content>
+        <h3>Venta Detalle</h3>
+        <div style="display: flex;flex-direction:column; margin:0.5rem auto; width: 800px; padding: 1rem;">
+          <mat-form-field>
+            <mat-label>Comprobante</mat-label>
+            <mat-select name="comprobante"  readonly>
+              <mat-option [value]="">Seleccionar</mat-option>
+             
+            </mat-select>
+          </mat-form-field>
+          
+  
+          <!--<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+            <input type="checkbox" (change)="clienteNuevo($event)"class="custom-control-input" id="customSwitch3">
+            <label class="custom-control-label" for="customSwitch3">&nbsp;Cliente Nuevo</label>
+          </div>-->
+          <mat-form-field>
+            <mat-label>Cliente con DNI</mat-label>
+            <mat-select name="id_cliente"  readonly>
+              <input class="buscador" placeholder="Buscar cliente..">
+              <mat-option [value]="">Seleccionar</mat-option>
+           
+            </mat-select>
+          </mat-form-field>
+         <!-- <mat-form-field *ngIf="data.comprobante=='Factura' || (data.comprobante=='Pendiente' && filter=='2')">
+            <mat-label>Cliente CON RUC</mat-label>
+            <mat-select name="id_cliente" #id_cliente="ngModel" [(ngModel)]="data.id_cliente" readonly>
+              <input class="buscador" (keyup)="onKeyRuc($event.target.value)" placeholder="Buscar con RUC..">
+              <mat-option [value]="">Seleccionar</mat-option>
+              <mat-option *ngFor="let cli of dataEmpresas" [value]="cli.id">
+                {{cli.razon_social}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          -->
+          <mat-form-field>
+            <mat-label>Vendedor</mat-label>
+            <mat-select name="id_vendedor"  readonly>
+              <mat-option [value]="">Seleccionar</mat-option>
+          
+            </mat-select>
+        </mat-form-field>
+       
+
+          <div class="row">
+            <div class="col-lg-4">
+              <mat-form-field>
+                <mat-label>Valor neto</mat-label>
+                <input matInput name="valor_neto"  type="number" readonly>
+              </mat-form-field>
+               </div>
+            <div class="col-lg-4">
+              <mat-form-field>
+                <mat-label>Monto IGV</mat-label>
+                  <input matInput name="monto_igv"  type="number" readonly>
+              </mat-form-field>
+              </div>
+           
+            <div class="col-lg-4">
+              <mat-form-field>
+                <mat-label>Monto Total</mat-label>
+                  <input matInput name="valor_total" type="number" readonly>
+              </mat-form-field>
+                  </div>
+            </div>
+    </div>
+        </div>
+    </form>
+    <h4>Items</h4>
+  <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
+    <div class="example-container mat-elevation-z8" style="overflow-y:scroll;height:auto;margin-top:10px;">
+      <!--<mat-table [dataSource]="dataDetalle" matSort>
+        <ng-container matColumnDef="id_producto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nombre">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="cantidad">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Unidad</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.unidad_medida}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="peso">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>cantidad</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.cantidad}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="precio">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let row">S/. {{row.precio | number }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="subtotal">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Subtotal</mat-header-cell>
+          <mat-cell *matCellDef="let row">S/.{{ row.subtotal | number }}
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="borrar">
+          <th mat-header-cell *matHeaderCellDef> Opciones </th>
+          <td mat-cell *matCellDef="let row ;let j = index;">
+            <button class="btn btn-primary" (click)="deleteTicket(j)">Eliminar</button>
+          </td>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>-->
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+    </div>
+    <div mat-dialog-actions>
+
+      <button mat-raised-button  [disabled]="!formGeneral.form.valid" cdkFocusInitial>Ver Comprobante</button>
+    </div>
+  </div>

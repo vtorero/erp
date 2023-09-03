@@ -1,0 +1,9 @@
+.numero_edicion{
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: darkblue;
+
+}

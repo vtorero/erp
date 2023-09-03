@@ -1,0 +1,20 @@
+.numero_edicion{
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: darkblue;
+
+}
+.table td{
+    font-size: 11px;
+}
+.botones{
+    width: 100%;
+    display: flex;
+align-items: flex-end;
+}
+.boton{
+    float:right
+}
