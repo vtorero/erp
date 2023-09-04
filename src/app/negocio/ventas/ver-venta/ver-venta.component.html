@@ -1,29 +1,34 @@
 <div style="height: 500px;overflow-y: auto;overflow-x: hidden;">
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
-        <h3>Venta Detalle</h3>
-        <div style="display: flex;flex-direction:column; margin:0.5rem auto; width: 800px; padding: 1rem;">
-          <mat-form-field>
-            <mat-label>Comprobante</mat-label>
-            <mat-select name="comprobante"  readonly>
-              <mat-option [value]="">Seleccionar</mat-option>
-             
+        <h3>Visualizar Venta</h3>
+        <div class="row">
+          <div class="col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Tipo de Documento</mat-label>
+            <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" required>
+                <mat-option >Seleccionar</mat-option>
+                <mat-option value="Ticket">Ticket</mat-option>
+                <mat-option value="Boleta">Boleta</mat-option>
+                <mat-option value="Factura">Factura</mat-option>
             </mat-select>
-          </mat-form-field>
-          
-  
+        </mat-form-field>
+          </div>
+
           <!--<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
             <input type="checkbox" (change)="clienteNuevo($event)"class="custom-control-input" id="customSwitch3">
             <label class="custom-control-label" for="customSwitch3">&nbsp;Cliente Nuevo</label>
           </div>-->
+          <div class="col-6">
           <mat-form-field>
             <mat-label>Cliente con DNI</mat-label>
             <mat-select name="id_cliente"  readonly>
               <input class="buscador" placeholder="Buscar cliente..">
               <mat-option [value]="">Seleccionar</mat-option>
-           
+
             </mat-select>
           </mat-form-field>
+          </div>
          <!-- <mat-form-field *ngIf="data.comprobante=='Factura' || (data.comprobante=='Pendiente' && filter=='2')">
             <mat-label>Cliente CON RUC</mat-label>
             <mat-select name="id_cliente" #id_cliente="ngModel" [(ngModel)]="data.id_cliente" readonly>
@@ -39,10 +44,10 @@
             <mat-label>Vendedor</mat-label>
             <mat-select name="id_vendedor"  readonly>
               <mat-option [value]="">Seleccionar</mat-option>
-          
+
             </mat-select>
         </mat-form-field>
-       
+
 
           <div class="row">
             <div class="col-lg-4">
@@ -57,7 +62,7 @@
                   <input matInput name="monto_igv"  type="number" readonly>
               </mat-form-field>
               </div>
-           
+
             <div class="col-lg-4">
               <mat-form-field>
                 <mat-label>Monto Total</mat-label>

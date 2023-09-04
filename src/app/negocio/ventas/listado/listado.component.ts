@@ -11,6 +11,7 @@ import { Usuario } from 'app/modelos/usuario';
 import { Clientes } from 'app/modelos/clientes';
 import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.component';
 import { VerVentaComponent } from '../ver-venta/ver-venta.component';
+import { Venta } from 'app/modelos/venta';
 
 @Component({
   selector: 'app-listado',
@@ -26,12 +27,13 @@ export class ListadoComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','observacion'];
+  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','observacion','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
+    public dialog2: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -171,6 +173,20 @@ eliminar(art:Clientes) {
 }
 }
 
+
+abrirEditar(cod: Venta) {
+  console.log("venta",cod)
+  const dialogo2 = this.dialog2.open(VerVentaComponent, {
+    data: cod,
+    disableClose: true
+  });
+  dialogo2.afterClosed().subscribe(art => {
+    if (art != undefined){
+    //console.log("cargans",this.cargando);
+     this.update(art);
+    }
+  });
+}
 
 
   clickedRows = new Set<Usuario>();
