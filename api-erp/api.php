@@ -1998,7 +1998,7 @@ $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
     $prods=array();
 

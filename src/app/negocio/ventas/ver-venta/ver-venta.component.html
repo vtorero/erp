@@ -20,36 +20,21 @@
             <label class="custom-control-label" for="customSwitch3">&nbsp;Cliente Nuevo</label>
           </div>-->
           <div class="col-6">
-          <mat-form-field>
-            <mat-label>Cliente con DNI</mat-label>
-            <mat-select name="id_cliente"  readonly>
-              <input class="buscador" placeholder="Buscar cliente..">
-              <mat-option [value]="">Seleccionar</mat-option>
-
+            <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+              <mat-label>Cliente</mat-label>
+                <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
+                </mat-form-field>
+          </div>
+          <div class="col-6">
+         <mat-form-field>
+            <mat-label>Vendedor</mat-label>
+            <mat-select name="id_vendedor" #id_vendedor="ngModel" [(ngModel)]="data.id_vendedor" readonly>
+              <mat-option value="1">Vendedor 1</mat-option>
+              <mat-option value="2">Vendedor 2</mat-option>
             </mat-select>
           </mat-form-field>
           </div>
-         <!-- <mat-form-field *ngIf="data.comprobante=='Factura' || (data.comprobante=='Pendiente' && filter=='2')">
-            <mat-label>Cliente CON RUC</mat-label>
-            <mat-select name="id_cliente" #id_cliente="ngModel" [(ngModel)]="data.id_cliente" readonly>
-              <input class="buscador" (keyup)="onKeyRuc($event.target.value)" placeholder="Buscar con RUC..">
-              <mat-option [value]="">Seleccionar</mat-option>
-              <mat-option *ngFor="let cli of dataEmpresas" [value]="cli.id">
-                {{cli.razon_social}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          -->
-          <mat-form-field>
-            <mat-label>Vendedor</mat-label>
-            <mat-select name="id_vendedor"  readonly>
-              <mat-option [value]="">Seleccionar</mat-option>
-
-            </mat-select>
-        </mat-form-field>
-
-
-          <div class="row">
+             <div class="row">
             <div class="col-lg-4">
               <mat-form-field>
                 <mat-label>Valor neto</mat-label>
@@ -66,7 +51,7 @@
             <div class="col-lg-4">
               <mat-form-field>
                 <mat-label>Monto Total</mat-label>
-                  <input matInput name="valor_total" type="number" readonly>
+                  <input matInput name="valor_total" type="number" [(ngModel)]="data.valor_total" readonly>
               </mat-form-field>
                   </div>
             </div>
