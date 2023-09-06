@@ -68,7 +68,7 @@ public getCajasUsuario(usuario: string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/cajas/' + usuario,
     { headers: this.headers }
   ).pipe(map(result => result))
-  
+
 }
 
 listarUsuarios() {
@@ -281,6 +281,14 @@ public guardaVentas(datos,detalle){
   return this._http.post(Global.BASE_API_URL + 'api.php/venta',
     { json:json,detalle:det }, { headers: headers });
 }
+
+
+public GetDetalleVenta(id: any) {
+  return this._http.get(Global.BASE_API_URL + 'api.php/venta/' + id,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
+
 
 /**
 
@@ -518,11 +526,7 @@ enviaFactura(id): Observable<any> {
     ).pipe(map(result => result));
   }
 
-  GetDetalleVenta(id: any) {
-    return this._http.get(Global.BASE_API_URL + 'api.php/venta/' + id,
-      { headers: this.headers }
-    ).pipe(map(result => result));
-  }
+
 
   getReportes(inicio: string, final: string, empresa: string) {
     const url = Global.BASE_API_URL + 'api.php/reporte';

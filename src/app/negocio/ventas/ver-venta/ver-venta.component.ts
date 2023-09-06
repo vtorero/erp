@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { Venta } from 'app/modelos/venta';
 
@@ -9,8 +10,10 @@ import { Venta } from 'app/modelos/venta';
   styleUrls: ['./ver-venta.component.css']
 })
 export class VerVentaComponent implements OnInit {
+  displayedColumns = ['id_producto', 'nombre', 'cantidad','precio','subtotal','borrar'];
   dataClientes:any;
-
+  dataDetalle:any;
+  exampleArray:any;
   constructor(
     private api:ApiService,
     @Inject(MAT_DIALOG_DATA) public data:Venta,
@@ -18,6 +21,14 @@ export class VerVentaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.api.GetDetalleVenta(this.data.id).subscribe(x => {
+      this.dataDetalle = new MatTableDataSource();
+      this.exampleArray=x;
+      this.dataDetalle=this.exampleArray
+      this.data.detalleVenta=this.exampleArray;
+      console.log("datadetalle",this.dataDetalle)
+      });
+
     this.getCliente();
   }
 

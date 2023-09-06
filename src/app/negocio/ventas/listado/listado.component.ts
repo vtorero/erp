@@ -178,7 +178,7 @@ abrirEditar(cod: Venta) {
   console.log("venta",cod)
   const dialogo2 = this.dialog2.open(VerVentaComponent, {
     data: cod,
-    disableClose: true
+    disableClose: false
   });
   dialogo2.afterClosed().subscribe(art => {
     if (art != undefined){

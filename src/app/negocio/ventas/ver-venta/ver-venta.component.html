@@ -1,54 +1,51 @@
-<div style="height: 500px;overflow-y: auto;overflow-x: hidden;">
+<div>
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
-        <h3>Visualizar Venta</h3>
+        <h3>Visualizar Venta Nro:({{data.id}})</h3>
         <div class="row">
           <div class="col-6">
-          <mat-form-field appearance="outline">
-            <mat-label>Tipo de Documento</mat-label>
-            <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" required>
-                <mat-option >Seleccionar</mat-option>
-                <mat-option value="Ticket">Ticket</mat-option>
-                <mat-option value="Boleta">Boleta</mat-option>
-                <mat-option value="Factura">Factura</mat-option>
-            </mat-select>
-        </mat-form-field>
-          </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de Documento</mat-label>
+              <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
+                  <mat-option >Seleccionar</mat-option>
+                  <mat-option value="Ticket">Ticket</mat-option>
+                  <mat-option value="Boleta">Boleta</mat-option>
+                  <mat-option value="Factura">Factura</mat-option>
+              </mat-select>
+          </mat-form-field>
+            </div>
 
-          <!--<div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-            <input type="checkbox" (change)="clienteNuevo($event)"class="custom-control-input" id="customSwitch3">
-            <label class="custom-control-label" for="customSwitch3">&nbsp;Cliente Nuevo</label>
-          </div>-->
           <div class="col-6">
-            <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+            <mat-form-field>
+              <mat-label>Vendedor</mat-label>
+              <mat-select name="id_vendedor" #id_vendedor="ngModel" [(ngModel)]="data.id_vendedor" disabled="disabled">
+                <mat-option value="1">Vendedor 1</mat-option>
+                <mat-option value="2">Vendedor 2</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+          <div class="col-12">
+            <mat-form-field appearance="outline">
               <mat-label>Cliente</mat-label>
                 <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
                 </mat-form-field>
           </div>
-          <div class="col-6">
-         <mat-form-field>
-            <mat-label>Vendedor</mat-label>
-            <mat-select name="id_vendedor" #id_vendedor="ngModel" [(ngModel)]="data.id_vendedor" readonly>
-              <mat-option value="1">Vendedor 1</mat-option>
-              <mat-option value="2">Vendedor 2</mat-option>
-            </mat-select>
-          </mat-form-field>
-          </div>
              <div class="row">
-            <div class="col-lg-4">
+            <div class="col-4 offset-1">
               <mat-form-field>
                 <mat-label>Valor neto</mat-label>
                 <input matInput name="valor_neto"  type="number" readonly>
               </mat-form-field>
                </div>
-            <div class="col-lg-4">
+            <div class="col-3">
               <mat-form-field>
                 <mat-label>Monto IGV</mat-label>
                   <input matInput name="monto_igv"  type="number" readonly>
               </mat-form-field>
               </div>
 
-            <div class="col-lg-4">
+            <div class="col-4">
               <mat-form-field>
                 <mat-label>Monto Total</mat-label>
                   <input matInput name="valor_total" type="number" [(ngModel)]="data.valor_total" readonly>
@@ -60,22 +57,18 @@
     </form>
     <h4>Items</h4>
   <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
-    <div class="example-container mat-elevation-z8" style="overflow-y:scroll;height:auto;margin-top:10px;">
-      <!--<mat-table [dataSource]="dataDetalle" matSort>
+    <div class="example-container mat-elevation-z8" style="overflow-y:scroll;height:200px;margin-top:10px;">
+      <mat-table [dataSource]="dataDetalle" matSort>
         <ng-container matColumnDef="id_producto">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
+          <mat-cell *matCellDef="let row"> {{row.id_producto}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="nombre">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="cantidad">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Unidad</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.unidad_medida}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="peso">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>cantidad</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.cantidad}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="precio">
@@ -88,18 +81,16 @@
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="borrar">
-          <th mat-header-cell *matHeaderCellDef> Opciones </th>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Opciones </mat-header-cell>
+          <!--<th mat-header-cell *matHeaderCellDef> Opciones </th>-->
           <td mat-cell *matCellDef="let row ;let j = index;">
             <button class="btn btn-primary" (click)="deleteTicket(j)">Eliminar</button>
           </td>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      </mat-table>-->
+      </mat-table>
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
     </div>
-    <div mat-dialog-actions>
 
-      <button mat-raised-button  [disabled]="!formGeneral.form.valid" cdkFocusInitial>Ver Comprobante</button>
-    </div>
   </div>

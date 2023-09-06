@@ -2607,7 +2607,7 @@ $app->get("/nota/:id",function($id) use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
 
-        $resultado = $db->query("SELECT v.`id`, `id_producto`,p.codigo,p.`nombre`,`unidad_medida` ,`cantidad`,v.`peso` ,`precio`, `subtotal` FROM `venta_detalle` v ,productos p where v.id_producto=p.id and id_venta={$id}");
+        $resultado = $db->query("SELECT a.nombre, d.* FROM aprendea_erp.venta_detalle d,articulos a  where a.id=d.id_producto and id_venta={$id}");
 
         $prods=array();
 
