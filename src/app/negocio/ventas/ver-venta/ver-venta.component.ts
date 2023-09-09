@@ -10,7 +10,7 @@ import { Venta } from 'app/modelos/venta';
   styleUrls: ['./ver-venta.component.css']
 })
 export class VerVentaComponent implements OnInit {
-  displayedColumns = ['id_producto', 'nombre', 'cantidad','precio','subtotal','borrar'];
+  displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal','borrar'];
   dataClientes:any;
   dataDetalle:any;
   exampleArray:any;
