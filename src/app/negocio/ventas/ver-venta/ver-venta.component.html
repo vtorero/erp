@@ -25,7 +25,18 @@
             </mat-form-field>
 
           </div>
-          <div class="col-12">
+          <div class="col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Terminal</mat-label>
+              <mat-select matInput matInput [(ngModel)]="data.id_sucursal" name="id" required>
+                  <mat-option value="">Seleccionar</mat-option>
+                <mat-option  *ngFor="let subcat of sucursales" [value]="subcat.id">
+                  {{subcat.nombre}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
             <mat-form-field appearance="outline">
               <mat-label>Cliente</mat-label>
                 <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>

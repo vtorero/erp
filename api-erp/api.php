@@ -1998,7 +1998,7 @@ $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 asc");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,v.descuento,v.valor_total,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
     $prods=array();
 
@@ -2049,7 +2049,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $detalle = json_decode($j['detalle']);
         $valor_total=0;
                 try {
-                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}','{$data->entrega}','{$data->tipoDoc}',{$data->total}, 0,'{$data->comentario}')";
+                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->total}, 0,'{$data->comentario}')";
 
 
 
@@ -2078,7 +2078,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
 
-                    $sql="INSERT INTO salidas_articulos  (`codigo`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$item->cantidad},1,'{$data->usuario}')";
+                    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$ultimo_id->ultimo_id},{$item->cantidad},$data->sucursal,'{$data->usuario}')";
                     $stmt2 = mysqli_prepare($db,$sql);
                     mysqli_stmt_execute($stmt2);
                     $stmt2->close();

@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
 import { Venta } from 'app/modelos/venta';
+import { AnyMxRecord } from 'dns';
 
 @Component({
   selector: 'app-ver-venta',
@@ -14,6 +15,7 @@ export class VerVentaComponent implements OnInit {
   dataClientes:any;
   dataDetalle:any;
   exampleArray:any;
+  sucursales:any;
   constructor(
     private api:ApiService,
     @Inject(MAT_DIALOG_DATA) public data:Venta,
@@ -30,9 +32,17 @@ export class VerVentaComponent implements OnInit {
       });
 
     this.getCliente();
+    this.cargaSucursales();
   }
 
-
+  cargaSucursales() {
+    this.api.getApiTabla('/sucursales').subscribe(x => {
+      this.sucursales = x;
+      },
+      error => {
+        console.log('Error de conexion de datatable!' + error);
+      });
+  }
 
   getCliente(): void {
     this.api.getApi('clientes').subscribe(data => {

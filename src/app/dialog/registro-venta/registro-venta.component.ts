@@ -77,9 +77,9 @@ openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
   });
    dialogo2.afterClosed().subscribe(ux => {
     console.log("len",ux.pendiente);
-  
-  
-  
+
+
+
   });
 }
 
