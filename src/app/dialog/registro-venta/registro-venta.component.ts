@@ -6,6 +6,8 @@ import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
+import { Global } from 'app/global';
+
 
 
 
@@ -26,9 +28,11 @@ export class RegistroVentaComponent implements OnInit {
     cliente: ['0', Validators.required],
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['Efectivo', Validators.required],
-      montoPago: [0, [Validators.required, Validators.min(0.1)]],
+      montoPago: [0, [Validators.required, Validators.min(0.1)]]
+
     })]),
     vuelto:['',Validators.required],
+    igv:[''],
     comentario:[''],
     impresoras:[''],
     total:[0],
@@ -42,6 +46,7 @@ dataCajas:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
+montoTotal:any;
 public id_documento:number=0
 
 
@@ -208,11 +213,27 @@ console.log(respuesta)
 
   }
 
+  cambiaTicket(value: any){
+      const total2 = this.MyForm.get('total') as FormControl;
+      const igv2 = this.MyForm.get('igv') as FormControl;
+      if(value=='Factura'){
+      this.data.detalle.map(function(dato){
+        console.log(parseFloat(dato.precio) + (dato.precio * Global.BASE_IGV))
+        total2.setValue(parseFloat(dato.precio) + (dato.precio * Global.BASE_IGV));
+        igv2.setValue('18');
+        });
+      }
+      if(value=='Ticket'){
+        total2.setValue(this.data.precio);
+
+      }
+  }
+
   cambiaVuelto(precio:number){
 
-  let efectivo=0;
+  let efectivo:number=0;
   let depositos=0;
-  let total=0;
+  let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
   if(element.tipoPago=="Efectivo"){
       console.log(element.tipoPago)
@@ -233,11 +254,18 @@ if(depositos>precio){
       vuelto.setValue('');
   }else if(efectivo==precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
-  vuelto.setValue(efectivo-precio)
+    vuelto.setValue(efectivo-precio)
+
 }else{
     const vuelto = this.MyForm.get('vuelto') as FormControl;
-    this.MyForm.valid;
-    vuelto.setValue(efectivo-precio)
+    const tipoDoc = this.MyForm.get('tipoDoc') as FormControl;
+    if(tipoDoc.value=="Factura"){
+      console.log(efectivo - (precio * Global.BASE_IGV))
+      vuelto.setValue(efectivo-(precio + (precio * Global.BASE_IGV)));
+
+    }else{
+     vuelto.setValue(efectivo-precio)
+    }
   }
 
   }
