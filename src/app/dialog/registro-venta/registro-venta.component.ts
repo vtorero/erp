@@ -32,13 +32,14 @@ export class RegistroVentaComponent implements OnInit {
 
     })]),
     vuelto:['',Validators.required],
-    igv:[''],
+    igv:[0],
     comentario:[''],
     impresoras:[''],
+    neto:[0],
     total:[0],
     usuario:[''],
     sucursal:[''],
-    entrega: [''],
+    entrega: [0],
   });
 
 dataClientes:any;
@@ -216,17 +217,19 @@ console.log(respuesta)
   cambiaTicket(value: any){
       const total2 = this.MyForm.get('total') as FormControl;
       const igv2 = this.MyForm.get('igv') as FormControl;
+      const neto = this.MyForm.get('neto') as FormControl;
       if(value=='Factura'){
       this.data.detalle.map(function(dato){
-        console.log(parseFloat(dato.precio) + (dato.precio * Global.BASE_IGV))
-        total2.setValue(parseFloat(dato.precio) + (dato.precio * Global.BASE_IGV));
-        igv2.setValue('18');
+
+        total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
+        igv2.setValue(dato.precio * Global.BASE_IGV);
         });
       }
       if(value=='Ticket'){
         total2.setValue(this.data.precio);
 
       }
+      neto.setValue(this.data.precio)
   }
 
   cambiaVuelto(precio:number){

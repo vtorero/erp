@@ -67,7 +67,8 @@
           <ng-container matColumnDef="opciones">
             <th mat-header-cell *matHeaderCellDef> Opciones </th>
             <td mat-cell *matCellDef="let row">
-              <button class="btn btn-primary" mat-button (click)="abrirEditar(row)">Ver Detalles</button>&nbsp;
+              <a mat-stroked-button (click)="abrirEditar(row)">Detalle</a>
+              <!--<button class="btn btn-primary" mat-button >Ver Detalles</button>&nbsp;-->
               <!--<button class="btn btn-primary" (click)="abrirDialog(dialogTemplate,row)">Eliminar</button>-->
 
               <ng-template #dialogTemplate>
