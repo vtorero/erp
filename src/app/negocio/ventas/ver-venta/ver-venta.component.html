@@ -99,7 +99,8 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Opciones </mat-header-cell>
           <!--<th mat-header-cell *matHeaderCellDef> Opciones </th>-->
           <td mat-cell *matCellDef="let row ;let j = index;">
-            <button class="btn btn-primary" (click)="deleteTicket(j)">Opciones</button>
+            <a mat-stroked-button (click)="openEntrega('20ms','20ms')">Opciones</a>
+
           </td>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>

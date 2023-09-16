@@ -147,6 +147,7 @@ async getData() {
     const conector = new ConectorPluginV3;
     conector.Iniciar()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+    console.log(this.data.detalle);
     conector.EscribirTexto("esto es una prueba");
     conector.EscribirTexto("esto es una prueba");
     conector.EscribirTexto("esto es una prueba");

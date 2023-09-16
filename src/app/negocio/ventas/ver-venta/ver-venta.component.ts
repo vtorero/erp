@@ -1,9 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
+import { EntregaParcialComponent } from 'app/dialog/entrega-parcial/entrega-parcial.component';
 import { Venta } from 'app/modelos/venta';
 import { AnyMxRecord } from 'dns';
+import { Details } from '../../../modelos/details';
+import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-final.component';
 
 @Component({
   selector: 'app-ver-venta',
@@ -17,8 +20,10 @@ export class VerVentaComponent implements OnInit {
   exampleArray:any;
   sucursales:any;
   constructor(
+    public dialog: MatDialog,
     private api:ApiService,
     @Inject(MAT_DIALOG_DATA) public data:Venta,
+    @Inject(MAT_DIALOG_DATA) public detalle:Details,
 
   ) { }
 
@@ -34,6 +39,19 @@ export class VerVentaComponent implements OnInit {
     this.getCliente();
     this.cargaSucursales();
   }
+
+  openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
+    console.log(this.dataDetalle)
+    const dialogo2=this.dialog.open(EntregaFinalComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+    data: this.dataDetalle,
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+      console.log("len",ux);
+
+    });
+  }
+
+
 
   cargaSucursales() {
     this.api.getApiTabla('/sucursales').subscribe(x => {

@@ -27,7 +27,7 @@ export class ListadoComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','observacion','opciones'];
+  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','pendientes','observacion','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,

@@ -60,6 +60,10 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Valor total</mat-header-cell>
                     <mat-cell *matCellDef="let row">S/ {{row.valor_total}} </mat-cell>
               </ng-container>
+              <ng-container matColumnDef="pendientes">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Pendientes</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{row.pendientes}} </mat-cell>
+          </ng-container>
               <ng-container matColumnDef="observacion">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
                 <mat-cell *matCellDef="let row">{{row.observacion}} </mat-cell>

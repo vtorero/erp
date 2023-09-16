@@ -1,3 +1,7 @@
 
 mat-header-cell{font-size: 10px; font-weight: 700;}
 mat-cell{font-size: 11px;}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
+    border-bottom: unset;
+  }
