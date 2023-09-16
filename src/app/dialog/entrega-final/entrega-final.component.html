@@ -1,0 +1,40 @@
+<p>entrega-final works!</p>
+{{detalle | json}}
+
+
+<div class="table-responsive boleta">
+    <table class="table">
+        <thead class=" text-primary">
+            <th>
+                Codigo
+            </th>
+            <th>
+                Producto
+            </th>
+            <th>
+                Pendientes
+            </th>
+
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of detalle; let i=index">
+                <td>
+                    {{item.id}}
+                </td>
+                <td>
+                    {{item.nombre}}
+                </td>
+                <td>
+                  <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.pendiente,item.nombre)">{{item.pendiente}}</a>
+                </td>
+
+
+            </tr>
+
+
+        </tbody>
+    </table>
+
+    <button class="btn boton"  [mat-dialog-close]="detalle" cdkFocusInitial>Listo</button>
+
+</div>
