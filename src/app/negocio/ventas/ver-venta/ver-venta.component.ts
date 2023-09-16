@@ -7,6 +7,7 @@ import { Venta } from 'app/modelos/venta';
 import { AnyMxRecord } from 'dns';
 import { Details } from '../../../modelos/details';
 import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-final.component';
+import { ModCantidadComponent } from 'app/dialog/mod-cantidad/mod-cantidad.component';
 
 @Component({
   selector: 'app-ver-venta',
@@ -38,6 +39,26 @@ export class VerVentaComponent implements OnInit {
 
     this.getCliente();
     this.cargaSucursales();
+  }
+
+  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
+    let index=0;
+    const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+      
+      this.dataDetalle.forEach(element => {
+       if(element.id==id){
+        this.dataDetalle[index].pendiente=ux.cantidad;
+       }
+       index++;
+      });
+
+      console.log("ux",ux)
+   
+     });
+  
   }
 
   openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){

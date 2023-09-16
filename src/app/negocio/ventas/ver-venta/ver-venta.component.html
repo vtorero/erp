@@ -81,10 +81,14 @@
         <ng-container matColumnDef="cantidad">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.cantidad}} </mat-cell>
+          
         </ng-container>
         <ng-container matColumnDef="pendiente">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.pendiente}} </mat-cell>
+          <mat-cell *matCellDef="let row">
+            <a class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.pendiente,row.nombre)">{{row.pendiente}}</a>
+          </mat-cell>
+
         </ng-container>
         <ng-container matColumnDef="precio">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
