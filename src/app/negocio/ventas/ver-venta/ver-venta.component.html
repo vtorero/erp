@@ -86,7 +86,7 @@
         <ng-container matColumnDef="pendiente">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
           <mat-cell *matCellDef="let row">
-            <a class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.pendiente,row.nombre)">{{row.pendiente}}</a>
+            <a class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.pendiente,row.nombre,data.id)">{{row.pendiente}}</a>
           </mat-cell>
 
         </ng-container>

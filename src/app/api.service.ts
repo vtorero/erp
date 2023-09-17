@@ -22,6 +22,7 @@ export class ApiService {
 
   constructor(public _http: HttpClient) {}
   public articulos=[];
+  public datos=[]
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
@@ -88,6 +89,20 @@ public guardarUsuario(datos: Usuario): Observable<any> {
     { json: json },
     { headers: headers }
   );
+}
+
+public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad:number):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  this.datos=[]
+  let json = JSON.stringify(this.datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/cajas",
+    { json: json },
+    { headers: headers }
+  ); 
 }
 
 public guardarCajas(datos:Cajas): Observable<any> {

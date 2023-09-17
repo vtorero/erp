@@ -41,7 +41,7 @@ export class VerVentaComponent implements OnInit {
     this.cargaSucursales();
   }
 
-  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
+  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string,id_venta:number){
     let index=0;
     const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
     data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
@@ -55,7 +55,7 @@ export class VerVentaComponent implements OnInit {
        index++;
       });
 
-      console.log("ux",ux)
+      console.log("ux",id_venta)
    
      });
   
