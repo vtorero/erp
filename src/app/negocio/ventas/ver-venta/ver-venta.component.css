@@ -5,3 +5,12 @@ mat-cell{font-size: 11px;}
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
     border-bottom: unset;
   }
+  .numero_edicion{
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: darkblue;
+
+}
