@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
+import { async, map, Observable } from "rxjs";
 import { Global } from "./global";
 import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
@@ -22,7 +22,7 @@ export class ApiService {
 
   constructor(public _http: HttpClient) {}
   public articulos=[];
-  public datos=[]
+
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
@@ -96,13 +96,16 @@ public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad
     "Content-Type",
     "application/x-www-form-urlencoded"
   );
-  this.datos=[]
-  let json = JSON.stringify(this.datos);
-  return this._http.post(
-    Global.BASE_API_URL + "api.php/cajas",
-    { json: json },
+  let datos = {
+    'id_venta':id_venta,
+    'id_producto':id_producto,
+    'id':id,
+    'cantidad':cantidad
+  }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-pendiente",{ json: json },
     { headers: headers }
-  ); 
+  )
 }
 
 public guardarCajas(datos:Cajas): Observable<any> {
