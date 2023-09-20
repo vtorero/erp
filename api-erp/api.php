@@ -2115,6 +2115,57 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
     });
 
 
+    $app->post("/actualiza-pendiente",function() use($db,$app){
+
+
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+
+        $resultado = $db->query("SELECT  d.* FROM aprendea_erp.venta_detalle d where  id={$data->id} and id_venta={$data->id_venta}");
+        $prods=array();
+
+    while ($fila = $resultado->fetch_array()) {
+
+        $prods[]=$fila;
+
+    }
+
+    //var_dump($prods);
+
+
+
+    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_venta']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
+
+    $stmt2 = mysqli_prepare($db,$sql);
+    mysqli_stmt_execute($stmt2);
+    $stmt2->close();
+
+    try {
+
+        $query ="UPDATE venta_detalle SET pendiente={$data->cantidad} where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
+
+        $db->query($query);
+
+        $result = array("STATUS"=>true,"messaje"=>"Pendientes actualizados correctamente");
+
+          }
+
+         catch(PDOException $e) {
+
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+    }
+
+        echo  json_encode($result);
+
+
+
+
+    });
+
+
 
     $app->post("/factura",function() use($db,$app){
 

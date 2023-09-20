@@ -45,7 +45,7 @@ export class VerVentaComponent implements OnInit {
   }
 
 
-  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string,id_venta:number){
+  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_producto:number,cantidad:number,nombre:string,id_venta:number){
     let index=0;
     const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
     data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
@@ -54,7 +54,7 @@ export class VerVentaComponent implements OnInit {
       this.dataDetalle.forEach(element => {
        if(element.id==id){
         this.dataDetalle[index].pendiente=ux.cantidad;
-        this.api.actualizaPendientes(id_venta,id,id,ux.cantidad).subscribe(
+        this.api.actualizaPendientes(id_venta,id_producto,id,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },

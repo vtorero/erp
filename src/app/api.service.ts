@@ -100,7 +100,9 @@ public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad
     'id_venta':id_venta,
     'id_producto':id_producto,
     'id':id,
-    'cantidad':cantidad
+    'cantidad':cantidad,
+    'sucursal':localStorage.getItem("sucursal_id"),
+    'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);
   return this._http.post(Global.BASE_API_URL + "api.php/actualiza-pendiente",{ json: json },
