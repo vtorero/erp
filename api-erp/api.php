@@ -107,7 +107,7 @@ $app->get("/usuarios",function() use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
 
-        $resultado = $db->query("SELECT *  FROM {$tabla} order by id desc");
+        $resultado = $db->query("SELECT *  FROM {$tabla} order by id asc");
 
         $prods=array();
 
@@ -1990,6 +1990,25 @@ $app->get("/pendientes",function() use($db,$app){
 
 });
 
+$app->get("/inventario",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+     $resultado = $db->query("SELECT producto_id,a.nombre,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, articulos a where a.id=i.producto_id;");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+});
 
 
 
@@ -2076,10 +2095,14 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
 
-                    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$ultimo_id->ultimo_id},{$item->cantidad},$data->sucursal,'{$data->usuario}')";
+                    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$ultimo_id->ultimo_id},{$item->cantidad}-{$item->pendiente},$data->sucursal,'{$data->usuario}');";
+                    $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
                     $stmt2 = mysqli_prepare($db,$sql);
+                    $stmt3 = mysqli_prepare($db,$sql2);
                     mysqli_stmt_execute($stmt2);
+                    mysqli_stmt_execute($stmt3);
                     $stmt2->close();
+                    $stmt3->close();
 
 
                     //$actualiza="call p_actualiza_inventario({$valor->codProductob->id},{$valor->codProducto},{$valor->cantidad},{$valor->peso},'{$valor->unidadmedida}')";
