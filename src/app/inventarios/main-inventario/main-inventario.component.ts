@@ -9,6 +9,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
+import { AgregarInventarioComponent } from '../../dialog/agregar-inventario/agregar-inventario.component';
 
 @Component({
   selector: 'app-main-inventario',
@@ -75,7 +76,7 @@ openBusqueda(){
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
       this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
-        const dialog= this.dialog.open(AddProductoComponent, {
+        const dialog= this.dialog.open(AgregarInventarioComponent, {
           width: '800px',
           enterAnimationDuration,
           exitAnimationDuration,
@@ -111,7 +112,7 @@ openBusqueda(){
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
 
-    const dialogo1 =this.dialog.open(AddProductoComponent, {
+    const dialogo1 =this.dialog.open(AgregarInventarioComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,

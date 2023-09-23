@@ -37,6 +37,7 @@ import { EntregaParcialComponent } from './dialog/entrega-parcial/entrega-parcia
 import { ModPendienteComponent } from './dialog/mod-pendiente/mod-pendiente.component';
 import { VerVentaComponent } from './negocio/ventas/ver-venta/ver-venta.component';
 import { EntregaFinalComponent } from './dialog/entrega-final/entrega-final.component';
+import { AgregarInventarioComponent } from './dialog/agregar-inventario/agregar-inventario.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { EntregaFinalComponent } from './dialog/entrega-final/entrega-final.comp
      EntregaParcialComponent,
      ModPendienteComponent,
      VerVentaComponent,
-     EntregaFinalComponent
+     EntregaFinalComponent,
+     AgregarInventarioComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
