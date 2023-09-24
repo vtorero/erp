@@ -263,6 +263,14 @@ public EditarProducto(datos: Productos): Observable<any> {
     { json: json }, { headers: headers });
 }
 
+getProductosSelect(value = ''): Observable<Productos[]> {
+  if (value == '') {
+    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/productos', { headers: this.headers });
+  } else {
+    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/productos/' + value, { headers: this.headers });
+  }
+}
+
 public delProducto(datos: Productos): Observable<any> {
   let headers = new HttpHeaders().set(
     "Content-Type",

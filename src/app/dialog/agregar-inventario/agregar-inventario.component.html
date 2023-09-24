@@ -1,30 +1,31 @@
-<mat-card>
+<mat-card style="width: 550px;">
     <mat-card-content>
           <form  [formGroup]="form">
-      <h3 mb-10>Agregar Usuario</h3>
-        <mat-form-field appearance="fill">
-            <mat-label>Nombre completo</mat-label>
-            <input matInput  [(ngModel)]="data.nombre" type="text" required formControlName="nombre">
+      <h3 mb-10>Agregar Stock</h3>
+      <mat-form-field appearance="fill">
+        <mat-label>Seleccionar producto</mat-label>
+        <mat-select required [(ngModel)]="data.rol" formControlName="estado">
+        <input class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar..">
+          <mat-option value="">Seleccionar</mat-option>
+          <mat-option *ngFor="let prod of dataProducto" [value]="prod.id">{{prod.nombre}}</mat-option>
+     
+        </mat-select>
+      </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Cantidad a Ingresar</mat-label>
+            <input matInput required type="number" [(ngModel)]="data.correo" formControlName="cantidad">
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>Correo electrónico</mat-label>
-            <input matInput required type="email" [(ngModel)]="data.correo" formControlName="correo">
+            <mat-label>Precio</mat-label>
+            <input matInput required type="number" [(ngModel)]="data.correo" formControlName="precio">
           </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Rol</mat-label>
-            <mat-select required [(ngModel)]="data.rol" formControlName="estado">
-              <mat-option value="">Seleccionar</mat-option>
-              <mat-option value="administrador">Administrador</mat-option>
-              <mat-option value="usuario">Usuario</mat-option>
-            </mat-select>
+          <mat-form-field floatLabel="always">
+            <mat-label>Amount</mat-label>
+            <input matInput type="number" class="example-right-align" placeholder="0">
+            <span matTextPrefix>S/&nbsp;</span>
+            <span matTextSuffix>.00</span>
           </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Estado</mat-label>
-            <mat-select required [(ngModel)]="data.estado" formControlName="estado">
-              <mat-option value="0">Inactivo</mat-option>
-              <mat-option value="1">Activo</mat-option>
-            </mat-select>
-          </mat-form-field>
+ 
           <div mat-dialog-actions>
             <button  mat-raised-button [mat-dialog-close]="false" color="primary">Cancelar</button>
             <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="form.invalid">Confirmar</button>
@@ -32,14 +33,3 @@
           </form>
         </mat-card-content>
   </mat-card>
-<div>
-  <h1 mat-dialog-title>Eliminar registro</h1>
-<div mat-dialog-content>
-  ¿Desea eliminar el registro?
-
-</div>
-<div mat-dialog-actions>
-  <button mat-raised-button  mat-dialog-close>No</button>
-  <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Si</button>
-</div>
-</div>
