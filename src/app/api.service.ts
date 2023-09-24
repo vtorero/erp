@@ -265,7 +265,7 @@ public EditarProducto(datos: Productos): Observable<any> {
 
 getProductosSelect(value = ''): Observable<Productos[]> {
   if (value == '') {
-    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/productos', { headers: this.headers });
+    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/articulos', { headers: this.headers });
   } else {
     return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/productos/' + value, { headers: this.headers });
   }

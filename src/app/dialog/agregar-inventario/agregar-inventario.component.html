@@ -5,28 +5,22 @@
       <mat-form-field appearance="fill">
         <mat-label>Seleccionar producto</mat-label>
         <mat-select required [(ngModel)]="data.rol" formControlName="estado">
-        <input class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar..">
-          <mat-option value="">Seleccionar</mat-option>
+
+            <input class="form-control" matInput (keyup)="onKey($event.target.value)" placeholder="Buscar..">
+
           <mat-option *ngFor="let prod of dataProducto" [value]="prod.id">{{prod.nombre}}</mat-option>
-     
+
         </mat-select>
       </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Cantidad a Ingresar</mat-label>
             <input matInput required type="number" [(ngModel)]="data.correo" formControlName="cantidad">
           </mat-form-field>
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Precio</mat-label>
-            <input matInput required type="number" [(ngModel)]="data.correo" formControlName="precio">
-          </mat-form-field>
-          <mat-form-field floatLabel="always">
-            <mat-label>Amount</mat-label>
-            <input matInput type="number" class="example-right-align" placeholder="0">
-            <span matTextPrefix>S/&nbsp;</span>
-            <span matTextSuffix>.00</span>
-          </mat-form-field>
- 
-          <div mat-dialog-actions>
+            <input matInput  name="vuelto" mask="separator.2" prefix="S/ "  formControlName="precio"  type="text" placeholder="Precio">
+        </mat-form-field>
+             <div mat-dialog-actions>
             <button  mat-raised-button [mat-dialog-close]="false" color="primary">Cancelar</button>
             <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="form.invalid">Confirmar</button>
             </div>
