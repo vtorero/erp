@@ -4,7 +4,7 @@
       <h3 mb-10>Agregar Stock</h3>
       <mat-form-field appearance="fill">
         <mat-label>Seleccionar producto</mat-label>
-        <mat-select required [(ngModel)]="data.rol" formControlName="estado">
+        <mat-select required [(ngModel)]="data.rol" formControlName="nombre">
 
             <input class="form-control" matInput (keyup)="onKey($event.target.value)" placeholder="Buscar..">
 
@@ -14,7 +14,7 @@
       </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Cantidad a Ingresar</mat-label>
-            <input matInput required type="number" [(ngModel)]="data.correo" formControlName="cantidad">
+            <input matInput required type="number" formControlName="cantidad">
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Precio</mat-label>
