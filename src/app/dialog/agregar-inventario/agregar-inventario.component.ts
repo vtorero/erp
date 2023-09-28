@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Usuario } from '../../modelos/usuario';
+import { AddInventario } from '../../modelos/addinventario';
 
 
 export interface DialogData {
@@ -15,7 +16,7 @@ export interface DialogData {
   styleUrls: ['./agregar-inventario.component.css']
 })
 export class AgregarInventarioComponent implements OnInit {
-  form:FormGroup;
+  Miform:FormGroup;
   dataProducto:any;
 seleccionados:string[]=[];
 producto:any;
@@ -25,17 +26,18 @@ stockPeso;
 dataExistencias:any;
 dataUnidades = [{ id: 'NIU', tipo: 'Unidades' }, { id: 'KGM', tipo: 'Kilogramo' }];
 constructor(private api:ApiService,  private fb:FormBuilder,
-  @Inject(MAT_DIALOG_DATA) public data:Usuario,
-  
+  @Inject(MAT_DIALOG_DATA) public data:AddInventario,
+
     ) {
-      this.form=this.fb.group({
+      this.Miform=this.fb.group({
         nombre:['',Validators.required],
         cantidad:['',Validators.required],
-        precio:[0,Validators.required]
+        precio:['',Validators.required]
       });
     }
+
   getProductos(): void {
-    this.api.getApi('/articulos').subscribe(data => {
+    this.api.getApi('articulos').subscribe(data => {
       if(data) {
         this.dataProducto = data;
       }
@@ -108,7 +110,7 @@ if(ev.source){
     this.getProductos();
   }
 
-  
+
   onKey(value) {
     this.dataArray = [];
     this.selectSearch(value);

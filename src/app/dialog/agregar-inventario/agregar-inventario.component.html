@@ -1,28 +1,27 @@
 <mat-card style="width: 550px;">
     <mat-card-content>
-          <form  [formGroup]="form">
+          <form [formGroup]="Miform" autocomplete="off">
       <h3 mb-10>Agregar Stock</h3>
       <mat-form-field appearance="fill">
         <mat-label>Seleccionar producto</mat-label>
-        <mat-select required [(ngModel)]="data.rol" formControlName="nombre">
-
-            <input class="form-control" matInput (keyup)="onKey($event.target.value)" placeholder="Buscar..">
-
+        <mat-select [(ngModel)]="data.id_producto" formControlName="nombre" required>
+      <input class="form-control" matInput (keyup)="onKey($event.target.value)" placeholder="Buscar..">
           <mat-option *ngFor="let prod of dataProducto" [value]="prod.id">{{prod.nombre}}</mat-option>
 
         </mat-select>
       </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Cantidad a Ingresar</mat-label>
-            <input matInput required type="number" formControlName="cantidad">
+            <input matInput  type="number" [(ngModel)]="data.cantidad"  formControlName="cantidad" required>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Precio</mat-label>
-            <input matInput  name="vuelto" mask="separator.2" prefix="S/ "  formControlName="precio"  type="text" placeholder="Precio">
+            <input matInput  name="precio" mask="separator.2" prefix="S/ " [(ngModel)]="data.precio"  formControlName="precio"  type="text" placeholder="Precio" required>
         </mat-form-field>
              <div mat-dialog-actions>
             <button  mat-raised-button [mat-dialog-close]="false" color="primary">Cancelar</button>
-            <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="form.invalid">Confirmar</button>
+            <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="!Miform.valid">Confirmar</button>
+
             </div>
           </form>
         </mat-card-content>

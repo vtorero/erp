@@ -460,11 +460,7 @@ $app->get("/articulos/:criterio",function($criterio) use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen
-
-    FROM productos p right join categorias c on p.id_categoria=c.id   right join sub_categorias sc  on p.id_subcategoria=sc.id
-
-    right join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id where p.nombre like '%{$criterio}%' order by id;");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and p.nombre like '%{$criterio}%' order by id;");
 
     $prods=array();
 
@@ -1994,7 +1990,7 @@ $app->get("/inventario",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT producto_id,a.nombre,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, articulos a where a.id=i.producto_id;");
+     $resultado = $db->query("SELECT producto_id,a.nombre,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, productos a where a.id=i.producto_id;");
 
     $prods=array();
 
@@ -2057,6 +2053,27 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
     });
 
+    $app->post("/agregar-inventario",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+
+        $sql="INSERT INTO entradas_articulos  (`codigo_prod`,`cantidad`,`precio`,`id_sucursal`,`usuario`)  VALUES({$data->id_producto},{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
+        $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}";
+
+          $stmt2 = mysqli_prepare($db,$sql);
+        $stmt3 = mysqli_prepare($db,$sql2);
+        mysqli_stmt_execute($stmt2);
+        mysqli_stmt_execute($stmt3);
+        $stmt2->close();
+        $stmt3->close();
+
+        $result = array("STATUS"=>true,"messaje"=>"Inventario registrado correctamente");
+        echo  json_encode($result);
+
+    });
+
 
 
     $app->post("/venta",function() use($db,$app){
@@ -2111,8 +2128,6 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     //$stmtb->close();
 
                     }
-
-
 
 
                        $result = array("STATUS"=>true,"messaje"=>"Venta registrada correctamente con el número: ".$ultimo_id->ultimo_id);

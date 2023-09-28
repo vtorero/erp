@@ -10,6 +10,7 @@ import { Categoria } from "./modelos/categoria";
 import { Details } from './modelos/details';
 import { Permisos } from './modelos/permisos';
 import { Cajas } from './modelos/cajas';
+import { AddInventario } from "./modelos/addinventario";
 
 
 
@@ -252,6 +253,14 @@ public GuardarProducto(datos: Productos): Observable<any> {
     { json: json }, { headers: headers });
 }
 
+public AgregarInventario(datos: AddInventario): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/agregar-inventario',
+    { json: json }, { headers: headers });
+}
+
+
 getCategoriaSelect(): Observable<Categoria[]> {
   return this._http.get<Categoria[]>(Global.BASE_API_URL + 'api.php/categorias', { headers: this.headers });
 }
@@ -267,7 +276,7 @@ getProductosSelect(value = ''): Observable<Productos[]> {
   if (value == '') {
     return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/articulos', { headers: this.headers });
   } else {
-    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/productos/' + value, { headers: this.headers });
+    return this._http.get<Productos[]>(Global.BASE_API_URL + 'api.php/articulos/' + value, { headers: this.headers });
   }
 }
 

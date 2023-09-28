@@ -10,6 +10,7 @@ import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 import { AgregarInventarioComponent } from '../../dialog/agregar-inventario/agregar-inventario.component';
+import { AddInventario } from 'app/modelos/addinventario';
 
 @Component({
   selector: 'app-main-inventario',
@@ -116,12 +117,14 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','','','',0,'',0,'','','','Nuevo','','')
+      data:new AddInventario(0,0,0,localStorage.getItem("currentId"),localStorage.getItem("sucursal_id"))
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
-       this.agregar(us)
+       this.agregar(us);
+       this.renderDataTable();
      });
+
   }
 
   update(art:Productos) {
@@ -139,9 +142,9 @@ openBusqueda(){
 }
 
 
-  agregar(art:Productos) {
+  agregar(art:AddInventario) {
     if(art){
-    this.api.GuardarProducto(art).subscribe(
+    this.api.AgregarInventario(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         },
