@@ -96,6 +96,24 @@ openBusqueda(){
   }
   }
 
+  openFacturar(enterAnimationDuration: string, exitAnimationDuration: string){
+    const dialogo2=this.dialog.open(AddClienteComponent, {
+      width: 'auto',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        datos:this.selectedRowIndex,
+        clase:'Facturar',
+        cliente:this.selectedRowIndex
+      },
+    });
+    dialogo2.afterClosed().subscribe(ux => {
+      console.log(ux);
+      this.facturar(ux);
+     });
+
+  }
+
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddClienteComponent, {
     width: 'auto',
@@ -159,7 +177,18 @@ openBusqueda(){
       this.renderDataTable();
   }
 }
-
+facturar(art:Venta) {
+  console.log("art",art);
+  if(art){
+  this.api.facturaVenta(art).subscribe(
+    data=>{
+      this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+      },
+    erro=>{console.log(erro)}
+      );
+    this.renderDataTable();
+}
+}
 eliminar(art:Clientes) {
   console.log("art",art);
   if(art){

@@ -2075,6 +2075,29 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
     });
 
 
+    $app->post("/facturar",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+
+
+
+        if($data->datos->tipoDoc!='Factura'){
+        $sql="UPDATE ventas set igv=(valor_neto*0.18), monto_igv=valor_neto*0.18, valor_total=valor_neto+(valor_neto*0.18),tipoDoc='Factura' where id={$data->datos->id}";
+
+        $stmt2 = mysqli_prepare($db,$sql);
+         mysqli_stmt_execute($stmt2);
+        $stmt2->close();
+    }else{
+        $result = array("STATUS"=>true,"messaje"=>"Ya es una Factura ");
+    }
+        $result = array("STATUS"=>true,"messaje"=>"Venta Factura correctamente");
+        echo  json_encode($result);
+
+    });
+
+
 
     $app->post("/venta",function() use($db,$app){
 

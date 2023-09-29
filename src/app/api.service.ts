@@ -11,6 +11,7 @@ import { Details } from './modelos/details';
 import { Permisos } from './modelos/permisos';
 import { Cajas } from './modelos/cajas';
 import { AddInventario } from "./modelos/addinventario";
+import { Venta } from './modelos/venta';
 
 
 
@@ -230,6 +231,21 @@ public GuardarCliente(datos: Clientes): Observable<any> {
   return this._http.post(Global.BASE_API_URL + 'api.php/cliente',
     { json: json }, { headers: headers });
 }
+
+
+public facturaVenta(datos:Venta): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/facturar",
+    { json: json },
+    { headers: headers }
+  );
+}
+
 
 public delCliente(datos:Clientes): Observable<any> {
   let headers = new HttpHeaders().set(

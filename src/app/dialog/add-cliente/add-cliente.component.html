@@ -1,4 +1,4 @@
-<div *ngIf="data.clase!='DelProvedor'">
+<div *ngIf="data.clase!='DelProvedor' && data.clase!='Facturar'">
     <h1 mat-dialog-title>Agregar Cliente</h1>
     <form #formGeneral="ngForm">
     <div mat-dialog-content>
@@ -49,6 +49,15 @@
     </div>
     <div *ngIf="data.clase=='DelProvedor'">
       <h1 mat-dialog-title>Eliminar registro {{data.cliente.nombre}} ?</h1>
+    <div mat-dialog-content>
+      </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
+    </div>
+    </div>
+    <div *ngIf="data.clase=='Facturar'">
+      <h1 mat-dialog-title>¿Desea Facturar la Venta {{data.datos.id}}?</h1>
     <div mat-dialog-content>
       </div>
     <div mat-dialog-actions>
