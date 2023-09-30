@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./ver-venta.component.css']
 })
 export class VerVentaComponent implements OnInit {
-  displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal','borrar'];
+  displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
   dataClientes:any;
   dataDetalle:any;
   exampleArray:any;

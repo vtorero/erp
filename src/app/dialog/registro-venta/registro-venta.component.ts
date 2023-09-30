@@ -221,10 +221,12 @@ console.log(respuesta)
       const neto = this.MyForm.get('neto') as FormControl;
       if(value=='Factura'){
       this.data.detalle.map(function(dato){
-
-        total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
-        igv2.setValue(dato.precio * Global.BASE_IGV);
+          console.log("datoooooo",dato.prec)
+        //total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
+        //igv2.setValue(dato.precio * Global.BASE_IGV);
         });
+        total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))
+        igv2.setValue(total2.value * Global.BASE_IGV)
       }
       if(value=='Ticket'){
         total2.setValue(this.data.precio);

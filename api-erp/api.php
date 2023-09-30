@@ -28,7 +28,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 $app = new Slim\Slim();
 
-//$db = new mysqli("localhost","marife","libido16","no-whaste");
 
 $db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 
@@ -2106,9 +2105,11 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
         $detalle = json_decode($j['detalle']);
+
+       
         $valor_total=0;
                 try {
-                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->igv},'{$data->comentario}')";
+                   $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->total}-{$data->neto},'{$data->comentario}')";
 
                    $stmt = mysqli_prepare($db,$sql);
                     mysqli_stmt_execute($stmt);
