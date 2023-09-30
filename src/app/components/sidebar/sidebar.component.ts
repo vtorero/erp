@@ -21,7 +21,7 @@ export const ROUTES: RouteInfo[] = [
     { path: '/ventas/main', title: 'Ventas',  icon: 'library_books', class: '',child:[{pat:'/ventas/venta-rapida', tit: 'Venta Rápida',  icn:'bubble_chart',cls:'notifications'},{pat:'/ventas/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications'}]},
     { path: '/clientes', title: 'Clientes',  icon: 'person', class: '',child:[]},
     { path: '/proveedores', title: 'Proveedores',  icon: 'dashboard', class: '',child:[]},
-    { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'}]},
+    { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'},{pat:'/kardex', tit: 'Kardex',  icn:'bubble_chart',cls:'notifications'}]},
     //{ path: '/user-profile', title: 'User Profile',  icon:'person', class: '',child:[{pat:'/icons', tit: 'Iconos',  icn:'bubble_chart',cls:'person'}]},
     //{ path: '/table-list', title: 'Table List',  icon:'content_paste', class: '' ,child:[]},
     //{ path: '/typography', title: 'Typography',  icon:'library_books', class: '' ,child:[]},

@@ -22,6 +22,7 @@ import { MainComponent } from 'app/negocio/ventas/main/main.component';
 import { ConfiguracionComponent } from '../../seguridad/configuracion/configuracion.component';
 import { permisosComponent } from '../../seguridad/permisos/permisos.component';
 import { CajasComponent } from 'app/seguridad/cajas/cajas.component';
+import { KardexComponent } from 'app/inventarios/kardex/kardex.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -76,6 +77,7 @@ export const AdminLayoutRoutes: Routes = [
     ,{path:'permisos',component:permisosComponent},
     {path:'cajas',component:CajasComponent}]},
       {path:'inventarios',component:MainInventarioComponent},
+      {path:'kardex',component:KardexComponent},
     { path: 'proveedores',      component: ProveedoresComponent },
     { path: 'clientes',      component: ClienteComponent },
     { path: 'seguridad',      component: UsuarioComponent },
