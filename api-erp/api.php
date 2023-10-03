@@ -2058,7 +2058,8 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
 
-        $sql="INSERT INTO entradas_articulos  (`codigo_prod`,`cantidad`,`precio`,`id_sucursal`,`usuario`)  VALUES({$data->id_producto},{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
+        $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`cantidad_ingreso`,`precio`,`id_sucursal`,`usuario`) 
+         VALUES({$data->id_producto},'Ingreso',{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
         $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}";
 
           $stmt2 = mysqli_prepare($db,$sql);
@@ -2136,7 +2137,8 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
 
-                    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$ultimo_id->ultimo_id},{$item->cantidad}-{$item->pendiente},$data->sucursal,'{$data->usuario}');";
+                    $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`cantidad_salida`,`precio`,`id_sucursal`,`usuario`) 
+                     VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
                     $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
                     $stmt2 = mysqli_prepare($db,$sql);
                     $stmt3 = mysqli_prepare($db,$sql2);
