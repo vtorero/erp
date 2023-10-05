@@ -341,6 +341,11 @@ public GetDetalleVenta(id: any) {
     { headers: this.headers }
   ).pipe(map(result => result));
 }
+public GetDetalleMovimiento(id: any) {
+  return this._http.get(Global.BASE_API_URL + 'api.php/movimiento/' + id,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
 
 
 /**

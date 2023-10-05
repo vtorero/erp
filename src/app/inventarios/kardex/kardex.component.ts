@@ -20,11 +20,12 @@ export class KardexComponent implements OnInit {
 
   buscador:boolean=false;
   dataSource: any;
+  dataDetalle: any;
   selectedRowIndex:any;
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','codigo','nombre','categoria','subcategoria','familia','unidad','precio'];
+  displayedColumns = ['id','nombre','movimientos'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -61,17 +62,26 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('articulos').subscribe(x => {
-      this.dataSource = new MatTableDataSource();
-      this.dataSource.data = x;
-      this.empTbSort.disableClear = true;
-      this.dataSource.sort = this.empTbSort;
-      this.dataSource.paginator = this.paginator;
+    this.api.getApi('movimientos').subscribe(x => {
+      //this.dataSource = new MatTableDataSource();
+      this.dataSource = x;
+      console.log("dat",x);
+      //this.empTbSort.disableClear = true;
+      //this.dataSource.sort = this.empTbSort;
+      //this.dataSource.paginator = this.paginator;
       },
       error => {
         console.log('Error de conexion de datatable!' + error);
       });
   }
+
+
+  verMovimientos(id:number){
+    this.api.GetDetalleMovimiento(id).subscribe(detalle => {
+      this.dataDetalle=detalle
+      });
+  }
+
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
