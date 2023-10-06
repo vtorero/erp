@@ -5,3 +5,24 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+mat-card{
+    margin-bottom: 15px;
+}
+
+.salida{
+    color: crimson;
+    font-size: 12px;
+    font-weight: 500;
+
+}
+
+.ingreso{
+    color:darkgreen;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+table {
+    width: 100%;
+  }

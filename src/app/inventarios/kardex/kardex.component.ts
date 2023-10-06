@@ -25,9 +25,10 @@ export class KardexComponent implements OnInit {
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','nombre','movimientos'];
+  displayedColumns = ['tipo_movimiento','cantidad_salida','cantidad_ingreso','precio'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
+
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
