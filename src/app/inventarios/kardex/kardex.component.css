@@ -17,6 +17,11 @@ mat-card{
 
 }
 
+.precio{
+    font-size: 12px;
+    font-weight: bold;
+}
+
 .ingreso{
     color:darkgreen;
     font-size: 12px;

@@ -2038,8 +2038,10 @@ $app->get("/movimientos",function() use($db,$app){
    $detalle=array();
 
        while ($fila = $resultado->fetch_array()) {
-        $fila['detalle'];
 
+        $fila['detalle'];
+        $fila['promedio'];
+        $fila['stock'];
         $sql="SELECT p.id,p.nombre, m.tipo_movimiento,cantidad_ingreso,cantidad_salida,m.precio FROM aprendea_erp.movimiento_articulos m, productos p where m.codigo_prod=p.id and p.id={$fila['id']} order by id desc;";
 
         $resul_detalle = $db->query($sql);
@@ -2048,7 +2050,16 @@ $app->get("/movimientos",function() use($db,$app){
             $fila['detalle'][]=$filadet;
         }
 
+        $sql_promedio="SELECT codigo_prod, codigo_prod,  ROUND((sum(cantidad_ingreso*precio) + sum(cantidad_salida*precio))/sum(cantidad_ingreso+cantidad_salida),2) promedio from movimiento_articulos where codigo_prod={$fila['id']} group by 1";
 
+        $resul_promedio = $db->query($sql_promedio);
+        while ($filaprod = $resul_promedio->fetch_array()) {
+            $fila['promedio'][]=$filaprod;
+        }
+
+        $sql_stock="SELECT cantidad from inventario where producto_id={$fila['id']}";
+        $resul_stock = $db->query($sql_stock)->fetch_array();
+        $fila['stock']=$resul_stock;
 
         $prods[]=$fila;
 

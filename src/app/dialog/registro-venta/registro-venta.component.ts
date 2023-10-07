@@ -145,14 +145,83 @@ async getData() {
       return;
     }
     const conector = new ConectorPluginV3;
+    const amongUsComoCadena = `000001111000
+    000010000100
+    000100011110
+    000100100001
+    011100100001
+    010100100001
+    010100100001
+    010100011110
+    010100000010
+    011100000010
+    000100111010
+    000100101010
+    000111101110
+    000000000000
+    000000000000
+    000000000000
+    111010101110
+    100010101000
+    111010101110
+    001010100010
+    111011101110
+    000000000000
+    000000000000
+    000000000000`;
+
     conector.Iniciar()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
     console.log(this.data.detalle);
-    conector.EscribirTexto("esto es una prueba");
-    conector.EscribirTexto("esto es una prueba");
-    conector.EscribirTexto("esto es una prueba");
-    conector.EscribirTexto("esto es una prueba");
-    conector.EscribirTexto("esto es una prueba");
+    conector.Iniciar()
+    .DeshabilitarElModoDeCaracteresChinos()
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+    .DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp.png", 0, 216)
+    .Feed(1)
+    .EscribirTexto("LAS HERMANITAS\n")
+    .EscribirTexto("Ferretería y materiales de contrucción las\n")
+    .EscribirTexto("Hermanitas E.I.R.L.\n")
+    .EscribirTexto("Wharsapp/Teléfono:902 715 979 \n")
+    .EscribirTexto("lashermanitas_bertha@hotmail.com \n")
+    .EscribirTexto("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima \n")
+    .EscribirTexto("RUC: 2053799520\n")
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    .EscribirTexto('CLIENTE:'+this.MyForm.get('cliente').value +'\n')
+//    .TextoSegunPaginaDeCodigos(2, "cp850", "Teléfono: 123456798\n")
+    .EscribirTexto("Fecha y hora: " + (new Intl.DateTimeFormat("es-PE").format(new Date())))
+    .Feed(1)
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
+    .EscribirTexto("_______________________\n")
+    //.TextoSegunPaginaDeCodigos(2, "cp850", "Venta de plugin para impresoras versión 3\n")
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
+
+    this.data.detalle.forEach(element => {
+      console.log("linea",element)
+      conector.EscribirTexto(element.precio)
+      conector.EscribirTexto("____________________\n")
+    });
+    conector.EscribirTexto("____________________\n")
+    conector.EscribirTexto("\n")
+    .EscribirTexto("____________________\n")
+    .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+    .HabilitarCaracteresPersonalizados()
+    .DefinirCaracterPersonalizado("$", amongUsComoCadena)
+    //.EscribirTexto("En lugar del simbolo de pesos debe aparecer un among us\n")
+    //.EscribirTexto("TOTAL: $25\n")
+    .EstablecerEnfatizado(true)
+    .EstablecerTamañoFuente(1, 1)
+    .TextoSegunPaginaDeCodigos(2, "cp850", "¡Gracias por su compra!\n")
+    .Feed(1)
+    //.ImprimirCodigoQr("https://parzibyte.me/blog", 160, ConectorPluginV3.RECUPERACION_QR_MEJOR, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
+    //.Feed(1)
+    //.ImprimirCodigoDeBarrasCode128("parzibyte.me", 80, 192, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
+    //.Feed(1)
+    .EstablecerTamañoFuente(1, 1)
+    //.EscribirTexto("parzibyte.me\n")
+    //.Feed(3)
+    .Corte(1)
+    .Pulso(48, 60, 120)
+    //.imprimirEn(this.MyForm.get('impresoras').value);
     const respuesta =   conector.imprimirEn(this.MyForm.get('impresoras').value);
     if(respuesta){
       console.log("imprimio correcto")
