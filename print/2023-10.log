@@ -1,0 +1,17 @@
+2023/10/07 10:54:48.360141 Plugin para comunicación con impresoras térmicas 
+Proudly brought to you by Parzibyte
+
+Finalmente llegamos a la versión 3! espero que esta sea la última, por favor
+Nota: ya existe la versión para Android: https://parzibyte.me/blog/2022/11/01/plugin-gratuito-impresoras-termicas-bluetooth-android/
+No olvides leer mi blog si hay más actualizaciones o cosas interesantes:
+==========================================
+	https://parzibyte.me/blog
+========================================== 
+2023/10/07 10:54:48.360677 Escuchando en el puerto :8000.
+2023/10/07 11:12:14.903932 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\ticketera: Acceso denegado.
+2023/10/07 11:12:19.541158 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\OneNote for Windows 10: No se encuentra el nombre de red especificado.
+2023/10/07 11:12:23.496556 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\Microsoft XPS Document Writer: No se encuentra el nombre de red especificado.
+2023/10/07 11:12:26.973516 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\Fax: No se encuentra el nombre de red especificado.
+2023/10/07 11:12:30.971841 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\Enviar a OneNote 2010: No se encuentra el nombre de red especificado.
+2023/10/07 11:12:34.499998 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\AnyDesk Printer: No se encuentra el nombre de red especificado.
+2023/10/07 11:48:39.758247 error de servidor. El mensaje es: open \\DESKTOP-K9OEBJ7\ticketera: Acceso denegado.
