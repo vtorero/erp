@@ -80,8 +80,8 @@
                 </div>
             <div class=" col-3">
                 <mat-form-field appearance="outline">
-                    <mat-label>Vuelto</mat-label>
-                    <input matInput  name="vuelto" mask="separator.2" prefix="S/ "  formControlName="vuelto"  type="text" placeholder="Precio">
+                    <mat-label>{{vuelto}}</mat-label>
+                    <input    [ngClass]="{'claseVuelto': vuelto === 'Vuelto', 'clasePendiente' : vuelto === 'Pendiente' }" matInput  name="vuelto" mask="separator.2" prefix="S/ "  formControlName="vuelto"  type="text" placeholder="Precio">
                 </mat-form-field>
             </div>
         </div>

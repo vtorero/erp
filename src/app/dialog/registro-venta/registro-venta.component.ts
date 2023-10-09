@@ -7,6 +7,7 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+import { ModPrecioComponent } from '../mod-precio/mod-precio.component';
 
 
 
@@ -31,6 +32,7 @@ export class RegistroVentaComponent implements OnInit {
       montoPago: [0, [Validators.required, Validators.min(0.1)]]
 
     })]),
+    montopendiente: [0, Validators.required],
     vuelto:['',Validators.required],
     igv:[0],
     comentario:[''],
@@ -43,6 +45,7 @@ export class RegistroVentaComponent implements OnInit {
   });
 
 dataClientes:any;
+vuelto:string='';
 dataCajas:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
@@ -171,8 +174,6 @@ async getData() {
     000000000000`;
 
     conector.Iniciar()
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
-    console.log(this.data.detalle);
 
     conector.DeshabilitarElModoDeCaracteresChinos()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
@@ -197,8 +198,8 @@ async getData() {
 
     this.data.detalle.forEach(element => {
       console.log("linea",element)
-      conector.EscribirTexto(element.precio)
-      conector.EscribirTexto("____________________\n")
+      conector.EscribirTexto(element.nombre+"          "+element.precio+'\n')
+      conector.EscribirTexto("_____________________\n")
     });
     conector.EscribirTexto("____________________\n")
     conector.EscribirTexto("\n")
@@ -212,13 +213,14 @@ async getData() {
     conector.EstablecerTamañoFuente(1, 1)
     conector.TextoSegunPaginaDeCodigos(2, "cp850", "¡Gracias por su compra!\n")
     conector.Feed(1)
-    //.ImprimirCodigoQr("https://parzibyte.me/blog", 160, ConectorPluginV3.RECUPERACION_QR_MEJOR, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
-    //.Feed(1)
-    //.ImprimirCodigoDeBarrasCode128("parzibyte.me", 80, 192, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
-    //.Feed(1)
+
+    conector.ImprimirCodigoQr("https://parzibyte.me/blog", 160, ConectorPluginV3.RECUPERACION_QR_MEJOR, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
+    conector.Feed(1)
+    conector.ImprimirCodigoDeBarrasCode128("parzibyte.me", 80, 192, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
+    conector.Feed(1)
     conector.EstablecerTamañoFuente(1, 1)
-    //.EscribirTexto("parzibyte.me\n")
-    //.Feed(3)
+    conector.EscribirTexto("parzibyte.me\n")
+    conector.Feed(3)
     conector.Corte(1)
     conector.Pulso(48, 60, 120)
     //.imprimirEn(this.MyForm.get('impresoras').value);
@@ -331,7 +333,15 @@ if(depositos>precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
     vuelto.setValue(efectivo-precio)
 
-}else{
+}else if(efectivo<precio){
+  this.vuelto='Pendiente';
+  const vuelto = this.MyForm.get('vuelto') as FormControl;
+  vuelto.setValue(precio-efectivo)
+  const mpendiente = this.MyForm.get('montopendiente') as FormControl;
+  mpendiente.setValue(precio-efectivo)
+}
+
+else{
     const vuelto = this.MyForm.get('vuelto') as FormControl;
     const tipoDoc = this.MyForm.get('tipoDoc') as FormControl;
     if(tipoDoc.value=="Factura"){
@@ -339,6 +349,7 @@ if(depositos>precio){
       vuelto.setValue(efectivo-(precio + (precio * Global.BASE_IGV)));
 
     }else{
+      this.vuelto='Vuelto';
      vuelto.setValue(efectivo-precio)
     }
   }
