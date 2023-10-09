@@ -23,6 +23,9 @@ import { ConfiguracionComponent } from '../../seguridad/configuracion/configurac
 import { permisosComponent } from '../../seguridad/permisos/permisos.component';
 import { CajasComponent } from 'app/seguridad/cajas/cajas.component';
 import { KardexComponent } from 'app/inventarios/kardex/kardex.component';
+import { ComprasComponent } from 'app/negocio/compras/compras.component';
+import { ComprasRegistroComponent } from 'app/negocio/compras/compras-registro/compras-registro.component';
+import { ListadoComprasComponent } from 'app/negocio/compras/listado-compras/listado-compras.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -71,15 +74,19 @@ export const AdminLayoutRoutes: Routes = [
     {path:'ventas',
     children:[{path:'main',component:MainComponent},
     {path:'listado',component:ListadoComponent},
-    {path:'venta-rapida',component:VentasComponent}]},
+    {path:'venta-rapida',component:VentasComponent},
+    { path: 'clientes', component: ClienteComponent }]},
+    {path:'compras',
+    children:[{path:'main',component:ComprasComponent},
+    {path:'listado',component:ListadoComprasComponent},
+    {path:'registro-compras',component:ComprasRegistroComponent},
+    { path: 'proveedores', component: ProveedoresComponent }]},
     {path:'configuracion',
     children:[{path:'main',component:ConfiguracionComponent}
     ,{path:'permisos',component:permisosComponent},
     {path:'cajas',component:CajasComponent}]},
       {path:'inventarios',component:MainInventarioComponent},
       {path:'kardex',component:KardexComponent},
-    { path: 'proveedores',      component: ProveedoresComponent },
-    { path: 'clientes',      component: ClienteComponent },
     { path: 'seguridad',      component: UsuarioComponent },
     { path: 'usuarios',      component: UsuarioComponent },
     { path: 'sucursales',      component: SucursalesComponent },
