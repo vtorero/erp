@@ -66,10 +66,12 @@
     </div>
         </div>
     </form>
-    <h4>Detalle de pedido</h4>
+
   <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
-    <div class="example-container mat-elevation-z8" style="overflow-y:scroll;height:200px;margin-top:10px;">
-      <mat-table [dataSource]="dataDetalle" matSort>
+  <div style="display:flex;width: 100%;">
+  <div style="height:200px;margin-top:10px;flex-grow:1;">
+    <h4>Detalle de pedido</h4>
+      <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
         <ng-container matColumnDef="id_producto">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.id_producto}} </mat-cell>
@@ -106,4 +108,30 @@
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
     </div>
 
+    <div  style="height:200px;margin-top:10px;flex-grow:1;">
+      <h4>Detalle Pagos</h4>
+
+   <mat-table [dataSource]="dataPagos" matSort style="overflow-y:scroll">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tipoPago">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.tipoPago}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="monto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.monto}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="fecha_registro">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
+        </ng-container>
+         <mat-header-row *matHeaderRowDef="displayedColumnsPago" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsPago;"></mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+    </div>
   </div>
+</div>

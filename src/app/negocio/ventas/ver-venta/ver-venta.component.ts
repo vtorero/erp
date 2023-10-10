@@ -10,6 +10,7 @@ import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-fin
 import { ModCantidadComponent } from 'app/dialog/mod-cantidad/mod-cantidad.component';
 import { async } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DetaPagos } from '../../../modelos/detapagos';
 
 @Component({
   selector: 'app-ver-venta',
@@ -18,8 +19,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
+  displayedColumnsPago = ['id', 'tipoPago', 'monto','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
+  dataPagos:any;
   exampleArray:any;
   sucursales:any;
   constructor(
@@ -28,6 +31,7 @@ export class VerVentaComponent implements OnInit {
     private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data:Venta,
     @Inject(MAT_DIALOG_DATA) public detalle:Details,
+    @Inject(MAT_DIALOG_DATA) public detapago:DetaPagos,
 
   ) { }
 
@@ -37,8 +41,16 @@ export class VerVentaComponent implements OnInit {
       this.exampleArray=x;
       this.dataDetalle=this.exampleArray
       this.data.detalleVenta=this.exampleArray;
-      console.log("datadetalle",this.dataDetalle)
+
       });
+
+      this.api.GetDetallePago(this.data.id).subscribe(d => {
+        this.dataPagos = new MatTableDataSource();
+        this.exampleArray=d;
+        this.dataPagos=this.exampleArray
+
+
+        });
 
     this.getCliente();
     this.cargaSucursales();
