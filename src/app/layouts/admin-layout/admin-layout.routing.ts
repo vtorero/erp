@@ -26,6 +26,7 @@ import { KardexComponent } from 'app/inventarios/kardex/kardex.component';
 import { ComprasComponent } from 'app/negocio/compras/compras.component';
 import { ComprasRegistroComponent } from 'app/negocio/compras/compras-registro/compras-registro.component';
 import { ListadoComprasComponent } from 'app/negocio/compras/listado-compras/listado-compras.component';
+import { VendedoresComponent } from '../../negocio/vendedores/vendedores.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -90,6 +91,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'seguridad',      component: UsuarioComponent },
     { path: 'usuarios',      component: UsuarioComponent },
     { path: 'sucursales',      component: SucursalesComponent },
+    { path: 'vendedores',      component: VendedoresComponent },
     { path: 'productos',      component: ProductosComponent },
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },

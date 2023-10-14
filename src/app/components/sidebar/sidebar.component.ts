@@ -27,8 +27,10 @@ export const ROUTES: RouteInfo[] = [
     {pat:'/compras/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications'},
     {pat:'/compras/proveedores', tit: 'Proveedores',  icn:'person',cls:'notifications'}]},
     { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'},{pat:'/kardex', tit: 'Kardex',  icn:'bubble_chart',cls:'notifications'}]},
-    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[{pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
-       {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'}]},
+    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[
+      {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
+       {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'},
+       {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person'}]},
     { path: '/configuracion/main', title: 'Configuración',  icon: 'dashboard', class: '',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'},
     {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person'}]},
 ];

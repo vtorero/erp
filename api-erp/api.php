@@ -244,6 +244,75 @@ $app->post("/permisos",function() use($db,$app){
 
 });
 
+/*Agregar vendedor*/
+
+
+$app->post("/vendedor",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+       $json = $app->request->getBody();
+
+       $j = json_decode($json,true);
+
+       $data = json_decode($j['json']);
+
+       try {
+
+
+
+        $sql="call p_vendedor('{$data->nombre}','{$data->correo}','{$data->rol}',{$data->estado})";
+
+        $stmt = mysqli_prepare($db,$sql);
+
+        mysqli_stmt_execute($stmt);
+
+        $result = array("STATUS"=>true,"messaje"=>"Vendedor registrado correctamente");
+
+        }
+
+        catch(PDOException $e) {
+
+
+
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+
+
+    }
+
+
+
+             echo  json_encode($result);
+
+});
+
+/**listar vendedores */
+
+$app->get("/vendedores",function() use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT *  FROM vendedor order by id desc");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+
+
+    });
+
 
 /*Agregar usuario*/
 

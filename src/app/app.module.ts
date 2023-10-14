@@ -43,6 +43,7 @@ import { ComprasComponent } from './negocio/compras/compras.component';
 import { ComprasRegistroComponent } from './negocio/compras/compras-registro/compras-registro.component';
 import { ListadoComprasComponent } from './negocio/compras/listado-compras/listado-compras.component';
 import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.component';
+import { VendedoresComponent } from './negocio/vendedores/vendedores.component';
 
 
 @NgModule({
@@ -93,7 +94,8 @@ import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.c
      ComprasComponent,
      ComprasRegistroComponent,
      ListadoComprasComponent,
-     PagoPendienteComponent
+     PagoPendienteComponent,
+     VendedoresComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

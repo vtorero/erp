@@ -80,6 +80,12 @@ listarUsuarios() {
     .pipe(map((result) => result));
 }
 
+listarVendedores() {
+  return this._http
+    .get(Global.BASE_API_URL + "api.php/vendedores", { headers: this.headers })
+    .pipe(map((result) => result));
+}
+
 public guardarUsuario(datos: Usuario): Observable<any> {
   let headers = new HttpHeaders().set(
     "Content-Type",
@@ -88,6 +94,19 @@ public guardarUsuario(datos: Usuario): Observable<any> {
   let json = JSON.stringify(datos);
   return this._http.post(
     Global.BASE_API_URL + "api.php/usuario",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public guardarVendedor(datos: Usuario): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/vendedor",
     { json: json },
     { headers: headers }
   );

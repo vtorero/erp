@@ -45,6 +45,7 @@ export class RegistroVentaComponent implements OnInit {
   });
 
 dataClientes:any;
+dataVendedores:any;
 vuelto:string='';
 dataCajas:any;
 montoVuelto:any=0;
@@ -254,12 +255,22 @@ console.log(respuesta)
     this.getCliente();
     this.getData();
     this.getCajas();
+    this.getVendedor();
   const total = this.MyForm.get('total') as FormControl;
   total.setValue(this.data.precio);
   const usuario = this.MyForm.get('usuario') as FormControl;
   usuario.setValue(localStorage.getItem("currentId"));
   const sucursal = this.MyForm.get('sucursal') as FormControl;
   sucursal.setValue(localStorage.getItem("sucursal_id"));
+  }
+
+
+  getVendedor(): void {
+    this.api.getApi('vendedores').subscribe(data => {
+      if(data) {
+        this.dataVendedores = data;
+      }
+    } );
   }
 
   getCliente(): void {

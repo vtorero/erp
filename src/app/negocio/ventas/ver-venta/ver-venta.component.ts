@@ -20,6 +20,7 @@ export class VerVentaComponent implements OnInit {
   displayedColumnsPago = ['id', 'tipoPago', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
+  dataVendedores:any;
   dataPagos:any;
   exampleArray:any;
   sucursales:any;
@@ -52,6 +53,15 @@ export class VerVentaComponent implements OnInit {
 
     this.getCliente();
     this.cargaSucursales();
+    this.getVendedor();
+  }
+
+  getVendedor(): void {
+    this.api.getApi('vendedores').subscribe(data => {
+      if(data) {
+        this.dataVendedores = data;
+      }
+    } );
   }
 
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number){

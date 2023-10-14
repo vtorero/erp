@@ -19,9 +19,8 @@
             <mat-form-field>
               <mat-label>Vendedor</mat-label>
               <mat-select name="id_vendedor" #id_vendedor="ngModel" [(ngModel)]="data.id_vendedor" disabled="disabled">
-                <mat-option value="1">Vendedor 1</mat-option>
-                <mat-option value="2">Vendedor 2</mat-option>
-              </mat-select>
+                <mat-option *ngFor="let ven of dataVendedores" [value]="ven.id">{{ven.nombre}}</mat-option>
+                </mat-select>
             </mat-form-field>
 
           </div>

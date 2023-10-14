@@ -1,1 +1,98 @@
-<p>compras-registro works!</p>
+<div class="content">
+    <app-barratareas></app-barratareas>
+  <div class="container-fluid" *ngIf="sucursal_id!=null">
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Buscar Producto</mat-label>
+            <input matInput width="500" placeholder="Buscar producto" (keyup)="applyFilter($event.target.value)">
+         </mat-form-field>
+         <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
+         <div class="resultado">
+         <ul class="flex-container" *ngIf="!loading">
+        <li class="flex-item" (click)="enviarProducto(item.id,item.nombre,1,item.precio)" *ngFor="let item of dataSource; let i=index"
+         style="cursor: pointer;background-image: url(https://aprendeadistancia.online/erp/erp-api/upload/{{item.imagen}});background-size: 90%;background-repeat: no-repeat;">
+          <div class="precio"><div class="texto">S/ {{item.precio}}</div></div>
+         <div class="titulo">{{item.nombre}}</div>
+         </li>
+      </ul>
+
+      </div>
+        </div>
+        <div class="col-6">
+          <div class="card-body">
+            <div class="table-responsive boleta">
+                <table class="table">
+                    <thead class=" text-primary">
+                        <th>
+                            Codigo
+                        </th>
+                        <th>
+                            Producto
+                        </th>
+                        <th>
+                            Cantidad
+                        </th>
+                        <th>
+                            Precio
+                        </th>
+                        <th>
+                          % Descuento
+                      </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                          Eliminar
+                      </th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of dataRecibo; let i=index">
+                            <td>
+                                {{item.id}}
+                            </td>
+                            <td>
+                                {{item.nombre}}
+                            </td>
+                            <td>
+                              <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad}}</a>
+                            </td>
+                           <td>
+                               <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio}}</a>
+                            </td>
+                            <td>
+                              <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.descuento*item.cantidad}}</a>
+                           </td>
+                            <td class="text-primary">
+                                S/ {{item.cantidad * item.precio-(item.descuento*item.cantidad)}}
+                            </td>
+                            <td class="text-primary">
+                              <button mat-icon-button color="primary" (click)="borrarItem(i)" aria-label="Eliminar">
+                                <i class="material-icons">delete</i>
+                              </button>
+                          </td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+           <div class="row">
+  <div class="col-6"><b>Usuario: {{usuario}} / Punto de Venta: {{sucursal}}</b></div>
+  <div class="col-6 text-right"><b>Total:S/ {{totalMonto}}</b></div>
+
+           <div class="col-6">
+
+                  </div>
+            <div class="col-6">
+                   <button class="enviar float-right mt-3" mat-raised-button (click)="openRegistro()" color="primary" dkFocusInitial [disabled]="!dataRecibo.length>0"><i class="material-icons">save</i> Guardar</button>
+                 </div>
+            </div>
+
+        </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
