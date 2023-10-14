@@ -19,7 +19,7 @@ constructor(private _router:Router,private _sercicioRutas:ServicesService){}
 
 ngOnInit(): void {
   this.tabs=this._sercicioRutas.getRutas();
-console.log("init",this.tabs)
+//console.log("init",this.tabs)
 }
 
   go(url:string){
@@ -28,16 +28,16 @@ console.log("init",this.tabs)
   }
 
   closeTab(index: number) {
-    console.log("delindex",index+1);
+   // console.log("delindex",index+1);
     var total=this.tabs.length;
       setTimeout(() => {
-      console.log("total",total);
+     // console.log("total",total);
 if(index+1<total){
-  console.log("es menor:"+this.tabs[index+1])
+//  console.log("es menor:"+this.tabs[index+1])
       this._router.navigate([this.tabs[index+1]])
       this.tabs=this._sercicioRutas.del(index);
      }else{
-      console.log("es mayor")
+     // console.log("es mayor")
       this.tabs=this._sercicioRutas.del(index);
       this._router.navigate([this.tabs[index-1]])
      }

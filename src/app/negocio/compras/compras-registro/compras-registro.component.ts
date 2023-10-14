@@ -9,6 +9,7 @@ import { ModCantidadComponent } from '../../../dialog/mod-cantidad/mod-cantidad.
 import { ModDescuentoComponent } from '../../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../../dialog/registro-venta/registro-venta.component';
+import { RegistroCompraComponent } from '../../../dialog/registro-compra/registro-compra.component';
 
 
 
@@ -226,7 +227,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
 
-    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
+    const dialogo2=this.dialog.open(RegistroCompraComponent,{width: '910px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
     data: {precio:this.totalMonto,
            detalle:this.dataRecibo
     },

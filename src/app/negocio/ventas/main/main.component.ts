@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { BarratareasComponent } from '../../../components/barratareas/barratareas.component';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',

@@ -40,10 +40,12 @@ import { EntregaFinalComponent } from './dialog/entrega-final/entrega-final.comp
 import { AgregarInventarioComponent } from './dialog/agregar-inventario/agregar-inventario.component';
 import { KardexComponent } from './inventarios/kardex/kardex.component';
 import { ComprasComponent } from './negocio/compras/compras.component';
+import { MainComponent } from './negocio/ventas/main/main.component';
 import { ComprasRegistroComponent } from './negocio/compras/compras-registro/compras-registro.component';
 import { ListadoComprasComponent } from './negocio/compras/listado-compras/listado-compras.component';
 import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.component';
 import { VendedoresComponent } from './negocio/vendedores/vendedores.component';
+import { RegistroCompraComponent } from './dialog/registro-compra/registro-compra.component';
 
 
 @NgModule({
@@ -95,7 +97,9 @@ import { VendedoresComponent } from './negocio/vendedores/vendedores.component';
      ComprasRegistroComponent,
      ListadoComprasComponent,
      PagoPendienteComponent,
-     VendedoresComponent
+     VendedoresComponent,
+     MainComponent,
+     RegistroCompraComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

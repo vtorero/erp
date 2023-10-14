@@ -1,6 +1,7 @@
 <div class="content">
     <app-barratareas></app-barratareas>
   <div class="container-fluid" *ngIf="sucursal_id!=null">
+    <h3>Registro de Compras</h3>
       <div class="row">
         <div class="col-6">
           <mat-form-field appearance="outline">
@@ -86,7 +87,7 @@
 
                   </div>
             <div class="col-6">
-                   <button class="enviar float-right mt-3" mat-raised-button (click)="openRegistro()" color="primary" dkFocusInitial [disabled]="!dataRecibo.length>0"><i class="material-icons">save</i> Guardar</button>
+                   <button class="enviar float-right mt-3" mat-raised-button (click)="openRegistro()" color="primary" dkFocusInitial [disabled]="!dataRecibo.length>0"><i class="material-icons">save</i> Guardar Compra</button>
                  </div>
             </div>
 

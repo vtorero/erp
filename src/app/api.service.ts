@@ -374,6 +374,15 @@ public guardaVentas(datos,detalle){
     { json:json,detalle:det }, { headers: headers });
 }
 
+/**Guardar Compras */
+
+public guardarCompras(datos,detalle){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  let det = JSON.stringify(detalle);
+  return this._http.post(Global.BASE_API_URL + 'api.php/compra',
+    { json:json,detalle:det }, { headers: headers });
+}
 
 public GetDetalleVenta(id: any) {
   return this._http.get(Global.BASE_API_URL + 'api.php/venta/' + id,
