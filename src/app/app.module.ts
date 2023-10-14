@@ -42,6 +42,7 @@ import { KardexComponent } from './inventarios/kardex/kardex.component';
 import { ComprasComponent } from './negocio/compras/compras.component';
 import { ComprasRegistroComponent } from './negocio/compras/compras-registro/compras-registro.component';
 import { ListadoComprasComponent } from './negocio/compras/listado-compras/listado-compras.component';
+import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.component';
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import { ListadoComprasComponent } from './negocio/compras/listado-compras/lista
      KardexComponent,
      ComprasComponent,
      ComprasRegistroComponent,
-     ListadoComprasComponent
+     ListadoComprasComponent,
+     PagoPendienteComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

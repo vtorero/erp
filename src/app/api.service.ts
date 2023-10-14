@@ -112,6 +112,26 @@ public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad
   )
 }
 
+public actualizaMonto(id:number,id_venta:number,pendiente:number,monto:number):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'id':id,
+    'id_venta':id_venta,
+    'pendiente':pendiente,
+    'monto':monto,
+    'sucursal':localStorage.getItem("sucursal_id"),
+    'usuario':localStorage.getItem("currentId")
+  }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-monto",{ json: json },
+    { headers: headers }
+  )
+}
+
+
 public guardarCajas(datos:Cajas): Observable<any> {
   let headers = new HttpHeaders().set(
     "Content-Type",

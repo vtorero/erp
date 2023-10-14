@@ -7,7 +7,7 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
-import { ModPrecioComponent } from '../mod-precio/mod-precio.component';
+
 
 
 
@@ -236,13 +236,13 @@ console.log(respuesta)
       data=>{
         console.log("form",this.MyForm.value)
         console.log("detallesss",this.data.detalle)
-        this._snackBar.open(data['messaje'],"OK",{verticalPosition:'bottom'});
+        this._snackBar.open(data['messaje'],"OK",{duration:5000,verticalPosition:'bottom'});
        this.MyForm.reset();
        this.cancelar()
 
         },
       error=>{console.log(error)
-        this._snackBar.open("Ocurrio un Error","OK",{verticalPosition:'bottom'});
+        this._snackBar.open("Ocurrio un Error","OK",{duration:10000,verticalPosition:'bottom'});
         this.cancelar()
       }
         );

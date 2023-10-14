@@ -86,13 +86,13 @@
             </div>
         </div>
     </div>
-    <mat-form-field appearance="outline">
+    <!--<mat-form-field appearance="outline">
         <mat-label>Impresora</mat-label>
         <mat-select name="impresoras" formControlName="impresoras" required>
             <mat-option value="">Seleccionar</mat-option>
             <mat-option *ngFor="let imp of impresoras" [value]="imp">{{imp}}</mat-option>
     </mat-select>
-    </mat-form-field>
+    </mat-form-field>-->
     <div mat-dialog-actions class="float-right">
         <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>
         <button mat-button (click)="cancelar()">Cancelar</button>

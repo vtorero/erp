@@ -2188,7 +2188,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
 
                      foreach($data->pagos as $pago){
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->montoPago})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->montoPago},{$data->montopendiente})";
 
                     $stmtP = mysqli_prepare($db,$procP);
                     mysqli_stmt_execute($stmtP);
@@ -2245,6 +2245,33 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
     });
 
 
+    $app->post("/actualiza-monto",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+
+        try {
+            $query ="UPDATE venta_pagos SET monto=monto+({$data->monto}-{$data->pendiente}), monto_pendiente={$data->pendiente} where id_venta={$data->id_venta} and id={$data->id}";
+            $db->query($query);
+            $result = array("STATUS"=>true,"messaje"=>"Monto Pendientes actualizados correctamente");
+            }
+
+             catch(PDOException $e) {
+
+            $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+        }
+
+            echo  json_encode($result);
+
+
+
+
+
+    });
+
+
     $app->post("/actualiza-pendiente",function() use($db,$app){
 
 
@@ -2257,30 +2284,18 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $prods=array();
 
     while ($fila = $resultado->fetch_array()) {
-
         $prods[]=$fila;
-
     }
-
     //var_dump($prods);
-
-
-
     $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_venta']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
-
     $stmt2 = mysqli_prepare($db,$sql);
     mysqli_stmt_execute($stmt2);
     $stmt2->close();
-
     try {
-
         $query ="UPDATE venta_detalle SET pendiente={$data->cantidad} where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
-
         $db->query($query);
-
         $result = array("STATUS"=>true,"messaje"=>"Pendientes actualizados correctamente");
-
-          }
+        }
 
          catch(PDOException $e) {
 

@@ -2,15 +2,13 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
-import { EntregaParcialComponent } from 'app/dialog/entrega-parcial/entrega-parcial.component';
 import { Venta } from 'app/modelos/venta';
-import { AnyMxRecord } from 'dns';
 import { Details } from '../../../modelos/details';
 import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-final.component';
 import { ModCantidadComponent } from 'app/dialog/mod-cantidad/mod-cantidad.component';
-import { async } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetaPagos } from '../../../modelos/detapagos';
+import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente.component';
 
 @Component({
   selector: 'app-ver-venta',
@@ -19,7 +17,7 @@ import { DetaPagos } from '../../../modelos/detapagos';
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'tipoPago', 'monto','fecha_registro'];
+  displayedColumnsPago = ['id', 'tipoPago', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
   dataPagos:any;
@@ -54,6 +52,24 @@ export class VerVentaComponent implements OnInit {
 
     this.getCliente();
     this.cargaSucursales();
+  }
+
+  openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number){
+    let index=0;
+    const dialogo2=this.dialog.open(PagoPendienteComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modPendiente',id:id,venta:id_venta,monto:monto},
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+      console.log("wsss",ux)
+        this.api.actualizaMonto(id,id_venta,ux.cantidad,ux.monto).subscribe(
+          data=>{
+            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+            },
+          erro=>{console.log(erro)}
+            );
+
+     });
+
   }
 
 

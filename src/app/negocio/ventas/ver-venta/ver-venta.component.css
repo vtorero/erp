@@ -14,3 +14,9 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
     color: darkblue;
 
 }
+
+.pendiente{
+  color:red;
+  font-weight: 600;
+  cursor:pointer;
+}

@@ -122,7 +122,14 @@
         </ng-container>
         <ng-container matColumnDef="monto">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.monto}} </mat-cell>
+          <mat-cell *matCellDef="let row">S/ {{row.monto | number}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="monto_pendiente">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Monto pendiente</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <a *ngIf="row.monto_pendiente>0" class="pendiente" (click)="openMontoPendiente('20ms','20ms',row.id,row.id_venta,row.monto_pendiente)">S/ {{row.monto_pendiente | number}}</a>
+            <a *ngIf="row.monto_pendiente==0"> S/ {{row.monto_pendiente | number}}</a>
+          </mat-cell>
         </ng-container>
         <ng-container matColumnDef="fecha_registro">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
