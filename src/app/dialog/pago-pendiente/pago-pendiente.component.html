@@ -1,0 +1,9 @@
+<small>{{data.nombre}}</small>
+<mat-form-field appearance="outline">
+    <mat-label>Modificar Pago</mat-label>
+      <input matInput [(ngModel)]="data.cantidad" name="codigo" type="number">
+    </mat-form-field>
+    <div mat-dialog-actions>
+        <button mat-button (click)="cancelar()">Cancelar</button>
+        <button mat-raised-button [mat-dialog-close]="data"  cdkFocusInitial>Actualizar</button>
+    </div>
