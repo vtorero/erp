@@ -528,7 +528,7 @@ $app->get("/articulos/:criterio",function($criterio) use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and p.nombre like '%{$criterio}%' order by id;");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and p.nombre like '%{$criterio}%' order by id;");
 
     $prods=array();
 
@@ -1281,40 +1281,6 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
 
 });
-
-
-
-    $app->get("/productos/:criterio",function($criterio) use($db,$app){
-
-            header("Content-type: application/json; charset=utf-8");
-
-            try{
-
-            $resultado = $db->query("SELECT `id`, `codigo`, `nombre` FROM `productos` where nombre like '%".$criterio."%'");
-
-            $prods=array();
-
-            while ($fila = $resultado->fetch_array()) {
-
-
-
-                $prods[]=$fila;
-
-            }
-
-            $respuesta=json_encode($prods);
-
-        }catch (PDOException $e){
-
-            $respuesta=json_encode(array("status"=>$e->message));
-
-        }
-
-                     echo  $respuesta;
-
-
-
-        });
 
 
 

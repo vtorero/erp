@@ -176,7 +176,6 @@ async getData() {
 
     conector.Iniciar()
 
-    conector.DeshabilitarElModoDeCaracteresChinos()
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
     conector.DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp.png", 0, 216)
     conector.Feed(1)
@@ -188,7 +187,7 @@ async getData() {
     conector.EscribirTexto("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima \n")
     conector.EscribirTexto("RUC: 2053799520\n")
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    conector.EscribirTexto('CLIENTE:'+this.MyForm.get('cliente').value +'\n')
+    //conector.EscribirTexto('CLIENTE:'+this.MyForm.get('cliente').value +'\n')
 
     conector.EscribirTexto("Fecha y hora: " + (new Intl.DateTimeFormat("es-PE").format(new Date())))
     conector.Feed(1)
@@ -198,7 +197,6 @@ async getData() {
     conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
 
     this.data.detalle.forEach(element => {
-      console.log("linea",element)
       conector.EscribirTexto(element.nombre+"          "+element.precio+'\n')
       conector.EscribirTexto("_____________________\n")
     });
