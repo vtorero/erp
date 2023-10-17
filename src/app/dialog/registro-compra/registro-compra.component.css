@@ -11,3 +11,12 @@ mat-datepicker-toggle
     top: -12px;
     right: 14px;
 }
+
+.buscador{
+    height: 43px;
+    margin: 0px;
+    border: solid 1px #ccc;
+    border-radius: 42px;
+    padding-left: 12px;
+    width: 384px !important;
+}

@@ -28,11 +28,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class RegistroCompraComponent implements OnInit {
   public MyForm = this.fb.group({
     tipoDoc: ['', Validators.required],
+    seriedoc: ['', Validators.required],
     nrodocumento: ['', Validators.required],
     proveedor: ['0', Validators.required],
+    fecha: ['', Validators.required],
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['Efectivo', Validators.required],
-      montoPago: [0, [Validators.required, Validators.min(0.1)]]
+      montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),
     montopendiente: [0, Validators.required],
@@ -71,7 +73,16 @@ public id_documento:number=0
       return this.MyForm.get('pagos') as FormArray;
     }
 
-
+    onKey(value) {
+      this.selectSearch(value);
+    }
+    selectSearch(value: string) {
+      this.api.apiBuscadorProveedor(value).subscribe(data => {
+        if (data) {
+          this.dataProveedores = data;
+        }
+      });
+      }
 
 isValidField(field:string):boolean | null{
 
