@@ -4,3 +4,10 @@
 .clasePendiente{
     color:red !important;
 }
+mat-datepicker-toggle
+{
+    float: right !important;
+    position: absolute;
+    top: -12px;
+    right: 14px;
+}

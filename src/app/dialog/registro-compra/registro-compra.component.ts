@@ -7,6 +7,10 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -15,7 +19,7 @@ import { Global } from 'app/global';
 @Component({
   selector: 'app-registro-compra',
   templateUrl: './registro-compra.component.html',
-  styleUrls: ['./registro-compra.component.css']
+  styleUrls: ['./registro-compra.component.css'],
 })
 
 

@@ -14,15 +14,22 @@
 
                 </mat-form-field>
             </div>
-            <div class="col-6">
+            <div class="col-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Serie Doc.</mat-label>
+                    <input matInput  name="seriedoc" formControlName="seriedoc"  type="text" placeholder="Serie doc">
+
+                </mat-form-field>
+            </div>
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Nro Documento</mat-label>
-                    <input matInput  name="nrodocumento" formControlName="nrodocumento"  type="text" placeholder="Numero de Documento">
+                    <input matInput  name="nrodocumento" formControlName="nrodocumento"  type="number" autocomplete="off" placeholder="Numero de Documento">
 
                 </mat-form-field>
 
             </div>
-            <div class="col-12">
+            <div class="col-6">
                 <!--<input matInput class="form-control" placeholder="Buscar categoria..">-->
                 <mat-form-field appearance="outline">
                     <mat-label>Proveedor</mat-label>
@@ -33,6 +40,15 @@
 
                 </mat-form-field>
 
+            </div>
+            <div class="col-6">
+                <mat-form-field>
+                    <mat-label>Fecha de compra</mat-label>
+                    <input matInput [matDatepicker]="picker">
+                    <mat-hint>DD/MM/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
             </div>
             <div formArrayName="pagos">
                 <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
