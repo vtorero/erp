@@ -27,7 +27,7 @@ export class ListadoComprasComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','observacion','opciones'];
+  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','observacion','fecha','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,

@@ -314,6 +314,41 @@ $app->get("/vendedores",function() use($db,$app){
     });
 
 
+/**buscar proveedor */
+
+
+$app->get("/buscarproveedor/:criterio",function($criterio) use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    try{
+
+    $resultado = $db->query("SELECT * FROM aprendea_erp.proveedores where razon_social like '%".$criterio."%' OR num_documento like '%".$criterio."%'");
+
+    $prods=array();
+
+    while ($fila = $resultado->fetch_array()) {
+
+
+
+        $prods[]=$fila;
+
+    }
+
+    $respuesta=json_encode($prods);
+
+}catch (PDOException $e){
+
+    $respuesta=json_encode(array("status"=>$e->message));
+
+}
+
+             echo  $respuesta;
+
+
+
+});
+
 /*Agregar usuario*/
 
  $app->post("/usuario",function() use($db,$app){
@@ -2019,7 +2054,7 @@ $app->get("/compras",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
     $prods=array();
 
@@ -2135,13 +2170,13 @@ $app->post("/compra",function() use($db,$app){
     $j = json_decode($json,true);
     $data = json_decode($j['json']);
     $detalle = json_decode($j['detalle']);
-
+    $fecha=substr($data->fecha,0,10);
 
 
 
     $valor_total=0;
             try {
-               $sql="call p_compra('{$data->usuario}','{$data->nrodocumento}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
+               $sql="call p_compra('{$data->usuario}','{$data->seriedoc}','{$data->nrodocumento}','{$fecha}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
 
                $stmt = mysqli_prepare($db,$sql);
                 mysqli_stmt_execute($stmt);
@@ -2168,9 +2203,12 @@ $app->post("/compra",function() use($db,$app){
                 mysqli_stmt_execute($stmt);
                 $stmt->close();
 
+
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`cantidad_ingreso`,`precio`,`id_sucursal`,`usuario`)
                  VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
                 $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
+
+
                 $stmt2 = mysqli_prepare($db,$sql);
                 $stmt3 = mysqli_prepare($db,$sql2);
                 mysqli_stmt_execute($stmt2);
