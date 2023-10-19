@@ -31,3 +31,6 @@ mat-card{
 table {
     width: 100%;
   }
+
+  mat-header-cell{font-size: 14px; font-weight: 700;}
+mat-cell{font-size: 13px;  font-weight: 400;color: black !important}

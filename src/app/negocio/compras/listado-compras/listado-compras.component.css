@@ -12,5 +12,5 @@
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
   border-bottom: unset;
 }
-mat-header-cell{font-size: 11px; font-weight: 700;}
-mat-cell{font-size: 12px;}
+mat-header-cell{font-size: 14px; font-weight: 700;}
+mat-cell{font-size: 13px;  font-weight: 400;color: black !important}

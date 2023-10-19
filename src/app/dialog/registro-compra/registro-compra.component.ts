@@ -7,21 +7,27 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 
-
-
-
+export const MY_MOMENT_FORMATS = {
+  parseInput: 'l LT',
+  fullPickerInput: 'l LT',
+  datePickerInput: 'l',
+  timePickerInput: 'LT',
+  monthYearLabel: 'MM YYYY',
+  dateA11yLabel: 'LL',
+  monthYearA11yLabel: 'MM YYYY',
+};
 
 @Component({
   selector: 'app-registro-compra',
   templateUrl: './registro-compra.component.html',
   styleUrls: ['./registro-compra.component.css'],
+  providers: [
+    // The locale would typically be provided on the root module of your application. We do it at
+    // the component level here, due to limitations of our example generation script.
+    {provide: MAT_DATE_LOCALE, useValue: 'en-PE'}]
 })
-
 
 
 
@@ -66,8 +72,12 @@ public id_documento:number=0
     private api:ApiService,
     private fb:FormBuilder,
     private _snackBar: MatSnackBar,
+    private _adapter: DateAdapter<any>,
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
+    ) {
 
-    ) { }
+
+    }
 
     get Pagos() {
       return this.MyForm.get('pagos') as FormArray;
@@ -162,7 +172,8 @@ async getData() {
       this.MyForm.markAllAsTouched();
       return;
     }
-
+    this._locale = 'es-ES';
+    this._adapter.setLocale(this._locale);
     this.api.guardarCompras(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
         console.log("form",this.MyForm.value)

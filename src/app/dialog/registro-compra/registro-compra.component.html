@@ -34,7 +34,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Proveedor</mat-label>
                     <mat-select name="id_cliente" formControlName="proveedor">
-                        <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar..">
+                        <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o RUC">
                         <mat-option  value="">Seleccionar</mat-option>
                         <mat-option *ngFor="let prov of dataProveedores" [value]="prov.id">{{prov.razon_social}} - {{prov.num_documento}}</mat-option>
                     </mat-select>
