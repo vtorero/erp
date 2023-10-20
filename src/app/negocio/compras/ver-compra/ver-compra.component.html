@@ -1,0 +1,141 @@
+<div>
+    <form #formGeneral="ngForm">
+      <div mat-dialog-content>
+        <h3>Visualizar Compra Nro:({{data.id}})</h3>
+        <div class="row">
+          <div class="col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de Documento</mat-label>
+              <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
+                  <mat-option >Seleccionar</mat-option>
+                  <mat-option value="Ticket">Ticket</mat-option>
+                  <mat-option value="Boleta">Boleta</mat-option>
+                  <mat-option value="Factura">Factura</mat-option>
+              </mat-select>
+          </mat-form-field>
+            </div>
+
+          <div class="col-6">
+            <mat-form-field appearance="outline">
+                <mat-label>Proveedor</mat-label>
+                  <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
+                </mat-form-field>
+
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Terminal</mat-label>
+              <mat-select matInput matInput [(ngModel)]="data.id_sucursal" name="id" required>
+                  <mat-option value="">Seleccionar</mat-option>
+                <mat-option  *ngFor="let subcat of sucursales" [value]="subcat.id">
+                  {{subcat.nombre}}
+                </mat-option>
+                </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de Compra</mat-label>
+                <input matInput [(ngModel)]="data.fecha" name="fecha" maxlength="110" minlength="2" type="text"  readonly>
+                </mat-form-field>
+          </div>
+             <div class="row">
+            <div class="col-4 offset-1">
+              <mat-form-field>
+                <mat-label>Valor neto</mat-label>
+                <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_neto" readonly>
+              </mat-form-field>
+               </div>
+            <div class="col-3">
+              <mat-form-field>
+                <mat-label>Monto IGV</mat-label>
+                  <input matInput name="monto_igv"  type="number" [(ngModel)]="data.monto_igv" readonly>
+              </mat-form-field>
+              </div>
+
+            <div class="col-4">
+              <mat-form-field>
+                <mat-label>Monto Total</mat-label>
+                  <input matInput name="valor_total" type="number" [(ngModel)]="data.valor_total" readonly>
+              </mat-form-field>
+                  </div>
+            </div>
+    </div>
+        </div>
+    </form>
+
+  <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
+  <div style="display:flex;width: 100%;">
+  <div style="height:200px;margin-top:10px;flex-grow:1;">
+    <h4>Detalle de Productos</h4>
+      <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
+        <ng-container matColumnDef="id_producto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id_producto}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nombre">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="cantidad">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
+
+        </ng-container>
+        <ng-container matColumnDef="pendiente">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <a *ngIf="row.pendiente>0" class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.nombre,data.id)">{{row.pendiente | number}}</a>
+            <span *ngIf="row.pendiente==0">{{row.pendiente | number}}</span>
+          </mat-cell>
+
+        </ng-container>
+        <ng-container matColumnDef="precio">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let row">S/. {{row.precio | number }} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="subtotal">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Subtotal</mat-header-cell>
+          <mat-cell *matCellDef="let row">S/.{{ row.subtotal | number }}
+          </mat-cell>
+        </ng-container>
+         <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+    </div>
+
+    <div  style="height:200px;margin-top:10px;flex-grow:1;">
+      <h4>Detalle Pagos</h4>
+
+   <mat-table [dataSource]="dataPagos" matSort style="overflow-y:scroll">
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="tipoPago">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.tipoPago}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="monto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+          <mat-cell *matCellDef="let row">S/ {{row.monto | number}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="monto_pendiente">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Monto pendiente</mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <a *ngIf="row.monto_pendiente>0" class="pendiente" (click)="openMontoPendiente('20ms','20ms',row.id,row.id_venta,row.monto_pendiente)">S/ {{row.monto_pendiente | number}}</a>
+            <a *ngIf="row.monto_pendiente==0"> S/ {{row.monto_pendiente | number}}</a>
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="fecha_registro">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
+        </ng-container>
+         <mat-header-row *matHeaderRowDef="displayedColumnsPago" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsPago;"></mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+    </div>
+  </div>
+</div>

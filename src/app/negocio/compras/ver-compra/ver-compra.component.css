@@ -1,0 +1,22 @@
+
+mat-header-cell{font-size: 10px; font-weight: 700;}
+mat-cell{font-size: 11px;}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
+    border-bottom: unset;
+  }
+  .numero_edicion{
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: darkblue;
+
+}
+
+.pendiente{
+  color:red;
+  font-weight: 600;
+  cursor:pointer;
+}
