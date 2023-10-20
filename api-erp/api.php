@@ -1582,7 +1582,7 @@ $app->get("/compra/:id",function($id) use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-    $resultado = $db->query("SELECT `id`, `descripcion`, `cantidad`, `precio`, `id_articulo`, `id_compra` FROM `detalle_compras` where id_compra={$id}");
+    $resultado = $db->query("SELECT a.nombre, d.* FROM aprendea_erp.compra_detalle d,productos a  where a.id=d.id_producto and id_compra={$id}");
 
     $prods=array();
 
@@ -2886,7 +2886,30 @@ $app->get("/nota/:id",function($id) use($db,$app){
 
     });
 
+/**pagos compra */
 
+$app->get("/pagos-compra/:id",function($id) use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT  p.* FROM aprendea_erp.compra_pagos p  where  id_venta={$id}");
+     $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+});
+
+
+/**pagos venta */
     $app->get("/pagos/:id",function($id) use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");

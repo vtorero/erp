@@ -46,6 +46,8 @@ import { ListadoComprasComponent } from './negocio/compras/listado-compras/lista
 import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.component';
 import { VendedoresComponent } from './negocio/vendedores/vendedores.component';
 import { RegistroCompraComponent } from './dialog/registro-compra/registro-compra.component';
+import { VerCompraComponent } from './negocio/compras/ver-compra/ver-compra.component';
+
 
 
 @NgModule({
@@ -99,7 +101,9 @@ import { RegistroCompraComponent } from './dialog/registro-compra/registro-compr
      PagoPendienteComponent,
      VendedoresComponent,
      MainComponent,
-     RegistroCompraComponent
+     RegistroCompraComponent,
+     VerCompraComponent,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

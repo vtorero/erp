@@ -13,6 +13,7 @@ import { Clientes } from 'app/modelos/clientes';
 import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.component';
 import { VerVentaComponent } from '../../ventas/ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
+import { VerCompraComponent } from '../ver-compra/ver-compra.component';
 
 @Component({
   selector: 'app-listado-compras',
@@ -79,7 +80,7 @@ openBusqueda(){
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
-    const dialog= this.dialog.open(VerVentaComponent, {
+    const dialog= this.dialog.open(VerCompraComponent, {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
@@ -205,7 +206,7 @@ eliminar(art:Clientes) {
 
 abrirEditar(cod: Venta) {
   console.log("venta",cod)
-  const dialogo2 = this.dialog2.open(VerVentaComponent, {
+  const dialogo2 = this.dialog2.open(VerCompraComponent, {
     data: cod,
     disableClose: false
   });

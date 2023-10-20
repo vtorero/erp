@@ -392,8 +392,20 @@ public guardarCompras(datos,detalle){
     { json:json,detalle:det }, { headers: headers });
 }
 
+public GetDetalleCompra(id: any) {
+  return this._http.get(Global.BASE_API_URL + 'api.php/compra/' + id,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
+
+
 public GetDetalleVenta(id: any) {
   return this._http.get(Global.BASE_API_URL + 'api.php/venta/' + id,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
+public GetDetallePagoCompra(id: any) {
+  return this._http.get(Global.BASE_API_URL + 'api.php/pagos-compra/' + id,
     { headers: this.headers }
   ).pipe(map(result => result));
 }
