@@ -78,8 +78,8 @@ export class VentasComponent implements OnInit {
         this.sucursal=d[0]['nombre'];
         localStorage.setItem("sucursal_id",this.sucursal_id);
         this.getCate();
-        this.getSubCategoria();
-        this.getFamilia();
+       // this.getSubCategoria();
+        //this.getFamilia();
 
          });
     }

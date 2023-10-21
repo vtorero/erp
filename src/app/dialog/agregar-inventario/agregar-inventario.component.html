@@ -1,23 +1,47 @@
 <mat-card style="width: 550px;">
     <mat-card-content>
           <form [formGroup]="Miform" autocomplete="off">
-      <h3 mb-10>Agregar Stock</h3>
+      <h3 mb-10>Mantenimiento de  Stocks</h3>
       <mat-form-field appearance="fill">
         <mat-label>Seleccionar producto</mat-label>
         <mat-select [(ngModel)]="data.id_producto" formControlName="nombre" required>
       <input class="form-control" matInput (keyup)="onKey($event.target.value)" placeholder="Buscar..">
           <mat-option *ngFor="let prod of dataProducto" [value]="prod.id">{{prod.nombre}}</mat-option>
-
         </mat-select>
       </mat-form-field>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field appearance="fill">
+            <mat-label>Tipo Operación</mat-label>
+            <mat-select  formControlName="operacion" required>
+             <mat-option value="">Seleccionar</mat-option>
+             <mat-option value="Ingreso">Ingreso</mat-option>
+             <mat-option value="Salida">Salida</mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
           <mat-form-field appearance="fill">
             <mat-label>Cantidad a Ingresar</mat-label>
             <input matInput  type="number" [(ngModel)]="data.cantidad"  formControlName="cantidad" required>
           </mat-form-field>
+        </div>
+        <div class="col-6">
           <mat-form-field appearance="outline">
             <mat-label>Precio</mat-label>
             <input matInput  name="precio" mask="separator.2" prefix="S/ " [(ngModel)]="data.precio"  formControlName="precio"  type="text" placeholder="Precio" required>
         </mat-form-field>
+        </div>
+      </div>
+      <div class="col-12">
+
+        <mat-form-field class="example-full-width">
+          <mat-label>Comentario</mat-label>
+          <textarea matInput placeholder="Motivo de salida"></textarea>
+        </mat-form-field>
+      </div>
              <div mat-dialog-actions>
             <button  mat-raised-button [mat-dialog-close]="false" color="primary">Cancelar</button>
             <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial  color="primary" [disabled]="!Miform.valid">Confirmar</button>
