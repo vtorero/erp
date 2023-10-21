@@ -36,8 +36,17 @@ interface Elemento {
 export class VentasComponent implements OnInit {
   selectedRowIndex:any;
   usuario:string;
+
+  criterio:string='';
+  categoria:string='';
+  subcategoria:string='';
+  familia:string='';
+
   sucursal:string='';
   sucursal_id:string='';
+  dataCategoria:any;
+  dataSubCategoria:any;
+  dataFamilia:any;
   dataSource: any;
   dataTabla:any;
   totalMonto:number=0;
@@ -68,6 +77,9 @@ export class VentasComponent implements OnInit {
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
         this.sucursal=d[0]['nombre'];
         localStorage.setItem("sucursal_id",this.sucursal_id);
+        this.getCate();
+        this.getSubCategoria();
+        this.getFamilia();
 
          });
     }
@@ -78,6 +90,67 @@ export class VentasComponent implements OnInit {
   }
 
 
+  public seleccionarCategoria(event) {
+    const value = event.value;
+    console.log(value);
+    this.categoria=value;
+    this.api.BuscarPorCategoria(value).subscribe(x => {
+      this.dataSubCategoria=x;
+      this.loading=false
+    });
+    this.api.BuscarPorFamilia(value,this.subcategoria,this.familia,'categoria').subscribe(x => {
+      this.dataSource=x;
+      this.loading=false
+     });
+ }
+
+ public seleccionarSubcategoria(event) {
+   const value = event.value;
+   this.subcategoria=value;
+   console.log("subcategoria",this.familia);
+   console.log(value)
+   this.api.BuscarPorSubcategoria(value).subscribe(x => {
+   this.dataFamilia=x;
+   this.loading=false
+  });
+  this.api.BuscarPorFamilia(this.categoria,value,this.familia,'subcategoria').subscribe(x => {
+    this.dataSource=x;
+    this.loading=false
+   });
+}
+
+public seleccionarFamilia(event) {
+  const value = event.value;
+  console.log(value)
+  this.api.BuscarPorFamilia(this.categoria,this.subcategoria,value,'familia').subscribe(x => {
+  this.dataSource=x;
+  this.loading=false
+ });
+}
+
+ getCate(): void {
+    this.api.getApi('categorias').subscribe(data => {
+      if(data) {
+        this.dataCategoria = data;
+      }
+    } );
+  }
+
+  getSubCategoria(): void {
+    this.api.getApi('sub_categorias').subscribe(data => {
+      if(data) {
+        this.dataSubCategoria = data;
+      }
+    } );
+  }
+
+  getFamilia(): void {
+    this.api.getApi('familia').subscribe(data => {
+      if(data) {
+        this.dataFamilia = data;
+      }
+    } );
+  }
 
 renderDataTable() {
   this.loading=true;
@@ -97,6 +170,7 @@ renderDataTable() {
 }
 
 applyFilter(filterValue: string) {
+  this.criterio=filterValue
   console.log(filterValue)
   this.loading=true;
   filterValue = filterValue.trim();

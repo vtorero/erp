@@ -1192,12 +1192,70 @@ $app->get("/categorias",function() use($db,$app){
         });
 
 
+        /*buscar general*/
+
+        $app->post("/buscargeneral", function() use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+
+            $json = $app->request->getBody();
+            $j = json_decode($json,true);
+            $data = json_decode($j['json']);
+
+            if($data->tipo=='categoria'){
+            $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat}";
+            }
+
+            if($data=='subcategoria'){
+            $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat} and id_subcategoria={$data->sub}";
+            }
+            if($data->tipo=='familia'){
+             $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat} and id_subcategoria={$data->sub} and id_sub_sub_categoria={$data->fam}";
+            }
+
+            $resultado = $db->query($sql);
+            $prods=array();
+            while ($fila = $resultado->fetch_array()) {
+                $prods[]=$fila;
+              }
+
+               $respuesta=json_encode($prods);
+              echo $respuesta;
+
+            });
+
+
+
+
+        $app->get("/familia/:criterio",function($criterio) use($db,$app){
+
+            header("Content-type: application/json; charset=utf-8");
+
+            $resultado = $db->query("SELECT categoria3 as nombre,id_sub_sub_categoria as id ,id_subcategoria from productos where id_subcategoria={$criterio} group by 1,2 order by 1 asc");
+
+            $prods=array();
+
+                while ($fila = $resultado->fetch_array()) {
+
+
+
+                    $prods[]=$fila;
+
+                }
+
+                $respuesta=json_encode($prods);
+
+                echo  $respuesta;
+
+
+
+        });
+
 
         $app->get("/subcategoria/:criterio",function($criterio) use($db,$app){
 
             header("Content-type: application/json; charset=utf-8");
 
-            $resultado = $db->query("SELECT s.id,c.id id_categoria,c.nombre categoria,s.nombre FROM sub_categorias s,categorias c WHERE s.id_categoria=c.id and c.id={$criterio} order by s.id");
+            $resultado = $db->query("SELECT categoria2 as nombre,id_subcategoria as id ,id_categoria from productos where id_categoria={$criterio} group by 1,2 order by 1 asc;");
 
             $prods=array();
 

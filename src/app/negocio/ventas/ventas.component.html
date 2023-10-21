@@ -6,8 +6,36 @@
       <div class="col-6">
         <mat-form-field appearance="outline">
           <mat-label>Buscar Venta</mat-label>
-          <input matInput width="500" placeholder="Buscar producto"(keyup)="applyFilter($event.target.value)">
+          <input matInput width="500"  [(ngModel)]="criterio" placeholder="Buscar producto"(keyup)="applyFilter($event.target.value)">
        </mat-form-field>
+       <div class="row">
+        <div class="col-4">
+       <mat-form-field appearance="outline">
+        <mat-label>Familia</mat-label>
+              <mat-select name="id-categoria" value="" (selectionChange)="seleccionarCategoria($event)">
+                <mat-option value="" selected>Categoría</mat-option>
+                <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
+          </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field appearance="outline">
+        <mat-select name="id_subcategoria" value="" (selectionChange)="seleccionarSubcategoria($event)">
+          <mat-option value="" selected>Sub Categoría</mat-option>
+          <mat-option *ngFor="let subcat of dataSubCategoria" [value]="subcat.id">{{subcat.nombre}}</mat-option>
+    </mat-select>
+</mat-form-field>
+    </div>
+    <div class="col-4">
+      <mat-form-field appearance="outline">
+        <mat-select name="id_subcategoria" value="" (selectionChange)="seleccionarFamilia($event)">
+          <mat-option value="" selected>Familia</mat-option>
+          <mat-option *ngFor="let fam of dataFamilia" [value]="fam.id">{{fam.nombre}}</mat-option>
+    </mat-select>
+</mat-form-field>
+    </div>
+
+    </div>
        <div style="display:block"><mat-spinner *ngIf="loading" diameter="150"></mat-spinner></div>
        <div class="resultado">
        <ul class="flex-container" *ngIf="!loading">

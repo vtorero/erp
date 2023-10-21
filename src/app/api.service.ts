@@ -362,6 +362,37 @@ public BuscarProducto(criterio:string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/articulos/' + criterio, { headers: this.headers });
 }
 
+//*Buscar x Categoria*/
+public BuscarPorCategoria(id:string): Observable<any> {
+  return this._http.get(Global.BASE_API_URL + 'api.php/subcategoria/' +id, { headers: this.headers });
+}
+
+/**buscar x familia */
+
+public BuscarPorSubcategoria(id:string): Observable<any> {
+  return this._http.get(Global.BASE_API_URL + 'api.php/familia/' +id, { headers: this.headers });
+}
+
+public BuscarPorFamilia(cat:string,subcat:string,fam:string,tipo:string): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'cat':cat,
+    'sub':subcat,
+    'fam':fam,
+    'tipo':tipo
+ }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + "api.php/buscargeneral",{ json },
+    { headers: headers }
+  )
+
+
+}
+
+
 
 addLinea(elemento:Details){
 this.articulos.push(elemento);
