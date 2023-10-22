@@ -5,7 +5,7 @@
       <div class="example-button-row">
         <div class="example-flex-container">
           <button mat-icon-button color="primary" (click)="openDialog('0ms','0ms')" aria-label="Example icon button with a vertical three dot icon">
-            <i class="material-icons">post_add</i>
+            <i class="material-icons">edit_note</i>
           </button>
          <!-- <button mat-icon-button color="primary"  (click)="openDialogEdit('10ms','10ms')"  [disabled]="!selectedRowIndex"  aria-label="Example icon button with a home icon"
           matTooltip="Editar registro"
@@ -21,12 +21,28 @@
           <button mat-icon-button color="primary" aria-label="Example icon button with a open in new tab icon">
             <i class="material-icons">file_upload</i>
           </button>
-          <mat-form-field *ngIf="buscador">
-            <input matInput width="350" (keyup)="applyFilter($event.target.value)"
-           placeholder="Escriba algo para filtrar">
-         </mat-form-field>
-        </div>
-      </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Almacen Destino</mat-label>
+                <mat-select  formControlName="almacen" required >
+                 <mat-option value="">Seleccionar</mat-option>
+                 <mat-option value="1">Almacen 1</mat-option>
+                 <mat-option value="2">Almacen 2</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+             </div>
+             <div class="col-3">
+              <mat-form-field>
+                <input matInput width="350px" (keyup)="applyFilter($event.target.value)"
+               placeholder="Escriba algo para filtrar">
+             </mat-form-field>
+             </div>
+          </div>
+             </div>
     </section>
     <div class="row">
            <div class="col-md-12">

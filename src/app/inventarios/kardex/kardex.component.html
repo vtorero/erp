@@ -1,7 +1,7 @@
 <div class="content">
     <app-barratareas></app-barratareas>
   <div class="container-fluid">
-    <section>
+    <!--<section>
       <div class="example-button-row">
         <div class="example-flex-container">
           <button mat-icon-button color="primary" (click)="openDialog('0ms','0ms')" aria-label="Example icon button with a vertical three dot icon">
@@ -25,7 +25,7 @@
          </mat-form-field>
         </div>
       </div>
-    </section>
+    </section>-->
 
 
     <div class="row">
@@ -52,7 +52,10 @@
                       <th mat-header-cell *matHeaderCellDef> Tipo Movimiento </th>
                       <td mat-cell *matCellDef="let element"> {{element.tipo_movimiento}} </td>
                     </ng-container>
-
+                    <ng-container matColumnDef="id_almacen">
+                      <th mat-header-cell *matHeaderCellDef>Almacen</th>
+                      <td mat-cell *matCellDef="let element"> {{element.id_almacen}} </td>
+                    </ng-container>
                     <ng-container matColumnDef="id_venta">
                       <th mat-header-cell *matHeaderCellDef>Codigo Venta </th>
                       <td  mat-cell *matCellDef="let element">  {{element.id_venta}} </td>
@@ -78,7 +81,14 @@
                       <th mat-header-cell *matHeaderCellDef>Precio </th>
                       <td class="precio" mat-cell *matCellDef="let element">S/ {{element.precio}} </td>
                     </ng-container>
-
+                    <ng-container matColumnDef="comentario">
+                      <th mat-header-cell *matHeaderCellDef>Comentario </th>
+                      <td mat-cell *matCellDef="let element"> {{element.comentario}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="fecha">
+                      <th mat-header-cell *matHeaderCellDef>Fecha de Registro </th>
+                      <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+                    </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                   </table>

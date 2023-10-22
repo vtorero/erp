@@ -17,6 +17,7 @@ import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-ven
 interface Elemento {
   id:number;
   nombre: string;
+  id_almacen:number,
   cantidad: number;
   pendiente: number;
   precio:number;
@@ -202,7 +203,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,cantidad:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+    array.push({ id:elemento.id,nombre:elemento.nombre,id_almacen:0,cantidad:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -218,7 +219,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,precio:precio, cantidad:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,id_almacen:0,precio:precio, cantidad:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
 

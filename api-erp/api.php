@@ -1205,7 +1205,7 @@ $app->get("/categorias",function() use($db,$app){
             $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat}";
             }
 
-            if($data=='subcategoria'){
+            if($data->tipo=='subcategoria'){
             $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat} and id_subcategoria={$data->sub}";
             }
             if($data->tipo=='familia'){
@@ -2023,7 +2023,7 @@ $app->get("/inventario",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
 
-     $resultado = $db->query("SELECT producto_id,a.nombre,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, productos a where a.id=i.producto_id;");
+     $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, productos a where a.id=i.producto_id;");
 
     $prods=array();
 
@@ -2076,7 +2076,7 @@ $app->get("/movimientos",function() use($db,$app){
         $fila['detalle'];
         $fila['promedio'];
         $fila['stock'];
-        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio FROM aprendea_erp.movimiento_articulos m, productos p where m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
+        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m, productos p where m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
         $resul_detalle = $db->query($sql);
 
         while ($filadet = $resul_detalle->fetch_array()) {
@@ -2180,11 +2180,28 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
 
-        $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`cantidad_ingreso`,`precio`,`id_sucursal`,`usuario`)
-         VALUES({$data->id_producto},'Ingreso',{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
-        $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}";
 
-          $stmt2 = mysqli_prepare($db,$sql);
+
+
+
+if($data->operacion=='Ingreso'){
+
+    $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_ingreso`,`precio`,`id_sucursal`,`usuario`)
+         VALUES({$data->id_producto},'{$data->operacion}',{$data->id_almacen},'{$data->comentario}',{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
+
+         $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}";
+        }
+
+        if($data->operacion=='Salida'){
+            $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_salida`,`precio`,`id_sucursal`,`usuario`)
+         VALUES({$data->id_producto},'{$data->operacion}',{$data->id_almacen},'{$data->comentario}',{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
+            $sql2="UPDATE inventario  SET cantidad = cantidad-{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}
+            and id_almacen={$data->id_almacen}";
+        }
+
+
+
+        $stmt2 = mysqli_prepare($db,$sql);
         $stmt3 = mysqli_prepare($db,$sql2);
         mysqli_stmt_execute($stmt2);
         mysqli_stmt_execute($stmt3);
@@ -2262,8 +2279,8 @@ $app->post("/compra",function() use($db,$app){
                 $stmt->close();
 
 
-                $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`cantidad_ingreso`,`precio`,`id_sucursal`,`usuario`)
-                 VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
+                $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
+                 VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
                 $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
 
 
