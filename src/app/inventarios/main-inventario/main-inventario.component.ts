@@ -25,7 +25,7 @@ export class MainInventarioComponent implements OnInit {
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['producto_id','nombre','cantidad','fecha_actualizacion'];
+  displayedColumns = ['producto_id','nombre','cantidad','id_almacen','fecha_actualizacion'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -117,7 +117,7 @@ openBusqueda(){
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new AddInventario(0,0,0,localStorage.getItem("currentId"),localStorage.getItem("sucursal_id"))
+      data:new AddInventario(0,0,0,localStorage.getItem("currentId"),'',0,'',localStorage.getItem("sucursal_id"))
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

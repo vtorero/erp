@@ -10,10 +10,21 @@
         </mat-select>
       </mat-form-field>
       <div class="row">
-        <div class="col-12">
+        <div class="col-6">
+          <mat-form-field appearance="fill">
+            <mat-label>Almacen Destino</mat-label>
+            <mat-select  formControlName="almacen" required [(ngModel)]="data.id_almacen" >
+             <mat-option value="">Seleccionar</mat-option>
+             <mat-option value="1">Almacen 1</mat-option>
+             <mat-option value="2">Almacen 2</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+        <div class="col-6">
           <mat-form-field appearance="fill">
             <mat-label>Tipo Operación</mat-label>
-            <mat-select  formControlName="operacion" required>
+            <mat-select  formControlName="operacion" required [(ngModel)]="data.operacion" >
              <mat-option value="">Seleccionar</mat-option>
              <mat-option value="Ingreso">Ingreso</mat-option>
              <mat-option value="Salida">Salida</mat-option>
@@ -39,7 +50,7 @@
 
         <mat-form-field class="example-full-width">
           <mat-label>Comentario</mat-label>
-          <textarea matInput placeholder="Motivo de salida"></textarea>
+          <textarea matInput placeholder="Motivo de salida" [(ngModel)]="data.comentario"  formControlName="comentario"></textarea>
         </mat-form-field>
       </div>
              <div mat-dialog-actions>

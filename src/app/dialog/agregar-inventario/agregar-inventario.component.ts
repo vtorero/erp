@@ -16,8 +16,9 @@ export interface DialogData {
   styleUrls: ['./agregar-inventario.component.css']
 })
 export class AgregarInventarioComponent implements OnInit {
-  Miform:FormGroup;
-  dataProducto:any;
+
+Miform:FormGroup;
+dataProducto:any;
 seleccionados:string[]=[];
 producto:any;
 dataArray;
@@ -31,8 +32,11 @@ constructor(private api:ApiService,  private fb:FormBuilder,
     ) {
       this.Miform=this.fb.group({
         nombre:['',Validators.required],
+        operacion:['',Validators.required],
+        almacen:['',Validators.required],
         cantidad:['',Validators.required],
-        precio:['',Validators.required]
+        precio:['',Validators.required],
+        comentario:['']
       });
     }
 

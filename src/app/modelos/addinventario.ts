@@ -4,6 +4,9 @@ export class AddInventario{
         public cantidad:number,
         public precio:number,
          public usuario:string,
+         public operacion:string,
+         public id_almacen:number,
+         public comentario:string,
         public id_sucursal:string
     ){}
 }
