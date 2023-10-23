@@ -52,6 +52,7 @@ export class RegistroCompraComponent implements OnInit {
     total:[0],
     usuario:[''],
     sucursal:[''],
+    almacen:[],
     entrega: [0],
   });
 
