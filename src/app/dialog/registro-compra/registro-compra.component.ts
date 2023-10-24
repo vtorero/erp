@@ -60,6 +60,7 @@ export class RegistroCompraComponent implements OnInit {
 dataVendedores:any;
 vuelto:string='';
 dataCajas:any;
+dataSucursales:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
@@ -197,6 +198,7 @@ async getData() {
     this.getProveedores();
     this.getData();
     this.getCajas();
+    this.getSucursales();
     this.getVendedor();
   const total = this.MyForm.get('total') as FormControl;
   total.setValue(this.data.precio);
@@ -228,6 +230,15 @@ async getData() {
     this.api.getCajasUsuario(idUsuario).subscribe(data => {
       if(data) {
         this.dataCajas = data;
+      }
+    } );
+  }
+
+  getSucursales(): void {
+    
+    this.api.listarSucursales().subscribe(data => {
+      if(data) {
+        this.dataSucursales = data;
       }
     } );
   }

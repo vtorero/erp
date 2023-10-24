@@ -82,6 +82,14 @@ public getCajasUsuario(usuario: string): Observable<any> {
 
 }
 
+
+listarSucursales() {
+  return this._http
+    .get(Global.BASE_API_URL + "api.php/sucursales", { headers: this.headers })
+    .pipe(map((result) => result));
+}
+
+
 listarUsuarios() {
   return this._http
     .get(Global.BASE_API_URL + "api.php/usuarios", { headers: this.headers })
