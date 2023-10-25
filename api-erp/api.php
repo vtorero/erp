@@ -2395,8 +2395,7 @@ $app->post("/compra",function() use($db,$app){
                      VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
                      $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
 
-                     var_dump($sql);
-                     die();
+
                     $stmt2 = mysqli_prepare($db,$sql);
                     $stmt3 = mysqli_prepare($db,$sql2);
                     mysqli_stmt_execute($stmt2);

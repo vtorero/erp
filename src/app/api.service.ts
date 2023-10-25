@@ -57,7 +57,11 @@ export class ApiService {
       .get(Global.BASE_API_URL + "api.php/buscarproveedor/" + criterio, { headers: this.headers })
       .pipe(map((result) => result));
   }
-
+  apiBuscadorCliente(criterio:string){
+    return this._http
+      .get(Global.BASE_API_URL + "api.php/buscarclientes/" + criterio, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
 
 
   getApiTabla(criterio){

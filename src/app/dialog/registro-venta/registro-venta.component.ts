@@ -293,7 +293,7 @@ console.log(respuesta)
     this.selectSearch(value);
   }
   selectSearch(value: string) {
-    this.api.apiBuscadorProveedor(value).subscribe(data => {
+    this.api.apiBuscadorCliente(value).subscribe(data => {
       if (data) {
         this.dataClientes = data;
       }

@@ -7,6 +7,7 @@ declare interface RouteInfo {
     title: string;
     icon: string;
     class: string;
+    admin:string;
     child:Child[];
 }
 
@@ -17,21 +18,21 @@ declare interface Child {
     cls:string;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '',child:[]},
-    { path: '/ventas/main', title: 'Ventas',  icon: 'library_books', class: '',
+    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class:'', admin:'si',child:[]},
+    { path: '/ventas/main', title: 'Ventas',  icon: 'library_books', class: '',admin:'no',
     child:[{pat:'/ventas/venta-rapida', tit: 'Venta Rápida',  icn:'bubble_chart',cls:'notifications'},
     {pat:'/ventas/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications'},
     {pat:'/ventas/clientes', tit: 'Clientes',  icn:'person',cls:'notifications'}]},
-    { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',
+    { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',admin:'si',
     child:[{pat:'/compras/registro-compras', tit: 'Registrar',  icn:'bubble_chart',cls:'notifications'},
     {pat:'/compras/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications'},
     {pat:'/compras/proveedores', tit: 'Proveedores',  icn:'person',cls:'notifications'}]},
-    { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'},{pat:'/kardex', tit: 'Kardex',  icn:'bubble_chart',cls:'notifications'}]},
-    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,child:[
+    { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '',admin:'si' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications'},{pat:'/kardex', tit: 'Kardex',  icn:'bubble_chart',cls:'notifications'}]},
+    { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,admin:'si',child:[
       {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'},
        {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person'}]},
-    { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class: '',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'},
+    { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class:'' ,admin:'si',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'},
     {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person'}]},
 ];
 
@@ -42,6 +43,7 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
   menuItems: any[];
+  currentname:string='';
 
   constructor(private _serviceRutas:ServicesService) { }
 
@@ -53,6 +55,7 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentname = localStorage.getItem("currentNombre");
     this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
   isMobileMenu() {
