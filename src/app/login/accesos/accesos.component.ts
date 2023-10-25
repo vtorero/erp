@@ -75,12 +75,17 @@ loginUser(usuario,password){
             localStorage.setItem("currentAvatar",data['data'][0]['avatar']);
             localStorage.setItem("currentEmpresa",data['data'][0]['nombre']);
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
+
+            if(data['data'][0]['nombre']=='admin'){
             this.router.navigate(['/dashboard']);
+          }else{
+            this.router.navigate(['/ventas/venta-rapida']);
+          }
 
           }else{
-            
+
             this.error();
-          
+
 
           }
 

@@ -31,7 +31,7 @@ export const ROUTES: RouteInfo[] = [
       {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person'},
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person'},
        {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person'}]},
-    { path: '/configuracion/main', title: 'Configuración',  icon: 'dashboard', class: '',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'},
+    { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class: '',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person'},
     {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person'}]},
 ];
 

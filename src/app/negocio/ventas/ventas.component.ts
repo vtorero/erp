@@ -77,7 +77,7 @@ export class VentasComponent implements OnInit {
       console.log("thissss",suc)
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
         this.sucursal=d[0]['nombre'];
-        localStorage.setItem("sucursal_id",this.sucursal_id);
+        sessionStorage.setItem("sucursal_id",this.sucursal_id);
         this.getCate();
        // this.getSubCategoria();
         //this.getFamilia();
@@ -292,7 +292,6 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
   });
    dialogo2.afterClosed().subscribe(ux => {
      this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
-
       this.sucursal=d[0]['nombre'];
       sessionStorage.setItem("sucursal_id",ux.id);
        });

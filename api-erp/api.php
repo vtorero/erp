@@ -365,7 +365,7 @@ $app->get("/buscarproveedor/:criterio",function($criterio) use($db,$app){
 
 
 
-        $sql="call p_usuario('{$data->nombre}','{$data->correo}','{$data->rol}',{$data->estado})";
+        $sql="call p_usuario('{$data->nombre}','{$data->correo}','{$data->contrasena}','{$data->rol}',{$data->estado})";
 
         $stmt = mysqli_prepare($db,$sql);
 
@@ -390,6 +390,33 @@ $app->get("/buscarproveedor/:criterio",function($criterio) use($db,$app){
              echo  json_encode($result);
 
 });
+
+/*get sucursal usuario**/
+
+$app->get("/permisos/:uid",function($uid) use($db,$app){
+
+    header("Content-type: application/json; charset=utf-8");
+
+    $resultado = $db->query("SELECT s.id,s.nombre FROM aprendea_erp.permisos p inner join sucursales s on p.id_sucursal=s.id  where id_usuario={$uid}");
+
+    $prods=array();
+
+        while ($fila = $resultado->fetch_array()) {
+
+
+
+            $prods[]=$fila;
+
+        }
+
+        $respuesta=json_encode($prods);
+
+        echo  $respuesta;
+
+
+
+    });
+
 
 /**get cajas por usuario */
 $app->get("/cajas/:uid",function($uid) use($db,$app){
@@ -2280,7 +2307,7 @@ $app->post("/compra",function() use($db,$app){
 
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
-                 VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
+                 VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->almacen},{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
                 $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
 
 
@@ -2366,7 +2393,10 @@ $app->post("/compra",function() use($db,$app){
 
                     $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`cantidad_salida`,`precio`,`id_sucursal`,`usuario`)
                      VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
-                    $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
+                     $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
+
+                     var_dump($sql);
+                     die();
                     $stmt2 = mysqli_prepare($db,$sql);
                     $stmt3 = mysqli_prepare($db,$sql2);
                     mysqli_stmt_execute($stmt2);
