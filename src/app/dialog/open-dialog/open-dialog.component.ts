@@ -28,7 +28,8 @@ constructor(private api:ApiService,  private fb:FormBuilder,
       this.form=this.fb.group({
         nombre:['',Validators.required],
         correo:['',Validators.email],
-
+        rol:['',Validators.required],
+        contrasena:['',Validators.required],
         estado:['',Validators.required],
       });
     }

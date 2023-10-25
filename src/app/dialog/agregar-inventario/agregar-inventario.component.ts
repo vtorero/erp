@@ -21,6 +21,7 @@ Miform:FormGroup;
 dataProducto:any;
 seleccionados:string[]=[];
 producto:any;
+dataSucursales:any;
 dataArray;
 stock;
 stockPeso;
@@ -47,6 +48,17 @@ constructor(private api:ApiService,  private fb:FormBuilder,
       }
     } );
   }
+
+
+  getSucursales(): void {
+
+    this.api.getApiTabla('/sucursales').subscribe(data => {
+      if(data) {
+        this.dataSucursales = data;
+      }
+    } );
+  }
+
 /*
   getProdExiste(id): void {
     this.api.getApi('inventarios/'+id).subscribe(data => {
@@ -112,6 +124,7 @@ if(ev.source){
 
   ngOnInit() {
     this.getProductos();
+    this.getSucursales();
   }
 
 

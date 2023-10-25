@@ -196,7 +196,7 @@ async getData() {
 
   ngOnInit(): void {
     this.getProveedores();
-    this.getData();
+    //this.getData();
     this.getCajas();
     this.getSucursales();
     this.getVendedor();
@@ -235,8 +235,8 @@ async getData() {
   }
 
   getSucursales(): void {
-    
-    this.api.listarSucursales().subscribe(data => {
+
+    this.api.getApiTabla('/sucursales').subscribe(data => {
       if(data) {
         this.dataSucursales = data;
       }

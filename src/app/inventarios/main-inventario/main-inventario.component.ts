@@ -20,6 +20,7 @@ import { AddInventario } from 'app/modelos/addinventario';
 export class MainInventarioComponent implements OnInit {
 
   buscador:boolean=false;
+  dataSucursales:any;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
@@ -35,6 +36,7 @@ export class MainInventarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderDataTable();
+    this.getSucursales();
   }
 
   applyFilter(filterValue: string) {
@@ -50,6 +52,15 @@ openBusqueda(){
     this.buscador=true;
   }
 }
+getSucursales(): void {
+
+  this.api.getApiTabla('/sucursales').subscribe(data => {
+    if(data) {
+      this.dataSucursales = data;
+    }
+  } );
+}
+
 
   selected(row) {
     this.selectedRowIndex=row;

@@ -19,7 +19,8 @@ export class SelecTerminalComponent implements OnInit {
   }
 
   cargaSucursales() {
-    this.api.getApiTabla('/sucursales').subscribe(x => {
+    let id = localStorage.getItem("currentId");
+    this.api.getPermisos(id).subscribe(x => {
       this.sucursales = x;
       },
       error => {

@@ -289,6 +289,16 @@ console.log(respuesta)
   }
 
 
+  onKey(value) {
+    this.selectSearch(value);
+  }
+  selectSearch(value: string) {
+    this.api.apiBuscadorProveedor(value).subscribe(data => {
+      if (data) {
+        this.dataClientes = data;
+      }
+    });
+    }
   cancelar() {
     this.dialog.closeAll();
     this.data.precio=0

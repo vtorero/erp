@@ -4,3 +4,11 @@
 .clasePendiente{
     color:red !important;
 }
+.buscador{
+    height: 43px;
+    margin: 3px;
+    border: solid 1px #ccc;
+    border-radius: 6px;
+    padding-left: 12px;
+    width: 96% !important;
+}

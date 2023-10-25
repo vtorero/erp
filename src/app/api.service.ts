@@ -194,6 +194,13 @@ public guardarPermisos(datos:Permisos): Observable<any> {
   );
 }
 
+getPermisos(criterio:string){
+  return this._http
+    .get(Global.BASE_API_URL + "api.php/permisos/"+ criterio, { headers: this.headers })
+    .pipe(map((result) => result));
+}
+
+
 
 public actualizarUsuario(datos: Usuario): Observable<any> {
   let headers = new HttpHeaders().set(

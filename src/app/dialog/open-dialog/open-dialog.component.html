@@ -4,15 +4,19 @@
       <h3 mb-10>Agregar Usuario</h3>
         <mat-form-field appearance="fill">
             <mat-label>Nombre completo</mat-label>
-            <input matInput  [(ngModel)]="data.nombre" type="text" required formControlName="nombre">
+            <input matInput  [(ngModel)]="data.nombre" type="text" required formControlName="nombre" autocomplete="off">
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Correo electrónico</mat-label>
-            <input matInput required type="email" [(ngModel)]="data.correo" formControlName="correo">
+            <input matInput required type="email" [(ngModel)]="data.correo" formControlName="correo" autocomplete="off">
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Contraseña</mat-label>
+            <input matInput required type="password" [(ngModel)]="data.contrasena" formControlName="contrasena" autocomplete="off">
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Rol</mat-label>
-            <mat-select required [(ngModel)]="data.rol" formControlName="estado">
+            <mat-select required [(ngModel)]="data.rol" formControlName="rol">
               <mat-option value="">Seleccionar</mat-option>
               <mat-option value="administrador">Administrador</mat-option>
               <mat-option value="usuario">Usuario</mat-option>
@@ -20,7 +24,7 @@
           </mat-form-field>
           <mat-form-field appearance="fill">
             <mat-label>Estado</mat-label>
-            <mat-select required [(ngModel)]="data.estado" formControlName="estado">
+            <mat-select required [(ngModel)]="data.estado" formControlName="estado" >
               <mat-option value="0">Inactivo</mat-option>
               <mat-option value="1">Activo</mat-option>
             </mat-select>

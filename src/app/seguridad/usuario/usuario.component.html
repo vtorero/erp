@@ -7,18 +7,17 @@
           <button mat-icon-button color="primary" (click)="openDialog('0ms','0ms')" aria-label="Example icon button with a vertical three dot icon">
             <i class="material-icons">post_add</i>
           </button>
-          <button mat-icon-button color="primary"  (click)="openDialogEdit('10ms','10ms')"  [disabled]="!selectedRowIndex"  aria-label="Example icon button with a home icon"
-          matTooltip="Editar registro"
+          <button mat-icon-button color="primary"  (click)="openDialogEdit('10ms','10ms')"  [disabled]="!selectedRowIndex"  aria-label="" matTooltip="Editar registro"
           matTooltipHideDelay="100000">
             <i class="material-icons">edit_note</i>
           </button>
-          <button mat-icon-button color="primary" (click)="openDelete('20ms','20ms')" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon">
+          <button mat-icon-button color="primary" (click)="openDelete('20ms','20ms')" [disabled]="!selectedRowIndex" aria-label="">
             <i class="material-icons">delete</i>
           </button>
-          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
+          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="">
             <i class="material-icons">search</i>
           </button>
-          <button mat-icon-button color="primary" aria-label="Example icon button with a open in new tab icon">
+          <button mat-icon-button color="primary" aria-label="">
             <i class="material-icons">file_upload</i>
           </button>
           <mat-form-field *ngIf="buscador">

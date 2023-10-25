@@ -68,7 +68,7 @@ export class VentasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let suc=  localStorage.getItem("sucursal_id");
+    let suc=  sessionStorage.getItem("sucursal_id");
     console.log("sss",suc);
     if(suc==null){
     this.openTerminal('20ms','20ms');
@@ -294,7 +294,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
      this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
 
       this.sucursal=d[0]['nombre'];
-      localStorage.setItem("sucursal_id",ux.id);
+      sessionStorage.setItem("sucursal_id",ux.id);
        });
 
    });

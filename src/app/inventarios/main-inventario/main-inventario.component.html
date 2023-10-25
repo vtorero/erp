@@ -27,11 +27,10 @@
             <div class="col-4">
               <mat-form-field appearance="outline">
                 <mat-label>Almacen Destino</mat-label>
-                <mat-select  formControlName="almacen" required >
+                <mat-select  formControlName="almacen" required>
                  <mat-option value="">Seleccionar</mat-option>
-                 <mat-option value="1">Almacen 1</mat-option>
-                 <mat-option value="2">Almacen 2</mat-option>
-                </mat-select>
+                 <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id">{{suc.nombre}}</mat-option>
+                 </mat-select>
               </mat-form-field>
 
              </div>

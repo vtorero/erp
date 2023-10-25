@@ -31,6 +31,8 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
                     <mat-select name="id_cliente" formControlName="cliente">
+                        <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o RUC">
+                        <mat-option  value="">Seleccionar</mat-option>
                         <mat-option  value="0">Sin cliente</mat-option>
                         <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.nombre}}</mat-option>
                     </mat-select>
