@@ -50,10 +50,10 @@
         </li>
     </ul>
   </div>
-    <ul class="nav">
+    <ul class="nav" *ngIf="currentname=='admin'">
            <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
 
-            <a *ngIf="currentname=='admin' && menuItem.admin=='si'" class="nav-link" [routerLink]="[menuItem.path]">
+            <a *ngIf="currentname=='admin' && (menuItem.admin=='si' || menuItem.admin=='no')" class="nav-link" [routerLink]="[menuItem.path]">
                 <i class="material-icons">{{menuItem.icon}}</i>
                 <p (click)="cargarRuta(menuItem.path)">{{menuItem.title}}</p>
                 <i class="material-icons icon-mas" *ngIf="menuItem.child.length>=1" style="float:right;
@@ -65,7 +65,7 @@
 
             <ul *ngIf="menuItem.child.length>=1" class="nav nav-subitem">
                 <li *ngFor="let submenuItem of menuItem.child" class="{{submenuItem.cls}}">
-                    <a class="nav-link" [routerLink]="[submenuItem.pat]">
+                    <a  *ngIf="currentname=='admin' && (submenuItem.admin=='si' || submenuItem.admin=='no')"  class="nav-link" [routerLink]="[submenuItem.pat]">
                         <i class="material-icons">{{submenuItem.icn}}</i>
                     <p (click)="cargarRuta(submenuItem.pat)" routerLinkActive="active" class="submenu-nuevo">{{submenuItem.tit}}</p>
                 </a>
@@ -73,4 +73,28 @@
             </ul>
         </li>
     </ul>
+    <ul class="nav" *ngIf="currentname!='admin'" >
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+
+         <a *ngIf="menuItem.admin=='no'" class="nav-link" [routerLink]="[menuItem.path]">
+             <i class="material-icons">{{menuItem.icon}}</i>
+             <p (click)="cargarRuta(menuItem.path)">{{menuItem.title}}</p>
+             <i class="material-icons icon-mas" *ngIf="menuItem.child.length>=1" style="float:right;
+                 position: relative;
+                 right: -14px;
+                 top: -28px;
+             ">arrow_forward_ios</i>
+         </a>
+
+         <ul *ngIf="menuItem.child.length>=1" class="nav nav-subitem">
+             <li *ngFor="let submenuItem of menuItem.child" class="{{submenuItem.cls}}">
+                 <a  *ngIf="submenuItem.admin=='no'"  class="nav-link" [routerLink]="[submenuItem.pat]">
+                     <i class="material-icons">{{submenuItem.icn}}</i>
+                 <p (click)="cargarRuta(submenuItem.pat)" routerLinkActive="active" class="submenu-nuevo">{{submenuItem.tit}}</p>
+             </a>
+             </li>
+         </ul>
+     </li>
+ </ul>
+
 </div>

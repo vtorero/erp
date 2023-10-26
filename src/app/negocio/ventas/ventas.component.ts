@@ -301,7 +301,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){
 
-    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '610px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
+    const dialogo2=this.dialog.open(RegistroVentaComponent,{width: '620px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
     data: {precio:this.totalMonto,
            detalle:this.dataRecibo
     },

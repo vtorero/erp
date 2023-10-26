@@ -12,3 +12,7 @@
     padding-left: 12px;
     width: 96% !important;
 }
+
+#recibo{
+    display: none;
+}

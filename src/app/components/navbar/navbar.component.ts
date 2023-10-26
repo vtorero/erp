@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
     private listTitles: any[];
     location: Location;
       mobile_menu_visible: any = 0;
+    usuario:string='';
     private toggleButton: any;
     private sidebarVisible: boolean;
 
@@ -20,7 +21,20 @@ export class NavbarComponent implements OnInit {
           this.sidebarVisible = false;
     }
 
+cerrar(){
+    console.log("ceeeerrrar");
+    localStorage.removeItem("currentId");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentNombre");
+    localStorage.removeItem("currentAvatar");
+    localStorage.removeItem("currentEmpresa");
+    sessionStorage.removeItem("hashsession");
+    localStorage.removeItem("sucursal_id");
+    this.router.navigate(['/']);
+}
+
     ngOnInit(){
+        this.usuario= localStorage.getItem("currentNombre");
       this.listTitles = ROUTES.filter(listTitle => listTitle);
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggler')[0];

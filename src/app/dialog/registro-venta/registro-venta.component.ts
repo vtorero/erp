@@ -8,7 +8,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
 
-
+function imprSelec(nombre) {
+  var ficha = document.getElementById(nombre);
+  var ventimp = window.open(' ', 'popimpr','left=200,top=200,width=800,height=620');
+  ventimp.document.write( ficha.innerHTML );
+  ventimp.document.close();
+  ventimp.print();
+  ventimp.close();
+}
 
 
 
@@ -52,6 +59,8 @@ montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
 montoTotal:any;
+clientetexto:string;
+numero_doc:string;
 public id_documento:number=0
 
 
@@ -141,14 +150,19 @@ async getData() {
   }
 }
 
+imprimir() {
 
+
+  imprSelec("recibo");
+
+}
 
    onSubmit():void{
     if(this.MyForm.invalid){
       this.MyForm.markAllAsTouched();
       return;
     }
-    const conector = new ConectorPluginV3;
+   /* const conector = new ConectorPluginV3;
     const amongUsComoCadena = `000001111000
     000010000100
     000100011110
@@ -230,6 +244,8 @@ console.log(respuesta)
     }else{
       console.log("imprimio incorecto")
     }
+*/
+console.log(this.data.detalle)
 
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
@@ -288,6 +304,15 @@ console.log(respuesta)
     } );
   }
 
+seleccionarCliente(event){
+console.log(event.value)
+  this.api.getApiTablaCriterio('clientes',event.value).subscribe(data => {
+    if(data[0].nombre) {
+this.clientetexto=data[0].nombre
+this.numero_doc=data[0].num_documento
+    }
+  } );
+}
 
   onKey(value) {
     this.selectSearch(value);
