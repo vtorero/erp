@@ -1,0 +1,9 @@
+SELECT
+  sum(ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024  )) AS `Size (MB)`
+FROM
+  information_schema.TABLES
+WHERE
+  TABLE_SCHEMA = "aprendea_erp" 
+ORDER BY
+  (DATA_LENGTH + INDEX_LENGTH)
+DESC;
