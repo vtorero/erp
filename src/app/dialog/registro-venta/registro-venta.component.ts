@@ -246,7 +246,7 @@ console.log(respuesta)
     }
 */
 console.log(this.data.detalle)
-
+this.imprimir();
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
         console.log("form",this.MyForm.value)
@@ -337,11 +337,11 @@ this.numero_doc=data[0].num_documento
       if(value=='Factura'){
       this.data.detalle.map(function(dato){
           console.log("datoooooo",dato.prec)
-        //total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
-        //igv2.setValue(dato.precio * Global.BASE_IGV);
+        total2.setValue((parseFloat(total2.value) + (total2.value * Global.BASE_IGV)).toFixed(2));
+        igv2.setValue((dato.precio * Global.BASE_IGV).toFixed(2));
         });
-        total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))
-        igv2.setValue(total2.value * Global.BASE_IGV)
+       // total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))
+        //igv2.setValue(total2.value * Global.BASE_IGV)
       }
       if(value=='Ticket'){
         total2.setValue(this.data.precio);

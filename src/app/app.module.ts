@@ -47,6 +47,7 @@ import { PagoPendienteComponent } from './dialog/pago-pendiente/pago-pendiente.c
 import { VendedoresComponent } from './negocio/vendedores/vendedores.component';
 import { RegistroCompraComponent } from './dialog/registro-compra/registro-compra.component';
 import { VerCompraComponent } from './negocio/compras/ver-compra/ver-compra.component';
+import { FinanzasComponent } from './negocio/finanzas/finanzas.component';
 
 
 
@@ -103,6 +104,7 @@ import { VerCompraComponent } from './negocio/compras/ver-compra/ver-compra.comp
      MainComponent,
      RegistroCompraComponent,
      VerCompraComponent,
+     FinanzasComponent,
 
   ],
   providers: [],

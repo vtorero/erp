@@ -36,7 +36,7 @@
                         <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o RUC">
                         <mat-option  value="">Seleccionar</mat-option>
                         <mat-option  value="0">Sin cliente</mat-option>
-                        <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.id}} {{cat.nombre}}</mat-option>
+                        <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>
@@ -103,36 +103,42 @@
         <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>
 </form>
-<button (click)="imprimir()">print</button>
-{{this.MyForm.value | json }}
+<!--<button (click)="imprimir()">print</button>
+{{this.MyForm.value | json }}-->
 <div id="recibo" style="font-family:Arial, Helvetica, sans-serif;">
     <div style="display:flex;justify-content:space-around;margin-bottom:15px;">
-    <div><img style="text-align:right;" src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="40px" height="40px"></div>
-    <div style="text-align:left;font-weight:bold;padding-top: 10px;">LAS HERMANITAS<br>
+    <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="40px" height="40px"></div>
+    <div style="text-align:left;font-weight:bold;padding-top: 15px;padding-right:40px;">LAS HERMANITAS<br>
 </div>
     </div>
-    <div style="font-size:16px;text-align:center;">
-    Ferretería y materiales de contrucción las<br>
-    Hermanitas E.I.R.L.<br>
-    Whatsapp/Teléfono:902 715 979<br>
-    lashermanitas_bertha@hotmail.com<br>
-    LT. 9 MZ E COO. LA ESPERANZA<br> - Santiago de Surco - Lima - Lima<br>
+    <div style="Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;text-align:center;">
+    <strong>Ferretería y materiales de contrucción las<br>
+    Hermanitas E.I.R.L.</strong><br>
+    WhatsApp/Teléfono: 902 715 979<br>
+     lashermanitas_bertha@hotmail.com<br>
+     LT. 9 MZ E COO. LA ESPERANZA<br> - Santiago de Surco - Lima - Lima<br>
     RUC: 2053799520<br><br>
     </div>
     ADQUIRIENTE:<br>
-
-
     I.E/DNI: {{numero_doc}}<br>
-    {{clientetexto}} <br><br>
+    <strong>{{clientetexto}} </strong><br>
     <hr>
 
-    <div style="font-size:13px;">DESCRIPCION --- PRECIO --- CANTIDAD --- IMPORTE</div>
+    <div style="Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:13px;">Descripción&nbsp;&nbsp;&nbsp;&nbsp;   |&nbsp;&nbsp;&nbsp;&nbsp;    Precio&nbsp;&nbsp;&nbsp;&nbsp;    |&nbsp;&nbsp;&nbsp;&nbsp;  Cantidad&nbsp;&nbsp;&nbsp;&nbsp;   |&nbsp;&nbsp;&nbsp;&nbsp;   Importe</div>
         <div style="display:flex;justify-content:space-between" *ngFor="let det of data.detalle">
 
-          <div style="font-size:11px;"> {{det.nombre}} {{det.precio}} x {{det.cantidad}}</div><div>----</div><div style="font-size:12px;">S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)|number}}</div>
+          <div style="font-size:11px;"> {{det.nombre}} | S/ {{det.precio}} | {{det.cantidad}} |</div><div>----</div><div style="font-size:12px;">S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)|number}}</div>
+</div>
+<hr>
+<div style="display:flex;justify-content: flex-end; Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:13px;">
+<div style="text-align:right;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;">{{MyForm.value.neto}}<br>
+    {{MyForm.value.igv}}<br>
+    {{MyForm.value.total}}
+</div>
+<div></div>
 </div>
 
-{{MyForm.value.total}}
+
 
 <!--<pre>{{impresoras| json}}</pre>
 
