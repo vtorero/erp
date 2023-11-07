@@ -122,18 +122,19 @@
     ADQUIRIENTE:<br>
     I.E/DNI: {{numero_doc}}<br>
     <strong>{{clientetexto}} </strong><br>
+    
+
+    <div style="Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:13px;">DESCRIPCION&nbsp;&nbsp;&nbsp;&nbsp;    CANT.&nbsp;&nbsp;&nbsp;&nbsp; U.M.&nbsp;&nbsp;&nbsp;&nbsp;     PRECIO&nbsp;&nbsp;&nbsp;&nbsp;      IMPORTE</div>
     <hr>
-
-    <div style="Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:13px;">Descripción&nbsp;&nbsp;&nbsp;&nbsp;   |&nbsp;&nbsp;&nbsp;&nbsp;    Precio&nbsp;&nbsp;&nbsp;&nbsp;    |&nbsp;&nbsp;&nbsp;&nbsp;  Cantidad&nbsp;&nbsp;&nbsp;&nbsp;   |&nbsp;&nbsp;&nbsp;&nbsp;   Importe</div>
-        <div style="display:flex;justify-content:space-between" *ngFor="let det of data.detalle">
-
-          <div style="font-size:11px;"> {{det.nombre}} | S/ {{det.precio}} | {{det.cantidad}} |</div><div>----</div><div style="font-size:12px;">S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)|number}}</div>
-</div>
+        <div *ngFor="let det of data.detalle">
+            <div style="font-size:11px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
+          <div style="font-size:11px;display:flex;justify-content:flex-end">{{det.cantidad}} NIU S/ {{det.precio}}  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
+  </div>
 <hr>
 <div style="display:flex;justify-content: flex-end; Font-family: Arial, Helvetica Neue, Helvetica, sans-serif;font-size:13px;">
-<div style="text-align:right;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;">{{MyForm.value.neto}}<br>
-    {{MyForm.value.igv}}<br>
-    {{MyForm.value.total}}
+<div style="text-align:right;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;">{{MyForm.value.neto }}<br>  
+    {{MyForm.value.igv | number}}<br>
+    {{MyForm.value.total | number}}
 </div>
 <div></div>
 </div>
