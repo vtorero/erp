@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'OswBold';
+    src: url('./assets/fonts/Oswald-Bold.ttf');
+  }
+
+
 :host ::ng-deep  .sidebar .nav p.active{
     background-color: red !important;
 }
