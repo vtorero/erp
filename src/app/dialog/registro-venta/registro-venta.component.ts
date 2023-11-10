@@ -275,7 +275,7 @@ this.imprimir();
   const usuario = this.MyForm.get('usuario') as FormControl;
   usuario.setValue(localStorage.getItem("currentId"));
   const sucursal = this.MyForm.get('sucursal') as FormControl;
-  sucursal.setValue(localStorage.getItem("sucursal_id"));
+  sucursal.setValue(sessionStorage.getItem("sucursal_id"));
   }
 
 

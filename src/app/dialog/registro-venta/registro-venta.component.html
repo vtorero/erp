@@ -108,10 +108,10 @@
 <div id="recibo">
     <div style="display:flex;justify-content:space-around;margin-bottom:14px;">
     <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="50px" height="50px"></div>
-    <div style="font-size:10px;text-align:left;font-weight:bold;padding-top: 12px;padding-right:40px;">LAS HERMANITAS<br>
+    <div style="font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:left;font-weight:bold;padding-top: 12px;padding-right:40px;">LAS HERMANITAS<br>
 </div>
     </div>
-    <div style="font-size:11px;text-align:center;line-height: 13px;">
+    <div style="font-family:Arial, Helvetica, sans-serif;font-size:17px;text-align:center;line-height: 18px;">
     <strong>Ferretería y materiales de contrucción las<br>
     Hermanitas E.I.R.L.</strong><br>
     WhatsApp / Teléfono: 902 715 979<br>
@@ -126,16 +126,16 @@
     <strong>{{clientetexto}} </strong><br>
     </div>
   <hr>
-  <div style="Font-family:'OswBold';font-size: 11px">DESCRIPCION&nbsp;&nbsp;   CANT.&nbsp;&nbsp;  U.M.&nbsp;&nbsp;    PRECIO&nbsp;&nbsp;IMPORTE</div>
+  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 16;font-weight: bold;">DESCRIPCION&nbsp;&nbsp;&nbsp;&nbsp;   CANT.&nbsp;&nbsp;&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp;&nbsp;&nbsp; IMPORTE</div>
     <hr>
         <div *ngFor="let det of data.detalle">
-            <div style="font-size:14px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
-          <div style="font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
-    ---------------------------------------
+            <div style="Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
+          <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
+    <div style="text-align:center;width: 100%;margin:0 auto;">----------------------------------------------------</div>
   </div>
 
-<div style="display:flex;justify-content: flex-end; Font-family:'OswBold';font-size:15px;">
-<div style="text-align:right;font-weight: 700;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;font-weight: 700;">{{MyForm.value.neto | number }}<br>
+<div style="display:flex;justify-content: flex-end; font-family:Arial, Helvetica, sans-serif;font-size:16px;">
+<div style="text-align:right;font-weight:700;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
     {{MyForm.value.igv | number}}<br>
     {{MyForm.value.total | number}}
 </div>
