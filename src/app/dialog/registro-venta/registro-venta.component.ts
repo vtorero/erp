@@ -356,6 +356,7 @@ this.numero_doc=data[0].num_documento
   let depositos=0;
   let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
+      console.log(element)
   if(element.tipoPago=="Efectivo"){
       console.log(element.tipoPago)
       efectivo+=element.montoPago;

@@ -5,11 +5,24 @@
         <div style="display: flex;flex-direction: column; margin:1rem auto; width:350px; padding: 1rem;">
 
                 <mat-label>Nombre</mat-label>
-                <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+                <mat-form-field appearance="outline">
                     <mat-label>Descripción caja</mat-label>
                       <input matInput [(ngModel)]="data.nombre" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre Caja" required>
+                </mat-form-field>
 
-                    </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select  [(ngModel)]="data.tipo" name="tipo" #tipo="ngModel" required>
+                    <mat-option  value="">Seleccionar</mat-option>
+                    <mat-option  value="Efectivo">Efectivo</mat-option>
+                    <mat-option  value="Deposito">Deposito</mat-option>
+                    <mat-option  value="Transferencia">Transferencia</mat-option>
+                    <mat-option  value="Yape">Yape</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="tipo.hasError('required')">Seleccionar</mat-error>
+                </mat-form-field>
+
+
 
               <mat-form-field appearance="outline">
                 <mat-label>Sucursal</mat-label>

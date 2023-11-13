@@ -49,7 +49,7 @@
                     <mat-label>Forma de pago</mat-label>
                     <mat-select name="tipopago" formControlName="tipoPago"  required>
                         <mat-option value="">Seleccionar</mat-option>
-                        <mat-option *ngFor="let caj of dataCajas" [value]="caj.nombre">{{caj.nombre}}</mat-option>
+                        <mat-option *ngFor="let caj of dataCajas" [value]="caj.tipo">{{caj.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>

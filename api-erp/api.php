@@ -360,7 +360,7 @@ $app->post("/cajas",function() use($db,$app){
 
 
 
-        $sql="call p_cajas('{$data->nombre}','{$data->id_sucursal}',1,'{$data->usuario}')";
+        $sql="call p_cajas('{$data->nombre}','{$data->tipo}','{$data->id_sucursal}',1,'{$data->usuario}')";
 
 
 
@@ -914,7 +914,7 @@ $app->get("/cajas/:uid",function($uid) use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT c.id,c.nombre FROM cajas c inner JOIN sucursales s on c.id_sucursal=s.id inner JOIN permisos p on s.id=p.id_sucursal WHERE id_usuario='{$uid}'");
+    $resultado = $db->query("SELECT c.id,c.nombre,c.tipo FROM cajas c inner JOIN sucursales s on c.id_sucursal=s.id inner JOIN permisos p on s.id=p.id_sucursal WHERE id_usuario='{$uid}'");
 
 
 
