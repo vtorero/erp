@@ -357,11 +357,12 @@ this.numero_doc=data[0].num_documento
   let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
       console.log(element)
-  if(element.tipoPago=="Efectivo"){
+  if(element.tipoPago=="Efectivo" || element.tipoPago=='Yape'){
       console.log(element.tipoPago)
       efectivo+=element.montoPago;
     }else{
     depositos+=element.montoPago;
+    console.log("deposito",depositos)
     }
     });
  total=depositos+efectivo;
