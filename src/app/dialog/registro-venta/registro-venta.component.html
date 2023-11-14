@@ -100,7 +100,7 @@
     <div mat-dialog-actions class="float-right">
         <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>
         <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
-        
+
         <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>
 </form>
@@ -108,11 +108,11 @@
 {{this.MyForm.value | json }}-->
 <div id="recibo">
     <div style="display:flex;justify-content:space-around;margin-bottom:14px;">
-    <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="50px" height="50px"></div>
+    <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="55px" height="55px"></div>
     <div style="font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:left;font-weight:bold;padding-top: 12px;padding-right:40px;">LAS HERMANITAS<br>
 </div>
     </div>
-    <div style="font-family:Arial, Helvetica, sans-serif;font-size:17px;text-align:center;line-height: 18px;">
+    <div style="font-family:Arial, Helvetica, sans-serif;font-size:17px;text-align:center;line-height: 20px;">
     <strong>Ferretería y materiales de contrucción las<br>
     Hermanitas E.I.R.L.</strong><br>
     WhatsApp / Teléfono: 902 715 979<br>
@@ -121,13 +121,15 @@
     RUC: 2053799520<br>
     </div>
     <br>
-    <strong style="Font-family:Arial, Helvetica, sans-serif;font-size: 12px;font-weight: 500;">ADQUIRIENTE:</strong><br>
-    <div style="Font-family:Arial, Helvetica, sans-serif;font-size:12px">
+    <strong style="Font-family:Arial, Helvetica, sans-serif;font-size: 15px;font-weight: 700;">ADQUIRIENTE</strong><br>
+    <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px">
     I.E/DNI: {{numero_doc}}<br>
-    <strong>{{clientetexto}} </strong><br>
+    {{clientetexto}}<br>
+    {{direccioncliente}}<br>
+    <br>
     </div>
   <hr>
-  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 15;font-weight: bold;">DESCRIPCION&nbsp;&nbsp;   CANT.&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp; IMPORTE<div>
+  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 15;font-weight: bold;width:100%; text-align: center;">DESCRIPCION&nbsp;&nbsp;   CANT.&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp; IMPORTE</div>
     <hr>
         <div *ngFor="let det of data.detalle">
             <div style="Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
@@ -140,8 +142,18 @@
     {{MyForm.value.igv | number}}<br>
     {{MyForm.value.total | number}}
 </div>
-<div></div>
+
+
+
+
 </div>
+<hr>
+<div style="font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight: 400;width: 100%;text-align:center;">
+    SON: {{textoprecio}} SOLES <br>
+    Gracias por su preferencia.</div>
+    <br>
+    <br>
+    <br>
 </div>
 
 

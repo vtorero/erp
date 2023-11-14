@@ -7,7 +7,7 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
-import { element } from 'protractor';
+
 
 function imprSelec(nombre) {
   var ficha = document.getElementById(nombre);
@@ -61,8 +61,11 @@ montoRecibido:any=0;
 impresoras:any;
 montoTotal:any;
 clientetexto:string;
+direccioncliente:string;
 numero_doc:string;
+textoprecio:any;
 public id_documento:number=0
+
 
 
 
@@ -311,6 +314,7 @@ console.log(event.value)
     if(data[0].nombre) {
 this.clientetexto=data[0].nombre
 this.numero_doc=data[0].num_documento
+this.direccioncliente=data[0].direccion
     }
   } );
 }
@@ -374,6 +378,12 @@ if(depositos>precio){
 }else if(depositos==precio){
   var vuelto = this.MyForm.get('vuelto') as FormControl;
   vuelto.setValue(0.00);
+
+  this.api.getNumeroALetras(precio).subscribe(letra => {
+    console.log("letra",letra)
+  this.textoprecio=letra;
+  });
+
 }
     if(efectivo<0){
       const vuelto = this.MyForm.get('vuelto') as FormControl;
@@ -382,6 +392,10 @@ if(depositos>precio){
   }else if(efectivo==precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
     vuelto.setValue(efectivo-precio)
+    this.api.getNumeroALetras(precio).subscribe(letra => {
+      console.log("letra",letra)
+    this.textoprecio=letra;
+    });
 
 }else if(efectivo<precio && depositos<precio){
   this.vuelto='Pendiente';
@@ -389,6 +403,10 @@ if(depositos>precio){
   vuelto.setValue(precio-efectivo)
   const mpendiente = this.MyForm.get('montopendiente') as FormControl;
   mpendiente.setValue(precio-efectivo)
+  this.api.getNumeroALetras(precio).subscribe(letra => {
+    console.log("letra",letra)
+  this.textoprecio=letra;
+  });
 }
 
 else{
@@ -397,12 +415,18 @@ else{
     if(tipoDoc.value=="Factura"){
       console.log(efectivo - (precio * Global.BASE_IGV))
       vuelto.setValue(efectivo-(precio + (precio * Global.BASE_IGV)));
+      this.api.getNumeroALetras(efectivo-(precio + (precio * Global.BASE_IGV))).subscribe(letra => {
+
+      this.textoprecio=letra;
+      });
 
     }else{
       this.vuelto='Vuelto';
     // vuelto.setValue(efectivo-precio)
     }
   }
+
+
 
   }
 }

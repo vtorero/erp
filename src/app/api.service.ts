@@ -471,6 +471,12 @@ public GetDetalleMovimiento(id: any) {
   ).pipe(map(result => result));
 }
 
+getNumeroALetras(cantidad:number) {
+  return this._http.get(Global.BASE_API_URL+ 'api.php/numeroletras/'+ cantidad,
+  { headers: this.headers }
+).pipe(map(result => result));
+}
+
 
 /**
 
@@ -762,11 +768,7 @@ enviaFactura(id): Observable<any> {
   }
 
 
-  getNumeroALetras(cantidad:number) {
-    return this._http.get(Global.BASE_API_URL+ 'api.php/numeroletras/'+ cantidad,
-    { headers: this.headers }
-  ).pipe(map(result => result));
-  }
+
 
   public GuardarDataBanco(datos: Databanco): Observable<any> {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
