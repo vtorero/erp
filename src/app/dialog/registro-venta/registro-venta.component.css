@@ -13,6 +13,12 @@
     width: 96% !important;
 }
 
+hr.separador{
+    color: #000;
+height: 0px;
+border:2px dashed;
+}
+
 #recibo{
     display: none;
 }

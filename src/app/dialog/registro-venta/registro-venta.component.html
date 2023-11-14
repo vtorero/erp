@@ -121,18 +121,18 @@
     RUC: 2053799520<br>
     </div>
     <br>
-    <strong style="font-size: 10px">ADQUIRIENTE:</strong><br>
-    <div style="font-size:11px">
+    <strong style="Font-family:Arial, Helvetica, sans-serif;font-size: 12px;font-weight: 500;">ADQUIRIENTE:</strong><br>
+    <div style="Font-family:Arial, Helvetica, sans-serif;font-size:12px">
     I.E/DNI: {{numero_doc}}<br>
     <strong>{{clientetexto}} </strong><br>
     </div>
   <hr>
-  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 16;font-weight: bold;">DESCRIPCION&nbsp;&nbsp;&nbsp;&nbsp;   CANT.&nbsp;&nbsp;&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp;&nbsp;&nbsp; IMPORTE</div>
+  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 15;font-weight: bold;">DESCRIPCION&nbsp;&nbsp;   CANT.&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp; IMPORTE<div>
     <hr>
         <div *ngFor="let det of data.detalle">
             <div style="Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
           <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
-    <div style="text-align:center;width: 100%;margin:0 auto;">----------------------------------------------------</div>
+    <div style="text-align:center;width: 100%;margin:0 auto;"><hr class="separador"/></div>
   </div>
 
 <div style="display:flex;justify-content: flex-end; font-family:Arial, Helvetica, sans-serif;font-size:16px;">
