@@ -7,6 +7,7 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+import { element } from 'protractor';
 
 function imprSelec(nombre) {
   var ficha = document.getElementById(nombre);
@@ -367,9 +368,12 @@ this.numero_doc=data[0].num_documento
     });
  total=depositos+efectivo;
 if(depositos>precio){
-  const vuelto = this.MyForm.get('vuelto') as FormControl;
+  var vuelto = this.MyForm.get('vuelto') as FormControl;
   this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
    vuelto.setValue('');
+}else if(depositos==precio){
+  var vuelto = this.MyForm.get('vuelto') as FormControl;
+  vuelto.setValue(0.00);
 }
     if(efectivo<0){
       const vuelto = this.MyForm.get('vuelto') as FormControl;
@@ -379,7 +383,7 @@ if(depositos>precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
     vuelto.setValue(efectivo-precio)
 
-}else if(efectivo<precio){
+}else if(efectivo<precio && depositos<precio){
   this.vuelto='Pendiente';
   const vuelto = this.MyForm.get('vuelto') as FormControl;
   vuelto.setValue(precio-efectivo)
@@ -396,7 +400,7 @@ else{
 
     }else{
       this.vuelto='Vuelto';
-     vuelto.setValue(efectivo-precio)
+    // vuelto.setValue(efectivo-precio)
     }
   }
 
