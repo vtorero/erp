@@ -356,7 +356,6 @@ this.direccioncliente=data[0].direccion
   }
 
   cambiaVuelto(precio:number){
-
   let efectivo:number=0;
   let depositos=0;
   let total:number=0;
@@ -379,7 +378,7 @@ if(depositos>precio){
   var vuelto = this.MyForm.get('vuelto') as FormControl;
   vuelto.setValue(0.00);
 
-  this.api.getNumeroALetras(precio).subscribe(letra => {
+  this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
     console.log("letra",letra)
   this.textoprecio=letra;
   });
@@ -392,18 +391,19 @@ if(depositos>precio){
   }else if(efectivo==precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
     vuelto.setValue(efectivo-precio)
-    this.api.getNumeroALetras(precio).subscribe(letra => {
+    this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
       console.log("letra",letra)
     this.textoprecio=letra;
     });
 
 }else if(efectivo<precio && depositos<precio){
   this.vuelto='Pendiente';
+  console.log("pendiente");
   const vuelto = this.MyForm.get('vuelto') as FormControl;
   vuelto.setValue(precio-efectivo)
   const mpendiente = this.MyForm.get('montopendiente') as FormControl;
   mpendiente.setValue(precio-efectivo)
-  this.api.getNumeroALetras(precio).subscribe(letra => {
+  this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
     console.log("letra",letra)
   this.textoprecio=letra;
   });
@@ -413,9 +413,14 @@ else{
     const vuelto = this.MyForm.get('vuelto') as FormControl;
     const tipoDoc = this.MyForm.get('tipoDoc') as FormControl;
     if(tipoDoc.value=="Factura"){
-      console.log(efectivo - (precio * Global.BASE_IGV))
-      vuelto.setValue(efectivo-(precio + (precio * Global.BASE_IGV)));
-      this.api.getNumeroALetras(efectivo-(precio + (precio * Global.BASE_IGV))).subscribe(letra => {
+      console.log("facturaaa")
+      console.log("efectivo",efectivo)
+      console.log("precio",precio)
+
+      console.log("igv",(precio * Global.BASE_IGV).toFixed(2))
+      vuelto.setValue((efectivo-(precio + (precio * Global.BASE_IGV))).toFixed(2));
+      let total=((precio + (precio * Global.BASE_IGV))).toFixed(2)
+      this.api.getNumeroALetras(total.toString()).subscribe(letra => {
 
       this.textoprecio=letra;
       });
