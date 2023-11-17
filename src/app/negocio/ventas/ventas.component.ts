@@ -78,7 +78,7 @@ export class VentasComponent implements OnInit {
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
         this.sucursal=d[0]['nombre'];
         sessionStorage.setItem("sucursal_id",this.sucursal_id);
-        this.getCate();
+
        // this.getSubCategoria();
         //this.getFamilia();
 
@@ -88,6 +88,7 @@ export class VentasComponent implements OnInit {
     this.usuario=localStorage.getItem("currentNombre");
     this.renderDataTable()
     this.dataTabla = this.api.getLinea();
+    this.getCate();
   }
 
 

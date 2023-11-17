@@ -1,6 +1,7 @@
 export const Global = Object.freeze({
     /*general*/
         BASE_IGV :0.18,
+        EXTRAE_IGV:1.18,
        BASE_API_SUNAT :'https://dniruc.apisperu.com/api/v1/',
        TOKEN_API_PERU:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InZ0b3Jlcm9AZ21haWwuY29tIn0.j-kQo0Dz4mb9wH3NjeXcurSu0MpBWfqt-AODCMKzpjM',
         DOWNLOAD_CDR:'http://35.231.78.51/fapi/demo/examples/pages/status.php',

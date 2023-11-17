@@ -138,18 +138,15 @@
   </div>
 
 <div style="display:flex;justify-content: flex-end; font-family:Arial, Helvetica, sans-serif;font-size:16px;">
-<div style="text-align:right;font-weight:700;">Operaciones Gravadas: S/<br>I.G.V: S/<br>Total: S/</div><div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
+<div style="text-align:right;font-weight:700;">Op. Gravadas: S/&nbsp; <br>I.G.V: S/&nbsp; <br>Total: S/&nbsp; </div><div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
     {{MyForm.value.igv | number}}<br>
     {{MyForm.value.total | number}}
 </div>
-
-
-
-
 </div>
+<div *ngIf="MyForm.value.montopendiente>0" style="text-align:right;font-weight:700;">Pendiente: S/ &nbsp; {{MyForm.value.montopendiente | number}} </div>
 <hr>
 <div style="font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight: 400;width: 100%;text-align:center;">
-    SON: {{textoprecio}} SOLES <br>
+    SON: {{textoprecio}} SOLES <br><br><br>
     Gracias por su preferencia.</div>
     <br>
     <br>
