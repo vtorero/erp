@@ -107,53 +107,50 @@
 <!--<button (click)="imprimir()">print</button>
 {{this.MyForm.value | json }}-->
 <div id="recibo">
-    <div style="display:flex;justify-content:space-around;margin-bottom:14px;">
-    <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="55px" height="55px"></div>
+    <div style="display:flex;margin-bottom:14px;">
+    <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="40px" height="40px"/></div>
     <div style="font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:left;font-weight:bold;padding-top: 12px;padding-right:40px;">LAS HERMANITAS<br>
 </div>
     </div>
-    <div style="font-family:Arial, Helvetica, sans-serif;font-size:17px;text-align:center;line-height: 20px;">
-    <strong>Ferretería y materiales de contrucción las<br>
-    Hermanitas E.I.R.L.</strong><br>
-    WhatsApp / Teléfono: 902 715 979<br>
-    lashermanitas_bertha@hotmail.com<br>
-    LT. 9 MZ E COO. LA ESPERANZA<br> - Santiago de Surco - Lima - Lima<br>
-    RUC: 2053799520<br>
+    <div style="font-family:Arial, Helvetica, sans-serif;font-size:17px;text-align:center;line-height:20px;">
+        <strong>Ferretería y materiales de contrucción las<br>
+        Hermanitas E.I.R.L.</strong><br>
+        WhatsApp / Teléfono: 902 715 979<br>
+        lashermanitas_bertha@hotmail.com<br>
+        LT. 9 MZ E COO. LA ESPERANZA<br> - Santiago de Surco - Lima - Lima<br>
+        RUC: 2053799520<br>
+        </div>
+        <br>
+        <strong style="Font-family:Arial, Helvetica,sans-serif;font-size: 15px;font-weight:700;">ADQUIRIENTE</strong><br>
+        <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px">
+        I.E/DNI: {{numero_doc}}<br>
+        {{clientetexto}}<br>
+        {{direccioncliente}}<br>
+        <br>
+        </div>
+
+
+      <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 14;font-weight: bold;width:100%; text-align: center;">DESCRIPCION&nbsp;   CANT.&nbsp;  U.M.&nbsp    PRECIO&nbsp; IMPORTE</div>
+        <hr>
+            <div *ngFor="let det of data.detalle">
+                <div style="Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
+              <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
+        <div style="text-align:center;width: 100%;margin:0 auto;"><hr class="separador"/></div>
+      </div>
+
+    <div style="display:block;text-align: right;font-family:Arial, Helvetica, sans-serif;font-size:16px;">
+    <div style="text-align:right;font-weight:700;">Op. Gravadas: S/&nbsp; <br>I.G.V: S/&nbsp; <br>Total: S/&nbsp; </div>
+    <div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
+        {{MyForm.value.igv | number}}<br>
+        {{MyForm.value.total | number}}
     </div>
-    <br>
-    <strong style="Font-family:Arial, Helvetica, sans-serif;font-size: 15px;font-weight: 700;">ADQUIRIENTE</strong><br>
-    <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px">
-    I.E/DNI: {{numero_doc}}<br>
-    {{clientetexto}}<br>
-    {{direccioncliente}}<br>
-    <br>
     </div>
-  <hr>
-  <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 15;font-weight: bold;width:100%; text-align: center;">DESCRIPCION&nbsp;&nbsp;   CANT.&nbsp;&nbsp;  U.M.&nbsp;&nbsp;&nbsp;    PRECIO&nbsp;&nbsp; IMPORTE</div>
+    <div *ngIf="MyForm.value.montopendiente>0" style="text-align:right;font-weight:700;height:30px;">Pendiente: S/ &nbsp; {{MyForm.value.montopendiente | number}} </div>
     <hr>
-        <div *ngFor="let det of data.detalle">
-            <div style="Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
-          <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
-    <div style="text-align:center;width: 100%;margin:0 auto;"><hr class="separador"/></div>
-  </div>
-
-<div style="display:flex;justify-content: flex-end; font-family:Arial, Helvetica, sans-serif;font-size:16px;">
-<div style="text-align:right;font-weight:700;">Op. Gravadas: S/&nbsp; <br>I.G.V: S/&nbsp; <br>Total: S/&nbsp; </div><div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
-    {{MyForm.value.igv | number}}<br>
-    {{MyForm.value.total | number}}
-</div>
-</div>
-<div *ngIf="MyForm.value.montopendiente>0" style="text-align:right;font-weight:700;">Pendiente: S/ &nbsp; {{MyForm.value.montopendiente | number}} </div>
-<hr>
-<div style="font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight: 400;width: 100%;text-align:center;">
-    SON: {{textoprecio}} SOLES <br><br><br>
-    Gracias por su preferencia.</div>
-    <br>
-    <br>
-    <br>
-</div>
-
+   <div style="font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;width:100%;text-align:center;">
+        SON: {{textoprecio}} SOLES <br>
+        Gracias por su preferencia.</div>
 
 <!--<pre>{{impresoras| json}}</pre>
-
 <pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>-->

@@ -370,10 +370,11 @@ this.direccioncliente=data[0].direccion
     }
     });
  total=depositos+efectivo;
+ vuelto.setValue(total-precio);
 if(depositos>precio){
   var vuelto = this.MyForm.get('vuelto') as FormControl;
-  this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
-   vuelto.setValue('');
+ // this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
+   vuelto.setValue(total-precio);
 }else if(depositos==precio){
   var vuelto = this.MyForm.get('vuelto') as FormControl;
   vuelto.setValue(0.00);
@@ -390,7 +391,7 @@ if(depositos>precio){
       vuelto.setValue('');
   }else if(efectivo==precio && tipoDoc1.value!="Factura"){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
-    vuelto.setValue(efectivo-precio)
+
     this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
       console.log("letra",letra)
     this.textoprecio=letra;
