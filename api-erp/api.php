@@ -2110,15 +2110,7 @@ $app->get("/categorias",function() use($db,$app){
 
             while ($fila = $resultado->fetch_array()) {
 
-
-
-
-
-
-
                 $prods[]=$fila;
-
-
 
             }
 
@@ -6202,7 +6194,7 @@ $app->get("/clientes",function() use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT * FROM clientes order by id desc");
+    $resultado = $db->query("SELECT * FROM clientes order by nombre asc");
 
 
 

@@ -356,6 +356,7 @@ this.direccioncliente=data[0].direccion
   }
 
   cambiaVuelto(precio:number){
+    var vuelto = this.MyForm.get('vuelto') as FormControl;
   const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
   let efectivo:number=0;
   let depositos=0;
