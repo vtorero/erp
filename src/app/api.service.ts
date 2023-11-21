@@ -477,6 +477,14 @@ getNumeroALetras(cantidad:string) {
 ).pipe(map(result => result));
 }
 
+getVentaBoletas(inicio: string, final: string, empresa: string) {
+  const url = Global.BASE_API_URL + 'reportes.php/reporte';
+  return this._http.post(url, {
+    ini: inicio,
+    fin: final,
+    emp: empresa
+  }, { headers: this.headers }).pipe(map(data => data));
+}
 
 /**
 

@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { ApiService } from 'app/api.service';
 import * as Chartist from 'chartist';
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,9 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
   fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
   constructor(
-    @Inject(MAT_DATE_LOCALE) private _locale: string
+    @Inject(MAT_DATE_LOCALE) private _locale: string,
+     private api: ApiService
+
 
   ) {
 
@@ -79,21 +82,53 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
   };
 
   enviaFechas(){
-    
+
     var empresa = sessionStorage.getItem("CurrentUser");
     var fec1 = this.selectedMoment.toDateString().split(" ",4);
     var fec2 = this.selectedMoment2.toDateString().split(" ",4);
     let ini=fec1[1]+fec1[2]+fec1[3];
     let fin=fec2[1]+fec2[2]+fec2[3];
-    
+
     this.fecha1=fec1[2]+'-'+fec1[1]+'-'+fec1[3];;
     this.fecha2=fec2[2]+'-'+fec2[1]+'-'+fec2[3];;
-    
+
     console.log(this.fecha1,this.fecha2);
-    //this.loadVentas(this.fecha1,this.fecha2,empresa);
+    this.loadVentas(this.fecha1,this.fecha2,empresa);
     //this.renderDataTableConsulta(ini,fin,empresa);
     }
 
+
+    loadVentas(inicio:string,final:string,empresa:string){
+      const dataDailySalesChart: any = {
+        labels: ['E', 'F', 'W', 'T', 'F', 'S', 'S'],
+        series: [
+            [122, 170, 79, 170, 230, 180, 448]
+        ]
+    };
+
+   const optionsDailySalesChart: any = {
+        lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+        }),
+        low: 0,
+        high: 650, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
+    }
+      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+
+      this.startAnimationForLineChart(dailySalesChart);
+
+      this.api.getVentaBoletas(inicio,final,empresa)
+      .subscribe(x => {
+
+
+
+
+      });
+
+
+
+    }
 
   ngOnInit() {
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
@@ -114,9 +149,9 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
           chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
       }
 
-      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+    //  var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
 
-      this.startAnimationForLineChart(dailySalesChart);
+      //this.startAnimationForLineChart(dailySalesChart);
 
 
       /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
@@ -137,10 +172,10 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
           chartPadding: { top: 0, right: 0, bottom: 0, left: 0}
       }
 
-      var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
+     // var completedTasksChart = new Chartist.Line('#completedTasksChart', dataCompletedTasksChart, optionsCompletedTasksChart);
 
       // start animation for the Completed Tasks Chart - Line Chart
-      this.startAnimationForLineChart(completedTasksChart);
+      //this.startAnimationForLineChart(completedTasksChart);
 
 
 

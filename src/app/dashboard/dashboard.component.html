@@ -9,19 +9,19 @@
                             </div>
                             <mat-form-field appearance="outline">
                                 <mat-label>Fecha Inicio</mat-label>
-                                <input name="fecha" formControlName="fecha" [(ngModel)]="selectedMoment" matInput [matDatepicker]="picker">
+                                <input name="fecha" [(ngModel)]="selectedMoment" #fecha="ngModel"  matInput [matDatepicker]="picker">
                                 <mat-hint>DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                               </mat-form-field>
                               <mat-form-field appearance="outline">
                                 <mat-label>Fecha Fin</mat-label>
-                                <input name="fecha2" formControlName="fecha2" [(ngModel)]="selectedMoment2"  matInput [matDatepicker]="picker2">
+                                <input name="fecha2" [(ngModel)]="selectedMoment2"  #fecha2="ngModel" matInput [matDatepicker]="picker2">
                                 <mat-hint>DD/MM/YYYY</mat-hint>
                                 <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
                                 <mat-datepicker #picker2></mat-datepicker>
                               </mat-form-field>
-                              <button type="submit"  class="enviar"  (click)="enviaFechas()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Consultar</button>
+                              <button type="button"  class="enviar"  (click)="enviaFechas()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Consultar</button>
             </div>
 
     </div>
