@@ -18,7 +18,42 @@ function imprSelec(nombre) {
   ventimp.close();
 }
 
+function enviarTicketera(impresora){
+  let conector = new ConectorPluginV3();
+  conector.EstablecerFuente(1);
+  conector.Iniciar();
+  conector.EstablecerEnfatizado(true);
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+  conector.DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp.png", 2, 216);
+  conector.Feed(1);
+  conector.EscribirTexto("Parzibyte's blog\n");
+  conector.EscribirTexto("Blog de un programador\n");
+  conector.EscribirTexto("Telefono: 123456789\n");
+  conector.EscribirTexto("Fecha/Hora: 2021-02-08 16:57:55\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EscribirTexto("Venta de plugin para impresora\n");
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
+  conector.EscribirTexto("25 USD\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EscribirTexto("TOTAL: 25 USD\n");
+  conector.EscribirTexto("--------------------------------\n");
+  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
+  conector.EscribirTexto("***Gracias por su compra***");
+  conector.Feed(4);
+  conector.Corte(1);
+  conector.CorteParcial();
+  conector.imprimirEn(impresora)
+      .then(respuestaAlImprimir => {
+          if (respuestaAlImprimir === true) {
+              console.log("Impreso correctamente");
+          } else {
+              console.log("Error. La respuesta es: " + respuestaAlImprimir);
+          }
+      });
 
+
+
+}
 
 @Component({
   selector: 'app-registro-venta',
@@ -45,12 +80,13 @@ export class RegistroVentaComponent implements OnInit {
     igv:[0],
     comentario:[''],
     impresoras:[''],
+    impresora:[''],
     neto:[0],
     total:[0],
     usuario:[''],
     sucursal:[''],
     entrega: [0],
-    imprimir:[0],
+    imprimir:[1],
   });
 
 dataClientes:any;
@@ -255,8 +291,11 @@ console.log(respuesta)
 console.log(this.data.detalle)
 console.log(this.MyForm)
 const print = this.MyForm.get('imprimir') as FormControl;
+let impresora = this.MyForm.get('impresoras') as FormControl;
 if(print.value==true){
-this.imprimir();
+  console.log("impresoras",impresora.value);
+//this.imprimir();
+enviarTicketera(impresora.value)
 }
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{

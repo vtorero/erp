@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ApiService } from 'app/api.service';
 import * as Chartist from 'chartist';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -10,10 +11,12 @@ import * as Chartist from 'chartist';
 export class DashboardComponent implements OnInit {
   public selectedMoment = new Date();
 public selectedMoment2 = new Date();
+ventaTotal:any;
+montoPendiente:any;
 fec1= this.selectedMoment.toDateString().split(" ",4);
-  fec2 = this.selectedMoment2.toDateString().split(" ",4);
-  fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
-  fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
+fec2 = this.selectedMoment2.toDateString().split(" ",4);
+fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
+fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
@@ -99,30 +102,42 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
 
 
     loadVentas(inicio:string,final:string,empresa:string){
-      const dataDailySalesChart: any = {
-        labels: ['E', 'F', 'W', 'T', 'F', 'S', 'S'],
-        series: [
-            [122, 170, 79, 170, 230, 180, 448]
-        ]
-    };
+      var data = {
+        labels: ["Test 1","Test 2","Test 3"],
+        series: [160,210,250]
+      };
 
-   const optionsDailySalesChart: any = {
-        lineSmooth: Chartist.Interpolation.cardinal({
-            tension: 0
-        }),
-        low: 0,
-        high: 650, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-        chartPadding: { top: 0, right: 0, bottom: 0, left: 0},
-    }
-      var dailySalesChart = new Chartist.Line('#dailySalesChart', dataDailySalesChart, optionsDailySalesChart);
+      var options = {
+        labelInterpolationFnc: function(value) {
+          return String(value)[0]
+        }
+      };
+
+
+
+      var responsiveOptions = [
+        ['screen and (min-width: 640px)', {
+          chartPadding: 30,
+          labelOffset: 100,
+          labelDirection: 'explode',
+          labelInterpolationFnc: function(value) {
+            return value;
+          }
+        }],
+        ['screen and (min-width: 1024px)', {
+          labelOffset: 80,
+          chartPadding: 20
+        }]
+      ];
+
+      var dailySalesChart = new Chartist.Pie('#pie-canvas', data,options);
 
       this.startAnimationForLineChart(dailySalesChart);
 
       this.api.getVentaBoletas(inicio,final,empresa)
-      .subscribe(x => {
-
-
-
+      .subscribe(data => {
+        this.ventaTotal=data['boletas'][0].total;
+        this.montoPendiente=data['pendiente'][0].pendiente;
 
       });
 
@@ -206,7 +221,7 @@ fec1= this.selectedMoment.toDateString().split(" ",4);
           }
         }]
       ];
-      var websiteViewsChart = new Chartist.Bar('#websiteViewsChart', datawebsiteViewsChart, optionswebsiteViewsChart, responsiveOptions);
+      var websiteViewsChart = new Chartist.Pie('#websiteViewsChart', datawebsiteViewsChart, optionswebsiteViewsChart, responsiveOptions);
 
       //start animation for the Emails Subscription Chart
       this.startAnimationForBarChart(websiteViewsChart);

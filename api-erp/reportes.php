@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app = new Slim\Slim();
-$db = new mysqli("localhost","marife","libido16","no-whaste");
+$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 //$db = new mysqli("localhost","marife","libido16","frdash_dev");
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -66,13 +66,19 @@ $app->post("/reporte",function() use($db,$app){
     $final=$dia2.'/'.$fmes2;
 
 
-    $ingreso=$db->query("SELECT v.id, v.tipoDoc,v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.nombre,' ',c.apellido) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante, DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,observacion FROM ventas v,usuarios u,clientes c,vendedor ve where v.estado=1 and v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante in('Boleta') and fecha  between '".$ini."' and '".$fin."' order by v.id desc");
+    $ingreso=$db->query("SELECT sum(valor_total) total  FROM ventas where fecha_registro between '".$ini."' and '".$fin."'");
        $infoboleta=array();
     while ($row = $ingreso->fetch_array()) {
             $infoboleta[]=$row;
         }
 
-        $factura=$db->query("SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.estado=1 and v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante='Factura' and v.fecha  between  '".$ini."' and '".$fin."' order by v.id desc");
+    $pendiente=$db->query("SELECT sum(monto_pendiente) pendiente  FROM ventas where fecha_registro between '".$ini."' and '".$fin."'");
+    $infopendiente=array();
+    while ($row = $pendiente->fetch_array()) {
+            $infopendiente[]=$row;
+        }
+
+      /*  $factura=$db->query("SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.estado=1 and v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante='Factura' and v.fecha  between  '".$ini."' and '".$fin."' order by v.id desc");
         $infofactura=array();
     while ($row = $factura->fetch_array()) {
             $infofactura[]=$row;
@@ -118,8 +124,7 @@ $app->post("/reporte",function() use($db,$app){
                 $totalnot[]=$row;
             }
 
-
-        $data = array("status"=>200,
+      $data = array("status"=>200,
         "boletas"=>$infoboleta,
         "facturas"=>$infofactura,
         "notas"=>$infonotas,
@@ -128,6 +133,13 @@ $app->post("/reporte",function() use($db,$app){
         "totalfactura"=>$totalfac,
         "totalnotas"=>$totalnot,
         "totaldias"=>$totaldias,
+        "inicio"=>$ini,"final"=>$fin);
+
+
+*/
+        $data = array("status"=>200,
+        "boletas"=>$infoboleta,
+        "pendiente"=>$infopendiente,
         "inicio"=>$ini,"final"=>$fin);
 
         echo json_encode($data);

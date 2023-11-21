@@ -32,8 +32,8 @@
                       <div class="card-icon">
                           <i class="material-icons">attach_money</i>
                       </div>
-                      <p class="card-category">Cuentas por cobrar</p>
-                      <h3 class="card-title">S/ 0.00
+                      <p class="card-category">Ingresos</p>
+                      <h3 class="card-title">S/ {{ventaTotal}}
                           <small></small>
                       </h3>
                   </div>
@@ -51,8 +51,8 @@
                       <div class="card-icon">
                           <i class="material-icons">attach_money</i>
                       </div>
-                      <p class="card-category">Cuentas por pagar</p>
-                      <h3 class="card-title">$34,245</h3>
+                      <p class="card-category">Pendientes</p>
+                      <h3 class="card-title">S/ {{montoPendiente}} </h3>
                   </div>
                   <div class="card-footer">
                       <div class="stats">
@@ -97,8 +97,8 @@
       <div class="row">
           <div class="col-md-4">
               <div class="card card-chart">
-                  <div class="card-header card-header-success">
-                      <div class="ct-chart" id="dailySalesChart"></div>
+                  <div class="card-header ">
+                      <div class="ct-chart" id="pie-canvas"></div>
                   </div>
                   <div class="card-body">
                       <h4 class="card-title">Daily Sales</h4>

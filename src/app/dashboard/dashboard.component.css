@@ -10,3 +10,11 @@ height: 42px;
     margin-left: 20px;
     margin-top: 14px;
 }
+
+
+.input-group-addon{
+    margin-right: 20px;
+    padding-top: 20px;
+    margin-left: 20px;
+    font-weight: bold;
+}
