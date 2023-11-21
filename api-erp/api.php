@@ -4812,7 +4812,7 @@ $app->post("/compra",function() use($db,$app){
 
                      foreach($data->pagos as $pago){
 
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->montoPago},{$data->montopendiente})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$data->total},{$data->montopendiente})";
 
 
 
@@ -4944,9 +4944,15 @@ $app->post("/compra",function() use($db,$app){
 
         try {
 
-            $query ="UPDATE venta_pagos SET monto=monto+({$data->monto}-{$data->pendiente}), monto_pendiente={$data->pendiente} where id_venta={$data->id_venta} and id={$data->id}";
+            $query ="UPDATE venta_pagos SET monto=({$data->monto}-{$data->pendiente}), monto_pendiente=({$data->monto}-{$data->pendiente}) where id_venta={$data->id_venta} and id={$data->id}";
 
             $db->query($query);
+
+            $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$data->pendiente}) where id={$data->id_venta}";
+            print($query2);
+
+            $db->query($query2);
+
 
             $result = array("STATUS"=>true,"messaje"=>"Monto Pendientes actualizados correctamente");
 

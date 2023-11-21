@@ -98,14 +98,17 @@
     </mat-select>
     </mat-form-field>-->
     <div mat-dialog-actions class="float-right">
-        <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>
-        <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
+        <mat-slide-toggle color="primary" name="imprimir" formControlName="imprimir">Imprimir</mat-slide-toggle>&nbsp;&nbsp;
+        <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;
+        <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>&nbsp;
 
         <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>
 </form>
 <!--<button (click)="imprimir()">print</button>
 {{this.MyForm.value | json }}-->
+
+
 <div id="recibo">
     <div style="display:flex;margin-bottom:14px;">
     <div style="text-align:right;padding-left:20px;"><img src="https://aprendeadistancia.online/erp/assets/img/logo-erp.png" width="40px" height="40px"/></div>

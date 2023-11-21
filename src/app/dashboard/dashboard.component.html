@@ -1,6 +1,30 @@
 <div class="content">
     <app-barratareas></app-barratareas>
+
   <div class="container-fluid">
+    <div class="row">
+        <div class="input-group date" style="padding-top: 26px;width: 100%;float: right;display: flex;background: white;">
+            <div class="input-group-addon">Período&nbsp;&nbsp;
+                              <i class="fa fa-calendar"></i>
+                            </div>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Fecha Inicio</mat-label>
+                                <input name="fecha" formControlName="fecha"  matInput [matDatepicker]="picker">
+                                <mat-hint>DD/MM/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline">
+                                <mat-label>Fecha Fin</mat-label>
+                                <input name="fecha2" formControlName="fecha2"  matInput [matDatepicker]="picker2">
+                                <mat-hint>DD/MM/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                              </mat-form-field>
+                              <button type="submit"  class="enviar" mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Consultar</button>
+            </div>
+
+    </div>
       <div class="row">
           <div class="col-lg-3 col-md-6 col-sm-6">
               <div class="card card-stats">

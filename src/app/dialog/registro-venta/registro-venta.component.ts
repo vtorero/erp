@@ -11,9 +11,9 @@ import { Global } from 'app/global';
 
 function imprSelec(nombre) {
   var ficha = document.getElementById(nombre);
-  var ventimp = window.open(' ', 'popimpr','left=200,top=200,width=800,height=620');
+  var ventimp = window.open(' ','popimpr','left=200,top=200,width=800,height=620');
   ventimp.document.write( ficha.innerHTML );
-  ventimp.document.close();
+  //ventimp.document.close();
   ventimp.print();
   ventimp.close();
 }
@@ -50,6 +50,7 @@ export class RegistroVentaComponent implements OnInit {
     usuario:[''],
     sucursal:[''],
     entrega: [0],
+    imprimir:[0],
   });
 
 dataClientes:any;
@@ -161,6 +162,8 @@ imprimir() {
 
 }
 
+
+
    onSubmit():void{
     if(this.MyForm.invalid){
       this.MyForm.markAllAsTouched();
@@ -250,7 +253,11 @@ console.log(respuesta)
     }
 */
 console.log(this.data.detalle)
+console.log(this.MyForm)
+const print = this.MyForm.get('imprimir') as FormControl;
+if(print.value==true){
 this.imprimir();
+}
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
         console.log("form",this.MyForm.value)
@@ -447,6 +454,10 @@ else if(efectivo==precio || depositos==precio ||efectivo>precio ) {
     }
     else{
       this.vuelto='Vuelto';
+      console.log("else")
+      this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
+        this.textoprecio=letra;
+        });
     // vuelto.setValue(efectivo-precio)
     }
   }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import * as Chartist from 'chartist';
 @Component({
   selector: 'app-dashboard',
@@ -7,7 +8,13 @@ import * as Chartist from 'chartist';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    @Inject(MAT_DATE_LOCALE) private _locale: string
+
+  ) {
+
+
+   }
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
       seq = 0;
