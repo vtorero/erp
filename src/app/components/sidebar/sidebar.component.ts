@@ -24,7 +24,7 @@ export const ROUTES: RouteInfo[] = [
     child:[{pat:'/ventas/venta-rapida', tit: 'Venta Rápida',  icn:'bubble_chart',cls:'notifications', admin:'no'},
     {pat:'/ventas/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications', admin:'no'},
     {pat:'/ventas/clientes', tit: 'Clientes',  icn:'person',cls:'notifications', admin:'no'}]},
-    { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',admin:'no',
+    { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',admin:'si',
     child:[{pat:'/compras/registro-compras', tit: 'Registrar',  icn:'bubble_chart',cls:'notifications', admin:'si'},
     {pat:'/compras/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications', admin:'si'},
     {pat:'/compras/proveedores', tit: 'Proveedores',  icn:'person',cls:'notifications', admin:'no'}]},

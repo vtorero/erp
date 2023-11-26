@@ -7,6 +7,9 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+declare function connetor_plugin(): void;
+declare function obtenerImpresoras();
+
 
 
 function imprSelec(nombre) {
@@ -18,39 +21,77 @@ function imprSelec(nombre) {
   ventimp.close();
 }
 
-function enviarTicketera(impresora){
-  let conector = new ConectorPluginV3();
-  conector.EstablecerFuente(1);
-  conector.Iniciar();
-  conector.EstablecerEnfatizado(true);
-  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
-  conector.DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp.png", 2, 216);
-  conector.Feed(1);
-  conector.EscribirTexto("Parzibyte's blog\n");
-  conector.EscribirTexto("Blog de un programador\n");
-  conector.EscribirTexto("Telefono: 123456789\n");
-  conector.EscribirTexto("Fecha/Hora: 2021-02-08 16:57:55\n");
-  conector.EscribirTexto("--------------------------------\n");
-  conector.EscribirTexto("Venta de plugin para impresora\n");
-  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
-  conector.EscribirTexto("25 USD\n");
-  conector.EscribirTexto("--------------------------------\n");
-  conector.EscribirTexto("TOTAL: 25 USD\n");
-  conector.EscribirTexto("--------------------------------\n");
-  conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO);
-  conector.EscribirTexto("***Gracias por su compra***");
-  conector.Feed(4);
-  conector.Corte(1);
-  conector.CorteParcial();
-  conector.imprimirEn(impresora)
-      .then(respuestaAlImprimir => {
-          if (respuestaAlImprimir === true) {
-              console.log("Impreso correctamente");
-          } else {
-              console.log("Error. La respuesta es: " + respuestaAlImprimir);
-          }
-      });
 
+
+async function imprimirTicket(impresora,datos){
+  let nombreImpresora = "ticketera";
+            let api_key = "123456"
+            const conector = new connetor_plugin()
+                        conector.fontsize("2")
+                        conector.textaling("center")
+                        conector.text("Ferreteria")
+                        conector.fontsize("1")
+                        conector.text("Calle de las margaritas #45854")
+                        conector.text("PEC7855452SCC")
+                        conector.feed("3")
+                        conector.textaling("left")
+                        conector.text("Fecha: Miercoles 8 de ABRIL 2022 13:50")
+
+                        conector.text("Cant.       Descripcion      Importe")
+                        conector.text("-------------------------------------------")
+                        for (let index = 0; index < datos.length; index++) {
+                          const element = datos[index].nombre;
+                          conector.text(element+                    "$110")
+                        }
+                        conector.feed("1")
+                        conector.fontsize("2")
+                        conector.textaling("right")
+                        conector.text("Total: $275")
+                        //conector.qr("https://abrazasoft.com")
+                        conector.feed("5")
+                        const resp = await conector.imprimir(nombreImpresora, api_key);
+                        if (resp === true) {
+
+                             console.log("imprimio: "+resp)
+                        } else {
+                             console.log("Problema al imprimir: "+resp)
+
+                        }
+
+}
+
+
+
+async function enviarTicketera(impresora,datos){
+  let conector = new ConectorPluginV3();
+  conector
+  .Iniciar()
+  .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+ .Feed(1)
+  .DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
+  .Iniciar()
+  .Feed(1)
+  .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
+  .EscribirTexto("LAS HERMANITAS\n")
+  .EscribirTexto("Ferretería y materiales de contrucción las\n")
+  .EscribirTexto("Hermanitas E.I.R.L.\n")
+  .EscribirTexto("Wharsapp/Teléfono:902 715 979 \n")
+  .EscribirTexto("lashermanitas_bertha@hotmail.com \n")
+  .EscribirTexto("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima \n")
+  .EscribirTexto("RUC: 2053799520\n")
+  .Feed(1);
+  for (let index = 0; index < datos.length; index++) {
+    const element = datos[index].nombre;
+    conector.EscribirTexto(element)
+  }
+   conector
+  .CorteParcial()
+  const respuesta = await conector.imprimirEn(impresora);
+  if (respuesta == true) {
+    console.log("Impresión correcta");
+  } else {
+    console.log("Error: " + respuesta);
+  }
 
 
 }
@@ -184,8 +225,12 @@ onDeletePago(index:number):void{
 
 async getData() {
   try {
-    this.impresoras = await ConectorPluginV3.obtenerImpresoras();
-    console.log(this.impresoras)
+
+   // this.impresoras = await ConectorPluginV3.obtenerImpresoras();
+
+
+
+    //console.log(this.impresoras)
   } catch (error) {
     console.error(error);
   }
@@ -295,7 +340,8 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
 if(print.value==true){
   console.log("impresoras",impresora.value);
 //this.imprimir();
-enviarTicketera(impresora.value)
+//enviarTicketera(impresora.value,this.data.detalle)
+imprimirTicket(impresora.value,this.data.detalle)
 }
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
@@ -326,6 +372,9 @@ enviarTicketera(impresora.value)
   usuario.setValue(localStorage.getItem("currentId"));
   const sucursal = this.MyForm.get('sucursal') as FormControl;
   sucursal.setValue(sessionStorage.getItem("sucursal_id"));
+
+
+
   }
 
 

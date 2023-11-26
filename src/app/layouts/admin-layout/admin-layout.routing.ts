@@ -27,6 +27,7 @@ import { ComprasComponent } from 'app/negocio/compras/compras.component';
 import { ComprasRegistroComponent } from 'app/negocio/compras/compras-registro/compras-registro.component';
 import { ListadoComprasComponent } from 'app/negocio/compras/listado-compras/listado-compras.component';
 import { VendedoresComponent } from '../../negocio/vendedores/vendedores.component';
+import { AuthGuard } from 'app/seguridad/auth/auth.guards';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -71,24 +72,36 @@ export const AdminLayoutRoutes: Routes = [
     //         component: UpgradeComponent
     //     }]
     // }
-    { path: 'dashboard', component: DashboardComponent },
+    { path: 'dashboard', component: DashboardComponent,
+    canActivate: [ AuthGuard ],
+    canMatch: [ AuthGuard ]
+  },
     {path:'ventas',
     children:[{path:'main',component:MainComponent},
     {path:'listado',component:ListadoComponent},
     {path:'venta-rapida',component:VentasComponent},
     { path: 'clientes', component: ClienteComponent }]},
     {path:'compras',
-    children:[{path:'main',component:ComprasComponent},
+    children:[{path:'main',component:ComprasComponent,
+    canActivate: [ AuthGuard ],
+    canMatch: [ AuthGuard ]
+  },
     {path:'listado',component:ListadoComprasComponent},
     {path:'registro-compras',component:ComprasRegistroComponent},
-    { path: 'proveedores', component: ProveedoresComponent }]},
+    { path: 'proveedores', component: ProveedoresComponent,
+    canActivate: [ AuthGuard ],
+    canMatch: [ AuthGuard ] }]},
     {path:'configuracion',
     children:[{path:'main',component:ConfiguracionComponent}
     ,{path:'permisos',component:permisosComponent},
     {path:'cajas',component:CajasComponent}]},
       {path:'inventarios',component:MainInventarioComponent},
-      {path:'kardex',component:KardexComponent},
-    { path: 'seguridad',      component: UsuarioComponent },
+      {path:'kardex',component:KardexComponent,
+      canActivate: [ AuthGuard ],
+      canMatch: [ AuthGuard ]},
+    { path: 'seguridad',      component: UsuarioComponent,
+    canActivate: [ AuthGuard ],
+    canMatch: [ AuthGuard ] },
     { path: 'usuarios',      component: UsuarioComponent },
     { path: 'sucursales',      component: SucursalesComponent },
     { path: 'vendedores',      component: VendedoresComponent },
