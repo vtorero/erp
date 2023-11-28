@@ -9,6 +9,8 @@ import { ModCantidadComponent } from '../../dialog/mod-cantidad/mod-cantidad.com
 import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
+import { Router } from '@angular/router';
+
 
 
 
@@ -63,25 +65,25 @@ export class VentasComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
+    private router:Router
 
 
   ) { }
 
   ngOnInit(): void {
+    if(this.api.getCurrentUser==false){
+      this.router.navigate(['']);
+      }
+
     let suc=  sessionStorage.getItem("sucursal_id");
-    console.log("sss",suc);
+
     if(suc==null){
     this.openTerminal('20ms','20ms');
     }else{
       this.sucursal_id=suc;
-      console.log("thissss",suc)
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
         this.sucursal=d[0]['nombre'];
         sessionStorage.setItem("sucursal_id",this.sucursal_id);
-
-       // this.getSubCategoria();
-        //this.getFamilia();
-
          });
     }
 

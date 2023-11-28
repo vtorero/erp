@@ -151,7 +151,7 @@ openBusqueda(){
 
   agregar(art:Cajas) {
     if(art){
-      art.usuario=localStorage.getItem("currentUser");
+      art.usuario=sessionStorage.getItem("currentUser");
     this.api.guardarCajas(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});

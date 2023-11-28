@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
 cerrar(){
     console.log("ceeeerrrar");
     localStorage.removeItem("currentId");
-    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("currentUser");
     localStorage.removeItem("currentNombre");
     localStorage.removeItem("currentAvatar");
     localStorage.removeItem("currentEmpresa");

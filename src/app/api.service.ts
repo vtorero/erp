@@ -39,6 +39,16 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  get getCurrentUser(){
+    let user = sessionStorage.getItem("currentUser");
+    if(!user){
+      return false;
+       }else{
+         return true;
+       }
+  }
+
+
   getApi(ruta: string) {
     return this._http
       .get(Global.BASE_API_URL + "api.php/" + ruta, { headers: this.headers })

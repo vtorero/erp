@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'app/api.service';
+import { Router } from '@angular/router';
 import { BarratareasComponent } from '../../../components/barratareas/barratareas.component';
 @Component({
   selector: 'app-main',
@@ -7,9 +9,16 @@ import { BarratareasComponent } from '../../../components/barratareas/barratarea
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private api: ApiService,
+    private router:Router
+
+  ) { }
 
   ngOnInit(): void {
+    if(this.api.getCurrentUser==false){
+      this.router.navigate(['/']);
+      }
   }
 
 }

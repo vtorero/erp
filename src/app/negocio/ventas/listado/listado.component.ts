@@ -12,6 +12,7 @@ import { Clientes } from 'app/modelos/clientes';
 import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.component';
 import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-listado',
@@ -34,9 +35,13 @@ export class ListadoComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private api: ApiService,
     public dialog2: MatDialog,
+    private router:Router
   ) { }
 
   ngOnInit(): void {
+    if(this.api.getCurrentUser==false){
+      this.router.navigate(['']);
+      }
     this.renderDataTable();
   }
 

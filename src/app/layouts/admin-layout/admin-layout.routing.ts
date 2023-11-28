@@ -77,8 +77,8 @@ export const AdminLayoutRoutes: Routes = [
     canMatch: [ AuthGuard ]
   },
     {path:'ventas',
-    children:[{path:'main',component:MainComponent},
-    {path:'listado',component:ListadoComponent},
+    children:[{path:'main',component:ListadoComponent},
+   // {path:'listado',component:ListadoComponent},
     {path:'venta-rapida',component:VentasComponent},
     { path: 'clientes', component: ClienteComponent }]},
     {path:'compras',

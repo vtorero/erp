@@ -22,31 +22,44 @@ function imprSelec(nombre) {
 }
 
 
-
-async function imprimirTicket(impresora,datos){
+async function imprimirTicket(datos,form,cliente,direccion){
+  const fecha = new Date();
   let nombreImpresora = "ticketera";
             let api_key = "123456"
             const conector = new connetor_plugin()
                         conector.fontsize("2")
                         conector.textaling("center")
-                        conector.text("Ferreteria")
+                        conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg");
+                        conector.text("LAS HERMANITAS")
                         conector.fontsize("1")
-                        conector.text("Calle de las margaritas #45854")
-                        conector.text("PEC7855452SCC")
+                        conector.text("Ferretería y materiales de contruccion las")
+                        conector.text("Hermanitas E.I.R.L.")
+                        conector.text("lashermanitas_bertha@hotmail.com")
+                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima")
+                        conector.text("RUC: 2053799520")
                         conector.feed("3")
                         conector.textaling("left")
-                        conector.text("Fecha: Miercoles 8 de ABRIL 2022 13:50")
-
-                        conector.text("Cant.       Descripcion      Importe")
+                        conector.text("ADQUIRIENTE")
+                        conector.text(cliente)
+                        conector.text(direccion)
+                        conector.feed("1")
+                        conector.textaling("left")
+                        conector.text(fecha.toLocaleDateString())
+                        conector.text("Descripcion        Cant.           Importe")
                         conector.text("-------------------------------------------")
                         for (let index = 0; index < datos.length; index++) {
-                          const element = datos[index].nombre;
-                          conector.text(element+                    "$110")
+                          const element = datos[index];
+                          let precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
+                          conector.text(element.nombre)
+                          conector.text(element.cantidad+"          "+element.cantidad+"             S/ "+precio)
                         }
                         conector.feed("1")
+                        conector.text("-------------------------------------------")
                         conector.fontsize("2")
                         conector.textaling("right")
-                        conector.text("Total: $275")
+                        conector.text("Op. Gravadas:"+form.value.neto)
+                        conector.text("i.G.V:"+form.value.igv)
+                        conector.text("Total:"+form.value.total)
                         //conector.qr("https://abrazasoft.com")
                         conector.feed("5")
                         const resp = await conector.imprimir(nombreImpresora, api_key);
@@ -341,7 +354,7 @@ if(print.value==true){
   console.log("impresoras",impresora.value);
 //this.imprimir();
 //enviarTicketera(impresora.value,this.data.detalle)
-imprimirTicket(impresora.value,this.data.detalle)
+imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente)
 }
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{

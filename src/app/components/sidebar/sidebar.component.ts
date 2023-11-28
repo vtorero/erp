@@ -22,7 +22,6 @@ export const ROUTES: RouteInfo[] = [
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class:'', admin:'si',child:[]},
     { path: '/ventas/main', title: 'Ventas',  icon: 'library_books', class: '',admin:'no',
     child:[{pat:'/ventas/venta-rapida', tit: 'Venta Rápida',  icn:'bubble_chart',cls:'notifications', admin:'no'},
-    {pat:'/ventas/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications', admin:'no'},
     {pat:'/ventas/clientes', tit: 'Clientes',  icn:'person',cls:'notifications', admin:'no'}]},
     { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',admin:'si',
     child:[{pat:'/compras/registro-compras', tit: 'Registrar',  icn:'bubble_chart',cls:'notifications', admin:'si'},
