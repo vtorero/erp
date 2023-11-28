@@ -82,7 +82,7 @@ export const AdminLayoutRoutes: Routes = [
     {path:'venta-rapida',component:VentasComponent},
     { path: 'clientes', component: ClienteComponent }]},
     {path:'compras',
-    children:[{path:'main',component:ComprasComponent,
+    children:[{path:'main',component:ListadoComprasComponent,
     canActivate: [ AuthGuard ],
     canMatch: [ AuthGuard ]
   },
