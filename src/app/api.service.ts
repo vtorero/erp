@@ -12,6 +12,7 @@ import { Permisos } from './modelos/permisos';
 import { Cajas } from './modelos/cajas';
 import { AddInventario } from "./modelos/addinventario";
 import { Venta } from './modelos/venta';
+import {Chart} from 'chart.js/auto';
 
 
 
@@ -24,6 +25,7 @@ export class ApiService {
 
   constructor(public _http: HttpClient) {}
   public articulos=[];
+  public chart:Chart;
 
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
@@ -46,6 +48,154 @@ export class ApiService {
        }else{
          return true;
        }
+  }
+  getPie(labels:any,datos:any,canvas:string,titulo:string){
+
+    return this.chart = new Chart(canvas, {
+      type: 'doughnut',
+      options: {
+        plugins: {
+          legend: {
+            position: 'right',
+          },
+          title: {
+            display: false,
+            text: titulo,
+            color: 'black',
+            font: {
+              size: 14,
+              family: 'verdana',
+              weight: 'normal',
+              style: 'normal'
+            },
+          },
+          subtitle: {
+            display: false,
+            text: 'Periodo seleccionado',
+            color: 'black',
+            font: {
+              size: 12,
+              family: 'verdana',
+              weight: 'normal',
+              style: 'normal'
+            },
+            padding: {
+              bottom: 1
+            }
+
+      }
+    }
+    },
+         data: {
+        labels: labels,
+        datasets: [
+          {
+          // backgroundColor: "RGBA(0,233,168,0.3)",
+          //  borderColor: "#3cb371",
+            //borderDash: [],
+            borderDashOffset: 0.0,
+
+            data: datos,
+           // borderColor: '#3cba9f',
+            //fill: true,
+           /* backgroundColor: [
+              "#0f498aff",
+              "#999999ff",
+              "#2196f3ff",
+              "#ccccccff",
+              "#bbdefbff",
+              "#f990a7",
+              "#aad2ed",
+              "#FF00FF",
+              "Blue",
+              "Red",
+              "Blue"
+            ]*/
+          },
+
+
+        ],
+
+      },
+
+    }
+    )
+
+  }
+  getLine(labels:any,datos:any,canvas:string,titulo:string){
+
+    return this.chart = new Chart(canvas, {
+      type: 'line',
+      options: {
+        plugins: {
+
+          title: {
+            display: false,
+            text: titulo,
+            color: 'black',
+            font: {
+              size: 14,
+              family: 'verdana',
+              weight: 'normal',
+              style: 'normal'
+            },
+          },
+          subtitle: {
+            display: false,
+            text: 'Periodo seleccionado',
+            color: 'black',
+            font: {
+              size: 12,
+              family: 'verdana',
+              weight: 'normal',
+              style: 'normal'
+            },
+            padding: {
+              bottom: 1
+            }
+
+      }
+    },
+
+
+
+    },
+         data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Días',
+          // backgroundColor: "RGBA(0,233,168,0.3)",
+          //  borderColor: "#3cb371",
+            //borderDash: [],
+            borderDashOffset: 0.0,
+
+            data: datos,
+           // borderColor: '#3cba9f',
+            //fill: true,
+           /* backgroundColor: [
+              "#0f498aff",
+              "#999999ff",
+              "#2196f3ff",
+              "#ccccccff",
+              "#bbdefbff",
+              "#f990a7",
+              "#aad2ed",
+              "#FF00FF",
+              "Blue",
+              "Red",
+              "Blue"
+            ]*/
+          },
+
+
+        ],
+
+      },
+
+    }
+    )
+
   }
 
 

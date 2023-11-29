@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ApiService } from 'app/api.service';
 import * as Chartist from 'chartist';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ export class DashboardComponent implements OnInit {
 public selectedMoment2 = new Date();
 ventaTotal:any;
 montoPendiente:any;
+montoCompras:any;
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
@@ -21,12 +23,13 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
      private api: ApiService
-
-
   ) {
 
 
    }
+
+
+
   startAnimationForLineChart(chart){
       let seq: any, delays: any, durations: any;
       seq = 0;
@@ -97,51 +100,46 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
     console.log(this.fecha1,this.fecha2);
     this.loadVentas(this.fecha1,this.fecha2,empresa);
+
+
     //this.renderDataTableConsulta(ini,fin,empresa);
     }
 
 
     loadVentas(inicio:string,final:string,empresa:string){
-      var data = {
-        labels: ["Test 1","Test 2","Test 3"],
-        series: [160,210,250]
-      };
-
-      var options = {
-        labelInterpolationFnc: function(value) {
-          return String(value)[0]
-        }
-      };
-
-
-
-      var responsiveOptions = [
-        ['screen and (min-width: 640px)', {
-          chartPadding: 30,
-          labelOffset: 100,
-          labelDirection: 'explode',
-          labelInterpolationFnc: function(value) {
-            return value;
-          }
-        }],
-        ['screen and (min-width: 1024px)', {
-          labelOffset: 80,
-          chartPadding: 20
-        }]
-      ];
-
-      var dailySalesChart = new Chartist.Pie('#pie-canvas', data,options);
-
-      this.startAnimationForLineChart(dailySalesChart);
-
       this.api.getVentaBoletas(inicio,final,empresa)
       .subscribe(data => {
         this.ventaTotal=data['boletas'][0].total;
         this.montoPendiente=data['pendiente'][0].pendiente;
+        this.montoCompras = data['gasto'][0].gasto;
+        let productos_name = data['productos'].map(res=>res.nombre);
+        let productos_total = data['productos'].map(res=>res.total);
+
+        let clientes_name = data['clientes'].map(res=>res.nombre);
+        let clientes_total = data['clientes'].map(res=>res.total);
+
+        let sucursal_name = data['sucursales'].map(res=>res.nombre);
+        let sucursal_total = data['sucursales'].map(res=>res.total);
+
+        let compras_fecha = data['compras'].map(res=>res.fecha);
+        let compras_gasto = data['compras'].map(res=>res.gasto);
+
+        let ventas_fecha = data['ventas'].map(res=>res.fecha);
+        let ventas_venta = data['ventas'].map(res=>res.venta);
+
+
+        //grafico productos
+        this.api.getPie(productos_name ,productos_total,'canvas','Productos más pedidos');
+        //grafico clientes
+        this.api.getPie(clientes_name,clientes_total,'canvas2','Clientes');
+        //Graficos por sucursal
+        this.api.getPie(sucursal_name,sucursal_total,'canvas3','Clientes');
+        //Graficos Compras
+        this.api.getLine(compras_fecha,compras_gasto,'canvas4','Clientes');
+        //Graficos ventas
+        this.api.getLine(ventas_fecha,ventas_venta,'canvas5','Clientes');
 
       });
-
-
 
     }
 
