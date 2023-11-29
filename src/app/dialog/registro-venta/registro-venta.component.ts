@@ -8,7 +8,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
 declare function connetor_plugin(): void;
-declare function obtenerImpresoras();
 
 
 
@@ -22,9 +21,15 @@ function imprSelec(nombre) {
 }
 
 
+
 async function imprimirTicket(datos,form,cliente,direccion){
   const fecha = new Date();
-  let nombreImpresora = "ticketera";
+  let imp = localStorage.getItem("impresora");
+if(imp==""){
+  this.snackBar.open("Impresora no configurada", undefined, { duration: 8000, verticalPosition: 'bottom', panelClass: ['snackbar-error'] });
+}
+
+  let nombreImpresora = imp;
             let api_key = "123456"
             const conector = new connetor_plugin()
                         conector.fontsize("2")
