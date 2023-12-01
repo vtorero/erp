@@ -50,6 +50,8 @@ import { VerCompraComponent } from './negocio/compras/ver-compra/ver-compra.comp
 import { FinanzasComponent } from './negocio/finanzas/finanzas.component';
 import { SelectImpresoraComponent } from './dialog/select-impresora/select-impresora.component';
 import { ModoPagoComponent } from './seguridad/modo-pago/modo-pago.component';
+import { ModDespachoComponent } from './dialog/mod-despacho/mod-despacho.component';
+import { AddMediopagoComponent } from './dialog/add-mediopago/add-mediopago.component';
 
 
 
@@ -109,6 +111,8 @@ import { ModoPagoComponent } from './seguridad/modo-pago/modo-pago.component';
      FinanzasComponent,
      SelectImpresoraComponent,
      ModoPagoComponent,
+     ModDespachoComponent,
+     AddMediopagoComponent,
 
   ],
   providers: [],

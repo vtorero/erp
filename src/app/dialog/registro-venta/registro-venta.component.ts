@@ -22,7 +22,7 @@ function imprSelec(nombre) {
 
 
 
-async function imprimirTicket(datos,form,cliente,direccion,pago){
+async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,pago:string,ticket:string){
   const fecha = new Date();
   let imp = localStorage.getItem("impresora");
 if(imp==""){
@@ -51,23 +51,26 @@ if(imp==""){
                         conector.text(direccion)
                         conector.textaling("left")
                         conector.text("Fecha:"+fecha.toLocaleDateString())
+                        conector.text("Numero de ticket:"+ticket)
+                        console.log("ticket",ticket)
+                        conector.feed("1")
                         conector.text("Descripcion        Cant.     Precio      Importe")
                         conector.text("-------------------------------------------")
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
-                          let precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
-                          conector.text(element.nombre)
-                          conector.text("       "+element.cantidad+"          "+element.cantidad+"             S/ "+precio)
+                          var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
+                          var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad)
+                          conector.text(index+1+") "+element.nombre)
+                          conector.text("       "+element.cantidad+"       S/"+precio.toFixed(2)+"        S/"+subtotal.toFixed(2))
                         }
                         conector.feed("1")
-                        conector.text("-------------------------------------------")
+                        conector.text("------------------------------------------")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: "+form.value.neto)
-                        conector.text("i.G.V: "+form.value.igv)
-                        conector.text("Total: "+form.value.total)
-                        //conector.qr("https://abrazasoft.com")
-                        conector.feed("1")
+                        conector.text("Op. Gravadas: "+form.value.neto.toFixed(2))
+                        conector.text("i.G.V: "+form.value.igv.toFixed(2))
+                        conector.text("Total: "+form.value.total.toFixed(2))
+                         conector.feed("1")
                         conector.textaling("center")
                         conector.text("---------------------------------")
                         conector.text("Son:"+pago+" SOLES")
@@ -360,16 +363,19 @@ console.log(this.data.detalle)
 console.log(this.MyForm)
 const print = this.MyForm.get('imprimir') as FormControl;
 let impresora = this.MyForm.get('impresoras') as FormControl;
-if(print.value==true){
-  console.log("impresoras",impresora.value);
-//this.imprimir();
-//enviarTicketera(impresora.value,this.data.detalle)
-imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.textoprecio)
-}
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
         console.log("form",this.MyForm.value)
         console.log("detallesss",this.data.detalle)
+
+        if(print.value==true){
+          console.log("impresoras",impresora.value);
+        //this.imprimir();
+        //enviarTicketera(impresora.value,this.data.detalle)
+        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'])
+        }
+
+
         this._snackBar.open(data['messaje'],"OK",{duration:5000,verticalPosition:'bottom'});
        this.MyForm.reset();
        this.cancelar()

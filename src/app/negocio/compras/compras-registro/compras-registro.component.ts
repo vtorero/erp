@@ -20,6 +20,7 @@ interface Elemento {
   nombre: string;
   almacen:number,
   cantidad: number;
+  despacho:number;
   pendiente: number;
   precio:number;
   descuento:number,
@@ -201,7 +202,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,almacen:0,cantidad:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+    array.push({ id:elemento.id,nombre:elemento.nombre,almacen:0,cantidad:cantidad,despacho:0,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -217,7 +218,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,almacen:0,precio:precio, cantidad:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
 

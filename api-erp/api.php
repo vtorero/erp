@@ -4812,7 +4812,7 @@ $app->post("/compra",function() use($db,$app){
 
                      foreach($data->pagos as $pago){
 
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$data->total},{$data->montopendiente})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->cuentaPago},{$data->total},{$data->montopendiente})";
 
 
 
@@ -4884,7 +4884,7 @@ $app->post("/compra",function() use($db,$app){
 
 
 
-                       $result = array("STATUS"=>true,"messaje"=>"Venta registrada correctamente con el número: ".$ultimo_id->ultimo_id);
+                       $result = array("STATUS"=>true,"numero"=>$ultimo_id->ultimo_id,"messaje"=>"Venta registrada correctamente con el número: ".$ultimo_id->ultimo_id);
 
 
 

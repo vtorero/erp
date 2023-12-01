@@ -10,6 +10,7 @@ import { ModDescuentoComponent } from '../../dialog/mod-descuento/mod-descuento.
 import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
 import { Router } from '@angular/router';
+import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.component';
 
 
 
@@ -21,6 +22,7 @@ interface Elemento {
   nombre: string;
   almacen:number,
   cantidad: number;
+  despacho:number;
   pendiente: number;
   precio:number;
   descuento:number,
@@ -201,12 +203,13 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     array.forEach(item => {
       if (item.id === elemento.id) {
         item.cantidad += cantidad;
+        item.despacho+=cantidad;
       }
 
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,almacen:0,cantidad:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+    array.push({ id:elemento.id,nombre:elemento.nombre,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -217,12 +220,12 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
   sumarMonto(array: Details[]){
     this.totalMonto=0;
 
- array.forEach(item =>{this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)})
+ array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)})
   }
 
 
 enviarProducto(id:number,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,almacen:0,precio:precio, cantidad:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,almacen:0,precio:precio, cantidad:cantidad,despacho:0,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
 
@@ -288,6 +291,28 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
    });
 
 }
+
+openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
+  const dialogo2=this.dialog.open(ModDespachoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    this.dataRecibo.map(function(dato){
+      if(dato.id == id){
+        if(ux.despacho!=cantidad){
+        dato.despacho = ux.despacho
+        dato.pendiente=dato.cantidad-ux.despacho
+        console.log(dato)
+
+      }
+      }
+   });
+   console.log("cantidad",this.dataRecibo)
+   this.sumarMonto(this.dataRecibo)
+   });
+
+}
+
 
 openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 

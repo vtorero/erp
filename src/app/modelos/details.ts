@@ -3,6 +3,7 @@ export class Details {
         public id: number,
         public nombre: string,
         public cantidad:number,
+        public despacho:number,
         public pendiente:number,
         public almacen:number,
         public precio: number,
