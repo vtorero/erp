@@ -1,0 +1,13 @@
+.example-button-row{
+    background-color: white;
+}
+.mat-row.hovered {
+    background: rgb(146, 107, 107);
+}
+
+.mat-row.highlighted {
+  background: #999;
+}
+
+mat-header-cell{font-size: 14px; font-weight: 700;}
+mat-cell{font-size: 13px;  font-weight: 400;color: black !important}

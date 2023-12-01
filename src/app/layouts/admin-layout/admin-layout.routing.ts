@@ -28,6 +28,7 @@ import { ComprasRegistroComponent } from 'app/negocio/compras/compras-registro/c
 import { ListadoComprasComponent } from 'app/negocio/compras/listado-compras/listado-compras.component';
 import { VendedoresComponent } from '../../negocio/vendedores/vendedores.component';
 import { AuthGuard } from 'app/seguridad/auth/auth.guards';
+import { ModoPagoComponent } from '../../seguridad/modo-pago/modo-pago.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -94,7 +95,8 @@ export const AdminLayoutRoutes: Routes = [
     {path:'configuracion',
     children:[{path:'main',component:ConfiguracionComponent}
     ,{path:'permisos',component:permisosComponent},
-    {path:'cajas',component:CajasComponent}]},
+    {path:'cajas',component:CajasComponent},
+    {path:'pagos',component:ModoPagoComponent}]},
       {path:'inventarios',component:MainInventarioComponent},
       {path:'kardex',component:KardexComponent,
       canActivate: [ AuthGuard ],

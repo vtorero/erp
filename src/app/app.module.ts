@@ -49,6 +49,7 @@ import { RegistroCompraComponent } from './dialog/registro-compra/registro-compr
 import { VerCompraComponent } from './negocio/compras/ver-compra/ver-compra.component';
 import { FinanzasComponent } from './negocio/finanzas/finanzas.component';
 import { SelectImpresoraComponent } from './dialog/select-impresora/select-impresora.component';
+import { ModoPagoComponent } from './seguridad/modo-pago/modo-pago.component';
 
 
 
@@ -107,6 +108,7 @@ import { SelectImpresoraComponent } from './dialog/select-impresora/select-impre
      VerCompraComponent,
      FinanzasComponent,
      SelectImpresoraComponent,
+     ModoPagoComponent,
 
   ],
   providers: [],

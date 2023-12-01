@@ -44,17 +44,26 @@
             </div>
             <div formArrayName="pagos">
                 <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
-            <div class="col-7">
+                    <div class="col-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Forma de pago</mat-label>
+                            <mat-select name="tipopago" formControlName="tipoPago"  required>
+                                <mat-option value="">Seleccionar</mat-option>
+                                <mat-option *ngFor="let med of dataMedios" [value]="med.id">{{med.nombre}}</mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                    </div>
+            <div class="col-4">
                 <mat-form-field appearance="outline">
-                    <mat-label>Forma de pago</mat-label>
-                    <mat-select name="tipopago" formControlName="tipoPago"  required>
+                    <mat-label>A la cuenta</mat-label>
+                    <mat-select name="tipopago" formControlName="cuentaPago"  required>
                         <mat-option value="">Seleccionar</mat-option>
                         <mat-option *ngFor="let caj of dataCajas" [value]="caj.tipo">{{caj.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
                     <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>

@@ -1,0 +1,81 @@
+<div class="content">
+    <app-barratareas></app-barratareas>
+  <div class="container-fluid">
+    <section>
+      <div class="example-button-row">
+        <div class="example-flex-container">
+          <button mat-icon-button color="primary" (click)="openDialog('0ms','0ms')" aria-label="Example icon button with a vertical three dot icon">
+            <i class="material-icons">post_add</i>
+          </button>
+        <!--  <button mat-icon-button color="primary"  (click)="openDialogEdit('10ms','10ms')"  [disabled]="!selectedRowIndex"  aria-label="Example icon button with a home icon"
+          matTooltip="Editar registro"
+          matTooltipHideDelay="100000">
+            <i class="material-icons">edit_note</i>
+          </button>
+          <button mat-icon-button color="primary" (click)="openDelete('20ms','20ms')" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon">
+            <i class="material-icons">delete</i>
+          </button>-->
+          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
+            <i class="material-icons">search</i>
+          </button>
+          <button mat-icon-button color="primary" aria-label="Example icon button with a open in new tab icon">
+            <i class="material-icons">file_upload</i>
+          </button>
+          <mat-form-field *ngIf="buscador">
+            <input matInput width="350" (keyup)="applyFilter($event.target.value)"
+           placeholder="Escriba algo para filtrar">
+         </mat-form-field>
+        </div>
+      </div>
+    </section>
+    <div class="row">
+           <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-danger">
+                    <h4 class="card-title ">Configuración Medio de pago</h4>
+                    <p class="card-category">Pagos en el  Sistema</p>
+                </div>
+                <div class="card-body">
+
+                    <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
+                        <!--  Columna ID-->
+                        <ng-container matColumnDef="id">
+                              <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                              <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="nombre">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                            <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
+                      </ng-container>
+                        <ng-container matColumnDef="usuario">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
+                          <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="estado">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{row.estado}} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="fecha_registro">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de registro</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
+            </ng-container>
+
+                          <!-- Columna Nacionalidad -->
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"  (click)="selected(row)" [ngClass]="{'highlighted': selectedRowIndex == row}"
+                        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+
+                      </mat-table>
+                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+  </div>
+    </div>
+
+

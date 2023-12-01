@@ -33,7 +33,7 @@ export const ROUTES: RouteInfo[] = [
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person', admin:'si'},
        {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person', admin:'si'}]},
     { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class:'' ,admin:'si',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person', admin:'si'},
-    {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person', admin:'si'}]},
+    {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person', admin:'si'},{pat:'/configuracion/pagos', tit: 'Modo de pago',  icn:'bubble_chart',cls:'person', admin:'si'}]},
 ];
 
 @Component({

@@ -22,51 +22,56 @@ function imprSelec(nombre) {
 
 
 
-async function imprimirTicket(datos,form,cliente,direccion){
+async function imprimirTicket(datos,form,cliente,direccion,pago){
   const fecha = new Date();
   let imp = localStorage.getItem("impresora");
 if(imp==""){
+  console.log("impresora vacia")
   this.snackBar.open("Impresora no configurada", undefined, { duration: 8000, verticalPosition: 'bottom', panelClass: ['snackbar-error'] });
 }
 
   let nombreImpresora = imp;
             let api_key = "123456"
             const conector = new connetor_plugin()
-                        conector.fontsize("2")
                         conector.textaling("center")
-                        conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg");
-                        conector.text("LAS HERMANITAS")
+                       conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg");
+                       conector.fontsize("2")
+                       conector.text("LAS HERMANITAS")
                         conector.fontsize("1")
                         conector.text("Ferretería y materiales de contruccion las")
                         conector.text("Hermanitas E.I.R.L.")
                         conector.text("lashermanitas_bertha@hotmail.com")
-                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima")
+                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco")
+                        conector.text("Lima - Lima")
                         conector.text("RUC: 2053799520")
-                        conector.feed("3")
+                        conector.feed("1")
                         conector.textaling("left")
                         conector.text("ADQUIRIENTE")
                         conector.text(cliente)
                         conector.text(direccion)
-                        conector.feed("1")
                         conector.textaling("left")
-                        conector.text(fecha.toLocaleDateString())
-                        conector.text("Descripcion        Cant.           Importe")
+                        conector.text("Fecha:"+fecha.toLocaleDateString())
+                        conector.text("Descripcion        Cant.     Precio      Importe")
                         conector.text("-------------------------------------------")
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
                           let precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
                           conector.text(element.nombre)
-                          conector.text(element.cantidad+"          "+element.cantidad+"             S/ "+precio)
+                          conector.text("       "+element.cantidad+"          "+element.cantidad+"             S/ "+precio)
                         }
                         conector.feed("1")
                         conector.text("-------------------------------------------")
-                        conector.fontsize("2")
+                        conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas:"+form.value.neto)
-                        conector.text("i.G.V:"+form.value.igv)
-                        conector.text("Total:"+form.value.total)
+                        conector.text("Op. Gravadas: "+form.value.neto)
+                        conector.text("i.G.V: "+form.value.igv)
+                        conector.text("Total: "+form.value.total)
                         //conector.qr("https://abrazasoft.com")
-                        conector.feed("5")
+                        conector.feed("1")
+                        conector.textaling("center")
+                        conector.text("---------------------------------")
+                        conector.text("Son:"+pago+" SOLES")
+
                         const resp = await conector.imprimir(nombreImpresora, api_key);
                         if (resp === true) {
 
@@ -130,7 +135,8 @@ export class RegistroVentaComponent implements OnInit {
     vendedor: ['', Validators.required],
     cliente: ['0', Validators.required],
     pagos: this.fb.array([this.fb.group({
-      tipoPago: ['Efectivo', Validators.required],
+      tipoPago: ['', Validators.required],
+      cuentaPago:['',Validators.required],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),
@@ -152,6 +158,7 @@ dataClientes:any;
 dataVendedores:any;
 vuelto:string='';
 dataCajas:any;
+dataMedios:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
@@ -161,8 +168,6 @@ direccioncliente:string;
 numero_doc:string;
 textoprecio:any;
 public id_documento:number=0
-
-
 
 
   constructor(public dialog: MatDialog,
@@ -359,7 +364,7 @@ if(print.value==true){
   console.log("impresoras",impresora.value);
 //this.imprimir();
 //enviarTicketera(impresora.value,this.data.detalle)
-imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente)
+imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.textoprecio)
 }
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
@@ -380,6 +385,7 @@ imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncli
 
 
   ngOnInit(): void {
+    this.getMedioPago();
     this.getCliente();
     this.getData();
     this.getCajas();
@@ -411,6 +417,14 @@ imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncli
       }
     } );
   }
+
+  getMedioPago():void{
+      this.api.getApiTabla('/tipoPago').subscribe(data => {
+        if(data) {
+this.dataMedios=data;
+        }
+      } );
+    }
 
   getCajas(): void {
     const idUsuario = localStorage.getItem("currentId")
