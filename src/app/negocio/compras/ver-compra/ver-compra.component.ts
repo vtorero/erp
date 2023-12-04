@@ -64,12 +64,12 @@ export class VerCompraComponent implements OnInit {
     });
      dialogo2.afterClosed().subscribe(ux => {
       console.log("wsss",ux)
-        this.api.actualizaMonto(id,id_venta,ux.cantidad,ux.monto).subscribe(
+       /* this.api.actualizaMonto(id,id_venta,ux.tipoPago,ux.cantidad,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
           erro=>{console.log(erro)}
-            );
+            );*/
 
      });
 

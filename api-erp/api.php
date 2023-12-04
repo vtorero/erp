@@ -4944,11 +4944,15 @@ $app->post("/compra",function() use($db,$app){
 
         try {
 
-            $query ="UPDATE venta_pagos SET monto=({$data->monto}-{$data->pendiente}), monto_pendiente=({$data->monto}-{$data->pendiente}) where id_venta={$data->id_venta} and id={$data->id}";
+            //$query ="UPDATE venta_pagos SET monto=({$data->monto}-{$data->pendiente}), monto_pendiente=({$data->monto}-{$data->pendiente}) where id_venta={$data->id_venta} and id={$data->id}";
+
+            $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
 
             $db->query($query);
 
             $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$data->pendiente}) where id={$data->id_venta}";
+
+
             print($query2);
 
             $db->query($query2);
@@ -6102,7 +6106,7 @@ $app->get("/pagos-compra/:id",function($id) use($db,$app){
 
 
 
-        $resultado = $db->query("SELECT  p.* FROM aprendea_erp.venta_pagos p  where  id_venta={$id}");
+        $resultado = $db->query("SELECT  p.*, tp.nombre FROM aprendea_erp.venta_pagos p , tipoPago tp  where p.tipoPago=tp.id and  id_venta={$id}");
 
          $prods=array();
 

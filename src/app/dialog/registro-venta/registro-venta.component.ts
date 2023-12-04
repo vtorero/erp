@@ -35,6 +35,7 @@ if(imp==""){
             const conector = new connetor_plugin()
                         conector.textaling("center")
                        conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg");
+                       conector.feed("1")
                        conector.fontsize("2")
                        conector.text("LAS HERMANITAS")
                         conector.fontsize("1")
@@ -54,26 +55,27 @@ if(imp==""){
                         conector.text("Numero de ticket:"+ticket)
                         console.log("ticket",ticket)
                         conector.feed("1")
-                        conector.text("Descripcion        Cant.     Precio      Importe")
-                        conector.text("-------------------------------------------")
+                        conector.text("Descripcion    Cant.   Precio   Importe")
+                        conector.text("========================================")
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
                           var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
                           var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad)
                           conector.text(index+1+") "+element.nombre)
-                          conector.text("       "+element.cantidad+"       S/"+precio.toFixed(2)+"        S/"+subtotal.toFixed(2))
+                          conector.text("        "+element.cantidad+"       S/"+(precio/element.cantidad).toFixed(2)+"        S/"+subtotal.toFixed(2))
+                          conector.text("-------------------------------------")
                         }
                         conector.feed("1")
-                        conector.text("------------------------------------------")
+                        conector.text("========================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: "+form.value.neto.toFixed(2))
-                        conector.text("i.G.V: "+form.value.igv.toFixed(2))
-                        conector.text("Total: "+form.value.total.toFixed(2))
+                        conector.text("Op. Gravadas: "+form.value.neto)
+                        conector.text("I.G.V: "+form.value.igv)
+                        conector.text("Total: "+form.value.total)
                          conector.feed("1")
                         conector.textaling("center")
                         conector.text("---------------------------------")
-                        conector.text("Son:"+pago+" SOLES")
+                        conector.text("SON: "+pago+" SOLES")
 
                         const resp = await conector.imprimir(nombreImpresora, api_key);
                         if (resp === true) {
@@ -166,8 +168,8 @@ montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
 montoTotal:any;
-clientetexto:string;
-direccioncliente:string;
+clientetexto:string='Sin Cliente';
+direccioncliente:string='-';
 numero_doc:string;
 textoprecio:any;
 public id_documento:number=0
@@ -489,11 +491,11 @@ this.direccioncliente=data[0].direccion
   }
 
   cambiaVuelto(precio:number){
-    var vuelto = this.MyForm.get('vuelto') as FormControl;
-  const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
-  let efectivo:number=0;
-  let depositos=0;
-  let total:number=0;
+var vuelto = this.MyForm.get('vuelto') as FormControl;
+const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
+let efectivo:number=0;
+let depositos=0;
+let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
       console.log(element)
   if(element.tipoPago=="Efectivo" || element.tipoPago=='Yape'){
@@ -504,91 +506,46 @@ this.direccioncliente=data[0].direccion
     }
     });
  total=depositos+efectivo;
- vuelto.setValue(total-precio);
-if(depositos>precio){
-  var vuelto = this.MyForm.get('vuelto') as FormControl;
- // this._snackBar.open("El monto recibido es mayor al precio total","Aceptar",{verticalPosition:'bottom'});
-   vuelto.setValue(total-precio);
-}else if(depositos==precio){
-  var vuelto = this.MyForm.get('vuelto') as FormControl;
-  vuelto.setValue(0.00);
-
-  this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
-    console.log("letra",letra)
-  this.textoprecio=letra;
-  });
-
-}
-    if(efectivo<0){
-      const vuelto = this.MyForm.get('vuelto') as FormControl;
-      this._snackBar.open("El monto recibido no es suficiente","Aceptar",{verticalPosition:'bottom'});
-      vuelto.setValue('');
-  }else if(efectivo==precio && tipoDoc1.value!="Factura"){
-  const vuelto = this.MyForm.get('vuelto') as FormControl;
-
-    this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
-      console.log("letra",letra)
-    this.textoprecio=letra;
-    });
-
-}else if(efectivo<precio && depositos<precio){
-  const total3 = this.MyForm.get('total') as FormControl;
-  const igv3 = this.MyForm.get('igv') as FormControl;
-  const neto3 = this.MyForm.get('neto') as FormControl;
-  this.vuelto='Pendiente';
-  console.log("pendiente");
-  const vuelto = this.MyForm.get('vuelto') as FormControl;
-  vuelto.setValue(precio-efectivo)
-  const mpendiente = this.MyForm.get('montopendiente') as FormControl;
+ if(precio>total){
+ this.vuelto='Pendiente';
+ const mpendiente = this.MyForm.get('montopendiente') as FormControl;
   mpendiente.setValue(precio-efectivo);
-  let precio_p = precio/Global.EXTRAE_IGV
-  console.log("precio_p",precio_p);
-console.log("igv",(precio_p * Global.BASE_IGV).toFixed(2))
-vuelto.setValue((efectivo-(precio_p + (precio_p * Global.BASE_IGV))).toFixed(2));
-let total=((precio_p + (precio_p * Global.BASE_IGV))).toFixed(2);
-total3.setValue(total);
-igv3.setValue((precio_p * Global.BASE_IGV).toFixed(2))
-neto3.setValue((precio/Global.EXTRAE_IGV).toFixed(2))
-
-
-  this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
+ }
+ else{
+  this.vuelto='Vuelto';
+ }
+ vuelto.setValue(total-precio);
+ this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
     console.log("letra",letra)
   this.textoprecio=letra;
   });
-}
-else if(efectivo==precio || depositos==precio ||efectivo>precio ) {
-    const vuelto = this.MyForm.get('vuelto') as FormControl;
-    const tipoDoc = this.MyForm.get('tipoDoc') as FormControl;
+
+  if(tipoDoc1.value=="Factura"){
     const total3 = this.MyForm.get('total') as FormControl;
     const igv3 = this.MyForm.get('igv') as FormControl;
     const neto3 = this.MyForm.get('neto') as FormControl;
-    if(tipoDoc.value=="Factura"){
-      console.log("facturaaa")
-      console.log("efectivo",efectivo)
-      console.log("precio",precio/Global.EXTRAE_IGV);
-        let precio_p = precio/Global.EXTRAE_IGV
-        console.log("precio_p",precio_p);
-      console.log("igv",(precio_p * Global.BASE_IGV).toFixed(2))
-      vuelto.setValue((efectivo-(precio_p + (precio_p * Global.BASE_IGV))).toFixed(2));
-     let total=((precio_p + (precio_p * Global.BASE_IGV))).toFixed(2);
-     total3.setValue(total);
-     igv3.setValue((precio_p * Global.BASE_IGV).toFixed(2))
-     neto3.setValue((precio/Global.EXTRAE_IGV).toFixed(2))
-      this.api.getNumeroALetras(total.toString()).subscribe(letra => {
-      this.textoprecio=letra;
-      });
-    }
-    else{
-      this.vuelto='Vuelto';
-      console.log("else")
-      this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
-        this.textoprecio=letra;
-        });
-    // vuelto.setValue(efectivo-precio)
-    }
+    console.log("facturaaa")
+    console.log("efectivo",efectivo)
+    console.log("precio",precio/Global.EXTRAE_IGV);
+      let precio_p = precio/Global.EXTRAE_IGV
+      console.log("precio_p",precio_p);
+    console.log("igv",(precio_p * Global.BASE_IGV).toFixed(2))
+    vuelto.setValue((efectivo-(precio_p + (precio_p * Global.BASE_IGV))).toFixed(2));
+   let total=((precio_p + (precio_p * Global.BASE_IGV))).toFixed(2);
+   total3.setValue(total);
+   igv3.setValue((precio_p * Global.BASE_IGV).toFixed(2))
+   neto3.setValue((precio/Global.EXTRAE_IGV).toFixed(2))
+    this.api.getNumeroALetras(total.toString()).subscribe(letra => {
+    this.textoprecio=letra;
+    });
   }
 
 
-
-  }
 }
+
+  }
+
+
+
+
+

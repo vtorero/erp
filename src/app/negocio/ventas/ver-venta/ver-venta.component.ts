@@ -17,7 +17,7 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'tipoPago', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id', 'nombre', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
   dataVendedores:any;
@@ -67,16 +67,24 @@ export class VerVentaComponent implements OnInit {
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number){
     let index=0;
     const dialogo2=this.dialog.open(PagoPendienteComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-    data: {clase:'modPendiente',id:id,venta:id_venta,monto:monto},
+    data: {clase:'modPendiente',id:id,venta:id_venta,monto_pendiente:monto},
     });
      dialogo2.afterClosed().subscribe(ux => {
       console.log("wsss",ux)
-        this.api.actualizaMonto(id,id_venta,ux.cantidad,ux.monto).subscribe(
+        this.api.actualizaMonto(id_venta,ux.tipoPago,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
           erro=>{console.log(erro)}
             );
+
+            this.api.GetDetallePago(id_venta).subscribe(d => {
+              this.dataPagos = new MatTableDataSource();
+              this.exampleArray=d;
+              this.dataPagos=this.exampleArray
+
+
+              });
 
      });
 
