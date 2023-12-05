@@ -4944,22 +4944,39 @@ $app->post("/compra",function() use($db,$app){
 
         try {
 
-            //$query ="UPDATE venta_pagos SET monto=({$data->monto}-{$data->pendiente}), monto_pendiente=({$data->monto}-{$data->pendiente}) where id_venta={$data->id_venta} and id={$data->id}";
 
-            $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
+            $qwmax=$db->query("SELECT monto_pendiente from venta_pagos where id_venta={$data->id_venta} order by id desc limit 1");
+
+            $prods=array();
+            while ($fila = $qwmax->fetch_array()) {
+                $prods[]=$fila;
+
+            }
+
+
+            if($prods[0]["monto_pendiente"]!="0"){
+
+                $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
+
 
             $db->query($query);
 
-            $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$data->pendiente}) where id={$data->id_venta}";
-
-
-            print($query2);
+            $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$data->pendiente} ) where id={$data->id_venta}";
 
             $db->query($query2);
 
+            if($data->monto-$data->pendiente==0){
+                $query3 ="UPDATE venta_pagos SET monto_pendiente=0 where id={$data->id_venta}";
+                $db->query($query3);
+
+            }
+
 
             $result = array("STATUS"=>true,"messaje"=>"Monto Pendientes actualizados correctamente");
+}else{
 
+                 $result = array("STATUS"=>true,"messaje"=>"Ya no existe monto pendiente");
+}
             }
 
 
