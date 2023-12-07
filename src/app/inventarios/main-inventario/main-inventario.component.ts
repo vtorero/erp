@@ -21,12 +21,13 @@ export class MainInventarioComponent implements OnInit {
 
   buscador:boolean=false;
   dataSucursales:any;
+  dataSubCategoria:any;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['producto_id','nombre','cantidad','id_almacen','fecha_actualizacion'];
+  displayedColumns = ['producto_id','nombre','cantidad','almacen','fecha_actualizacion'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -44,6 +45,28 @@ export class MainInventarioComponent implements OnInit {
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
 }
+
+public seleccionarCategoria(event) {
+  const value = event.value;
+  console.log(value);
+
+if(value==0){
+  this.renderDataTable()
+}else{
+  this.api.getInventarios(value).subscribe(x => {
+    this.dataSource = new MatTableDataSource();
+    this.dataSource.data = x;
+    this.empTbSort.disableClear = true;
+    this.dataSource.sort = this.empTbSort;
+    this.dataSource.paginator = this.paginator;
+    },
+    error => {
+      console.log('Error de conexion de datatable!' + error);
+    });
+}
+
+}
+
 
 openBusqueda(){
   if(this.buscador){

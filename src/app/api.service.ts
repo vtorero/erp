@@ -359,6 +359,13 @@ public guardarPermisos(datos:Permisos): Observable<any> {
   );
 }
 
+getInventarios(criterio:string){
+  return this._http
+    .get(Global.BASE_API_URL + "api.php/inventario/"+ criterio, { headers: this.headers })
+    .pipe(map((result) => result));
+}
+
+
 getPermisos(criterio:string){
   return this._http
     .get(Global.BASE_API_URL + "api.php/permisos/"+ criterio, { headers: this.headers })

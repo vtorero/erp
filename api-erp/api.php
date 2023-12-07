@@ -3626,69 +3626,53 @@ $app->get("/inventarios",function() use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
 
-
-
            $json = $app->request->getBody();
-
-
-
            $j = json_decode($json,true);
-
-
-
            $data = json_decode($j['json']);
-
-
-
            try {
-
-
-
             $fecha=substr($data->fecha_produccion,0,10);
-
-
-
             $fecha2=substr($data->fecha_vencimiento,0,10);
-
-
-
             $sql="call p_inventario({$data->id_producto},'{$data->presentacion}','{$data->unidad}',{$data->granel},{$data->cantidad},{$data->peso},{$data->merma},'{$fecha}','{$fecha2}','{$data->observacion}')";
-
-
-
             $stmt = mysqli_prepare($db,$sql);
-
-
-
             mysqli_stmt_execute($stmt);
-
-
-
             $result = array("STATUS"=>true,"messaje"=>"Inventario registrado correctamente","string"=>$fecha);
-
-
-
            }
-
-
-
             catch(PDOException $e) {
-
-
-
                 $result = array("STATUS"=>true,"messaje"=>$e->getMessage());
-
-
-
                  }
-
-
-
-
-
-
-
                  $respuesta=json_encode($result);
+                echo  $respuesta;
+        });
+
+
+        $app->get("/inventario/:id",function($id) use($db,$app){
+
+            header("Content-type: application/json; charset=utf-8");
+
+
+            $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id and i.id_almacen={$id}");
+
+            $prods=array();
+
+
+
+                while ($fila = $resultado->fetch_array()) {
+
+
+
+
+
+
+
+                    $prods[]=$fila;
+
+
+
+                }
+
+
+
+                $respuesta=json_encode($prods);
 
 
 
@@ -3698,12 +3682,7 @@ $app->get("/inventarios",function() use($db,$app){
 
 
 
-
-
         });
-
-
-
 
 
 
@@ -4160,7 +4139,7 @@ $app->get("/inventario",function() use($db,$app){
 
 
 
-     $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen,cantidad,fecha_actualizacion FROM aprendea_erp.inventario i, productos a where a.id=i.producto_id;");
+     $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id");
 
 
 
@@ -4266,7 +4245,7 @@ $app->get("/movimientos",function() use($db,$app){
 
         $fila['stock'];
 
-        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal id_almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m, productos p where m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
+        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
 
         $resul_detalle = $db->query($sql);
 

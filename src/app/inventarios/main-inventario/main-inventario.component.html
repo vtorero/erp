@@ -27,8 +27,8 @@
             <div class="col-4">
               <mat-form-field appearance="outline">
                 <mat-label>Almacen Destino</mat-label>
-                <mat-select  formControlName="almacen" required>
-                 <mat-option value="">Seleccionar</mat-option>
+                <mat-select  formControlName="almacen"  (selectionChange)="seleccionarCategoria($event)" required>
+                 <mat-option value="0">Todos</mat-option>
                  <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id">{{suc.nombre}}</mat-option>
                  </mat-select>
               </mat-form-field>
@@ -66,9 +66,9 @@
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad Actual</mat-header-cell>
                           <mat-cell *matCellDef="let row">{{row.cantidad}} </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="id_almacen">
+                    <ng-container matColumnDef="almacen">
                       <mat-header-cell *matHeaderCellDef mat-sort-header>Almacen</mat-header-cell>
-                      <mat-cell *matCellDef="let row">{{row.id_almacen}} </mat-cell>
+                      <mat-cell *matCellDef="let row">{{row.almacen}} </mat-cell>
                 </ng-container>
                         <ng-container matColumnDef="fecha_actualizacion">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Ultima Actualización</mat-header-cell>
