@@ -34,7 +34,7 @@ if(imp==""){
             let api_key = "123456"
             const conector = new connetor_plugin()
                         conector.textaling("center")
-                       conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg");
+                       conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-b-n.jpg");
                        conector.feed("1")
                        conector.fontsize("2")
                        conector.text("LAS HERMANITAS")
@@ -51,22 +51,25 @@ if(imp==""){
                         conector.text(cliente)
                         conector.text(direccion)
                         conector.textaling("left")
-                        conector.text("Fecha:"+fecha.toLocaleDateString())
+                        conector.text("Fecha:"+fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
                         conector.text("Numero de ticket:"+ticket)
                         console.log("ticket",ticket)
                         conector.feed("1")
-                        conector.text("Descripcion    Cant.   Precio   Importe")
-                        conector.text("========================================")
+                        conector.textaling("center")
+                        conector.text("Descripcion      Cant.     Precio     Importe")
+                        conector.text("===============================================")
+                        conector.textaling("left")
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
                           var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
                           var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad)
                           conector.text(index+1+") "+element.nombre)
-                          conector.text("        "+element.cantidad+"       S/"+(precio/element.cantidad).toFixed(2)+"        S/"+subtotal.toFixed(2))
-                          conector.text("-------------------------------------")
+                          conector.text("           "+element.cantidad+"        S/"+(precio/element.cantidad).toFixed(2)+"        S/"+subtotal.toFixed(2))
+                          conector.text("--------------------------------------------")
                         }
                         conector.feed("1")
-                        conector.text("========================================")
+                        conector.textaling("center")
+                        conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
                         conector.text("Op. Gravadas: "+form.value.neto)
@@ -74,7 +77,7 @@ if(imp==""){
                         conector.text("Total: "+form.value.total)
                          conector.feed("1")
                         conector.textaling("center")
-                        conector.text("---------------------------------")
+                        conector.text("-----------------------------------------")
                         conector.text("SON: "+pago+" SOLES")
 
                         const resp = await conector.imprimir(nombreImpresora, api_key);
