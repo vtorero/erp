@@ -64,10 +64,10 @@ export class VerVentaComponent implements OnInit {
     } );
   }
 
-  openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number){
+  openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number,nombre:string){
     let index=0;
     const dialogo2=this.dialog.open(PagoPendienteComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-    data: {clase:'modPendiente',id:id,venta:id_venta,monto_pendiente:monto},
+    data: {clase:'modPendiente',id:id,venta:id_venta,monto_pendiente:monto,nombre:nombre},
     });
      dialogo2.afterClosed().subscribe(ux => {
       console.log("wsss",ux)

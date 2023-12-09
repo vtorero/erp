@@ -22,7 +22,7 @@ function imprSelec(nombre) {
 
 
 
-async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,pago:string,ticket:string){
+async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string){
   const fecha = new Date();
   let imp = localStorage.getItem("impresora");
 if(imp==""){
@@ -49,35 +49,43 @@ if(imp==""){
                         conector.textaling("left")
                         conector.text("ADQUIRIENTE")
                         conector.text(cliente)
-                        conector.text(direccion)
+                        if(direccion!=''){
+                        conector.text("Direccion:"+direccion)
+                        }
+                        if(telefono!=''){
+                          conector.text("Telefono:"+telefono)
+                        }
                         conector.textaling("left")
                         conector.text("Fecha:"+fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
                         conector.text("Numero de ticket:"+ticket)
-                        console.log("ticket",ticket)
                         conector.feed("1")
                         conector.textaling("center")
                         conector.text("Descripcion      Cant.     Precio     Importe")
                         conector.text("===============================================")
-                        conector.textaling("left")
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
                           var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
-                          var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad)
-                          conector.text(index+1+") "+element.nombre)
+                          var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad);
+                          conector.textaling("left");
+                          conector.text(index+1+") "+element.nombre);
+                          conector.textaling("right");
                           conector.text("           "+element.cantidad+"        S/"+(precio/element.cantidad).toFixed(2)+"        S/"+subtotal.toFixed(2))
-                          conector.text("--------------------------------------------")
+                          conector.textaling("center")
+                          conector.text("---------------------------------------------")
                         }
                         conector.feed("1")
                         conector.textaling("center")
                         conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: "+form.value.neto)
-                        conector.text("I.G.V: "+form.value.igv)
-                        conector.text("Total: "+form.value.total)
+                        conector.text("Op. Gravadas: S/"+form.value.neto)
+                        if(form.value.igv>0){
+                        conector.text("I.G.V: S/"+form.value.igv)
+                        }
+                        conector.text("Total: S/"+form.value.total)
                          conector.feed("1")
                         conector.textaling("center")
-                        conector.text("-----------------------------------------")
+                        conector.text("**********************************")
                         conector.text("SON: "+pago+" SOLES")
 
                         const resp = await conector.imprimir(nombreImpresora, api_key);
@@ -172,7 +180,8 @@ montoRecibido:any=0;
 impresoras:any;
 montoTotal:any;
 clientetexto:string='Sin Cliente';
-direccioncliente:string='-';
+telefonoCliente:string='';
+direccioncliente:string='';
 numero_doc:string;
 textoprecio:any;
 public id_documento:number=0
@@ -377,7 +386,7 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
           console.log("impresoras",impresora.value);
         //this.imprimir();
         //enviarTicketera(impresora.value,this.data.detalle)
-        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'])
+        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'])
         }
 
 
@@ -450,9 +459,10 @@ seleccionarCliente(event){
 console.log(event.value)
   this.api.getApiTablaCriterio('clientes',event.value).subscribe(data => {
     if(data[0].nombre) {
-this.clientetexto=data[0].nombre
-this.numero_doc=data[0].num_documento
-this.direccioncliente=data[0].direccion
+this.clientetexto=data[0].nombre;
+this.numero_doc=data[0].num_documento;
+this.direccioncliente=data[0].direccion;
+this.telefonoCliente=data[0].telefono;
     }
   } );
 }
