@@ -22,7 +22,7 @@ function imprSelec(nombre) {
 
 
 
-async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string){
+async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string,reciboneto:number,reciboigv:number,recibototal:number){
   const fecha = new Date();
   let imp = localStorage.getItem("impresora");
 if(imp==""){
@@ -34,7 +34,7 @@ if(imp==""){
             let api_key = "123456"
             const conector = new connetor_plugin()
                         conector.textaling("center")
-                       conector.img_url("https://aprendeadistancia.online/erp/assets/img/logo-erp-b-n.jpg");
+                       conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
                        conector.feed("1")
                        conector.fontsize("2")
                        conector.text("LAS HERMANITAS")
@@ -47,7 +47,7 @@ if(imp==""){
                         conector.text("RUC: 2053799520")
                         conector.feed("1")
                         conector.textaling("left")
-                        conector.text("ADQUIRIENTE")
+                        conector.text("ADQUIRIENTE:")
                         conector.text(cliente)
                         if(direccion!=''){
                         conector.text("Direccion:"+direccion)
@@ -69,7 +69,7 @@ if(imp==""){
                           conector.textaling("left");
                           conector.text(index+1+") "+element.nombre);
                           conector.textaling("right");
-                          conector.text("           "+element.cantidad+"        S/"+(precio/element.cantidad).toFixed(2)+"        S/"+subtotal.toFixed(2))
+                          conector.text("           "+element.cantidad+"        S/ "+(precio/element.cantidad).toFixed(2)+"        S/ "+subtotal.toFixed(2))
                           conector.textaling("center")
                           conector.text("---------------------------------------------")
                         }
@@ -78,11 +78,11 @@ if(imp==""){
                         conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: S/"+form.value.neto)
+                        conector.text("Op. Gravadas: S/ "+reciboneto.toFixed(2))
                         if(form.value.igv>0){
-                        conector.text("I.G.V: S/"+form.value.igv)
+                        conector.text("I.G.V: S/ "+reciboigv.toFixed(2))
                         }
-                        conector.text("Total: S/"+form.value.total)
+                        conector.text("Total: S/ "+recibototal.toFixed(2))
                          conector.feed("1")
                         conector.textaling("center")
                         conector.text("**********************************")
@@ -99,41 +99,6 @@ if(imp==""){
 
 }
 
-
-
-async function enviarTicketera(impresora,datos){
-  let conector = new ConectorPluginV3();
-  conector
-  .Iniciar()
-  .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
- .Feed(1)
-  .DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp-bn.jpg", ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL, 400)
-  .Iniciar()
-  .Feed(1)
-  .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-  .EscribirTexto("LAS HERMANITAS\n")
-  .EscribirTexto("Ferretería y materiales de contrucción las\n")
-  .EscribirTexto("Hermanitas E.I.R.L.\n")
-  .EscribirTexto("Wharsapp/Teléfono:902 715 979 \n")
-  .EscribirTexto("lashermanitas_bertha@hotmail.com \n")
-  .EscribirTexto("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima \n")
-  .EscribirTexto("RUC: 2053799520\n")
-  .Feed(1);
-  for (let index = 0; index < datos.length; index++) {
-    const element = datos[index].nombre;
-    conector.EscribirTexto(element)
-  }
-   conector
-  .CorteParcial()
-  const respuesta = await conector.imprimirEn(impresora);
-  if (respuesta == true) {
-    console.log("Impresión correcta");
-  } else {
-    console.log("Error: " + respuesta);
-  }
-
-
-}
 
 @Component({
   selector: 'app-registro-venta',
@@ -184,6 +149,9 @@ telefonoCliente:string='';
 direccioncliente:string='';
 numero_doc:string;
 textoprecio:any;
+reciboneto:number=0;
+reciboigv:number=0;
+recibototal:number=0;
 public id_documento:number=0
 
 
@@ -382,11 +350,14 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
         console.log("form",this.MyForm.value)
         console.log("detallesss",this.data.detalle)
 
+        this.reciboneto=this.MyForm.value.neto;
+         this.reciboigv=this.MyForm.value.igv;
+         this.recibototal=this.MyForm.value.total;
         if(print.value==true){
           console.log("impresoras",impresora.value);
         //this.imprimir();
         //enviarTicketera(impresora.value,this.data.detalle)
-        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'])
+        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
         }
 
 
@@ -447,8 +418,7 @@ this.dataMedios=data;
     }
 
   getCajas(): void {
-    const idUsuario = localStorage.getItem("currentId")
-    this.api.getCajasUsuario(idUsuario).subscribe(data => {
+    this.api.getApiTabla("/cajas").subscribe(data => {
       if(data) {
         this.dataCajas = data;
       }
@@ -490,7 +460,7 @@ this.telefonoCliente=data[0].telefono;
       if(value=='Factura'){
       this.data.detalle.map(function(dato){
           console.log("datoooooo",dato)
-        total2.setValue((this.data.precio/Global.EXTRAE_IGV) + ((this.data.precio/Global.EXTRAE_IGV) * Global.BASE_IGV).toFixed(2));
+        total2.setValue((dato.precio/Global.EXTRAE_IGV) + ((dato.precio/Global.EXTRAE_IGV) * Global.BASE_IGV).toFixed(2));
         igv2.setValue((dato.precio/Global.EXTRAE_IGV * Global.BASE_IGV).toFixed(2));
         });
        // total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))

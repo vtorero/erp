@@ -4791,7 +4791,7 @@ $app->post("/compra",function() use($db,$app){
 
                      foreach($data->pagos as $pago){
 
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->cuentaPago},{$data->total},{$data->montopendiente})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
 
 
 
@@ -6102,7 +6102,7 @@ $app->get("/pagos-compra/:id",function($id) use($db,$app){
 
 
 
-        $resultado = $db->query("SELECT  p.*, tp.nombre FROM aprendea_erp.venta_pagos p , tipoPago tp  where p.tipoPago=tp.id and  id_venta={$id}");
+        $resultado = $db->query("SELECT  p.*, tp.nombre, c.nombre as caja FROM aprendea_erp.venta_pagos p , tipoPago tp,cajas c   where p.tipoPago=tp.id and p.cuentaPago=c.id and  id_venta={$id}");
 
          $prods=array();
 

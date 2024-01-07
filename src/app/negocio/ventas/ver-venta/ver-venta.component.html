@@ -1,4 +1,5 @@
 <div>
+  <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
         <h3>Visualizar Venta Nro:({{data.id}})</h3>
@@ -118,6 +119,10 @@
         <ng-container matColumnDef="nombre">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="caja">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Caja</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.caja}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="monto">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>

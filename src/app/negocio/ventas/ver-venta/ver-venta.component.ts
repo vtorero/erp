@@ -17,7 +17,7 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'nombre', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id', 'nombre','caja', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
   dataVendedores:any;
@@ -146,6 +146,11 @@ export class VerVentaComponent implements OnInit {
         this.dataClientes = data;
       }
     } );
+  }
+
+  cancelar() {
+    this.dialog.closeAll();
+
   }
 
 }

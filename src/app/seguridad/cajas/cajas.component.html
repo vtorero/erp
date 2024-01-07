@@ -43,11 +43,7 @@
                               <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
                               <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
                         </ng-container>
-                       <!-- Columna Apellido -->
-                        <ng-container matColumnDef="sucursal">
-                              <mat-header-cell *matHeaderCellDef mat-sort-header>Sucursal</mat-header-cell>
-                              <mat-cell *matCellDef="let row">{{row.sucursal}} </mat-cell>
-                        </ng-container>
+
                         <ng-container matColumnDef="nombre">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
                             <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>

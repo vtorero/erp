@@ -72,8 +72,8 @@ loginUser(usuario,password){
             localStorage.setItem("currentId",data['data'][0]['id']);
             sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             localStorage.setItem("currentNombre",data['data'][0]['nombre']);
-            localStorage.setItem("currentAvatar",data['data'][0]['avatar']);
             localStorage.setItem("currentEmpresa",data['data'][0]['nombre']);
+            localStorage.setItem("impresora",data['data'][0]['avatar']);
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
 
             if(data['data'][0]['nombre']=='admin'){

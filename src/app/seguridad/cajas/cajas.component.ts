@@ -26,7 +26,7 @@ export class CajasComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','nombre','sucursal','usuario','estado','fecha_registro'];
+  displayedColumns = ['id','nombre','usuario','estado','fecha_registro'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
