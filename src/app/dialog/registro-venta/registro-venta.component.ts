@@ -428,7 +428,6 @@ this.dataMedios=data;
   }
 
 seleccionarCliente(event){
-console.log(event.value)
   this.api.getApiTablaCriterio('clientes',event.value).subscribe(data => {
     if(data[0].nombre) {
 this.clientetexto=data[0].nombre;
@@ -436,7 +435,7 @@ this.numero_doc=data[0].num_documento;
 this.direccioncliente=data[0].direccion;
 this.telefonoCliente=data[0].telefono;
     }
-  } );
+  });
 }
 
   onKey(value) {

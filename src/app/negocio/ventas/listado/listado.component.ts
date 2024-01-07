@@ -108,6 +108,11 @@ export class ListadoComponent implements OnInit {
   buscador:boolean=false;
   dataSource: any;
   dataDetalle:any;
+  clientetexto:string='Sin Cliente';
+  telefonoCliente:string='';
+direccioncliente:string='';
+textoprecio:any;
+numero_doc:string;
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
@@ -196,18 +201,29 @@ openBusqueda(){
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
-
       this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
         this.dataDetalle = new MatTableDataSource();
-    
-        //this.exampleArray=x;
+          //this.exampleArray=x;
         this.dataDetalle=x
         //this.data.detalleVenta=this.exampleArray;
   console.log("data detalle",this.dataDetalle)
         });
+        this.api.getApiTablaCriterio('clientes',ux.datos.cliente.id).subscribe(data => {
+          if(data[0].nombre) {
+      this.clientetexto=data[0].nombre;
+      this.numero_doc=data[0].num_documento;
+      this.direccioncliente=data[0].direccion;
+      this.telefonoCliente=data[0].telefono;
+          }
+        }); 
+
+        this.api.getNumeroALetras(ux.datos.precio).subscribe(letra => {
+          console.log("letra",letra)
+        this.textoprecio=letra;
+        });
 
       console.log(ux);
-     // imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
+   //   imprimirTicket(this.dataDetalle,ux,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
      });
 
   }
