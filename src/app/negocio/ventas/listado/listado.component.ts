@@ -101,6 +101,25 @@ openBusqueda(){
   }
   }
 
+  openImprimir(enterAnimationDuration: string, exitAnimationDuration: string){
+    const dialogo2=this.dialog.open(AddClienteComponent, {
+      width: 'auto',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        datos:this.selectedRowIndex,
+        clase:'Imprimir',
+        cliente:this.selectedRowIndex
+      },
+    });
+    dialogo2.afterClosed().subscribe(ux => {
+      console.log(ux);
+      this.facturar(ux);
+     });
+
+  }
+
+
   openFacturar(enterAnimationDuration: string, exitAnimationDuration: string){
     const dialogo2=this.dialog.open(AddClienteComponent, {
       width: 'auto',
