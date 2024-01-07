@@ -7,6 +7,7 @@ import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+import { DecimalPipe } from '@angular/common';
 declare function connetor_plugin(): void;
 
 
@@ -83,6 +84,7 @@ if(imp==""){
                         conector.text("I.G.V: S/ "+reciboigv.toFixed(2))
                         }
                         conector.text("Total: S/ "+recibototal.toFixed(2))
+
                          conector.feed("1")
                         conector.textaling("center")
                         conector.text("**********************************")
@@ -456,21 +458,31 @@ this.telefonoCliente=data[0].telefono;
   cambiaTicket(value: any){
       const total2 = this.MyForm.get('total') as FormControl;
       const igv2 = this.MyForm.get('igv') as FormControl;
-      const neto = this.MyForm.get('neto') as FormControl;
+      const neto2 = this.MyForm.get('neto') as FormControl;
       if(value=='Factura'){
-      this.data.detalle.map(function(dato){
-          console.log("datoooooo",dato)
-        total2.setValue((dato.precio/Global.EXTRAE_IGV) + ((dato.precio/Global.EXTRAE_IGV) * Global.BASE_IGV).toFixed(2));
-        igv2.setValue((dato.precio/Global.EXTRAE_IGV * Global.BASE_IGV).toFixed(2));
-        });
+        console.log("data",this.data.detalle)
+        let neto=0;
+        let total=0;
+        let igv=0;
+        for (let index = 0; index < this.data.detalle.length; index++) {
+
+          neto= neto + (this.data.detalle[index].precio/Global.EXTRAE_IGV)
+          total= total + (this.data.detalle[index].precio/Global.EXTRAE_IGV) + ((this.data.detalle[index].precio/Global.EXTRAE_IGV) * Global.BASE_IGV)
+          igv = igv +(this.data.detalle[index].precio/Global.EXTRAE_IGV * Global.BASE_IGV)
+        }
+        neto2.setValue(neto.toFixed(2));
+        total2.setValue(total.toFixed(2));
+        igv2.setValue(igv.toFixed(2));
+
        // total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))
         //igv2.setValue(total2.value * Global.BASE_IGV)
       }
-      if(value=='Ticket'){
-        total2.setValue(this.data.precio);
+      if(value=='Ticket' || value=='Boleta'){
+        total2.setValue(this.data.precio.toFixed(2));
+        neto2.setValue(this.data.precio.toFixed(2))
 
       }
-      neto.setValue(this.data.precio)
+     //
   }
 
   cambiaVuelto(precio:number){
@@ -481,7 +493,7 @@ let depositos=0;
 let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
       console.log(element)
-  if(element.tipoPago=="Efectivo" || element.tipoPago=='Yape'){
+  if(element.tipoPago=="Efectivo" || element.tipoPago=='Yape' || element.tipoPago=='Factura'){
       efectivo+=element.montoPago;
     }else{
     depositos+=element.montoPago;
@@ -492,17 +504,17 @@ let total:number=0;
  if(precio>total){
  this.vuelto='Pendiente';
  const mpendiente = this.MyForm.get('montopendiente') as FormControl;
-  mpendiente.setValue(precio-efectivo);
+  mpendiente.setValue((precio-efectivo).toFixed(2));
  }
  else{
   this.vuelto='Vuelto';
  }
- vuelto.setValue(total-precio);
+ vuelto.setValue((total-precio).toFixed(2));
  this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
     console.log("letra",letra)
   this.textoprecio=letra;
   });
-
+/*
   if(tipoDoc1.value=="Factura"){
     const total3 = this.MyForm.get('total') as FormControl;
     const igv3 = this.MyForm.get('igv') as FormControl;
@@ -523,7 +535,7 @@ let total:number=0;
     });
   }
 
-
+*/
 }
 
   }
