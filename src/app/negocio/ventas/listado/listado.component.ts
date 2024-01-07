@@ -13,6 +13,88 @@ import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.componen
 import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { Router } from '@angular/router';
+declare function connetor_plugin(): void;
+
+
+
+async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string,reciboneto:number,reciboigv:number,recibototal:number){
+  const fecha = new Date();
+  let imp = localStorage.getItem("impresora");
+if(imp==""){
+  console.log("impresora vacia")
+  this.snackBar.open("Impresora no configurada", undefined, { duration: 8000, verticalPosition: 'bottom', panelClass: ['snackbar-error'] });
+}
+
+  let nombreImpresora = imp;
+            let api_key = "123456"
+            const conector = new connetor_plugin()
+                        conector.textaling("center")
+                       conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
+                       conector.feed("1")
+                       conector.fontsize("2")
+                       conector.text("LAS HERMANITAS")
+                        conector.fontsize("1")
+                        conector.text("Ferretería y materiales de contruccion las")
+                        conector.text("Hermanitas E.I.R.L.")
+                        conector.text("lashermanitas_bertha@hotmail.com")
+                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco")
+                        conector.text("Lima - Lima")
+                        conector.text("RUC: 2053799520")
+                        conector.feed("1")
+                        conector.textaling("left")
+                        conector.text("ADQUIRIENTE:")
+                        conector.text(cliente)
+                        if(direccion!=''){
+                        conector.text("Direccion:"+direccion)
+                        }
+                        if(telefono!=''){
+                          conector.text("Telefono:"+telefono)
+                        }
+                        conector.textaling("left")
+                        conector.text("Fecha:"+fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
+                        conector.text("Numero de ticket:"+ticket)
+                        conector.feed("1")
+                        conector.textaling("center")
+                        conector.text("Descripcion      Cant.     Precio     Importe")
+                        conector.text("===============================================")
+                        for (let index = 0; index < datos.length; index++) {
+                          const element = datos[index];
+                          var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
+                          var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad);
+                          conector.textaling("left");
+                          conector.text(index+1+") "+element.nombre);
+                          conector.textaling("right");
+                          conector.text("           "+element.cantidad+"        S/ "+(precio/element.cantidad).toFixed(2)+"        S/ "+subtotal.toFixed(2))
+                          conector.textaling("center")
+                          conector.text("---------------------------------------------")
+                        }
+                        conector.feed("1")
+                        conector.textaling("center")
+                        conector.text("==============================================")
+                        conector.fontsize("1")
+                        conector.textaling("right")
+                        conector.text("Op. Gravadas: S/ "+reciboneto.toFixed(2))
+                        if(form.value.igv>0){
+                        conector.text("I.G.V: S/ "+reciboigv.toFixed(2))
+                        }
+                        conector.text("Total: S/ "+recibototal.toFixed(2))
+
+                         conector.feed("1")
+                        conector.textaling("center")
+                        conector.text("**********************************")
+                        conector.text("SON: "+pago+" SOLES")
+
+                        const resp = await conector.imprimir(nombreImpresora, api_key);
+                        if (resp === true) {
+
+                             console.log("imprimio: "+resp)
+                        } else {
+                             console.log("Problema al imprimir: "+resp)
+
+                        }
+
+}
+
 
 @Component({
   selector: 'app-listado',
@@ -25,6 +107,7 @@ export class ListadoComponent implements OnInit {
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;
+  dataDetalle:any;
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
@@ -113,8 +196,18 @@ openBusqueda(){
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
+
+      this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
+        this.dataDetalle = new MatTableDataSource();
+    
+        //this.exampleArray=x;
+        this.dataDetalle=x
+        //this.data.detalleVenta=this.exampleArray;
+  console.log("data detalle",this.dataDetalle)
+        });
+
       console.log(ux);
-      this.facturar(ux);
+     // imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
      });
 
   }
