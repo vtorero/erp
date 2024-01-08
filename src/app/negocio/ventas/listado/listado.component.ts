@@ -34,10 +34,11 @@ if(imp==""){
                        conector.fontsize("2")
                        conector.text("LAS HERMANITAS")
                         conector.fontsize("1")
-                        conector.text("Ferretería y materiales de contruccion las")
-                        conector.text("Hermanitas E.I.R.L.")
+                        conector.text("Ferreteria y materiales de contruccion")
+                        conector.text(localStorage.getItem("sucursal"))
                         conector.text("lashermanitas_bertha@hotmail.com")
-                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco")
+                        conector.text(localStorage.getItem("direccion"))
+                        conector.text("Telefonos: "+localStorage.getItem("telefono"))
                         conector.text("Lima - Lima")
                         conector.text("RUC: 2053799520")
                         conector.feed("1")
@@ -73,11 +74,11 @@ if(imp==""){
                         conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: S/ "+reciboneto.toFixed(2))
-                        if(form.value.igv>0){
-                        conector.text("I.G.V: S/ "+reciboigv.toFixed(2))
+                        conector.text("Op. Gravadas: S/ "+form.datos.valor_neto)
+                        if(form.datos.igv>0){
+                        conector.text("I.G.V: S/ "+form.datos.igv)
                         }
-                        conector.text("Total: S/ "+recibototal.toFixed(2))
+                        conector.text("Total: S/ "+form.datos.valor_total)
 
                          conector.feed("1")
                         conector.textaling("center")
@@ -110,9 +111,12 @@ export class ListadoComponent implements OnInit {
   dataDetalle:any;
   clientetexto:string='Sin Cliente';
   telefonoCliente:string='';
-direccioncliente:string='';
-textoprecio:any;
-numero_doc:string;
+  direccioncliente:string='';
+  textoprecio:any;
+  numero_doc:string;
+  reciboneto:number=0;
+  reciboigv:number=0;
+  recibototal:number=0;
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
@@ -201,33 +205,36 @@ openBusqueda(){
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
-      this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
-        this.dataDetalle = new MatTableDataSource();
-          //this.exampleArray=x;
-        this.dataDetalle=x
-        //this.data.detalleVenta=this.exampleArray;
-  console.log("data detalle",this.dataDetalle)
-        });
-        this.api.getApiTablaCriterio('clientes',ux.datos.cliente.id).subscribe(data => {
+
+
+      this.api.getNumeroALetras(ux.datos.valor_total).subscribe(letra => {
+      this.textoprecio=letra;
+
+      });
+      this.wait(1000);
+
+        this.api.getApiTablaCriterio('clientes',ux.cliente.id).subscribe(data => {
           if(data[0].nombre) {
       this.clientetexto=data[0].nombre;
       this.numero_doc=data[0].num_documento;
       this.direccioncliente=data[0].direccion;
       this.telefonoCliente=data[0].telefono;
           }
-        }); 
-
-        this.api.getNumeroALetras(ux.datos.precio).subscribe(letra => {
-          console.log("letra",letra)
-        this.textoprecio=letra;
         });
-
-      console.log(ux);
-   //   imprimirTicket(this.dataDetalle,ux,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
+      this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
+    imprimirTicket(x,ux,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+localStorage.getItem("id_suc")+"-"+ux.datos.id,this.reciboneto,this.reciboigv,this.recibototal)
+        });
      });
 
   }
 
+  wait(ms){
+    var start = new Date().getTime();
+    var end = start;
+    while(end < start + ms) {
+      end = new Date().getTime();
+   }
+ }
 
   openFacturar(enterAnimationDuration: string, exitAnimationDuration: string){
     const dialogo2=this.dialog.open(AddClienteComponent, {

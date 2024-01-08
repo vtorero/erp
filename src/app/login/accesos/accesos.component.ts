@@ -70,6 +70,10 @@ loginUser(usuario,password){
             localStorage.removeItem("currentEmpresa");
             sessionStorage.removeItem("hashsession");
             localStorage.setItem("currentId",data['data'][0]['id']);
+            localStorage.setItem("id_suc",data['data'][0]['id_sucursal']);
+            localStorage.setItem("sucursal",data['data'][0]['sucursal']);
+            localStorage.setItem("direccion",data['data'][0]['direccion']);
+            localStorage.setItem("telefono",data['data'][0]['telefono']);
             sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             localStorage.setItem("currentNombre",data['data'][0]['nombre']);
             localStorage.setItem("currentEmpresa",data['data'][0]['nombre']);

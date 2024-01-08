@@ -7667,37 +7667,12 @@ if(count($contar)>0){
 
 
    $app->post("/login",function() use($db,$app){
-
-
-
          $json = $app->request->getBody();
-
-
-
         $data = json_decode($json, true);
-
-
-
-
-
-
-
-        $resultado = $db->query("SELECT * FROM usuarios where nombre='".$data['usuario']."' and contrasena='".$data['password']."'");
-
-
-
+        $resultado = $db->query("SELECT u.*,s.id id_sucursal, s.nombre sucursal,s.direccion,s.telefono  FROM usuarios u, permisos p, sucursales s where u.id=p.id_usuario and p.id_sucursal=s.id and p.estado=1 and u.nombre='".$data['usuario']."' and u.contrasena='".$data['password']."'");
         $usuario=array();
-
-
-
         while ($fila = $resultado->fetch_object()) {
-
-
-
         $usuario[]=$fila;
-
-
-
         }
 
 
