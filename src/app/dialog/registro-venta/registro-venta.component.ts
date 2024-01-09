@@ -41,9 +41,10 @@ if(imp==""){
                        conector.text("LAS HERMANITAS")
                         conector.fontsize("1")
                         conector.text("Ferretería y materiales de contruccion las")
-                        conector.text("Hermanitas E.I.R.L.")
+                        conector.text(localStorage.getItem("sucursal"))
                         conector.text("lashermanitas_bertha@hotmail.com")
-                        conector.text("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco")
+                        conector.text(localStorage.getItem("direccion"))
+                        conector.text("Telefonos: "+localStorage.getItem("telefono"))
                         conector.text("Lima - Lima")
                         conector.text("RUC: 2053799520")
                         conector.feed("1")
@@ -107,9 +108,6 @@ if(imp==""){
   templateUrl: './registro-venta.component.html',
   styleUrls: ['./registro-venta.component.css']
 })
-
-
-
 
 
 export class RegistroVentaComponent implements OnInit {
@@ -260,89 +258,7 @@ imprimir() {
       this.MyForm.markAllAsTouched();
       return;
     }
-   /* const conector = new ConectorPluginV3;
-    const amongUsComoCadena = `000001111000
-    000010000100
-    000100011110
-    000100100001
-    011100100001
-    010100100001
-    010100100001
-    010100011110
-    010100000010
-    011100000010
-    000100111010
-    000100101010
-    000111101110
-    000000000000
-    000000000000
-    000000000000
-    111010101110
-    100010101000
-    111010101110
-    001010100010
-    111011101110
-    000000000000
-    000000000000
-    000000000000`;
 
-    conector.Iniciar()
-
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-    conector.DescargarImagenDeInternetEImprimir("https://aprendeadistancia.online/erp/assets/img/logo-erp.png", 0, 216)
-    conector.Feed(1)
-    conector.EscribirTexto("LAS HERMANITAS\n")
-    conector.EscribirTexto("Ferretería y materiales de contrucción las\n")
-    conector.EscribirTexto("Hermanitas E.I.R.L.\n")
-    conector.EscribirTexto("Wharsapp/Teléfono:902 715 979 \n")
-    conector.EscribirTexto("lashermanitas_bertha@hotmail.com \n")
-    conector.EscribirTexto("LT. 9 MZ E COO. LA ESPERANZA - Santiago de Surco - Lima - Lima \n")
-    conector.EscribirTexto("RUC: 2053799520\n")
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    //conector.EscribirTexto('CLIENTE:'+this.MyForm.get('cliente').value +'\n')
-
-    conector.EscribirTexto("Fecha y hora: " + (new Intl.DateTimeFormat("es-PE").format(new Date())))
-    conector.Feed(1)
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)
-    conector.EscribirTexto("_______________________\n")
-
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA);
-
-    this.data.detalle.forEach(element => {
-      conector.EscribirTexto(element.nombre+"          "+element.precio+'\n')
-      conector.EscribirTexto("_____________________\n")
-    });
-    conector.EscribirTexto("____________________\n")
-    conector.EscribirTexto("\n")
-    conector.EscribirTexto("____________________\n")
-    conector.EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-    conector.HabilitarCaracteresPersonalizados()
-    conector.DefinirCaracterPersonalizado("$", amongUsComoCadena)
-    //.EscribirTexto("En lugar del simbolo de pesos debe aparecer un among us\n")
-    //.EscribirTexto("TOTAL: $25\n")
-    conector.EstablecerEnfatizado(true)
-    conector.EstablecerTamañoFuente(1, 1)
-    conector.TextoSegunPaginaDeCodigos(2, "cp850", "¡Gracias por su compra!\n")
-    conector.Feed(1)
-
-    conector.ImprimirCodigoQr("https://parzibyte.me/blog", 160, ConectorPluginV3.RECUPERACION_QR_MEJOR, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
-    conector.Feed(1)
-    conector.ImprimirCodigoDeBarrasCode128("parzibyte.me", 80, 192, ConectorPluginV3.TAMAÑO_IMAGEN_NORMAL)
-    conector.Feed(1)
-    conector.EstablecerTamañoFuente(1, 1)
-    conector.EscribirTexto("parzibyte.me\n")
-    conector.Feed(3)
-    conector.Corte(1)
-    conector.Pulso(48, 60, 120)
-    //.imprimirEn(this.MyForm.get('impresoras').value);
-    const respuesta =  conector.imprimirEn(this.MyForm.get('impresoras').value);
-    if(respuesta){
-      console.log("imprimio correcto")
-console.log(respuesta)
-    }else{
-      console.log("imprimio incorecto")
-    }
-*/
 console.log(this.data.detalle)
 console.log(this.MyForm)
 const print = this.MyForm.get('imprimir') as FormControl;

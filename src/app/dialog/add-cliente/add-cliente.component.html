@@ -1,4 +1,4 @@
-<div *ngIf="data.clase!='DelProvedor' && data.clase!='Facturar' && data.clase!='Imprimir'">
+<div *ngIf="data.clase!='DelProvedor' && data.clase!='Facturar' && data.clase!='Imprimir' && data.clase!='Anular'">
     <h1 mat-dialog-title>Agregar Cliente</h1>
     <form #formGeneral="ngForm">
     <div mat-dialog-content>
@@ -67,6 +67,16 @@
     </div>
     <div *ngIf="data.clase=='Imprimir'">
       <h1 mat-dialog-title>¿Desea Imprimir  el ticket nro: {{data.datos.id}}?</h1>
+    <div mat-dialog-content>
+      </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button  mat-dialog-close>Cancelar</button>
+      <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Aceptar</button>
+    </div>
+    </div>
+
+    <div *ngIf="data.clase=='Anular'">
+      <h1 mat-dialog-title>¿Desea Anular  el ticket nro: {{data.datos.id}}?</h1>
     <div mat-dialog-content>
       </div>
     <div mat-dialog-actions>

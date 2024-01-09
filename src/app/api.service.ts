@@ -479,7 +479,18 @@ public facturaVenta(datos:Venta): Observable<any> {
     { headers: headers }
   );
 }
-
+public anularVenta(datos:Venta): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/anular",
+    { json: json },
+    { headers: headers }
+  );
+}
 
 public delCliente(datos:Clientes): Observable<any> {
   let headers = new HttpHeaders().set(

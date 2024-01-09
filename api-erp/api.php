@@ -4361,7 +4361,7 @@ $app->get("/ventas",function() use($db,$app){
 
 
 
-     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
 
 
@@ -4520,55 +4520,64 @@ if($data->operacion=='Ingreso'){
 
 
 
-
-    $app->post("/facturar",function() use($db,$app){
-
+    $app->post("/anular",function() use($db,$app){
         header("Content-type: application/json; charset=utf-8");
-
         $json = $app->request->getBody();
-
         $j = json_decode($json,true);
-
         $data = json_decode($j['json']);
-
-
-
-
-
-
-
-        if($data->datos->tipoDoc!='Factura'){
-
-        $sql="UPDATE ventas set igv=(valor_neto*0.18), monto_igv=valor_neto*0.18, valor_total=valor_neto+(valor_neto*0.18),tipoDoc='Factura' where id={$data->datos->id}";
-
-
-
+        if($data->datos->estado!='Anulado'){
+        $sql="UPDATE ventas set estado=2 where id={$data->datos->id}";
         $stmt2 = mysqli_prepare($db,$sql);
-
          mysqli_stmt_execute($stmt2);
-
         $stmt2->close();
 
+        $sql2="SELECT * FROM venta_detalle where id={$data->datos->id}";
+        $resultado = $db->query($sql2);
+        $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+            $sqla="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
+            VALUES({$fila['id_producto']},{$fila['id_venta']},'Ingreso',{$fila['id_inventario']},{$fila['cantidad']},{$fila['precio']},'Venta anulada',{$data->datos->id_sucursal},'admin');";
+
+
+
+        $sqlb="UPDATE inventario  SET cantidad = cantidad+{$fila['cantidad']},fecha_actualizacion=now() WHERE  producto_id={$fila['id_producto']} and id_almacen={$data->datos->id_sucursal}";
+           $stmt2 = mysqli_prepare($db,$sqla);
+           $stmt3 = mysqli_prepare($db,$sqlb);
+           mysqli_stmt_execute($stmt2);
+           mysqli_stmt_execute($stmt3);
+            }
+
+
+
+        $result = array("STATUS"=>true,"messaje"=>"Ticket nro ".$data->datos->id . " fue anulado correctamente");
     }else{
-
-        $result = array("STATUS"=>true,"messaje"=>"Ya es una Factura ");
-
+        $result = array("STATUS"=>true,"messaje"=>"El ticket ".$data->datos->id." Ya esta anulado");
     }
 
-        $result = array("STATUS"=>true,"messaje"=>"Venta Factura correctamente");
-
         echo  json_encode($result);
-
-
-
     });
 
 
 
+    $app->post("/facturar",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+        if($data->datos->tipoDoc!='Factura'){
+        $sql="UPDATE ventas set igv=(valor_neto*0.18), monto_igv=valor_neto*0.18, valor_total=valor_neto+(valor_neto*0.18),tipoDoc='Factura' where id={$data->datos->id}";
+        $stmt2 = mysqli_prepare($db,$sql);
+         mysqli_stmt_execute($stmt2);
+        $stmt2->close();
+    }else{
+        $result = array("STATUS"=>true,"messaje"=>"Ya es una Factura ");
+    }
+        $result = array("STATUS"=>true,"messaje"=>"Venta Factura correctamente");
+        echo  json_encode($result);
+    });
+
+
 /**Guardar Compra */
-
-
-
 $app->post("/compra",function() use($db,$app){
 
 

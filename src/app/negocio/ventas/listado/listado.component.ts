@@ -120,7 +120,7 @@ export class ListadoComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','observacion','opciones'];
+  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -254,6 +254,25 @@ openBusqueda(){
 
   }
 
+  openAnular(enterAnimationDuration: string, exitAnimationDuration: string){
+    const dialogo2=this.dialog.open(AddClienteComponent, {
+      width: 'auto',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        datos:this.selectedRowIndex,
+        clase:'Anular',
+        cliente:this.selectedRowIndex
+      },
+    });
+    dialogo2.afterClosed().subscribe(ux => {
+      console.log("anular",ux);
+      this.anular(ux);
+     });
+
+  }
+
+
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddClienteComponent, {
     width: 'auto',
@@ -317,8 +336,22 @@ openBusqueda(){
       this.renderDataTable();
   }
 }
-facturar(art:Venta) {
+
+anular(art:Venta) {
   console.log("art",art);
+  if(art){
+  this.api.anularVenta(art).subscribe(
+    data=>{
+      this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+      },
+    erro=>{console.log(erro)}
+      );
+    this.renderDataTable();
+}
+}
+
+
+facturar(art:Venta) {
   if(art){
   this.api.facturaVenta(art).subscribe(
     data=>{
