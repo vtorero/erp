@@ -412,34 +412,23 @@ $app->post("/reporte",function() use($db,$app){
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
         // Fetch records from database
-        $sql="SELECT v.id, v.tipoDoc,v.id_usuario,case v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.nombre,' ',c.apellido) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante, DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,formaPago,DATE_FORMAT(v.fechaPago, '%Y-%m-%d') fechaPago ,observacion FROM ventas v,usuarios u,clientes c,vendedor ve where v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante in('Boleta') and fecha BETWEEN '".$ini."' and '".$fin."'  union all SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,formaPago,DATE_FORMAT(v.fechaPago, '%Y-%m-%d') fechaPago ,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante in('Factura','Factura Gratuita') and fecha BETWEEN '".$ini."' and '".$fin."'  order by id desc";
+        $sql="SELECT vp.id,vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+        and vp.fecha_registro BETWEEN '".$ini."' and '".$fin."'";
 
          $query = $db->query($sql);
+
+
+
+
         if($query->num_rows > 0){
             // Output each row of the data
-                 while($row = $query->fetch_assoc()){
-                $fields = array('FACTURA', 'TIPO','FECHA EMISION', 'CLIENTE','RUC','FORMA PAGO' ,'FECHA PAGO');
+                $fields = array('ID','FECHA','MOVIMIENTO','USUARIO','SUCURSAL','RESPONSABLE','FORMA PAGO' ,'MONTO');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
-                $lineData  = array($row['nro_comprobante'],$row['comprobante'], $row['fecha'],$row['cliente'],$row['num_documento'],$row['formaPago'],$row['fechaPago']);
+                 while($row = $query->fetch_assoc()){
+                    $lineData  = array($row['id'],$row['fecha_registro'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['responsable'],$row['tipopago'],$row['monto']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
-                $sqlrow="SELECT v.`id`, `id_producto`,p.codigo,p.`nombre`,`unidad_medida` ,`cantidad`,v.`peso` ,`precio`, `subtotal` FROM `venta_detalle` v ,productos p where v.id_producto=p.id and id_venta={$row['id']}";
-                $query2 = $db->query($sqlrow);
-                $fields2 = array('NRO','CODIGO','PRODUCTO','UNIDAD','CANTIDAD','PRECIO','SUBTOTAL');
-            $excelData.= implode("\t", array_values($fields2)) . "\n";
-            $nro=1;
-                while($row2 = $query2->fetch_assoc()){
-                    $lineData1 = array($nro, $row2['codigo'],$row2['nombre'],$row2['unidad_medida'],$row2['cantidad'],$row2['precio'],$row2['subtotal']);
-                    array_walk($lineData1, 'filterData');
-                    $excelData.= implode("\t", array_values($lineData1)) . "\n";
-                    $nro++;
-                }
-                $fields3 = array('','','','','','OP. Gravadas',$row['valor_neto']);
-                $excelData.= implode("\t", array_values($fields3)) . "\n";
-                $fields4 = array('','','','','','I.G.V',$row['monto_igv']);
-                $excelData.= implode("\t", array_values($fields4)) . "\n";
-                $fields5 = array('','','','','','TOTAL',$row['valor_total']);
-                $excelData.= implode("\t", array_values($fields5)) . "\n";
+
 
             }
         }else{
@@ -447,8 +436,8 @@ $app->post("/reporte",function() use($db,$app){
         }
 
         // Headers for download
-        header("Content-Type: application/vnd.ms-excel");
-       header("Content-Disposition: attachment; filename=\"$fileName\"");
+       // header("Content-Type: application/vnd.ms-excel");
+       //header("Content-Disposition: attachment; filename=\"$fileName\"");
 
         // Render excel data
        echo $excelData;

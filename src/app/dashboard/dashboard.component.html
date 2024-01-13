@@ -457,7 +457,7 @@
 
 
   <div class="card-body">
-
+    <button type="button"  class="enviar"  (click)="enviaExcel()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
         <!--  Columna ID-->
         <ng-container matColumnDef="fecha_registro">
