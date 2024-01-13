@@ -1,8 +1,11 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ApiService } from 'app/api.service';
 import * as Chartist from 'chartist';
 import { Chart } from 'chart.js/auto';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,11 +18,14 @@ public selectedMoment2 = new Date();
 ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
+dataSource: any;
+displayedColumns = ['fecha_registro','Ingreso','usuario','sucursal','responsable','tipopago','monto'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
 fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
-
+@ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
      private api: ApiService
@@ -109,6 +115,17 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
     loadVentas(inicio:string,final:string,empresa:string){
       this.api.getVentaBoletas(inicio,final,empresa)
       .subscribe(data => {
+
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.data = data['reporte'];
+        this.empTbSort.disableClear = true;
+        this.dataSource.sort = this.empTbSort;
+        this.dataSource.paginator = this.paginator;
+
+
+
+
+
         this.ventaTotal=data['boletas'][0].total;
         this.montoPendiente=data['pendiente'][0].pendiente;
         this.montoCompras = data['gasto'][0].gasto;

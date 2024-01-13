@@ -38,11 +38,12 @@ if(imp==""){
                        conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
                        conector.feed("1")
                        conector.fontsize("2")
-                       conector.text("LAS HERMANITAS")
+                       conector.text(localStorage.getItem("sucursal"))
                         conector.fontsize("1")
-                        conector.text("Ferretería y materiales de contruccion las")
-                        conector.text(localStorage.getItem("sucursal"))
-                        conector.text("lashermanitas_bertha@hotmail.com")
+                        conector.text("Ferreteria y materiales de contruccion")
+                        if(localStorage.getItem("email")!='-'){
+                        conector.text(localStorage.getItem("email"))
+                        }
                         conector.text(localStorage.getItem("direccion"))
                         conector.text("Telefonos: "+localStorage.getItem("telefono"))
                         conector.text("Lima - Lima")
@@ -80,11 +81,11 @@ if(imp==""){
                         conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: S/ "+reciboneto.toFixed(2))
+                        conector.text("Op. Gravadas: S/ "+reciboneto)
                         if(form.value.igv>0){
-                        conector.text("I.G.V: S/ "+reciboigv.toFixed(2))
+                        conector.text("I.G.V: S/ "+reciboigv)
                         }
-                        conector.text("Total: S/ "+recibototal.toFixed(2))
+                        conector.text("Total: S/ "+recibototal)
 
                          conector.feed("1")
                         conector.textaling("center")

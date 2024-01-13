@@ -32,11 +32,12 @@ if(imp==""){
                        conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
                        conector.feed("1")
                        conector.fontsize("2")
-                       conector.text("LAS HERMANITAS")
-                        conector.fontsize("1")
-                        conector.text("Ferreteria y materiales de contruccion")
-                        conector.text(localStorage.getItem("sucursal"))
-                        conector.text("lashermanitas_bertha@hotmail.com")
+                       conector.text(localStorage.getItem("sucursal"))
+                       conector.fontsize("1")
+                       conector.text("Ferreteria y materiales de contruccion")
+                       if(localStorage.getItem("email")!='-'){
+                       conector.text("Email: "+localStorage.getItem("email"))
+                       }
                         conector.text(localStorage.getItem("direccion"))
                         conector.text("Telefonos: "+localStorage.getItem("telefono"))
                         conector.text("Lima - Lima")

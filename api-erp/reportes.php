@@ -125,6 +125,14 @@ $app->post("/reporte",function() use($db,$app){
                         $infoventas[]=$row;
                 }
 
+                $ventas_reporte=$db->query("SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+                and vp.fecha_registro  between '".$ini."' and '".$fin."'");
+                $infoventas_reporte=array();
+                while ($row = $ventas_reporte->fetch_array()) {
+                        $infoventas_reporte[]=$row;
+                }
+
+
       /*  $factura=$db->query("SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.estado=1 and v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante='Factura' and v.fecha  between  '".$ini."' and '".$fin."' order by v.id desc");
         $infofactura=array();
     while ($row = $factura->fetch_array()) {
@@ -193,6 +201,7 @@ $app->post("/reporte",function() use($db,$app){
         "sucursales"=>$infosucursales,
         "compras"=>$infocompras,
         "ventas"=>$infoventas,
+        "reporte"=>$infoventas_reporte,
         "inicio"=>$ini,"final"=>$fin);
 
         echo json_encode($data);

@@ -74,6 +74,7 @@ loginUser(usuario,password){
             localStorage.setItem("sucursal",data['data'][0]['sucursal']);
             localStorage.setItem("direccion",data['data'][0]['direccion']);
             localStorage.setItem("telefono",data['data'][0]['telefono']);
+            localStorage.setItem("email",data['data'][0]['email']);
             sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             localStorage.setItem("currentNombre",data['data'][0]['nombre']);
             localStorage.setItem("currentEmpresa",data['data'][0]['nombre']);
