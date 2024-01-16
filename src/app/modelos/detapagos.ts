@@ -4,6 +4,7 @@ export class DetaPagos {
         public nombre: string,
         public tipoPago: string,
         public cuentaPago:string,
+        public numero:string,
         public monto:number,
         public monto_pendiente:number,
         public fecha_registro:string,

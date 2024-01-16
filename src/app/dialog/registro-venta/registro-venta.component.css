@@ -1,6 +1,11 @@
 .claseVuelto{
     color:green !important;
 }
+.mat-dialog-content{
+    overflow-x: hidden !important;
+    overflow-y: auto;
+}
+
 .clasePendiente{
     color:red !important;
 }

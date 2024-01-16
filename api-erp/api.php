@@ -4249,17 +4249,13 @@ $app->get("/movimientos",function() use($db,$app){
 
         $resul_detalle = $db->query($sql);
 
-
-
         while ($filadet = $resul_detalle->fetch_array()) {
 
             $fila['detalle'][]=$filadet;
 
         }
 
-
-
-        $sql_promedio="SELECT codigo_prod, codigo_prod,  ROUND((sum(cantidad_ingreso*precio) + sum(cantidad_salida*precio))/sum(cantidad_ingreso+cantidad_salida),2) promedio from movimiento_articulos where codigo_prod={$fila['id']} group by 1";
+        $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos where codigo_prod={$fila['id']} group by 1";
 
 
 
@@ -4565,7 +4561,7 @@ if($data->operacion=='Ingreso'){
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
         if($data->datos->tipoDoc!='Factura'){
-        $sql="UPDATE ventas set igv=(valor_neto*0.18), monto_igv=valor_neto*0.18, valor_total=valor_neto+(valor_neto*0.18),tipoDoc='Factura' where id={$data->datos->id}";
+        $sql="UPDATE ventas set valor_neto=(valor_total/1.18), igv=monto_igv=(valor_total/1.18)*0.18, monto_igv=(valor_total/1.18)*0.18,tipoDoc='Factura' where id={$data->datos->id}";
         $stmt2 = mysqli_prepare($db,$sql);
          mysqli_stmt_execute($stmt2);
         $stmt2->close();
@@ -4771,7 +4767,6 @@ $app->post("/compra",function() use($db,$app){
 
 
 
-
         $valor_total=0;
 
                 try {
@@ -4800,7 +4795,7 @@ $app->post("/compra",function() use($db,$app){
 
                      foreach($data->pagos as $pago){
 
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
 
 
 
@@ -4921,17 +4916,10 @@ $app->post("/compra",function() use($db,$app){
     $app->post("/actualiza-monto",function() use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
-
         $json = $app->request->getBody();
-
         $j = json_decode($json,true);
-
         $data = json_decode($j['json']);
-
-
-
         try {
-
 
             $qwmax=$db->query("SELECT monto_pendiente from venta_pagos where id_venta={$data->id_venta} order by id desc limit 1");
 
@@ -4942,9 +4930,9 @@ $app->post("/compra",function() use($db,$app){
             }
 
 
-            if($prods[0]["monto_pendiente"]!="0"){
+            if($prods[0]["monto_pendiente"]>=$data->monto){
 
-                $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
+                $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
 
 
             $db->query($query);
@@ -4963,9 +4951,14 @@ $app->post("/compra",function() use($db,$app){
             $result = array("STATUS"=>true,"messaje"=>"Monto Pendientes actualizados correctamente");
 }else{
 
-                 $result = array("STATUS"=>true,"messaje"=>"Ya no existe monto pendiente");
+    if(($prods[0]["monto_pendiente"]-$data->monto)<0){
+
+        $result = array("STATUS"=>true,"messaje"=>"La cantidad ingresada es mayor al saldo");
+    }else{
+        $result = array("STATUS"=>true,"messaje"=>"Ya no existe monto pendiente");
+        }
 }
-            }
+    }
 
 
 

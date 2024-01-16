@@ -119,6 +119,7 @@ export class RegistroVentaComponent implements OnInit {
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['', Validators.required],
       cuentaPago:['',Validators.required],
+      numero:[''],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),
@@ -404,23 +405,22 @@ this.telefonoCliente=data[0].telefono;
   cambiaVuelto(precio:number){
 var vuelto = this.MyForm.get('vuelto') as FormControl;
 const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
-let efectivo:number=0;
 let depositos=0;
 let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
       console.log(element)
-  if(element.tipoPago=="Efectivo" || element.tipoPago=='Yape' || element.tipoPago=='Factura'){
-      efectivo+=element.montoPago;
-    }else{
+
+
+
     depositos+=element.montoPago;
     console.log("deposito",depositos)
-    }
+
     });
- total=depositos+efectivo;
+ total=depositos;
  if(precio>total){
  this.vuelto='Pendiente';
  const mpendiente = this.MyForm.get('montopendiente') as FormControl;
-  mpendiente.setValue((precio-efectivo).toFixed(2));
+  mpendiente.setValue((precio-depositos).toFixed(2));
  }
  else{
   this.vuelto='Vuelto';

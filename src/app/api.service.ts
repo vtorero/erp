@@ -311,7 +311,7 @@ public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad
   )
 }
 
-public actualizaMonto(id_venta:number,tipoPago:number,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
+public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
   let headers = new HttpHeaders().set(
     "Content-Type",
     "application/x-www-form-urlencoded"
@@ -319,6 +319,7 @@ public actualizaMonto(id_venta:number,tipoPago:number,cuentaPago:number,pendient
   let datos = {
     'id_venta':id_venta,
     'tipo_pago':tipoPago,
+    'numero':numero,
     'cuenta_pago':cuentaPago,
     'pendiente':pendiente,
     'monto':monto,

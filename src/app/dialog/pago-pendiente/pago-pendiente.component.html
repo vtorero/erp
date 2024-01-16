@@ -15,6 +15,10 @@
 
 </mat-form-field>
 <mat-form-field appearance="outline">
+  <mat-label>Nro. Operación</mat-label>
+    <input matInput [(ngModel)]="data.numero" name="numero" type="number">
+  </mat-form-field>
+<mat-form-field appearance="outline">
     <mat-label>Monto de Pago</mat-label>
       <input matInput [(ngModel)]="data.monto" name="monto" type="number">
     </mat-form-field>

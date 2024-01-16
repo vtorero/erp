@@ -17,7 +17,7 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'nombre','caja', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
   dataVendedores:any;
@@ -71,7 +71,7 @@ export class VerVentaComponent implements OnInit {
     });
      dialogo2.afterClosed().subscribe(ux => {
       console.log("wsss",ux)
-        this.api.actualizaMonto(id_venta,ux.tipoPago,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
+        this.api.actualizaMonto(id_venta,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
