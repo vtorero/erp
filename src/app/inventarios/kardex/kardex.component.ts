@@ -20,6 +20,8 @@ export class KardexComponent implements OnInit {
   buscador:boolean=false;
   dataSource: any;
   dataDetalle: any;
+  dataProductos:any;
+  dataSucursales:any;
   selectedRowIndex:any;
   cancela: boolean = false;
   prod:Productos;
@@ -50,7 +52,43 @@ openBusqueda(){
     this.buscador=true;
   }
 }
+public seleccionarCategoria(event) {
+  const value = event.value;
+  console.log(value);
 
+if(value==0){
+  this.renderDataTable()
+}else{
+  this.api.getInventarios(value).subscribe(x => {
+    this.dataSource.data = x;
+    this.empTbSort.disableClear = true;
+    this.dataSource.sort = this.empTbSort;
+    this.dataSource.paginator = this.paginator;
+    },
+    error => {
+      console.log('Error de conexion de datatable!' + error);
+    });
+}
+
+}
+
+seleccionarProducto(event){
+  this.api.getApiTablaCriterio('productos',event.value).subscribe(data => {
+    if(data[0].nombre) {
+
+    }
+  });
+}
+onKey(value) {
+  this.selectSearch(value);
+}
+selectSearch(value: string) {
+  this.api.apiBuscadorCliente(value).subscribe(data => {
+    if (data) {
+      this.dataProductos = data;
+    }
+  });
+  }
   selected(row) {
     this.selectedRowIndex=row;
     console.log('selectedRow',row)
