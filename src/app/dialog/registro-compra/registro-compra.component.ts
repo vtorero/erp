@@ -276,7 +276,7 @@ async getData() {
   let depositos=0;
   let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
-  if(element.tipoPago=="Efectivo"){
+  if(element.tipoPago!==""){
       console.log(element.tipoPago)
       efectivo+=element.montoPago;
     }else{

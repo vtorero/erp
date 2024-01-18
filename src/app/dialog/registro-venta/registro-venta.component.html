@@ -1,6 +1,8 @@
 <h1 mat-dialog-title>Registrar venta</h1>
+
 <form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <div mat-dialog-content>
+        <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
         <div class="row">
             <div class="col-6">
                 <mat-form-field appearance="outline">

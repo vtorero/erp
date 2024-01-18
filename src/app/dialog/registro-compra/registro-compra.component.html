@@ -1,7 +1,9 @@
 <h1 mat-dialog-title>Registrar Compra</h1>
 <form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <div mat-dialog-content>
+        <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
         <div class="row">
+           
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
@@ -73,7 +75,7 @@
             </div>
             <div class="col-4">
                 <mat-form-field appearance="outline">
-                    <mat-label>Monto recibido</mat-label>
+                    <mat-label>Monto Pagado</mat-label>
                     <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>
                 </mat-form-field>
                 </div>

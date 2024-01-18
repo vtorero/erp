@@ -4245,7 +4245,7 @@ $app->get("/movimientos",function() use($db,$app){
 
         $fila['stock'];
 
-        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
+        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
 
         $resul_detalle = $db->query($sql);
 
