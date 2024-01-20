@@ -631,69 +631,39 @@ $app->get("/vendedores",function() use($db,$app){
 
 
 $app->get("/buscarclientes/:criterio",function($criterio) use($db,$app){
-
-
-
     header("Content-type: application/json; charset=utf-8");
 
-
-
     try{
-
-
-
     $resultado = $db->query("SELECT * FROM aprendea_erp.clientes where nombre like '%".$criterio."%' OR num_documento like '%".$criterio."%'");
-
-
-
     $prods=array();
-
-
-
     while ($fila = $resultado->fetch_array()) {
-
-
-
-
-
-
-
         $prods[]=$fila;
-
-
-
+    }
+    $respuesta=json_encode($prods);
+    }catch (PDOException $e){
+    $respuesta=json_encode(array("status"=>$e->message));
     }
 
-
-
-    $respuesta=json_encode($prods);
-
-
-
-}catch (PDOException $e){
-
-
-
-    $respuesta=json_encode(array("status"=>$e->message));
-
-
-
-}
-
-
-
              echo  $respuesta;
+    });
 
 
+    $app->get("/buscarproducto/:criterio",function($criterio) use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
 
+        try{
+        $resultado = $db->query("SELECT * FROM aprendea_erp.productos where nombre like '%".$criterio."%' OR id like '%".$criterio."%'");
+        $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        }catch (PDOException $e){
+        $respuesta=json_encode(array("status"=>$e->message));
+        }
 
-
-
-
-});
-
-
-
+                 echo  $respuesta;
+        });
 
 
 /**buscar proveedor */
@@ -4216,87 +4186,119 @@ $app->get("/movimiento/:id",function($id) use($db,$app){
     });
 
 
+    $app->post("/kardex",function() use($db,$app){
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json'],true);
 
+        $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+        $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
+        $mes1=substr($data['inicio'], 0,3);
+        $mes2=substr($data['fin'], 0,3);
+        $dia1=substr($data['inicio'], 3,2);
+        $dia2=substr($data['fin'], 3,2);
+        $ano1=substr($data['inicio'], 5,4);
+        $ano2=substr($data['fin'], 5,4);
+        $fmes1=str_replace($arraymeses,$arraynros,$mes1);
+        $fmes2=str_replace($arraymeses,$arraynros,$mes2);
+        $ini=$ano1.'-'.$fmes1.'-'.$dia1;
+        $fin=$ano2.'-'.$fmes2.'-'.$dia2;
+
+
+
+
+
+$sql1="SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id";
+
+if($data["producto"]!=""){
+$sql1.=" and m.codigo_prod='{$data['producto']}' ";
+}
+
+$sql1.="group by 1 order by id asc";
+
+
+
+        $resultado = $db->query($sql1);
+       $prods=array();
+       $detalle=array();
+           while ($fila = $resultado->fetch_array()) {
+            $fila['detalle'];
+            $fila['promedio'];
+            $fila['stock'];
+            $fila['sql']=$sql1;
+            $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']} ";
+
+            if($data["sucursal"]!="0"){
+                $sql.=" and m.id_sucursal={$data['sucursal']} ";
+                }
+
+                if($data["movimiento"]!="0"){
+                    $sql.=" and m.tipo_movimiento='{$data['movimiento']}'";
+                    }
+
+                $sql.=" order by id desc";
+
+            $resul_detalle = $db->query($sql);
+            while ($filadet = $resul_detalle->fetch_array()) {
+                $fila['detalle'][]=$filadet;
+            }
+
+            $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos m where codigo_prod={$fila['id']}";
+
+            if($data["sucursal"]!="0"){
+                $sql_promedio.=" and m.id_sucursal={$data['sucursal']} ";
+                }
+
+                if($data["movimiento"]!="0"){
+                    $sql_promedio.=" and m.tipo_movimiento='{$data['movimiento']}'";
+                    }
+
+                $sql_promedio.=" order by id desc";
+
+
+            $resul_promedio = $db->query($sql_promedio);
+            while ($filaprod = $resul_promedio->fetch_array()) {
+                $fila['promedio'][]=$filaprod;
+            }
+            $sql_stock="SELECT cantidad from inventario where producto_id={$fila['id']}";
+            $resul_stock = $db->query($sql_stock)->fetch_array();
+            $fila['stock']=$resul_stock;
+             $prods[]=$fila;
+            }
+           $respuesta=json_encode($prods);
+           echo  $respuesta;
+    });
 
 
 $app->get("/movimientos",function() use($db,$app){
-
     header("Content-type: application/json; charset=utf-8");
-
-
-
     $resultado = $db->query("SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id group by 1 order by id asc;");
-
-
-
    $prods=array();
-
    $detalle=array();
-
-
-
        while ($fila = $resultado->fetch_array()) {
-
-
-
         $fila['detalle'];
-
         $fila['promedio'];
-
         $fila['stock'];
 
         $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
-
         $resul_detalle = $db->query($sql);
-
         while ($filadet = $resul_detalle->fetch_array()) {
-
             $fila['detalle'][]=$filadet;
-
         }
 
         $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos where codigo_prod={$fila['id']} group by 1";
-
-
-
         $resul_promedio = $db->query($sql_promedio);
-
         while ($filaprod = $resul_promedio->fetch_array()) {
-
             $fila['promedio'][]=$filaprod;
-
         }
-
-
-
         $sql_stock="SELECT cantidad from inventario where producto_id={$fila['id']}";
-
         $resul_stock = $db->query($sql_stock)->fetch_array();
-
         $fila['stock']=$resul_stock;
-
-
-
-        $prods[]=$fila;
-
-
-
-
-
+         $prods[]=$fila;
         }
-
-
-
-
-
-
-
        $respuesta=json_encode($prods);
-
-
-
        echo  $respuesta;
-
 });
 
 
@@ -7840,77 +7842,23 @@ $app->get("/reportesubcategoria",function() use($db,$app){
 
 
    $app->post("/reporte",function() use($db,$app){
-
-
-
     header("Content-type: application/json; charset=utf-8");
-
-
-
     $json = $app->request->getBody();
-
-
-
     $dat = json_decode($json, true);
-
-
-
     $hash=$dat['emp'];
-
-
-
     $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-
-
-
     $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
-
-
-
     $mes1=substr($dat['ini'], 0,3);
-
-
-
     $mes2=substr($dat['fin'], 0,3);
-
-
-
     $dia1=substr($dat['ini'], 3,2);
-
-
-
     $dia2=substr($dat['fin'], 3,2);
-
-
-
     $ano1=substr($dat['ini'], 5,4);
-
-
-
     $ano2=substr($dat['fin'], 5,4);
-
-
-
     $fmes1=str_replace($arraymeses,$arraynros,$mes1);
-
-
-
     $fmes2=str_replace($arraymeses,$arraynros,$mes2);
-
-
-
     $ini=$ano1.'-'.$fmes1.'-'.$dia1;
-
-
-
     $fin=$ano2.'-'.$fmes2.'-'.$dia2;
-
-
-
     $inicio=$dia1.'/'.$fmes1;
-
-
-
     $final=$dia2.'/'.$fmes2;
 
 

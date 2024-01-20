@@ -4,15 +4,12 @@
 <section>
       <div class="example-button-row">
         <div class="example-flex-container">
-          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
-            <i class="material-icons">search</i>
-          </button>
-          <div class="row">
-            <div class="col-3">
+          <div class="row mt-2">
+            <div class="col-2">
               <mat-form-field appearance="outline">
                 <mat-label>Producto</mat-label>
 
-                <mat-select name="id_producto" (selectionChange)="seleccionarProducto($event)">
+                <mat-select name="id_producto" [(ngModel)]="id_producto">
                     <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre">
                     <mat-option  value="">Seleccionar</mat-option>
                   <mat-option *ngFor="let pro of dataProductos" [value]="pro.id">{{pro.nombre}}</mat-option>
@@ -20,14 +17,51 @@
 
             </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-1">
           <mat-form-field appearance="outline">
-            <mat-label>Producto: </mat-label>
-            <mat-select  formControlName="almacen"  (selectionChange)="seleccionarCategoria($event)" required>
+            <mat-label>Sucursal: </mat-label>
+            <mat-select  name="id_sucursal" [(ngModel)]="id_sucursal">
              <mat-option value="0">Todos</mat-option>
              <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id">{{suc.nombre}}</mat-option>
              </mat-select>
           </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Movimiento: </mat-label>
+              <mat-select name="movimiento" name="tipo_movimiento" [(ngModel)]="tipo_movimiento">
+               <mat-option value="0">Todos</mat-option>
+               <mat-option value="Ingreso">Ingreso</mat-option>
+               <mat-option value="Salida">Salida</mat-option>
+
+               </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Inicio</mat-label>
+              <input name="fecha" [(ngModel)]="selectedMoment" #fecha="ngModel"  matInput [matDatepicker]="picker">
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Fin</mat-label>
+              <input name="fecha2" [(ngModel)]="selectedMoment2"  #fecha2="ngModel" matInput [matDatepicker]="picker2">
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-2 d-flex">
+            <button mat-icon-button color="primary" (click)="Busqueda()" aria-label="Example icon button with a heart icon">
+              <i class="material-icons">search</i>
+            </button>
+            <button mat-icon-button color="primary" (click)="reset()" aria-label="s">
+              <i class="material-icons">refresh</i>
+            </button>
           </div>
           </div>
         </div>

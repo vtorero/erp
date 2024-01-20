@@ -223,6 +223,12 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  apiBuscadorProducto(criterio:string){
+    return this._http
+      .get(Global.BASE_API_URL + "api.php/buscarproducto/" + criterio, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
+
 
   getApiTabla(criterio){
     return this._http
@@ -505,6 +511,26 @@ public delCliente(datos:Clientes): Observable<any> {
     { headers: headers }
   );
 }
+
+/*buscar producto*/
+
+public BuscarKardex(prod:string,sucursal:string,movimiento:string,inicio:string,fin:string,compra:number,venta:number): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let datos = {
+    'producto':prod,
+    'sucursal':sucursal,
+    'movimiento':movimiento,
+    'inicio':inicio,
+    'fin':fin,
+    'compra':compra,
+    'venta':venta
+ }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/kardex',
+    { json: json }, { headers: headers });
+
+}
+
 
 /*producto*/
 

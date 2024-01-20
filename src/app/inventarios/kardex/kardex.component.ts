@@ -9,6 +9,7 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
+import { Kardex } from 'app/modelos/kardex';
 
 @Component({
   selector: 'app-kardex',
@@ -16,7 +17,12 @@ import { AddProductoComponent } from '../../dialog/add-producto/add-producto.com
   styleUrls: ['./kardex.component.css']
 })
 export class KardexComponent implements OnInit {
-
+  public selectedMoment = new Date();
+public selectedMoment2 = new Date();
+fec1= this.selectedMoment.toDateString().split(" ",4);
+fec2 = this.selectedMoment2.toDateString().split(" ",4);
+fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
+fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   buscador:boolean=false;
   dataSource: any;
   dataDetalle: any;
@@ -25,6 +31,12 @@ export class KardexComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   prod:Productos;
+  kard:Kardex;
+  public id_producto:any;
+  public id_sucursal:any;
+  public tipo_movimiento:any;
+  public id_compra:any;
+  public id_venta:any;
   selection = new SelectionModel(false, []);
   displayedColumns = ['tipo_movimiento','almacen','id_venta','cantidad_salida','id_compra','cantidad_ingreso','precio','comentario','fecha'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -37,6 +49,7 @@ export class KardexComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderDataTable();
+    this.verSucursales();
   }
 
   applyFilter(filterValue: string) {
@@ -44,6 +57,34 @@ export class KardexComponent implements OnInit {
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
 }
+
+reset(){
+  this.renderDataTable();
+}
+
+Busqueda(){
+  var fec1 = this.selectedMoment.toDateString().split(" ",4);
+  var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+  let ini=fec1[1]+fec1[2]+fec1[3];
+  let fin=fec2[1]+fec2[2]+fec2[3];
+  console.log(ini)
+  console.log(fin)
+  console.log(this.id_producto)
+  console.log(this.id_sucursal)
+  console.log(this.tipo_movimiento)
+  this.api.BuscarKardex(this.id_producto,this.id_sucursal,this.tipo_movimiento,ini,fin,this.id_venta,this.id_venta).subscribe(
+    data=>{
+      this.dataSource = data;
+      },
+    erro=>{console.log(erro)}
+      );
+   // this.renderDataTable();
+}
+
+
+
+
+
 
 openBusqueda(){
   if(this.buscador){
@@ -83,12 +124,13 @@ onKey(value) {
   this.selectSearch(value);
 }
 selectSearch(value: string) {
-  this.api.apiBuscadorCliente(value).subscribe(data => {
+  this.api.apiBuscadorProducto(value).subscribe(data => {
     if (data) {
       this.dataProductos = data;
     }
   });
   }
+
   selected(row) {
     this.selectedRowIndex=row;
     console.log('selectedRow',row)
@@ -97,6 +139,8 @@ selectSearch(value: string) {
   editar(){
     console.log(this.selectedRowIndex);
   }
+
+
 
   renderDataTable() {
     this.selectedRowIndex=null
@@ -119,6 +163,16 @@ selectSearch(value: string) {
       this.dataDetalle=detalle
       });
   }
+
+verSucursales():void{
+
+  this.api.getApiTabla('/sucursales').subscribe(data => {
+    if(data) {
+      this.dataSucursales = data;
+    }
+  } );
+
+}
 
 
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {

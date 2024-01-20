@@ -6,6 +6,43 @@
     font-weight: bold;
 }
 
+mat-datepicker-toggle
+{
+    float: right !important;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+button{
+height: 42px;
+    margin-left: 20px;
+    margin-top: 14px;
+}
+.mat-form-field-infix {
+    display: block;
+    position: relative;
+    flex: auto;
+    min-width: 0;
+    width: 180px;
+}
+
+.input-group-addon{
+    margin-right: 20px;
+    padding-top: 20px;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.buscador{
+    height: 43px;
+    margin: 3px;
+    border: solid 1px #ccc;
+    border-radius: 6px;
+    padding-left: 12px;
+    width: 94% !important;
+}
+
+
 mat-card{
     margin-bottom: 15px;
 }
