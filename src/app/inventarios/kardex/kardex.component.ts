@@ -67,12 +67,7 @@ Busqueda(){
   var fec2 = this.selectedMoment2.toDateString().split(" ",4);
   let ini=fec1[1]+fec1[2]+fec1[3];
   let fin=fec2[1]+fec2[2]+fec2[3];
-  console.log(ini)
-  console.log(fin)
-  console.log(this.id_producto)
-  console.log(this.id_sucursal)
-  console.log(this.tipo_movimiento)
-  this.api.BuscarKardex(this.id_producto,this.id_sucursal,this.tipo_movimiento,ini,fin,this.id_venta,this.id_venta).subscribe(
+  this.api.BuscarKardex(this.id_producto,this.id_sucursal,this.tipo_movimiento,ini,fin,this.id_compra,this.id_venta).subscribe(
     data=>{
       this.dataSource = data;
       },

@@ -4202,18 +4202,19 @@ $app->get("/movimiento/:id",function($id) use($db,$app){
         $ano2=substr($data['fin'], 5,4);
         $fmes1=str_replace($arraymeses,$arraynros,$mes1);
         $fmes2=str_replace($arraymeses,$arraynros,$mes2);
-        $ini=$ano1.'-'.$fmes1.'-'.$dia1;
-        $fin=$ano2.'-'.$fmes2.'-'.$dia2;
+        $ini=$ano1.'-'.$fmes1.'-'.$dia1.' 00:00:01';
+        $fin=$ano2.'-'.$fmes2.'-'.$dia2.' 23:59:59';
 
 
 
 
 
-$sql1="SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id";
+$sql1="SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and m.fecha_registro between '{$ini}' and '{$fin}'";
 
-if($data["producto"]!=""){
+if(isset($data["producto"]) &&  $data["producto"]!=""){
 $sql1.=" and m.codigo_prod='{$data['producto']}' ";
 }
+
 
 $sql1.="group by 1 order by id asc";
 
@@ -4229,39 +4230,49 @@ $sql1.="group by 1 order by id asc";
             $fila['sql']=$sql1;
             $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']} ";
 
-            if($data["sucursal"]!="0"){
+            if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
                 $sql.=" and m.id_sucursal={$data['sucursal']} ";
                 }
 
-                if($data["movimiento"]!="0"){
+                if(isset($data["movimiento"])  && $data["movimiento"]!="0"){
                     $sql.=" and m.tipo_movimiento='{$data['movimiento']}'";
+                  }
+
+                  if(isset($data["compra"]) &&  $data["compra"]!=""){
+                    $sql.=" and m.id_compra='{$data['compra']}' ";
                     }
 
+
+                if(isset($data["venta"]) &&  $data["venta"]!=""){
+                    $sql.=" and m.id_venta='{$data['venta']}' ";
+                }
+
+
                 $sql.=" order by id desc";
+
 
             $resul_detalle = $db->query($sql);
             while ($filadet = $resul_detalle->fetch_array()) {
                 $fila['detalle'][]=$filadet;
             }
 
-            $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos m where codigo_prod={$fila['id']}";
-
-            if($data["sucursal"]!="0"){
-                $sql_promedio.=" and m.id_sucursal={$data['sucursal']} ";
-                }
-
-                if($data["movimiento"]!="0"){
-                    $sql_promedio.=" and m.tipo_movimiento='{$data['movimiento']}'";
-                    }
-
-                $sql_promedio.=" order by id desc";
-
+            $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos m where codigo_prod={$fila['id']} order by id desc";
 
             $resul_promedio = $db->query($sql_promedio);
             while ($filaprod = $resul_promedio->fetch_array()) {
                 $fila['promedio'][]=$filaprod;
             }
-            $sql_stock="SELECT cantidad from inventario where producto_id={$fila['id']}";
+            $sql_stock="SELECT sum(cantidad) cantidad from inventario where producto_id={$fila['id']}";
+
+            if(isset($data['sucursal']) && $data['sucursal']!="0"){
+
+                $sql_stock.=" and id_almacen={$data['sucursal']} ";
+            }
+
+            //$sql_stock.=" group by 1";
+
+
+
             $resul_stock = $db->query($sql_stock)->fetch_array();
             $fila['stock']=$resul_stock;
              $prods[]=$fila;

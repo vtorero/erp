@@ -6,6 +6,10 @@
     font-weight: bold;
 }
 
+.mat-select-value{
+    color:white !important;
+}
+
 mat-datepicker-toggle
 {
     float: right !important;
@@ -33,6 +37,11 @@ height: 42px;
     font-weight: bold;
 }
 
+button{
+    margin-left: unset;
+    margin-top: 14px !important;
+}
+
 .buscador{
     height: 43px;
     margin: 3px;
@@ -40,6 +49,16 @@ height: 42px;
     border-radius: 6px;
     padding-left: 12px;
     width: 94% !important;
+}
+
+.porid{
+    height: 43px;
+    margin: 3px;
+    border: solid 1px #ccc;
+    border-radius: 6px;
+    padding-left: 12px;
+    width: 94% !important;
+    color:black;
 }
 
 
