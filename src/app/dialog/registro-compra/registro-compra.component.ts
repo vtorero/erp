@@ -40,6 +40,7 @@ export class RegistroCompraComponent implements OnInit {
     fecha: ['', Validators.required],
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['Efectivo', Validators.required],
+      numero: [''],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),

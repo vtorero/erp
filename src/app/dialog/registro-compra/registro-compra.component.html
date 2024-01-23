@@ -3,7 +3,7 @@
     <div mat-dialog-content>
         <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
         <div class="row">
-           
+
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
@@ -63,17 +63,22 @@
             </div>
             <div formArrayName="pagos">
                 <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
-            <div class="col-7">
+            <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Forma de pago</mat-label>
                     <mat-select name="tipopago" formControlName="tipoPago"  required>
                         <mat-option value="">Seleccionar</mat-option>
                         <mat-option *ngFor="let caj of dataCajas" [value]="caj.nombre">{{caj.nombre}}</mat-option>
                     </mat-select>
-
                 </mat-form-field>
             </div>
-            <div class="col-4">
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nro Operación</mat-label>
+                    <input matInput name="numero" formControlName="numero" type="text">
+                </mat-form-field>
+                </div>
+            <div class="col-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto Pagado</mat-label>
                     <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>

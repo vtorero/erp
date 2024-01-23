@@ -64,14 +64,16 @@
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Monto Pendiente</mat-header-cell>
                 <mat-cell *matCellDef="let row">S/ {{row.monto_pendiente}} </mat-cell>
           </ng-container>
-              <ng-container matColumnDef="pendientes">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Despacho Pendiente</mat-header-cell>
-                <mat-cell *matCellDef="let row">{{row.pendientes}} </mat-cell>
-          </ng-container>
-              <ng-container matColumnDef="observacion">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
-                <mat-cell *matCellDef="let row">{{row.observacion}} </mat-cell>
-          </ng-container>
+
+      <ng-container matColumnDef="nro_documento">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Nro</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.nro_documento}} </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="serie_documento">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Serie</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{row.serie_documento}} </mat-cell>
+</ng-container>
+
           <ng-container matColumnDef="fecha">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.fecha}} </mat-cell>

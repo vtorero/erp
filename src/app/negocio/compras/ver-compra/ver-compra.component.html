@@ -38,6 +38,20 @@
               <mat-label>Fecha de Compra</mat-label>
                 <input matInput [(ngModel)]="data.fecha" name="fecha" maxlength="110" minlength="2" type="text"  readonly>
                 </mat-form-field>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Serie Doc</mat-label>
+                        <input matInput [(ngModel)]="data.serie_documento" name="serie_documento" maxlength="110" minlength="2" type="text"  readonly>
+                        </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Numero Documento</mat-label>
+                        <input matInput [(ngModel)]="data.nro_documento" name="nro_documento" maxlength="110" minlength="2" type="text"  readonly>
+                        </mat-form-field>
+                  </div>
+                </div>
           </div>
              <div class="row">
             <div class="col-4 offset-1">
@@ -116,6 +130,10 @@
         <ng-container matColumnDef="tipoPago">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.tipoPago}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="nro_operacion">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Nro. Operación</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.nro_operacion}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="monto">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>

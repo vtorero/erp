@@ -4326,7 +4326,7 @@ $app->get("/compras",function() use($db,$app){
 
 
 
-     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
 
 
 
@@ -4589,122 +4589,49 @@ if($data->operacion=='Ingreso'){
 /**Guardar Compra */
 $app->post("/compra",function() use($db,$app){
 
-
-
     header("Content-type: application/json; charset=utf-8");
-
     $json = $app->request->getBody();
-
     $j = json_decode($json,true);
-
     $data = json_decode($j['json']);
-
     $detalle = json_decode($j['detalle']);
-
     $fecha=substr($data->fecha,0,10);
-
-
-
-
-
-
-
     $valor_total=0;
-
             try {
-
                $sql="call p_compra('{$data->usuario}','{$data->seriedoc}','{$data->nrodocumento}','{$fecha}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
 
-
-
                $stmt = mysqli_prepare($db,$sql);
-
                 mysqli_stmt_execute($stmt);
-
                 $datos=$db->query("SELECT max(id) ultimo_id FROM compras");
-
                 $ultimo_id=array();
-
                 while ($d = $datos->fetch_object()) {
-
                  $ultimo_id=$d;
-
                  }
-
-
-
-
-
                  foreach($data->pagos as $pago){
-
-                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}',{$pago->montoPago},{$data->montopendiente})";
-
-
-
+                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}',{$pago->montoPago},{$data->montopendiente})";
                 $stmtP = mysqli_prepare($db,$procP);
-
                 mysqli_stmt_execute($stmtP);
-
                  }
-
-
-
-
 
                 foreach($detalle as $item){
-
                 /*inserta detalla*/
-
-
-
                 $proc="call p_compra_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
-
                 $stmt = mysqli_prepare($db,$proc);
-
                 mysqli_stmt_execute($stmt);
-
                 $stmt->close();
 
-
-
-
-
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
-
                  VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->almacen},{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
-
                 $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
-
-
-
-
-
                 $stmt2 = mysqli_prepare($db,$sql);
-
                 $stmt3 = mysqli_prepare($db,$sql2);
-
                 mysqli_stmt_execute($stmt2);
-
                 mysqli_stmt_execute($stmt3);
-
                 $stmt2->close();
-
                 $stmt3->close();
-
-
-
-
-
                 //$actualiza="call p_actualiza_inventario({$valor->codProductob->id},{$valor->codProducto},{$valor->cantidad},{$valor->peso},'{$valor->unidadmedida}')";
-
                 //$stmtb = mysqli_prepare($db,$actualiza);
-
                 //mysqli_stmt_execute($stmtb);
-
                 //$stmtb->close();
-
-
-
                 }
 
 
@@ -6073,7 +6000,7 @@ $app->get("/pagos-compra/:id",function($id) use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT  p.* FROM aprendea_erp.compra_pagos p  where  id_venta={$id}");
+    $resultado = $db->query("SELECT  p.* FROM aprendea_erp.compra_pagos p  where  id_compra={$id}");
 
      $prods=array();
 
