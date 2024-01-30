@@ -884,7 +884,7 @@ $app->get("/cajas/:uid",function($uid) use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT c.id,c.nombre,c.tipo FROM cajas c inner JOIN sucursales s on c.id_sucursal=s.id inner JOIN permisos p on s.id=p.id_sucursal WHERE id_usuario='{$uid}'");
+    $resultado = $db->query("SELECT c.id,c.nombre,c.tipo FROM cajas c inner JOIN permisos_caja p on c.id=p.id_caja and id_usuario='{$uid}'");
 
 
 
@@ -4262,14 +4262,14 @@ $sql1.="group by 1 order by id asc";
             while ($filaprod = $resul_promedio->fetch_array()) {
                 $fila['promedio'][]=$filaprod;
             }
-            $sql_stock="SELECT sum(cantidad) cantidad from inventario where producto_id={$fila['id']}";
+            $sql_stock="SELECT producto_id,sum(cantidad) cantidad from inventario where producto_id={$fila['id']}";
 
             if(isset($data['sucursal']) && $data['sucursal']!="0"){
 
-                $sql_stock.=" and id_almacen={$data['sucursal']} ";
+                $sql_stock.=" and id_almacen={$data['sucursal']}";
             }
 
-            //$sql_stock.=" group by 1";
+            $sql_stock.=" group by 1";
 
 
 
@@ -4291,8 +4291,12 @@ $app->get("/movimientos",function() use($db,$app){
         $fila['detalle'];
         $fila['promedio'];
         $fila['stock'];
+        $fila['total_entrada'];
+        $fila['total_salida'];
+        $fila['costo_venta'];
 
-        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
+        //$sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,id_venta,cantidad_salida,id_compra,cantidad_ingreso,m.precio,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
+        $sql="SELECT p.id,p.nombre, m.tipo_movimiento,m.id_sucursal, s.nombre as almacen,cantidad_ingreso,if(cantidad_ingreso>0,m.precio,0) precio_ingreso,cantidad_ingreso*m.precio costo_entrada,id_venta,cantidad_salida,if(cantidad_salida>0,m.precio,0) precio_salida,cantidad_salida*m.precio costo_salida, id_compra,cantidad_ingreso,m.comentario,DATE_FORMAT(m.fecha_registro, '%d-%m-%Y') fecha FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}   order by id desc";
         $resul_detalle = $db->query($sql);
         while ($filadet = $resul_detalle->fetch_array()) {
             $fila['detalle'][]=$filadet;
@@ -4303,11 +4307,35 @@ $app->get("/movimientos",function() use($db,$app){
         while ($filaprod = $resul_promedio->fetch_array()) {
             $fila['promedio'][]=$filaprod;
         }
-        $sql_stock="SELECT cantidad from inventario where producto_id={$fila['id']}";
+
+        $sql_te="SELECT SUM(cantidad_ingreso*m.precio) total_entrada FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}";
+        $resul_te = $db->query($sql_te);
+        while ($filate = $resul_te->fetch_array()) {
+            $fila['total_entrada'][]=$filate;
+        }
+
+        $sql_ts="SELECT SUM(cantidad_salida*m.precio) total_salida FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}";
+        $resul_ts = $db->query($sql_ts);
+        while ($filats = $resul_ts->fetch_array()) {
+            $fila['total_salida'][]=$filats;
+        }
+
+
+        $sql_cv="SELECT SUM((cantidad_salida*m.precio)-(cantidad_ingreso*m.precio)) costo_venta FROM aprendea_erp.movimiento_articulos m,sucursales s, productos p where  m.id_sucursal=s.id and m.codigo_prod=p.id and m.codigo_prod=p.id and p.id={$fila['id']}";
+        $resul_cv = $db->query($sql_cv);
+        while ($filacv = $resul_cv->fetch_array()) {
+            $fila['costo_venta'][]=$filacv;
+        }
+
+
+        //$sql_stock="SELECT producto_id,sum(cantidad) cantidad from inventario where producto_id={$fila['id']} group by 1";
+        $sql_stock="SELECT codigo_prod,sum(cantidad_ingreso)-sum(cantidad_salida) cantidad FROM aprendea_erp.movimiento_articulos where codigo_prod={$fila['id']}  group by 1";
         $resul_stock = $db->query($sql_stock)->fetch_array();
         $fila['stock']=$resul_stock;
          $prods[]=$fila;
         }
+
+
        $respuesta=json_encode($prods);
        echo  $respuesta;
 });
@@ -4621,7 +4649,7 @@ $app->post("/compra",function() use($db,$app){
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
                  VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->almacen},{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
-                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id}";
+                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->almacen}";
                 $stmt2 = mysqli_prepare($db,$sql);
                 $stmt3 = mysqli_prepare($db,$sql2);
                 mysqli_stmt_execute($stmt2);
@@ -4703,64 +4731,27 @@ $app->post("/compra",function() use($db,$app){
         $data = json_decode($j['json']);
 
         $detalle = json_decode($j['detalle']);
-
-
-
-
         $valor_total=0;
-
                 try {
-
                    $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
-
-
-
                    $stmt = mysqli_prepare($db,$sql);
-
                     mysqli_stmt_execute($stmt);
-
                     $datos=$db->query("SELECT max(id) ultimo_id FROM ventas");
-
                     $ultimo_id=array();
-
                     while ($d = $datos->fetch_object()) {
-
                      $ultimo_id=$d;
-
                      }
-
-
-
-
-
                      foreach($data->pagos as $pago){
-
                     $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
-
-
-
                     $stmtP = mysqli_prepare($db,$procP);
-
                     mysqli_stmt_execute($stmtP);
-
                      }
-
-
-
-
 
                     foreach($detalle as $item){
-
                     /*inserta detalla*/
-
-
-
                     $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
-
                     $stmt = mysqli_prepare($db,$proc);
-
                     mysqli_stmt_execute($stmt);
-
                     $stmt->close();
 
 
@@ -4872,16 +4863,14 @@ $app->post("/compra",function() use($db,$app){
 
             if($prods[0]["monto_pendiente"]>=$data->monto){
 
-                $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$data->pendiente}-{$data->monto})";
-
-
+            $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1)";
             $db->query($query);
 
-            $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$data->pendiente} ) where id={$data->id_venta}";
+             $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$prods[0]["monto_pendiente"]} ) where id={$data->id_venta}";
 
             $db->query($query2);
 
-            if($data->monto-$data->pendiente==0){
+            if($data->monto-$prods[0]["monto_pendiente"]==0){
                 $query3 ="UPDATE venta_pagos SET monto_pendiente=0 where id={$data->id_venta}";
                 $db->query($query3);
 
@@ -7619,7 +7608,7 @@ if(count($contar)>0){
 
 
 
-        if(count($usuario)==1){
+        if(count($usuario)>=1){
 
 
 

@@ -338,7 +338,8 @@ this.dataMedios=data;
     }
 
   getCajas(): void {
-    this.api.getApiTabla("/cajas").subscribe(data => {
+    let usuario = localStorage.getItem("currentId");
+    this.api.getCajasUsuario(usuario).subscribe(data => {
       if(data) {
         this.dataCajas = data;
       }

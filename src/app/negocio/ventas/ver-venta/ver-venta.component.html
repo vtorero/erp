@@ -110,6 +110,10 @@
 
     <div  style="height:200px;margin-top:10px;flex-grow:1;">
       <h4>Detalle Pagos</h4>
+      <button *ngIf="data" mat-icon-button color="warn">
+        Agregar pago: <i class="material-icons"  (click)="openMontoPendiente('20ms','20ms',data.id)" >add_circle</i>
+      </button>
+
 
    <mat-table [dataSource]="dataPagos" matSort style="overflow-y:scroll">
         <ng-container matColumnDef="id">
@@ -135,18 +139,19 @@
         <ng-container matColumnDef="monto_pendiente">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Monto pendiente</mat-header-cell>
           <mat-cell *matCellDef="let row">
-            <a *ngIf="row.monto_pendiente>0" class="pendiente" (click)="openMontoPendiente('20ms','20ms',row.id,row.id_venta,row.monto_pendiente,row.nombre)">S/ {{row.monto_pendiente | number}}</a>
-            <a *ngIf="row.monto_pendiente==0"> S/ {{row.monto_pendiente | number}}</a>
+            <!--<a *ngIf="row.estado" class="pendiente" (click)="openMontoPendiente('20ms','20ms',row.id,row.id_venta,row.monto_pendiente,row.nombre)">S/ {{row.monto_pendiente | number}}</a>-->
+             S/ {{row.monto_pendiente | number}}
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="fecha_registro">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
+          <mat-cell *matCellDef="let row">{{row.fecha_registro}}</mat-cell>
         </ng-container>
          <mat-header-row *matHeaderRowDef="displayedColumnsPago" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumnsPago;"></mat-row>
       </mat-table>
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
     </div>
+
   </div>
 </div>

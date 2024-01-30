@@ -38,7 +38,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   public id_compra:any;
   public id_venta:any;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['tipo_movimiento','almacen','id_venta','cantidad_salida','id_compra','cantidad_ingreso','precio','comentario','fecha'];
+  displayedColumns = ['comentario','tipo_movimiento','id_venta','id_compra','almacen','cantidad_ingreso','precio_ingreso','costo_entrada','cantidad_salida','precio_salida','costo_salida','fecha'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
 
@@ -75,9 +75,6 @@ Busqueda(){
       );
    // this.renderDataTable();
 }
-
-
-
 
 
 

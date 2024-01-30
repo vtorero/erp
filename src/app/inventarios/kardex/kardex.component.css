@@ -37,6 +37,10 @@ height: 42px;
     font-weight: bold;
 }
 
+tr.mat-mdc-footer-row td {
+    font-weight: bold !important;
+  }
+
 button{
     margin-left: unset;
     margin-top: 14px !important;
