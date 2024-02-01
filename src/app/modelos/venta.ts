@@ -13,6 +13,7 @@ export class Venta {
         public igv:number,
         public monto_igv:number,
         public valor_total:number,
+        public monto_pendiente:number,
         public detalleVenta:Array<Details>,
         public imprimir:boolean,
         public tipoDoc:string,

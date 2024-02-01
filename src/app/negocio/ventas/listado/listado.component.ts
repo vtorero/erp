@@ -386,6 +386,7 @@ abrirEditar(cod: Venta) {
   dialogo2.afterClosed().subscribe(art => {
     if (art != undefined){
     //console.log("cargans",this.cargando);
+    this.renderDataTable();
      this.update(art);
     }
   });

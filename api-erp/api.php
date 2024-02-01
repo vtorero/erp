@@ -4508,7 +4508,7 @@ if($data->operacion=='Ingreso'){
 
 
 
-         $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}";
+         $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
 
         }
 
@@ -4520,9 +4520,7 @@ if($data->operacion=='Ingreso'){
 
          VALUES({$data->id_producto},'{$data->operacion}',{$data->id_almacen},'{$data->comentario}',{$data->cantidad},{$data->precio},$data->id_sucursal,'{$data->usuario}');";
 
-            $sql2="UPDATE inventario  SET cantidad = cantidad-{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto}
-
-            and id_almacen={$data->id_almacen}";
+            $sql2="UPDATE inventario  SET cantidad = cantidad-{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_almacen}";
 
         }
 
@@ -4866,7 +4864,7 @@ $app->post("/compra",function() use($db,$app){
             $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1)";
             $db->query($query);
 
-             $query2 ="UPDATE ventas SET monto_pendiente=({$data->monto}-{$prods[0]["monto_pendiente"]} ) where id={$data->id_venta}";
+             $query2 ="UPDATE ventas SET monto_pendiente=({$prods[0]["monto_pendiente"]}-{$data->monto}) where id={$data->id_venta}";
 
             $db->query($query2);
 
