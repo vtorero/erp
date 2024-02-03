@@ -90,89 +90,61 @@
               <mat-card *ngFor="let datos of dataSource" class="card" class="example-card">
                 <mat-card-header>
                    <mat-card-title>({{datos.id}}) {{datos.nombre}}
-                    <br>  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
-                     Stock: {{datos.stock.cantidad}}<br>
-                    Costo Venta: S/ {{datos.costo_venta[0].costo_venta | number}}</mat-card-title>
+                    <br >  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
+                     Stock: <strong>{{datos.stock.cantidad}}</strong> unidades<br>
+                    Costo de Venta: S/ {{datos.costo_venta[0].costo_acumulado_ingreso | number}}
+                  </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                   <table mat-table [dataSource]="datos.detalle" class="mat-elevation-z8">
                     <ng-container matColumnDef="comentario">
                       <th mat-header-cell *matHeaderCellDef>Detalle</th>
                       <td mat-cell *matCellDef="let element"> {{element.comentario}} </td>
-                      <td mat-footer-cell *matFooterCellDef> <strong>TOTALES</strong> </td>
+
                     </ng-container>
 
                     <ng-container matColumnDef="tipo_movimiento">
                       <th mat-header-cell *matHeaderCellDef> Tipo Movimiento </th>
-                      <td mat-cell *matCellDef="let element"> {{element.tipo_movimiento}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
+                      <td [ngClass]="element.cantidad > 0 ? 'ingreso' : 'salida'"  mat-cell *matCellDef="let element"> {{element.tipo_movimiento}} </td>
+
                     </ng-container>
                     <ng-container matColumnDef="almacen">
                       <th mat-header-cell *matHeaderCellDef>Almacen</th>
                       <td mat-cell *matCellDef="let element"> {{element.almacen}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
+
                     </ng-container>
                     <ng-container matColumnDef="id_compra">
                       <th mat-header-cell *matHeaderCellDef>Codigo Compra </th>
                       <td  mat-cell *matCellDef="let element">  {{element.id_compra}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
-                    </ng-container>
-                    <ng-container matColumnDef="cantidad_ingreso">
-                      <th mat-header-cell *matHeaderCellDef> Cantidad Ingreso </th>
-                      <td class="ingreso" mat-cell *matCellDef="let element"> {{element.cantidad_ingreso}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
-                    </ng-container>
-                    <ng-container matColumnDef="precio_ingreso">
-                      <th mat-header-cell *matHeaderCellDef> Precio U. </th>
-                      <td class="ingreso" mat-cell *matCellDef="let element"> {{element.precio_ingreso}} </td>
-                      <td mat-footer-cell *matFooterCellDef> Total: </td>
-                    </ng-container>
-                    <ng-container matColumnDef="costo_entrada">
-                      <th mat-header-cell *matHeaderCellDef> Costo entrada </th>
-                      <td class="ingreso" mat-cell *matCellDef="let element">S/ {{element.costo_entrada}} </td>
-                      <td mat-footer-cell *matFooterCellDef> S/ {{datos.total_entrada[0].total_entrada}}</td>
 
                     </ng-container>
-
                     <ng-container matColumnDef="id_venta">
                       <th mat-header-cell *matHeaderCellDef>Codigo Venta </th>
                       <td  mat-cell *matCellDef="let element">  {{element.id_venta}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
+
                     </ng-container>
-                    <ng-container matColumnDef="cantidad_salida">
-                      <th mat-header-cell *matHeaderCellDef> Cantidad salida </th>
-                      <td class="salida" mat-cell *matCellDef="let element"> {{element.cantidad_salida}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
+                    <ng-container matColumnDef="cantidad">
+                      <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                      <td  [ngClass]="element.cantidad > 0 ? 'ingreso' : 'salida'"  mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+
                     </ng-container>
-                    <ng-container matColumnDef="precio_salida">
-                      <th mat-header-cell *matHeaderCellDef> Precio U. </th>
-                      <td class="salida" mat-cell *matCellDef="let element"> {{element.precio_salida}} </td>
-                      <td mat-footer-cell *matFooterCellDef> Total: </td>
+                    <ng-container matColumnDef="precio">
+                      <th mat-header-cell *matHeaderCellDef> Precio </th>
+                      <td [ngClass]="element.cantidad > 0 ? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.precio}} </td>
                     </ng-container>
-                    <ng-container matColumnDef="costo_salida">
-                      <th mat-header-cell *matHeaderCellDef> Costo salida </th>
-                      <td class="salida" mat-cell *matCellDef="let element">S/ {{element.costo_salida}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  S/ {{datos.total_salida[0].total_salida}} </td>
+                    <ng-container matColumnDef="p_total">
+                      <th mat-header-cell *matHeaderCellDef> Costo total </th>
+                      <td [ngClass]="element.cantidad > 0 ? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.p_total}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="cantidad_ingreso">
-                      <th mat-header-cell *matHeaderCellDef> Cantidad Ingreso </th>
-                      <td class="ingreso" mat-cell *matCellDef="let element"> {{element.cantidad_ingreso}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
-                    </ng-container>
-
-                    <!-- Symbol Column -->
-
-
-
-                    <ng-container matColumnDef="fecha">
+                    <ng-container matColumnDef="fecha_registro">
                       <th mat-header-cell *matHeaderCellDef>Fecha de Registro </th>
-                      <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
-                      <td mat-footer-cell *matFooterCellDef>  </td>
+                      <td mat-cell *matCellDef="let element"> {{element.fecha_registro}} </td>
+
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+
                   </table>
 
                 </mat-card-content>
