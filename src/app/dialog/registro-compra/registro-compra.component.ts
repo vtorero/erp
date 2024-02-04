@@ -270,7 +270,7 @@ async getData() {
       }
       neto.setValue(this.data.precio)
   }
-
+/*
   cambiaVuelto(precio:number){
 
   let efectivo:number=0;
@@ -323,4 +323,57 @@ else{
   }
   efectivo=0;
   }
+*/
+  cambiaVuelto(precio:number){
+    var vuelto = this.MyForm.get('vuelto') as FormControl;
+    const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
+    let depositos=0;
+    let total:number=0;
+        this.MyForm.value.pagos.forEach(element => {
+          console.log(element)
+
+
+
+        depositos+=element.montoPago;
+        console.log("deposito",depositos)
+
+        });
+     total=depositos;
+     if(precio>total){
+     this.vuelto='Pendiente';
+     const mpendiente = this.MyForm.get('montopendiente') as FormControl;
+      mpendiente.setValue((precio-depositos).toFixed(2));
+     }
+     else{
+      this.vuelto='Vuelto';
+     }
+     vuelto.setValue((total-precio).toFixed(2));
+     this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
+        console.log("letra",letra)
+     // this.textoprecio=letra;
+      });
+    /*
+      if(tipoDoc1.value=="Factura"){
+        const total3 = this.MyForm.get('total') as FormControl;
+        const igv3 = this.MyForm.get('igv') as FormControl;
+        const neto3 = this.MyForm.get('neto') as FormControl;
+        console.log("facturaaa")
+        console.log("efectivo",efectivo)
+        console.log("precio",precio/Global.EXTRAE_IGV);
+          let precio_p = precio/Global.EXTRAE_IGV
+          console.log("precio_p",precio_p);
+        console.log("igv",(precio_p * Global.BASE_IGV).toFixed(2))
+        vuelto.setValue((efectivo-(precio_p + (precio_p * Global.BASE_IGV))).toFixed(2));
+       let total=((precio_p + (precio_p * Global.BASE_IGV))).toFixed(2);
+       total3.setValue(total);
+       igv3.setValue((precio_p * Global.BASE_IGV).toFixed(2))
+       neto3.setValue((precio/Global.EXTRAE_IGV).toFixed(2))
+        this.api.getNumeroALetras(total.toString()).subscribe(letra => {
+        this.textoprecio=letra;
+        });
+      }
+
+    */
+    }
+
 }

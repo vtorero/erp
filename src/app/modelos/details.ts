@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 export class Details {
     constructor(
         public id: number,
