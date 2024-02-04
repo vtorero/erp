@@ -278,7 +278,7 @@ async getData() {
   let total:number=0;
     this.MyForm.value.pagos.forEach(element => {
   if(element.tipoPago!==""){
-      console.log(element.tipoPago)
+      console.log("montopago",element.tipoPago)
       efectivo+=element.montoPago;
     }else{
     depositos+=element.montoPago;
@@ -298,12 +298,15 @@ if(depositos>precio){
   const vuelto = this.MyForm.get('vuelto') as FormControl;
     vuelto.setValue(efectivo-precio)
 
-}else if(efectivo<precio){
+}else if(efectivo<=precio){
+  console.log("efectivo",efectivo)
+  console.log("precio",precio)
+  console.log("vuelto",efectivo-precio)
   this.vuelto='Pendiente';
   const vuelto = this.MyForm.get('vuelto') as FormControl;
-  vuelto.setValue(precio-efectivo)
+  vuelto.setValue(efectivo-precio);
   const mpendiente = this.MyForm.get('montopendiente') as FormControl;
-  mpendiente.setValue(precio-efectivo)
+  mpendiente.setValue(efectivo-precio)
 }
 
 else{
@@ -318,6 +321,6 @@ else{
      vuelto.setValue(efectivo-precio)
     }
   }
-
+  efectivo=0;
   }
 }
