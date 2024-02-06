@@ -4305,7 +4305,7 @@ $sql1.="group by 1 order by id asc";
 
 
               FROM (
-            SELECT id,tipo_movimiento,precio,cantidad_ingreso*precio as costo_ingreso,cantidad_ingreso,cantidad_salida*precio as costo_salida,cantidad_salida,fecha_registro from movimiento_articulos m where codigo_prod={$fila['id']} and tipo_movimiento in('Ingreso','Salida') order by fecha_registro asc) t
+            SELECT id,tipo_movimiento,precio,cantidad_ingreso*precio as costo_ingreso,cantidad_ingreso,cantidad_salida*precio as costo_salida,cantidad_salida,fecha_registro from movimiento_articulos m where codigo_prod={$fila['id']} and tipo_movimiento in('Ingreso') order by fecha_registro asc) t
             JOIN ( SELECT @acumulado_salida :=0,
                             @acumulado_ingreso:=0,
                              @tipo_movi:= null
@@ -4416,7 +4416,7 @@ $app->get("/movimientos",function() use($db,$app){
             $fila['detalle'][]=$filadet;
         }
 
-       // $sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos where codigo_prod={$fila['id']} group by 1";
+
 $sql_promedio="SELECT * FROM
 (SELECT
 id,
@@ -4442,9 +4442,20 @@ JOIN ( SELECT @acumulado_salida :=0,
 
          ) vars )  as todo where todo.tipo_movimiento='Ingreso' order by ID DESC limit 1 ";
 
+
+
         $resul_promedio = $db->query($sql_promedio);
         while ($filaprod = $resul_promedio->fetch_array()) {
+
+        //    var_dump($filaprod['promedio']);
+          //  var_dump((int)$filaprod['id']-1);
+//            die();
+
+
+
+
             $fila['promedio'][]=$filaprod;
+
         }
 
 

@@ -84,16 +84,16 @@
                                 {{item.nombre}}
                             </td>
                             <td>
-                              <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad}}</a>
+                              <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad  | number}}</a>
                             </td>
                            <td>
-                               <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio}}</a>
+                               <a class="numero_edicion" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio  | number}}</a>
                             </td>
                             <td>
-                              <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.descuento*item.cantidad}}</a>
+                              <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.descuento*item.cantidad  | number}}</a>
                            </td>
                             <td class="text-primary">
-                                S/ {{item.cantidad * item.precio-(item.descuento*item.cantidad)}}
+                                S/ {{item.cantidad * item.precio-(item.descuento*item.cantidad | number)}}
                             </td>
                             <td class="text-primary">
                               <button mat-icon-button color="primary" (click)="borrarItem(i)" aria-label="Eliminar">

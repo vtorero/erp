@@ -66,19 +66,19 @@ $app->post("/reporte",function() use($db,$app){
     $final=$dia2.'/'.$fmes2;
 
 
-    $ingreso=$db->query("SELECT sum(valor_total) total  FROM ventas where fecha_registro between '".$ini."' and '".$fin."'");
+    $ingreso=$db->query("SELECT sum(valor_total) total  FROM ventas where fecha_registro between '".$ini." 00:00:00'  and '".$fin." 23:59:00'");
        $infoboleta=array();
     while ($row = $ingreso->fetch_array()) {
             $infoboleta[]=$row;
         }
 
-    $pendiente=$db->query("SELECT sum(monto_pendiente) pendiente  FROM ventas where fecha_registro between '".$ini."' and '".$fin."'");
+    $pendiente=$db->query("SELECT sum(monto_pendiente) pendiente  FROM ventas where fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00'");
     $infopendiente=array();
     while ($row = $pendiente->fetch_array()) {
             $infopendiente[]=$row;
         }
 
-        $gasto=$db->query("SELECT TRUNCATE(sum(cantidad*precio),2) gasto FROM compras c, compra_detalle d  where c.id=d.id_compra and c.fecha_registro between '".$ini."' and '".$fin."'");
+        $gasto=$db->query("SELECT TRUNCATE(sum(cantidad*precio),2) gasto FROM compras c, compra_detalle d  where c.id=d.id_compra and c.fecha_registro between '".$ini."  00:00:00' and '".$fin." 23:59:00'");
         $infogasto=array();
         while ($row = $gasto->fetch_array()) {
                 $infogasto[]=$row;
@@ -86,7 +86,7 @@ $app->post("/reporte",function() use($db,$app){
 
 
 
-        $productos=$db->query("SELECT p.nombre,count(id_producto) total from venta_detalle vd, productos p where vd.id_producto=p.id AND  vd.fecha_registro between '".$ini."' and '".$fin."' GROUP by 1 order by 2 desc limit 5");
+        $productos=$db->query("SELECT p.nombre,count(id_producto) total from venta_detalle vd, productos p where vd.id_producto=p.id AND  vd.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' GROUP by 1 order by 2 desc limit 5");
         $infoproducto=array();
         while ($row = $productos->fetch_array()) {
                 $infoproducto[]=$row;
@@ -94,7 +94,7 @@ $app->post("/reporte",function() use($db,$app){
 
 
 
-            $clientes=$db->query("SELECT c.nombre,count(id_cliente) total from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini."' and '".$fin."' group by 1 order by 2 desc limit 5");
+            $clientes=$db->query("SELECT c.nombre,count(id_cliente) total from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 1 order by 2 desc limit 5");
             $infoclientes=array();
             while ($row = $clientes->fetch_array()) {
                     $infoclientes[]=$row;
@@ -104,7 +104,7 @@ $app->post("/reporte",function() use($db,$app){
 
 
 
-            $sucursales=$db->query("SELECT s.nombre,count(id_sucursal) total from ventas v, sucursales s where v.id_sucursal=s.id AND v.fecha_registro between '".$ini."' and '".$fin."' group by 1 order by 2 desc limit 5");
+            $sucursales=$db->query("SELECT s.nombre,count(id_sucursal) total from ventas v, sucursales s where v.id_sucursal=s.id AND v.fecha_registro between '".$ini." 00:00:00'  and '".$fin." 23:59:00' group by 1 order by 2 desc limit 5");
             $infosucursales=array();
             while ($row = $sucursales->fetch_array()) {
                     $infosucursales[]=$row;
@@ -112,21 +112,21 @@ $app->post("/reporte",function() use($db,$app){
 
 
 
-                $compras=$db->query("SELECT sum(cantidad*precio)gasto,DATE_FORMAT(c.fecha_registro, '%Y-%m-%d') fecha FROM compras c, compra_detalle d  where c.id=d.id_compra AND c.fecha_registro between '".$ini."' and '".$fin."' group by 2 order by 2");
+                $compras=$db->query("SELECT sum(cantidad*precio)gasto,DATE_FORMAT(c.fecha_registro, '%Y-%m-%d') fecha FROM compras c, compra_detalle d  where c.id=d.id_compra AND c.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 2 order by 2");
                 $infocompras=array();
                 while ($row = $compras->fetch_array()) {
                         $infocompras[]=$row;
                 }
 
 
-                $ventas=$db->query("SELECT sum(cantidad*precio)venta,DATE_FORMAT(v.fecha_registro, '%Y-%m-%d') fecha FROM ventas v, venta_detalle d  where v.id=d.id_venta  AND v.fecha_registro between '".$ini."' and '".$fin."' group by 2 order by 2");
+                $ventas=$db->query("SELECT sum(cantidad*precio)venta,DATE_FORMAT(v.fecha_registro, '%Y-%m-%d') fecha FROM ventas v, venta_detalle d  where v.id=d.id_venta  AND v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 2 order by 2");
                 $infoventas=array();
                 while ($row = $ventas->fetch_array()) {
                         $infoventas[]=$row;
                 }
 
                 $ventas_reporte=$db->query("SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
-                and vp.fecha_registro  between '".$ini."' and '".$fin."'");
+                and vp.fecha_registro  between '".$ini." 00:00:00' and '".$fin." 23:59:00'");
                 $infoventas_reporte=array();
                 while ($row = $ventas_reporte->fetch_array()) {
                         $infoventas_reporte[]=$row;
