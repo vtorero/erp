@@ -69,7 +69,7 @@
 
   <div *ngIf="!AddImagen" style="border:solid 1px #ccc;border-radius:10px;padding: 4px;text-align: center;">
     <img *ngIf="data.imagen==NULL" src="../../../assets/img/producto_defecto.png" >
-    <img *ngIf="data.imagen!=NULL" src="http://35.231.78.51/erp-api/upload/{{ data.imagen}}" >
+    <img *ngIf="data.imagen!=NULL"  src="https://aprendeadistancia.online/erp-api/upload/{{ data.imagen}}" >
   </div>
    <input #fileInput type="file" class="form-control" (change)="seleccionarArchivo($event)" />
 

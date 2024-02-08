@@ -38,7 +38,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   public id_compra:any;
   public id_venta:any;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['comentario','tipo_movimiento','id_venta','id_compra','almacen','cantidad','precio','p_total','fecha_registro'];
+  displayedColumns = ['contador','fecha_registro','almacen','comentario','tipo_movimiento','id_venta','id_compra','cantidad_ingreso','cantidad_salida','precio','p_total_ingreso','p_total_salida'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
 
