@@ -91,10 +91,9 @@
                 <mat-card-header>
                    <mat-card-title>({{datos.id}}) {{datos.nombre}}
                     <br >  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
-                     Stock: <strong>{{datos.promedio[0].total_inven}}</strong> unidades<br>
-                    Costo de Venta: S/ {{datos.promedio[0].costo_ingreso | number}}<br>
-                    Costo salida: S/ {{datos.promedio[0].costo_salida | number}}<br>
-                    Diferencia : S/ {{datos.promedio[0].diferencia | number}}
+                     Stock: <strong>{{datos.promedio[0].cantidad_acumulada}}</strong> unidades<br>
+                    Costo de Venta: S/ {{datos.costo_venta[0].costo | number}}<br>
+
                   </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
@@ -140,20 +139,15 @@
                       <td  [ngClass]="element.tipo_movimiento=='Ingreso'? 'ingreso' : 'salida'"  mat-cell *matCellDef="let element"> {{element.cantidad_salida}} </td>
 
                     </ng-container>
-                    <ng-container matColumnDef="precio">
+                    <ng-container matColumnDef="promedio">
                       <th mat-header-cell *matHeaderCellDef> Precio </th>
-                      <td [ngClass]="element.tipo_movimiento=='Ingreso'? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.precio}} </td>
+                      <td [ngClass]="element.tipo_movimiento=='Ingreso'? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.promedio}} </td>
                     </ng-container>
-                    <ng-container matColumnDef="p_total_ingreso">
+                    <ng-container matColumnDef="p_total">
                       <th mat-header-cell *matHeaderCellDef> Costo ingreso </th>
-                      <td [ngClass]="element.tipo_movimiento=='Ingreso' ? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.p_total_ingreso}} </td>
+                      <td [ngClass]="element.tipo_movimiento=='Ingreso' ? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.p_total}} </td>
                     </ng-container>
-                    <ng-container matColumnDef="p_total_salida">
-                      <th mat-header-cell *matHeaderCellDef> Costo salida </th>
-                      <td [ngClass]="element.tipo_movimiento=='Ingreso' ? 'ingreso' : 'salida'" mat-cell *matCellDef="let element">S/ {{element.p_total_salida}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="fecha_registro">
+                                      <ng-container matColumnDef="fecha_registro">
                       <th mat-header-cell *matHeaderCellDef>Fecha de Registro </th>
                       <td mat-cell *matCellDef="let element"> {{element.fecha_registro}} </td>
 
