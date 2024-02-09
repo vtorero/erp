@@ -18,7 +18,7 @@ import { Compra } from '../../../modelos/compra';
 })
 export class VerCompraComponent implements OnInit {
   displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'tipoPago','nro_operacion', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
   dataProveedores:any;
@@ -57,20 +57,26 @@ export class VerCompraComponent implements OnInit {
 
   }
 
-  openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_venta:number,monto:number){
+  openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
     let index=0;
     const dialogo2=this.dialog.open(PagoPendienteComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
-    data: {clase:'modPendiente',id:id,venta:id_venta,monto:monto},
-    });
+    data: {clase:'modPendiente',id:id},
+  });
      dialogo2.afterClosed().subscribe(ux => {
       console.log("wsss",ux)
-       /* this.api.actualizaMonto(id,id_venta,ux.tipoPago,ux.cantidad,ux.monto).subscribe(
+       this.api.actualizaMontoCompra(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
           erro=>{console.log(erro)}
-            );*/
+            );
+            this.api.GetDetallePagoCompra(id).subscribe(d => {
+              this.dataPagos = new MatTableDataSource();
+              this.exampleArray=d;
+              this.dataPagos=this.exampleArray
 
+
+              });
      });
 
   }
@@ -85,7 +91,7 @@ export class VerCompraComponent implements OnInit {
       this.dataDetalle.forEach(element => {
        if(element.id==id){
         this.dataDetalle[index].pendiente=ux.cantidad;
-        this.api.actualizaPendientes(id_venta,id_producto,id,ux.cantidad).subscribe(
+        this.api.actualizaPendientesCompra(id_venta,id_producto,id,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
@@ -97,7 +103,6 @@ export class VerCompraComponent implements OnInit {
        index++;
       });
 
-      console.log("ux",id_venta)
 
      });
 
@@ -131,6 +136,10 @@ export class VerCompraComponent implements OnInit {
         this.dataProveedores = data;
       }
     } );
+  }
+  cancelar() {
+    this.dialog.closeAll();
+
   }
 
 }

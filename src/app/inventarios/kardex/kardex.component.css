@@ -71,26 +71,26 @@ mat-card{
 }
 
 .salida{
-    color: crimson;
-    font-size: 12px;
+    color: crimson !important;
+    font-size: 11px;
     font-weight: 500;
 
 }
 
 .precio{
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
 }
 
 .ingreso{
-    color:darkgreen;
-    font-size: 12px;
-    font-weight: 500;
+    color:darkgreen !important;
+    font-size: 11px;
+    font-weight: 400;
 }
 
 table {
     width: 100%;
   }
 
-  mat-header-cell{font-size: 14px; font-weight: 700;}
-mat-cell{font-size: 13px;  font-weight: 400;color: black !important}
+  .mat-header-cell{font-size: 14px; font-weight: 700;}
+.mat-cell{font-size: 11px;  font-weight: 400;color: black}

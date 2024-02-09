@@ -298,7 +298,7 @@ public guardarVendedor(datos: Usuario): Observable<any> {
   );
 }
 
-public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad:number):Observable<any>{
+public actualizaPendientesCompra(id_venta:number,id_producto:number,id:number,cantidad:number):Observable<any>{
   let headers = new HttpHeaders().set(
     "Content-Type",
     "application/x-www-form-urlencoded"
@@ -312,10 +312,51 @@ public actualizaPendientes(id_venta:number,id_producto:number,id:number,cantidad
     'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);
-  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-pendiente",{ json: json },
+  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-pendiente-compra",{ json: json },
     { headers: headers }
   )
 }
+
+public actualizaPendientesVenta(id_venta:number,id_producto:number,id:number,cantidad:number):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'id_venta':id_venta,
+    'id_producto':id_producto,
+    'id':id,
+    'cantidad':cantidad,
+    'sucursal':localStorage.getItem("sucursal_id"),
+    'usuario':localStorage.getItem("currentId")
+  }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-pendiente-venta",{ json: json },
+    { headers: headers }
+  )
+}
+
+public actualizaMontoCompra(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'id_venta':id_venta,
+    'tipo_pago':tipoPago,
+    'numero':numero,
+    'cuenta_pago':cuentaPago,
+    'pendiente':pendiente,
+    'monto':monto,
+    'sucursal':sessionStorage.getItem("sucursal_id"),
+    'usuario':localStorage.getItem("currentId")
+  }
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + "api.php/actualiza-monto-compra",{ json: json },
+    { headers: headers }
+  )
+}
+
 
 public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
   let headers = new HttpHeaders().set(

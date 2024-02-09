@@ -39,8 +39,9 @@ export class RegistroCompraComponent implements OnInit {
     proveedor: ['0', Validators.required],
     fecha: ['', Validators.required],
     pagos: this.fb.array([this.fb.group({
-      tipoPago: ['Efectivo', Validators.required],
-      numero: [''],
+      tipoPago: ['', Validators.required],
+      cuentaPago:['',Validators.required],
+      numero:[''],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),
@@ -61,6 +62,7 @@ export class RegistroCompraComponent implements OnInit {
 dataVendedores:any;
 vuelto:string='';
 dataCajas:any;
+dataMedios:any;
 dataSucursales:any;
 montoVuelto:any=0;
 montoRecibido:any=0;
@@ -127,6 +129,13 @@ this.openEntrega('20ms','20ms')
 }
 }
 
+getMedioPago():void{
+  this.api.getApiTabla('/tipoPago').subscribe(data => {
+    if(data) {
+this.dataMedios=data;
+    }
+  } );
+}
   getFieldError(field:string):string | null{
   if(!this.MyForm.controls[field]) return null;
   const errors = this.MyForm.controls[field].errors || {};
@@ -200,6 +209,7 @@ async getData() {
     //this.getData();
     this.getCajas();
     this.getSucursales();
+    this,this.getMedioPago();
     this.getVendedor();
   const total = this.MyForm.get('total') as FormControl;
   total.setValue(this.data.precio);

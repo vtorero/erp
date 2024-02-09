@@ -70,8 +70,7 @@ export class VerVentaComponent implements OnInit {
     data: {clase:'modPendiente',id:id},
     });
      dialogo2.afterClosed().subscribe(ux => {
-      console.log("wsss",ux)
-        this.api.actualizaMonto(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
+           this.api.actualizaMonto(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
@@ -100,7 +99,7 @@ export class VerVentaComponent implements OnInit {
       this.dataDetalle.forEach(element => {
        if(element.id==id){
         this.dataDetalle[index].pendiente=ux.cantidad;
-        this.api.actualizaPendientes(id_venta,id_producto,id,ux.cantidad).subscribe(
+        this.api.actualizaPendientesVenta(id_venta,id_producto,id,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },

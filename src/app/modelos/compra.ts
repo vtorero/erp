@@ -13,6 +13,7 @@ export class Compra {
         public fechaPago:any,
         public igv:number,
         public monto_igv:number,
+        public monto_pendiente:number,
         public valor_total:number,
         public detalleVenta:Array<Details>,
         public imprimir:boolean,

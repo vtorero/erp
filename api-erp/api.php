@@ -1379,49 +1379,36 @@ $app->get("/articulos",function() use($db,$app){
 
 
         header("Content-type: application/json; charset=utf-8");
-
-
-
            $json = $app->request->getBody();
-
-
-
            $j = json_decode($json,true);
-
-
-
            $data = json_decode($j['json']);
+           $archivo = $data->imagen;
+           $archivo = base64_decode($archivo);
+           $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
+           file_put_contents($filePath, $archivo);
 
-
-
-
-
-
-
-
-
-
-
-            $query = "INSERT INTO `apitest`.`productos`(`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`nombre`,`unidad`)
-
-
-
-             values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->nombre}','{$data->codigo}','{$data->unidad}')";
-
-
-
+            $query = "INSERT INTO productos (`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`nombre`,`unidad`,`precio`,`imagen`)
+             values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->codigo}','{$data->nombre}','{$data->unidad}',{$data->precio},'{$data->nombre_imagen}')";
             $proceso=$db->query($query);
 
 
 
             if($proceso){
-
-
+                $datos=$db->query("SELECT max(id) ultimo_id FROM productos");
+                $ultimo_id=array();
+                while ($d = $datos->fetch_object()) {
+                 $ultimo_id=$d;
+                 }
+            $db->query("INSERT INTO inventario (producto_id,id_almacen,cantidad,comentario)
+            values({$ultimo_id->ultimo_id},1,0,'carga inicial')");
+            $db->query("INSERT INTO inventario (producto_id,id_almacen,cantidad,comentario)
+            values({$ultimo_id->ultimo_id},2,0,'carga inicial')");
+            $db->query("INSERT INTO movimiento_articulos (codigo_prod,tipo_movimiento,cantidad_ingreso,cantidad_salida,cantidad_acumulada,precio,comentario,id_sucursal,usuario)
+            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',1,'admin");
+            $db->query("INSERT INTO movimiento_articulos (codigo_prod,tipo_movimiento,cantidad_ingreso,cantidad_salida,cantidad_acumulada,precio,comentario,id_sucursal,usuario)
+            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',2,'admin");
 
            $result = array("STATUS"=>true,"messaje"=>"Producto creada correctamente");
-
-
-
             }else{
 
 
@@ -1451,116 +1438,27 @@ $app->get("/articulos",function() use($db,$app){
 
 
         $app->put("/producto",function() use($db,$app){
-
-
-
             header("Content-type: application/json; charset=utf-8");
-
-
-
                $json = $app->request->getBody();
-
-
-
                $j = json_decode($json,true);
-
-
-
                $data = json_decode($j['json']);
-
-
-
-
-
-
-
                $archivo = $data->imagen;
-
-
-
                $archivo = base64_decode($archivo);
-
-
-
-
-
-
-
                if(isset($data->nombre_imagen)){
-
-
-
                 $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
-
-
-
                 file_put_contents($filePath, $archivo);
-
-
-
                 $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio},imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
-
-
-
-            }else{
-
-
-
+                }else{
                 $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio} WHERE id={$data->id}";
-
-
-
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                }
                 $proceso=$db->query($query);
-
-
-
                 if($proceso){
 
-
-
                $result = array("STATUS"=>true,"messaje"=>"Producto actualizado correctamente");
-
-
-
                 }else{
-
-
-
                 $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
-
-
-
                 }
-
-
-
                 echo  json_encode($result);
-
-
 
             });
 
@@ -2230,7 +2128,7 @@ $app->get("/categorias",function() use($db,$app){
 
 
 
-                $resultado = $db->query("SELECT id, codigo,nombre  FROM  unidad  order by id");
+                $resultado = $db->query("SELECT id, codigo,nombre  FROM  unidad  order by nombre");
 
 
 
@@ -2843,89 +2741,25 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
 
         header("Content-type: application/json; charset=utf-8");
-
-
-
            $json = $app->request->getBody();
-
-
-
            $j = json_decode($json,true);
-
-
-
            $data = json_decode($j['json']);
 
-
-
-
-
-
-
            $codigo=(is_array($data->codigo))? array_shift($data->codigo): $data->codigo;
-
-
-
             $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
-
-
-
             $peso=(is_array($data->peso))? array_shift($data->peso): $data->peso;
-
-
-
             $costo=(is_array($data->costo))? array_shift($data->costo): $data->costo;
-
-
-
             $categoria=(is_array($data->id_categoria))? array_shift($data->id_categoria): $data->id_categoria;
-
-
-
             $sub_categoria=(is_array($data->id_subcategoria))? array_shift($data->id_subcategoria): $data->id_subcategoria;
-
-
-
             $usuario=(is_array($data->usuario))? array_shift($data->usuario): $data->usuario;
 
-
-
-
-
-
-
-
-
-
-
            $query ="INSERT INTO productos (codigo,nombre,peso,costo,id_categoria,id_subcategoria,usuario) VALUES ("
-
-
-
           ."'{$codigo}',"
-
-
-
           ."'{$nombre}',"
-
-
-
           ."'{$peso}',"
-
-
-
           ."{$costo},"
-
-
-
           ."{$categoria},"
-
-
-
           ."{$sub_categoria},"
-
-
-
           ."'{$usuario}'".")";
 
 
@@ -4382,15 +4216,17 @@ $app->get("/movimientos",function() use($db,$app){
         $fila['costo_venta'];
 
 
-        $sql=" SELECT @i := @i + 1 as contador ,`movimiento_articulos`.`id`,
+        $sql="SELECT @i := @i + 1 as contador ,`movimiento_articulos`.`id`,
         `movimiento_articulos`.`tipo_movimiento`,
         s.nombre as almacen,
         `movimiento_articulos`.`id_compra`,
         `movimiento_articulos`.`id_venta`,
+        `movimiento_articulos`.`cantidad_acumulada`,
         `movimiento_articulos`.`cantidad_movimiento`,
         round(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`promedio`,2) as p_total,
         `movimiento_articulos`.`cantidad_ingreso`,
         `movimiento_articulos`.`cantidad_salida`,
+        `movimiento_articulos`.`precio`,
         `movimiento_articulos`.`promedio`,
         ROUND(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`precio`,2) as costo,
         `movimiento_articulos`.`comentario`,
@@ -4635,6 +4471,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $data = json_decode($j['json']);
 
         $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$data->id_producto} and id_sucursal={$data->id_sucursal}  order by id desc limit 1");
+
         $inv = $resultado->fetch_array();
 
     if($data->operacion=='Ingreso'){
@@ -4650,29 +4487,34 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
  VALUES({$data->id_producto},'{$data->operacion}',{$data->id_sucursal},'{$data->comentario}',{$data->cantidad},{$data->cantidad},{$data->cantidad},{$data->precio},{$promedio},{$data->cantidad}*{$data->precio}, $data->id_sucursal,'{$data->usuario}');";
          $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
-        }else
-        {
+        }else{
 
             $cantidad_ingreso=$data->cantidad+floatval($inv['cantidad_ingreso']);
             $total=round(($data->cantidad*$data->precio)+$inv['total'],2);
 
             if(floatval($inv['cantidad_acumulada'])<=0){
-             //print_r($inv);
-             //print_r($data);
-            $promedio=(floatval($inv["total"])+($data->cantidad*$data->precio))/(floatval($inv['cantidad_acumulada'])+$data->cantidad);
+            $promedio=(floatval($inv["total"])+($data->cantidad))/(floatval($inv['cantidad_acumulada'])+$data->cantidad);
             var_dump(floatval($inv["total"]));
             var_dump($data->cantidad*$data->precio);
             var_dump($data->cantidad);
             var_dump(floatval($inv['cantidad_acumulada']));
             var_dump((floatval($inv['cantidad_acumulada'])+$data->cantidad));
-            var_dump($promedio);
 
             }
             else{
-            $promedio=$total/$cantidad_ingreso;
-            var_dump("#promedio2");
+                var_dump(floatval($inv["total"]));
+                var_dump($data->cantidad*$data->precio);
+                var_dump($data->cantidad);
+                var_dump(floatval($inv['cantidad_acumulada']));
+                var_dump((floatval($inv['cantidad_acumulada'])+$data->cantidad));
+                var_dump("promedio2");
+
+
+            $promedio=(floatval($inv["total"])+($data->cantidad*$data->precio))/($data->cantidad+floatval($inv['cantidad_acumulada']));
+            $cantidad_ingreso=$data->cantidad;
+            $cantidad_acumulada=$data->cantidad+floatval($inv['cantidad_acumulada']);
             }
-            $cantidad_acumulada=$data->cantidad+$inv['cantidad_acumulada'];
+
 
         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
             VALUES({$data->id_producto},'{$data->operacion}',{$data->id_sucursal},'{$data->comentario}',$data->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$data->precio},{$promedio},{$total}, $data->id_sucursal,'{$data->usuario}')";
@@ -4794,7 +4636,7 @@ $app->post("/compra",function() use($db,$app){
                  $ultimo_id=$d;
                  }
                  foreach($data->pagos as $pago){
-                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}',{$pago->montoPago},{$data->montopendiente})";
+                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
                 $stmtP = mysqli_prepare($db,$procP);
                 mysqli_stmt_execute($stmtP);
                  }
@@ -4872,36 +4714,10 @@ $app->post("/compra",function() use($db,$app){
 
 
                 }
-
-
-
                  catch(PDOException $e) {
-
-
-
-
-
-
-
                 $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
 
-
-
-
-
-
-
             }
-
-
-
-
-
-
-
-
-
-
 
         echo  json_encode($result);
 
@@ -5060,6 +4876,71 @@ $app->post("/compra",function() use($db,$app){
     });
 
 
+    $app->post("/actualiza-monto-compra",function() use($db,$app){
+
+        header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $j = json_decode($json,true);
+        $data = json_decode($j['json']);
+        try {
+
+            $qwmax=$db->query("SELECT monto_pendiente from compra_pagos where id_compra={$data->id_venta} order by id desc limit 1");
+
+            $prods=array();
+            while ($fila = $qwmax->fetch_array()) {
+                $prods[]=$fila;
+
+            }
+
+
+            if($prods[0]["monto_pendiente"]>=$data->monto){
+
+            $query ="INSERT INTO compra_pagos (`id_compra`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`)
+             VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1)";
+            $db->query($query);
+
+             $query2 ="UPDATE compras SET monto_pendiente=({$prods[0]["monto_pendiente"]}-{$data->monto}) where id={$data->id_venta}";
+
+            $db->query($query2);
+
+            /*if($data->monto-$prods[0]["monto_pendiente"]==0){
+                $query3 ="UPDATE compra_pagos SET monto_pendiente=0 where id={$data->id_venta}";
+                $db->query($query3);
+
+            }*/
+
+
+            $result = array("STATUS"=>true,"messaje"=>"Monto Pendientes actualizados correctamente");
+}else{
+
+    if(($prods[0]["monto_pendiente"]-$data->monto)<0){
+
+        $result = array("STATUS"=>true,"messaje"=>"La cantidad es mayor al saldo o ya fue pagado");
+    }else{
+        $result = array("STATUS"=>true,"messaje"=>"Ya no existe monto pendiente");
+        }
+}
+    }
+
+
+
+             catch(PDOException $e) {
+
+
+
+            $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+
+
+
+        }
+
+
+
+            echo  json_encode($result);
+
+    });
+
+
 
 
 
@@ -5124,71 +5005,40 @@ $app->post("/compra",function() use($db,$app){
 
             echo  json_encode($result);
 
-
-
-
-
-
-
-
-
-
-
     });
 
 
 
 
 
-    $app->post("/actualiza-pendiente",function() use($db,$app){
-
-
-
-
+    $app->post("/actualiza-pendiente-compra",function() use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
-
         $json = $app->request->getBody();
-
         $j = json_decode($json,true);
-
         $data = json_decode($j['json']);
-
-
-
-        $resultado = $db->query("SELECT  d.* FROM aprendea_erp.venta_detalle d where  id={$data->id} and id_venta={$data->id_venta}");
-
+        $resultado = $db->query("SELECT  d.* FROM aprendea_erp.compra_detalle d where id={$data->id} and id_compra={$data->id_venta}");
         $prods=array();
 
-
-
     while ($fila = $resultado->fetch_array()) {
-
         $prods[]=$fila;
-
     }
 
-    //var_dump($prods);
-
-    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_venta']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
+    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_compra']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
 
     $stmt2 = mysqli_prepare($db,$sql);
-
     mysqli_stmt_execute($stmt2);
-
     $stmt2->close();
 
     try {
 
-        $query ="UPDATE venta_detalle SET pendiente={$data->cantidad} where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
+        $query ="UPDATE compra_detalle SET pendiente={$data->cantidad} where id_compra={$data->id_venta} and id_producto={$data->id_producto}";
 
         $db->query($query);
 
         $result = array("STATUS"=>true,"messaje"=>"Pendientes actualizados correctamente");
 
         }
-
-
 
          catch(PDOException $e) {
 
@@ -6208,7 +6058,7 @@ $app->get("/pagos-compra/:id",function($id) use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT  p.* FROM aprendea_erp.compra_pagos p  where  id_compra={$id}");
+    $resultado = $db->query("SELECT  p.*, tp.nombre, c.nombre as caja FROM aprendea_erp.compra_pagos p , tipoPago tp,cajas c   where p.tipoPago=tp.id and p.cuentaPago=c.id and  id_compra={$id}");
 
      $prods=array();
 
