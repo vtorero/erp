@@ -1375,9 +1375,6 @@ $app->get("/articulos",function() use($db,$app){
 
 
     $app->post("/producto",function() use($db,$app){
-
-
-
         header("Content-type: application/json; charset=utf-8");
            $json = $app->request->getBody();
            $j = json_decode($json,true);
@@ -1387,6 +1384,7 @@ $app->get("/articulos",function() use($db,$app){
            $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
            file_put_contents($filePath, $archivo);
 
+           try{
             $query = "INSERT INTO productos (`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`nombre`,`unidad`,`precio`,`imagen`)
              values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->codigo}','{$data->nombre}','{$data->unidad}',{$data->precio},'{$data->nombre_imagen}')";
             $proceso=$db->query($query);
@@ -1403,10 +1401,11 @@ $app->get("/articulos",function() use($db,$app){
             values({$ultimo_id->ultimo_id},1,0,'carga inicial')");
             $db->query("INSERT INTO inventario (producto_id,id_almacen,cantidad,comentario)
             values({$ultimo_id->ultimo_id},2,0,'carga inicial')");
+
             $db->query("INSERT INTO movimiento_articulos (codigo_prod,tipo_movimiento,cantidad_ingreso,cantidad_salida,cantidad_acumulada,precio,comentario,id_sucursal,usuario)
-            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',1,'admin");
+            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',1,'admin')");
             $db->query("INSERT INTO movimiento_articulos (codigo_prod,tipo_movimiento,cantidad_ingreso,cantidad_salida,cantidad_acumulada,precio,comentario,id_sucursal,usuario)
-            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',2,'admin");
+            values({$ultimo_id->ultimo_id},'Ingreso',0,0,0,0,'carga inicial',2,'admin')");
 
            $result = array("STATUS"=>true,"messaje"=>"Producto creada correctamente");
             }else{
@@ -1418,6 +1417,11 @@ $app->get("/articulos",function() use($db,$app){
 
 
             }
+        }
+        catch(PDOException $e){
+
+            $result = array("STATUS"=>false,"messaje"=> $e->getMessage(),);
+        }
 
 
 
@@ -4222,6 +4226,7 @@ $app->get("/movimientos",function() use($db,$app){
         `movimiento_articulos`.`id_compra`,
         `movimiento_articulos`.`id_venta`,
         `movimiento_articulos`.`cantidad_acumulada`,
+           u.nombre as unidad,
         `movimiento_articulos`.`cantidad_movimiento`,
         round(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`promedio`,2) as p_total,
         `movimiento_articulos`.`cantidad_ingreso`,
@@ -4230,8 +4235,9 @@ $app->get("/movimientos",function() use($db,$app){
         `movimiento_articulos`.`promedio`,
         ROUND(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`precio`,2) as costo,
         `movimiento_articulos`.`comentario`,
-        DATE_FORMAT(`movimiento_articulos`.`fecha_registro`,'%d-%m-%Y') AS fecha_registro from movimiento_articulos, sucursales s
-    cross join (select @i := 0) r where s.id=id_sucursal and precio<>0 and codigo_prod={$fila['id']}  order by id asc;";
+
+        DATE_FORMAT(`movimiento_articulos`.`fecha_registro`,'%d-%m-%Y') AS fecha_registro from movimiento_articulos, sucursales s,productos p ,unidad u
+    cross join (select @i := 0) r where s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id  and `movimiento_articulos`.precio<>0 and codigo_prod={$fila['id']}  order by id asc;";
 
         $resul_detalle = $db->query($sql);
         while ($filadet = $resul_detalle->fetch_array()) {
@@ -4239,7 +4245,8 @@ $app->get("/movimientos",function() use($db,$app){
         }
 
 
-$sql_promedio="SELECT promedio,cantidad_acumulada from movimiento_articulos where  codigo_prod={$fila['id']} order by id desc limit 1";
+$sql_promedio="SELECT promedio,cantidad_acumulada,u.nombre as unidad from movimiento_articulos m,productos p, unidad u
+where  m.codigo_prod=p.id and p.unidad=u.codigo and  codigo_prod={$fila['id']} order by m.id desc limit 1";
 
 /*
 $sql_promedio="SELECT * FROM
@@ -4486,20 +4493,20 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
  VALUES({$data->id_producto},'{$data->operacion}',{$data->id_sucursal},'{$data->comentario}',{$data->cantidad},{$data->cantidad},{$data->cantidad},{$data->precio},{$promedio},{$data->cantidad}*{$data->precio}, $data->id_sucursal,'{$data->usuario}');";
-         $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
-        }else{
+         }else{
 
             $cantidad_ingreso=$data->cantidad+floatval($inv['cantidad_ingreso']);
             $total=round(($data->cantidad*$data->precio)+$inv['total'],2);
 
             if(floatval($inv['cantidad_acumulada'])<=0){
-            $promedio=(floatval($inv["total"])+($data->cantidad))/(floatval($inv['cantidad_acumulada'])+$data->cantidad);
-            var_dump(floatval($inv["total"]));
-            var_dump($data->cantidad*$data->precio);
-            var_dump($data->cantidad);
-            var_dump(floatval($inv['cantidad_acumulada']));
-            var_dump((floatval($inv['cantidad_acumulada'])+$data->cantidad));
 
+                $promedio=(floatval($inv["total"])+($data->cantidad*$data->precio))/(floatval($inv['cantidad_acumulada'])+$data->cantidad);
+
+            var_dump("ibtotal",floatval($inv["total"]));
+            var_dump("cantidad x precio ingresado",$data->cantidad*$data->precio);
+            var_dump("inv cantidad acumuladao",floatval($inv['cantidad_acumulada']));
+            var_dump("cantidad acumulada antigua mas nueva",(floatval($inv['cantidad_acumulada'])+$data->cantidad));
+            $cantidad_acumulada=(floatval($inv['cantidad_acumulada'])+$data->cantidad);
             }
             else{
                 var_dump(floatval($inv["total"]));
@@ -4511,6 +4518,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
 
             $promedio=(floatval($inv["total"])+($data->cantidad*$data->precio))/($data->cantidad+floatval($inv['cantidad_acumulada']));
+
             $cantidad_ingreso=$data->cantidad;
             $cantidad_acumulada=$data->cantidad+floatval($inv['cantidad_acumulada']);
             }
@@ -4518,14 +4526,18 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
             VALUES({$data->id_producto},'{$data->operacion}',{$data->id_sucursal},'{$data->comentario}',$data->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$data->precio},{$promedio},{$total}, $data->id_sucursal,'{$data->usuario}')";
-                    $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
 
         }
+
 
         $stmt2 = mysqli_prepare($db,$sql);
         mysqli_stmt_execute($stmt2);
         $stmt2->close();
 
+        /*atualiza tabla inventarios*/
+        $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
+        $db->query($sql2);
+        /*fin inventario*/
         }
         if($data->operacion=='Salida'){
 
@@ -4537,17 +4549,20 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
             $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
          VALUES({$data->id_producto},'{$data->operacion}',{$data->id_sucursal},'{$data->comentario}',{$data->cantidad},-{$data->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->id_sucursal,'{$data->usuario}');";
-            $sql2="UPDATE inventario  SET cantidad = cantidad-{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_almacen}";
+
             }
 
-            print($sql);
+            $sql2="UPDATE inventario  SET cantidad = cantidad-{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->id_sucursal}";
+            $db->query($sql2);
+
+
             $stmt3 = mysqli_prepare($db,$sql);
             mysqli_stmt_execute($stmt3);
             $stmt3->close();
         }
 
 
-        $result = array("STATUS"=>true,"messaje"=>"Inventario registrado correctamente");
+        $result = array("STATUS"=>true,"messaje"=>"Inventario registrado correctamente","consulta"=>$sql);
 
         echo  json_encode($result);
 
@@ -4626,6 +4641,7 @@ $app->post("/compra",function() use($db,$app){
     $fecha=substr($data->fecha,0,10);
     $valor_total=0;
             try {
+                $almacen=$data->sucursal;
                $sql="call p_compra('{$data->usuario}','{$data->seriedoc}','{$data->nrodocumento}','{$fecha}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
 
                $stmt = mysqli_prepare($db,$sql);
@@ -4643,54 +4659,71 @@ $app->post("/compra",function() use($db,$app){
 
                 foreach($detalle as $item){
                 /*inserta detalla*/
+
                 $proc="call p_compra_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
                 $stmt = mysqli_prepare($db,$proc);
                 mysqli_stmt_execute($stmt);
                 $stmt->close();
 
+
                 //$sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
                 //VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->almacen},{$item->cantidad}-{$item->pendiente},$item->precio,'{$data->comentario}',$data->sucursal,'{$data->usuario}');";
 
-                $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$item->id} and id_sucursal={$data->sucursal}  order by id desc limit 1");
+                $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$item->id} and id_sucursal={$almacen}  order by id desc limit 1");
                 $inv = $resultado->fetch_array();
 
 
-                    if($inv["precio"]=="0.00" || $inv["cantidad_acumulada"]=="0.00"){
+
+                if($inv["precio"]=="0.00" || $inv["cantidad_acumulada"]=="0.00"){
 
                     if($inv["cantidad_acumulada"]=="0.00")  {
-                        $promedio=$data->precio;
+                        $promedio=$item->precio;
                     } else{
-                        $promedio=$data->cantidad/$data->precio;
+                        $promedio=$item->cantidad/$item->precio;
                     }
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-         VALUES(,$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->sucursal},'{$data->comentario}',{$item->cantidad}-{$item->pendiente},{$item->cantidad}-{$item->pendiente},{$data->cantidad},{$item->precio},{$promedio},{$item->cantidad}*{$item->precio}, $data->sucursal,'{$data->usuario}');";
-
-                }else
-                {
+         VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id}),{$item->cantidad},{$item->cantidad},{$item->cantidad},{$item->precio},{$promedio},{$item->cantidad}*{$item->precio}, $almacen,'{$data->usuario}');";
+                 }else{
 
                     $cantidad_ingreso=$item->cantidad+floatval($inv['cantidad_ingreso']);
                     $total=round(($item->cantidad*$item->precio)+$inv['total'],2);
 
                     if(floatval($inv['cantidad_acumulada'])<=0){
 
-                    $promedio=round((floatval($inv["total"])+($item->cantidad*$item->precio))/(floatval($inv['cantidad_acumulada'])+$item->cantidad),2);
-
+                        $promedio=(floatval($inv["total"])+($item->cantidad*$item->precio))/(floatval($inv['cantidad_acumulada'])+$item->cantidad);
+/*
+                    var_dump("ibtotal",floatval($inv["total"]));
+                    var_dump("cantidad x precio ingresado",$data->item*$item->precio);
+                    var_dump("inv cantidad acumuladao",floatval($inv['cantidad_acumulada']));
+                    var_dump("cantidad acumulada antigua mas nueva",(floatval($inv['cantidad_acumulada'])+$item->cantidad));
+                    $cantidad_acumulada=(floatval($inv['cantidad_acumulada'])+$item->cantidad);
+                    */
                     }
                     else{
-                    $promedio=round($total/$cantidad_ingreso,2);
+                       /* var_dump(floatval($inv["total"]));
+                        var_dump($data->cantidad*$item->precio);
+                        var_dump($item->cantidad);
+                        var_dump(floatval($inv['cantidad_acumulada']));
+                        var_dump((floatval($inv['cantidad_acumulada'])+$item->cantidad));
+                        var_dump("promedio2");
+*/
 
+                    $promedio=(floatval($inv["total"])+($item->cantidad*$item->precio))/($item->cantidad+floatval($inv['cantidad_acumulada']));
+
+                    $cantidad_ingreso=$item->cantidad;
+                    $cantidad_acumulada=$item->cantidad+floatval($inv['cantidad_acumulada']);
                     }
-                    $cantidad_acumulada=$data->cantidad+$inv['cantidad_acumulada'];
+
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                    VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$data->sucursal},'{$data->comentario}',$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $data->sucursal,'{$data->usuario}')";
-
+                    VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id}),$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $almacen,'{$data->usuario}')";
 
                 }
 
 
-                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->almacen}";
+                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$almacen}";
+
 
 
                 $stmt2 = mysqli_prepare($db,$sql);
@@ -4779,52 +4812,28 @@ $app->post("/compra",function() use($db,$app){
                      $inv = $resultado->fetch_array();
 
 
+                     if($inv["precio"]!="0.00"){
+
+                        $total=number_format($inv["total"]-($item->cantidad*$inv["promedio"]),2, '.', '');
+
+                                $cantidad_acumulada=$inv["cantidad_acumulada"]-$item->cantidad;
+
+                        $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
+                        VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),{$item->cantidad},-{$item->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+
+                        }
+
+                        $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
+                        $db->query($sql2);
 
 
-                         if($inv["precio"]!="0.00"){
-
-                         $total=number_format($inv["total"]-($item->cantidad*$inv["promedio"]),2, '.', '');
-
-                                 $cantidad_acumulada=$inv["cantidad_acumulada"]-$item->cantidad;
-
-                         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                      VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},{$item->cantidad},-{$item->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
-
-                         }
-
-
-
-
-
-
-
-
-                     $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE id_almacen={$data->sucursal} and producto_id={$item->id}";
 
                     $stmt2 = mysqli_prepare($db,$sql);
-
                     $stmt3 = mysqli_prepare($db,$sql2);
-
                     mysqli_stmt_execute($stmt2);
-
                     mysqli_stmt_execute($stmt3);
-
                     $stmt2->close();
-
                     $stmt3->close();
-
-
-
-
-
-                    //$actualiza="call p_actualiza_inventario({$valor->codProductob->id},{$valor->codProducto},{$valor->cantidad},{$valor->peso},'{$valor->unidadmedida}')";
-
-                    //$stmtb = mysqli_prepare($db,$actualiza);
-
-                    //mysqli_stmt_execute($stmtb);
-
-                    //$stmtb->close();
-
 
 
                     }
@@ -4838,38 +4847,11 @@ $app->post("/compra",function() use($db,$app){
 
 
                     }
-
-
-
                      catch(PDOException $e) {
-
-
-
-
-
-
-
                     $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
 
-
-
-
-
-
-
                 }
-
-
-
-
-
-
-
-
-
-
-
-            echo  json_encode($result);
+                echo  json_encode($result);
 
 
 

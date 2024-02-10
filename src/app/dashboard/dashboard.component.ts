@@ -112,7 +112,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   };
 
   enviaFechas(){
-
+    this.resetChart();
     var empresa = sessionStorage.getItem("CurrentUser");
     var fec1 = this.selectedMoment.toDateString().split(" ",4);
     var fec2 = this.selectedMoment2.toDateString().split(" ",4);
@@ -276,5 +276,25 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       //start animation for the Emails Subscription Chart
       this.startAnimationForBarChart(websiteViewsChart);
   }
+
+  resetChart(){
+    var barChartContent = document.getElementById('barChartContent');
+    barChartContent.innerHTML = '&nbsp;';
+    barChartContent.innerHTML='<canvas id="canvas"><canvas>';
+    var barChartContent2 = document.getElementById('barChartContent2');
+    barChartContent2.innerHTML = '&nbsp;';
+    barChartContent2.innerHTML='<canvas id="canvas2"><canvas>';
+    var barChartContent3 = document.getElementById('barChartContent3');
+    barChartContent3.innerHTML = '&nbsp;';
+    barChartContent3.innerHTML='<canvas id="canvas3"><canvas>';
+    var barChartContent4 = document.getElementById('barChartContent4');
+    barChartContent4.innerHTML = '&nbsp;';
+    barChartContent4.innerHTML='<canvas id="canvas4"><canvas>';
+    var barChartContent5 = document.getElementById('barChartContent5');
+    barChartContent5.innerHTML = '&nbsp;';
+    barChartContent5.innerHTML='<canvas id="canvas5"><canvas>';
+
+
+    }
 
 }

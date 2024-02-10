@@ -13,7 +13,7 @@
         </mat-form-field>
     </div>
     <div class="col-9">
-        <mat-form-field appearance="outline" hintLabel="Max 11 números Min 8">
+        <mat-form-field appearance="outline">
         <mat-label>Nombre Producto</mat-label>
           <input matInput [(ngModel)]="data.nombre" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" required>
           <mat-hint align="end"> {{data.nombre.length}}</mat-hint>
@@ -78,7 +78,7 @@
 </div>
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-raised-button [mat-dialog-close]="data" [disabled]="!formGeneral.form.valid" cdkFocusInitial>Confirmar</button>
+        <button mat-raised-button [mat-dialog-close]="data" color="primary"  [disabled]="!formGeneral.form.valid" cdkFocusInitial><i class="material-icons">save</i>Guardar</button>
     </div>
   </form>
   </div>

@@ -91,7 +91,7 @@
                 <mat-card-header>
                    <mat-card-title>({{datos.id}}) {{datos.nombre}}
                     <br >  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
-                     Stock: <strong>{{datos.promedio[0].cantidad_acumulada}}</strong> unidades<br>
+                     Stock: <strong>{{datos.promedio[0].cantidad_acumulada}} / {{datos.promedio[0].unidad}}</strong><br>
                     Costo de Venta: S/ {{datos.costo_venta[0].costo | number}}<br>
 
                   </mat-card-title>
@@ -142,6 +142,11 @@
                     <ng-container matColumnDef="cantidad_acumulada">
                       <th mat-header-cell *matHeaderCellDef> Cantidad existente </th>
                       <td  mat-cell *matCellDef="let element"> {{element.cantidad_acumulada}} </td>
+
+                    </ng-container>
+                    <ng-container matColumnDef="unidad">
+                      <th mat-header-cell *matHeaderCellDef> Unidad de medida </th>
+                      <td  mat-cell *matCellDef="let element"> {{element.unidad}} </td>
 
                     </ng-container>
                     <ng-container matColumnDef="precio">
