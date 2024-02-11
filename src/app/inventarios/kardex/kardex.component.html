@@ -100,7 +100,7 @@
                   <table mat-table [dataSource]="datos.detalle" class="mat-elevation-z8">
                     <ng-container matColumnDef="contador">
                       <th mat-header-cell *matHeaderCellDef>Item</th>
-                      <td mat-cell *matCellDef="let element"> {{element.contador}} </td>
+                      <td mat-cell *matCellDef="let element ;let i=index"> {{i+1}} </td>
 
                     </ng-container>
                     <ng-container matColumnDef="comentario">
