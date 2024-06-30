@@ -74,16 +74,16 @@
 .titulo{
     top: 10px;
     text-align: center;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.7);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-    font-size: 11px;
+    font-size: 12px;
     line-height: 18px;
     height: 70px !important;
     display: block;
-    color: white;
+    color: greenyellow;
     margin: 50px auto;
-    font-weight: 600;
+    font-weight: bolder;
     padding-top: 5px;
 }
 .precio{
@@ -92,12 +92,15 @@
 
 }
 .precio .texto{
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.7);
     width: 67px;
     text-align: center;
     border-radius: 5px;
-    color: white;
+    color:greenyellow;
+    font-size: 12px;
+    font-weight: bolder;
     margin:0 auto;
+
 }
 
 .imagen{

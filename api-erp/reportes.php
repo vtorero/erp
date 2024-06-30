@@ -125,8 +125,13 @@ $app->post("/reporte",function() use($db,$app){
                         $infoventas[]=$row;
                 }
 
-                $ventas_reporte=$db->query("SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
-                and vp.fecha_registro  between '".$ini." 00:00:00' and '".$fin." 23:59:00'");
+                $sql_r="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+                and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
+SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
+                and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
+
+
+                $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
                 while ($row = $ventas_reporte->fetch_array()) {
                         $infoventas_reporte[]=$row;
@@ -412,8 +417,14 @@ $app->post("/reporte",function() use($db,$app){
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
         // Fetch records from database
-        $sql="SELECT vp.id,vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
-        and vp.fecha_registro BETWEEN '".$ini."' and '".$fin."'";
+    /*    $sql="SELECT vp.id,vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+        and vp.fecha_registro BETWEEN '".$ini."' and '".$fin."'";*/
+
+$sql="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
+SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
+
 
          $query = $db->query($sql);
 

@@ -662,8 +662,8 @@ $app->get("/buscarclientes/:criterio",function($criterio) use($db,$app){
         $respuesta=json_encode(array("status"=>$e->message));
         }
 
-                 echo  $respuesta;
-        });
+        echo  $respuesta;
+    });
 
 
 /**buscar proveedor */
@@ -1211,14 +1211,20 @@ $app->post("/usuario_del",function() use($db,$app){
 
 
 $app->get("/articulos/:criterio",function($criterio) use($db,$app){
-
-
-
     header("Content-type: application/json; charset=utf-8");
 
+$palabras = explode(" ",$criterio);
+
+$criterios="";
+foreach ($palabras as $valor) {
+    $criterios.= " p.nombre like '%".$valor."%' AND";
+}
+
+$refinado=substr($criterios, 0, -3);
 
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and p.nombre like '%{$criterio}%' order by id;");
+
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and {$refinado} order by id;");
 
 
 
@@ -4068,55 +4074,45 @@ $sql1.="group by 1 order by id asc";
             $fila['sql']=$sql1;
 
 
-           $sql="SELECT
-           id,
-           tipo_movimiento,
-           id_compra,
-           id_venta,
-           cantidad_ingreso cantidad,
-            precio,
-            comentario,
-            id_almacen,
-            almacen,
-          costo_ingreso as p_total,
-            @acumulado_costo_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                  , @acumulado_costo_ingreso
-                                  , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + costo_ingreso costo_acumulado_ingreso,
-                 @acumulado_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                  , @acumulado_ingreso
-                                  , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + cantidad_ingreso acumulado_ingreso
-                              , if(tipo_movimiento='Ingreso',round(@acumulado_costo_ingreso/@acumulado_ingreso,2),0) as promedio,
-                              fecha_registro
+           $sql="SELECT @i := @i + 1 as contador ,`movimiento_articulos`.`id`,
+           `movimiento_articulos`.`tipo_movimiento`,
+           s.nombre as almacen,
+           `movimiento_articulos`.`id_compra`,
+           `movimiento_articulos`.`id_venta`,
+           `movimiento_articulos`.`cantidad_acumulada`,
+              u.nombre as unidad,
+           `movimiento_articulos`.`cantidad_movimiento`,
+           round(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`promedio`,2) as p_total,
+           `movimiento_articulos`.`cantidad_ingreso`,
+           `movimiento_articulos`.`cantidad_salida`,
+           `movimiento_articulos`.`precio`,
+           `movimiento_articulos`.`promedio`,
+           ROUND(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`precio`,2) as costo,
+           `movimiento_articulos`.`comentario`,
 
-
-             FROM (
-           SELECT m.id,tipo_movimiento,id_compra,id_venta,precio,cantidad_ingreso*precio as costo_ingreso,cantidad_ingreso,cantidad_salida*precio as costo_salida,cantidad_salida,comentario, s.id as id_almacen, s.nombre as almacen, fecha_registro from movimiento_articulos m , sucursales s where m.id_sucursal=s.id and codigo_prod={$fila['id']} and tipo_movimiento in('Ingreso','Salida') and precio<> 0.00  order by fecha_registro asc) t
-           JOIN ( SELECT @acumulado_salida :=0,
-                           @acumulado_ingreso:=0,
-                            @tipo_movi:= null
-
-                    ) vars ";
+           DATE_FORMAT(`movimiento_articulos`.`fecha_registro`,'%d-%m-%Y') AS fecha_registro from movimiento_articulos, sucursales s,productos p ,unidad u
+       cross join (select @i := 0) r where s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id  and `movimiento_articulos`.precio<>0 and codigo_prod={$fila['id']}";
 
 
 
                        if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
-                           $sql.=" where id_almacen={$data['sucursal']} ";
+                           $sql.=" and id_almacen={$data['sucursal']} ";
                            }
                 if(isset($data["movimiento"])  && $data["movimiento"]!="0"){
-                    $sql.=" and m.tipo_movimiento='{$data['movimiento']}'";
+                    $sql.=" and movimiento_articulos.tipo_movimiento='{$data['movimiento']}'";
                   }
 
                   if(isset($data["compra"]) &&  $data["compra"]!=""){
-                    $sql.=" and m.id_compra='{$data['compra']}' ";
+                    $sql.=" and movimiento_articulos.id_compra='{$data['compra']}' ";
                     }
 
 
                 if(isset($data["venta"]) &&  $data["venta"]!=""){
-                    $sql.=" and m.id_venta='{$data['venta']}' ";
+                    $sql.=" and movimiento_articulos.id_venta='{$data['venta']}' ";
                 }
 
 
-                //$sql.=" order by id desc";
+                $sql.=" order by id desc";
 
 
             $resul_detalle = $db->query($sql);
@@ -4125,61 +4121,21 @@ $sql1.="group by 1 order by id asc";
             }
 
 //$sql_promedio="SELECT codigo_prod, ROUND(sum(cantidad_ingreso*precio)/sum(cantidad_ingreso),2) promedio from movimiento_articulos m where codigo_prod={$fila['id']} order by id desc";
-            $sql_promedio="SELECT * FROM
-            (SELECT
-            id,
-            tipo_movimiento,
-            cantidad_ingreso cantidad,
-             precio,
-            if(costo_ingreso>0,costo_ingreso,'-') p_total,
-             @acumulado_costo_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                   , @acumulado_costo_ingreso
-                                   , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + costo_ingreso costo_acumulado_ingreso,
-                  @acumulado_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                   , @acumulado_ingreso
-                                   , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + cantidad_ingreso acumulado_ingreso
-                               , if(tipo_movimiento='Ingreso',round(@acumulado_costo_ingreso/@acumulado_ingreso,2),0) as promedio,
-                               fecha_registro
+            $sql_promedio="SELECT promedio,cantidad_acumulada,u.nombre as unidad from movimiento_articulos m,productos p, unidad u
+            where  m.codigo_prod=p.id and p.unidad=u.codigo and  codigo_prod={$fila['id']} ";
 
+if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
+    $sql_promedio.=" and m.id_almacen={$data['sucursal']} ";
+    }
 
-              FROM (
-            SELECT id,tipo_movimiento,precio,cantidad_ingreso*precio as costo_ingreso,cantidad_ingreso,cantidad_salida*precio as costo_salida,cantidad_salida,fecha_registro from movimiento_articulos m where codigo_prod={$fila['id']} and tipo_movimiento in('Ingreso') order by fecha_registro asc) t
-            JOIN ( SELECT @acumulado_salida :=0,
-                            @acumulado_ingreso:=0,
-                             @tipo_movi:= null
-
-                     ) vars )  as todo where todo.tipo_movimiento='Ingreso' order by ID DESC limit 1 ";
-
+    $sql_promedio.=" order by m.id desc limit 1";
 
             $resul_promedio = $db->query($sql_promedio);
             while ($filaprod = $resul_promedio->fetch_array()) {
                 $fila['promedio'][]=$filaprod;
             }
 
-            $sql_costo_venta="SELECT * FROM
-            (SELECT
-            id,
-            tipo_movimiento,
-            cantidad_ingreso cantidad,
-             precio,
-            if(costo_ingreso>0,costo_ingreso,'-') p_total,
-             @acumulado_costo_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                   , @acumulado_costo_ingreso
-                                   , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + costo_ingreso costo_acumulado_ingreso,
-                  @acumulado_ingreso := if( (tipo_movimiento)=(@tipo_movi)
-                                   , @acumulado_ingreso
-                                   , ifnull( concat( @tipo_movi := tipo_movimiento , null), 0)) + cantidad_ingreso acumulado_ingreso
-                               , if(tipo_movimiento='Ingreso',round(@acumulado_costo_ingreso/@acumulado_ingreso,2),0) as promedio,
-                               fecha_registro
-
-
-              FROM (
-            SELECT id,tipo_movimiento,precio,cantidad_ingreso*precio as costo_ingreso,cantidad_ingreso,cantidad_salida*precio as costo_salida,cantidad_salida,fecha_registro from movimiento_articulos m where codigo_prod={$fila['id']} and tipo_movimiento in('Ingreso') order by fecha_registro asc) t
-            JOIN ( SELECT @acumulado_salida :=0,
-                            @acumulado_ingreso:=0,
-                             @tipo_movi:= null
-
-                     ) vars ) as todo order by ID DESC LIMIT 1";
+            $sql_costo_venta="SELECT sum(cantidad_movimiento*precio) costo from movimiento_articulos where precio<>0 and tipo_movimiento='Ingreso' and codigo_prod={$fila['id']} order by id limit 1";
 
 
             $resul_cv = $db->query($sql_costo_venta);
@@ -4208,7 +4164,7 @@ $sql1.="group by 1 order by id asc";
 
 $app->get("/movimientos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and (m.cantidad_ingreso>0 or cantidad_salida<0) group by 1 order by id asc limit 20;");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and (m.cantidad_ingreso>0 or cantidad_salida<0) group by 1 order by id asc limit 100;");
    $prods=array();
    $detalle=array();
        while ($fila = $resultado->fetch_array()) {
@@ -4658,7 +4614,7 @@ $app->post("/compra",function() use($db,$app){
                     }
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-         VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id}),{$item->cantidad},{$item->cantidad},{$item->cantidad},{$item->precio},{$promedio},{$item->cantidad}*{$item->precio}, $almacen,'{$data->usuario}');";
+         VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id),{$item->cantidad},{$item->cantidad},{$item->cantidad},{$item->precio},{$promedio},{$item->cantidad}*{$item->precio}, $almacen,'{$data->usuario}');";
                  }else{
 
                     $cantidad_ingreso=$item->cantidad+floatval($inv['cantidad_ingreso']);
@@ -4692,7 +4648,7 @@ $app->post("/compra",function() use($db,$app){
 
 
                 $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                    VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id}),$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $almacen,'{$data->usuario}')";
+                    VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id),$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $almacen,'{$data->usuario}')";
 
                 }
 
@@ -4770,14 +4726,11 @@ $app->post("/compra",function() use($db,$app){
 
                     foreach($detalle as $item){
                     /*inserta detalla*/
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
                     $stmt = mysqli_prepare($db,$proc);
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
 
-
-                    //$sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`cantidad_salida`,`precio`,`id_sucursal`,`usuario`)
-                     //VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',-{$item->cantidad}-{$item->pendiente},$item->precio,$data->sucursal,'{$data->usuario}');";
 
                      $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$item->id} and id_sucursal={$data->sucursal}  order by id desc limit 1");
                      $inv = $resultado->fetch_array();
@@ -4805,7 +4758,6 @@ $app->post("/compra",function() use($db,$app){
 
                             }
 
-
                         $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
                         $db->query($sql2);
 
@@ -4818,12 +4770,7 @@ $app->post("/compra",function() use($db,$app){
                     }
 
 
-
-
-
                        $result = array("STATUS"=>true,"numero"=>$ultimo_id->ultimo_id,"messaje"=>"Venta registrada correctamente con el número: ".$ultimo_id->ultimo_id);
-
-
 
                     }
                      catch(PDOException $e) {
@@ -4831,7 +4778,6 @@ $app->post("/compra",function() use($db,$app){
 
                 }
                 echo  json_encode($result);
-
 
 
     });

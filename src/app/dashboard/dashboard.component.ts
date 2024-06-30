@@ -2,7 +2,6 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ApiService } from 'app/api.service';
 import * as Chartist from 'chartist';
-import { Chart } from 'chart.js/auto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -140,7 +139,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       console.log(fecha2);
       let fechas = {'ini':fecha1,'fin':fecha2}
           console.log("test",JSON.stringify(fechas));
-      sendInvoice(JSON.stringify(fechas),'https://aprendeadistancia.online/erp/erp-api/reportes.php/exportar');
+      sendInvoice(JSON.stringify(fechas),'https://lh-cjm.com/erp-api/reportes.php/exportar');
       //this.loadVentas(this.fecha1,this.fecha2,empresa);
       //this.renderDataTableConsulta(ini,fin,empresa);
       }

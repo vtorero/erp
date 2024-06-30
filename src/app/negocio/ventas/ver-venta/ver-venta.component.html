@@ -72,9 +72,9 @@
   <div style="height:200px;margin-top:10px;flex-grow:1;">
     <h4>Detalle de pedido</h4>
       <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
-        <ng-container matColumnDef="id_producto">
+        <ng-container matColumnDef="codigo">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.id_producto}} </mat-cell>
+          <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="nombre">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>

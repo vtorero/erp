@@ -84,14 +84,14 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'clientes', component: ClienteComponent }]},
     {path:'compras',
     children:[{path:'main',component:ListadoComprasComponent,
-    canActivate: [ AuthGuard ],
-    canMatch: [ AuthGuard ]
+    /*canActivate: [ AuthGuard ],
+    canMatch: [ AuthGuard ]*/
   },
     {path:'listado',component:ListadoComprasComponent},
     {path:'registro-compras',component:ComprasRegistroComponent},
     { path: 'proveedores', component: ProveedoresComponent,
-    canActivate: [ AuthGuard ],
-    canMatch: [ AuthGuard ] }]},
+   /* canActivate: [ AuthGuard ],
+canMatch: [ AuthGuard ]*/ }]},
     {path:'configuracion',
     children:[{path:'main',component:ConfiguracionComponent}
     ,{path:'permisos',component:permisosComponent},

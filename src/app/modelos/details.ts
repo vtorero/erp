@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 export class Details {
     constructor(
         public id: number,
+        public codigo:string,
         public nombre: string,
         public cantidad:number,
         public despacho:number,

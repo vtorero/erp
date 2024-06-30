@@ -81,6 +81,8 @@ loginUser(usuario,password){
             localStorage.setItem("impresora",data['data'][0]['avatar']);
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
 
+            console.log("data",data['data'][0]['nombre']);
+
             if(data['data'][0]['nombre']=='admin'){
             this.router.navigate(['/dashboard']);
           }else{

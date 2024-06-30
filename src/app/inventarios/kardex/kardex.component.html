@@ -89,7 +89,7 @@
              <div class="card-body">
               <mat-card *ngFor="let datos of dataSource" class="card" class="example-card">
                 <mat-card-header>
-                   <mat-card-title>({{datos.id}}) {{datos.nombre}}
+                   <mat-card-title>({{datos.codigo}}) {{datos.nombre}}
                     <br >  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
                      Stock: <strong>{{datos.promedio[0].cantidad_acumulada}} / {{datos.promedio[0].unidad}}</strong><br>
                     Costo de Venta: S/ {{datos.costo_venta[0].costo | number}}<br>
@@ -109,11 +109,7 @@
 
                     </ng-container>
 
-                    <ng-container matColumnDef="tipo_movimiento">
-                      <th mat-header-cell *matHeaderCellDef> Tipo Movimiento </th>
-                      <td [ngClass]="element.tipo_movimiento=='Ingreso' ? 'ingreso' : 'salida'"  mat-cell *matCellDef="let element"> {{element.tipo_movimiento}} </td>
 
-                    </ng-container>
                     <ng-container matColumnDef="almacen">
                       <th mat-header-cell *matHeaderCellDef>Almacen</th>
                       <td mat-cell *matCellDef="let element"> {{element.almacen}} </td>
@@ -139,17 +135,7 @@
                       <td  [ngClass]="element.tipo_movimiento=='Ingreso'? 'ingreso' : 'salida'"  mat-cell *matCellDef="let element"> {{element.cantidad_salida}} </td>
 
                     </ng-container>
-                    <ng-container matColumnDef="cantidad_acumulada">
-                      <th mat-header-cell *matHeaderCellDef> Cantidad existente </th>
-                      <td  mat-cell *matCellDef="let element"> {{element.cantidad_acumulada}} </td>
-
-                    </ng-container>
-                    <ng-container matColumnDef="unidad">
-                      <th mat-header-cell *matHeaderCellDef> Unidad de medida </th>
-                      <td  mat-cell *matCellDef="let element"> {{element.unidad}} </td>
-
-                    </ng-container>
-                    <ng-container matColumnDef="precio">
+                         <ng-container matColumnDef="precio">
                       <th mat-header-cell *matHeaderCellDef> Precio </th>
                       <td mat-cell *matCellDef="let element">S/ {{element.precio | number }} </td>
                     </ng-container>
