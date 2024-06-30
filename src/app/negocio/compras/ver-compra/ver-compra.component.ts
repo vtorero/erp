@@ -17,7 +17,7 @@ import { Compra } from '../../../modelos/compra';
   styleUrls: ['./ver-compra.component.css']
 })
 export class VerCompraComponent implements OnInit {
-  displayedColumns = ['id_producto', 'nombre', 'cantidad','pendiente','precio','subtotal'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
   displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;

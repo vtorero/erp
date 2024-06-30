@@ -4591,7 +4591,7 @@ $app->post("/compra",function() use($db,$app){
                 foreach($detalle as $item){
                 /*inserta detalla*/
 
-                $proc="call p_compra_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
+                $proc="call p_compra_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
                 $stmt = mysqli_prepare($db,$proc);
                 mysqli_stmt_execute($stmt);
                 $stmt->close();
@@ -4647,8 +4647,7 @@ $app->post("/compra",function() use($db,$app){
                     }
 
 
-                $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                    VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id),$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $almacen,'{$data->usuario}')";
+                $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_compra`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_ingreso`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)  VALUES({$item->id},{$ultimo_id->ultimo_id},'Ingreso',{$almacen},CONCAT('compra nro:',$ultimo_id->ultimo_id),$item->cantidad,{$cantidad_ingreso},{$cantidad_acumulada},{$item->precio},{$promedio},{$total}, $almacen,'{$data->usuario}')";
 
                 }
 
