@@ -204,13 +204,13 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     array.forEach(item => {
       if (item.id === elemento.id) {
         item.cantidad += cantidad;
-        //item.despacho+=cantidad;
+        item.despacho+=cantidad;
       }
 
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:0,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+    array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -226,7 +226,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:0,pendiente:0,descuento:0,detalle:null},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
 

@@ -1,7 +1,7 @@
 <small><strong>{{data.nombre}}</strong></small>
 <mat-form-field appearance="outline">
     <mat-label>% Descuento</mat-label>
-      <input matInput [(ngModel)]="data.descuento" (ngModelChange)="cambiaDescuento(data.precio,data.descuento)" name="descuento" type="number">
+      <input matInput [(ngModel)]="data.descuento" (ngModelChange)="cambiaDescuento(data.precio,data.descuento)" name="descuento" type="number" autocomplete="off">
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>S/ Monto de descuento</mat-label>

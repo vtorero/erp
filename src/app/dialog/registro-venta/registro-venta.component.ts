@@ -112,8 +112,10 @@ if(imp==""){
 
 
 export class RegistroVentaComponent implements OnInit {
+  public modeselect = 'Ticket';
+
   public MyForm = this.fb.group({
-    tipoDoc: ['', Validators.required],
+    tipoDoc: [''],
     vendedor: ['', Validators.required],
     cliente: ['0', Validators.required],
     pagos: this.fb.array([this.fb.group({
@@ -307,6 +309,15 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
   usuario.setValue(localStorage.getItem("currentId"));
   const sucursal = this.MyForm.get('sucursal') as FormControl;
   sucursal.setValue(sessionStorage.getItem("sucursal_id"));
+
+  const vendedor = this.MyForm.get('vendedor') as FormControl;
+  vendedor.setValue(sessionStorage.getItem("sucursal_id"))
+
+  const toSelect = "Ticket";
+  const docum = this.MyForm.get('tipoDoc') as FormControl;
+  docum.setValue(toSelect);
+
+
 
 
 

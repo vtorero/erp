@@ -1,7 +1,7 @@
 <small>{{data.nombre}}</small>
 <mat-form-field appearance="outline">
     <mat-label>Modificar cantidad</mat-label>
-      <input matInput [(ngModel)]="data.cantidad" name="codigo" type="number">
+      <input matInput [(ngModel)]="data.cantidad" name="codigo" type="number" autocomplete="off">
     </mat-form-field>
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>
