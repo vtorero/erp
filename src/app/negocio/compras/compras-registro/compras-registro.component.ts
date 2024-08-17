@@ -307,20 +307,10 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
            detalle:this.dataRecibo
     },
     });
-     dialogo2.afterClosed().subscribe(ux => {
-      while(this.dataRecibo.length){
-       this.dataRecibo.pop();
-      }
-      this.totalMonto=0;
+  }
 
-     /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
 
-        this.sucursal=d[0]['nombre'];
-        localStorage.setItem("sucursal_id",ux.id);
-         });*/
 
-     });
-    }
 
 
   borrarItem(id){

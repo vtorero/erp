@@ -191,7 +191,7 @@ async getData() {
         console.log("form",this.MyForm.value)
         console.log("detallesss",this.data.detalle)
         this._snackBar.open(data['messaje'],"OK",{duration:5000,verticalPosition:'bottom'});
-       this.MyForm.reset();
+       //this.MyForm.reset();
        this.cancelar()
 
         },
@@ -256,9 +256,17 @@ async getData() {
 
 
   cancelar() {
-    this.dialog.closeAll();
-    this.data.precio=0
 
+    this.dialog.closeAll();
+    console.log(this.MyForm)
+   if(this.MyForm.status=="VALID"){
+    const total =this.data.detalle.length;
+    for (let index = 0; index < total; index++) {
+      console.log(index);
+      this.data.detalle.pop()
+        }
+
+   }
   }
 
   cambiaTicket(value: any){

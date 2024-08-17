@@ -206,13 +206,11 @@ openBusqueda(){
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
-
-
       this.api.getNumeroALetras(ux.datos.valor_total).subscribe(letra => {
       this.textoprecio=letra;
 
       });
-      this.wait(1000);
+      this.wait(2000);
 
         this.api.getApiTablaCriterio('clientes',ux.cliente.id).subscribe(data => {
           if(data[0].nombre) {

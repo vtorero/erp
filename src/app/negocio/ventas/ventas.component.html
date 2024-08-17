@@ -80,10 +80,10 @@
                   </thead>
                   <tbody>
                       <tr *ngFor="let item of dataRecibo; let i=index">
-                          <td>
+                          <td class="txtdato">
                             ({{item.codigo}})
                           </td>
-                          <td>
+                          <td class="txtdato">
                                {{item.nombre}}
                           </td>
                           <td>
@@ -98,7 +98,7 @@
                           <td>
                             <a class="numero_edicion" (click)="openDescuento('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.descuento*item.cantidad  | number}}</a>
                          </td>
-                          <td class="text-primary">
+                          <td class="text-primary txtdato">
                               S/ {{item.cantidad * item.precio-(item.descuento*item.cantidad  | number)}}
                           </td>
                           <td class="text-primary">

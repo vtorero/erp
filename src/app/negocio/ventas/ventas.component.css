@@ -79,7 +79,6 @@
     border-bottom-right-radius: 10px;
     font-size: 11px;
     line-height: 18px;
-    height: 60px !important;
     display: block;
     color: greenyellow;
     margin: 24px auto;
@@ -91,6 +90,13 @@
     font-size: 12px;
 
 }
+
+.txtdato{
+    color:black !important;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
 .precio .texto{
     background: rgba(0,0,0,0.7);
     width: 67px;

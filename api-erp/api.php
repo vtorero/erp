@@ -1284,7 +1284,7 @@ $app->get("/articulos",function() use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id desc");
 
 
 
@@ -1461,6 +1461,8 @@ $app->get("/articulos",function() use($db,$app){
                 }else{
                 $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio} WHERE id={$data->id}";
                 }
+
+
                 $proceso=$db->query($query);
                 if($proceso){
 
@@ -1747,109 +1749,33 @@ echo  json_encode($result);
 
 
 $app->post("/proveedor",function() use($db,$app){
-
-
-
 header("Content-type: application/json; charset=utf-8");
-
-
-
 $json = $app->request->getBody();
-
-
-
 $j = json_decode($json,true);
-
-
-
 $data = json_decode($j['json']);
-
-
-
-
-
-
-
 $ruc=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
-
-
-
 $razon_social=(is_array($data->razon_social)) ? array_shift(str_replace("'","\'",$data->razon_social)):str_replace("'","\'",$data->razon_social);
-
-
-
 $direccion=(is_array($data->direccion))? array_shift($data->direccion): $data->direccion;
-
-
-
 $departamento=(is_array($data->departamento))? array_shift($data->departamento): $data->departamento;
-
-
-
 $provincia=(is_array($data->provincia))? array_shift($data->provincia): $data->provincia;
-
-
-
 $distrito=(is_array($data->distrito))? array_shift($data->distrito): $data->distrito;
-
-
-
 $num_documento=(is_array($data->num_documento))? array_shift($data->num_documento): $data->num_documento;
 
-
-
-
-
-
-
 try {
-
-
-
 $query ="INSERT INTO proveedores (razon_social,direccion, num_documento, departamento,provincia,distrito) VALUES ("
-
-
-
 ."'{$razon_social}',"
-
-
-
 ."'{$direccion}',"
-
-
-
 ."'{$ruc}',"
-
-
-
 ."'{$departamento}',"
-
-
-
 ."'{$provincia}',"
-
-
-
 ."'{$distrito}'".")";
 
 
 
 $db->query($query);
-
-
-
   }
-
-
-
 catch(PDOException $e) {
-
-
-
 $result = array("STATUS"=>true,"messaje"=>$e->getMessage(),"string"=>$query);
-
-
-
 }
 
 
@@ -6732,7 +6658,7 @@ $app->post("/empresa",function() use($db,$app){
 
 
 
-        $json = file_get_contents("https://nal.azurewebsites.net/api/Nal?num={$cantidad}");
+        $json = file_get_contents("http://nal.azurewebsites.net/api/Nal?num={$cantidad}");
 
 
 

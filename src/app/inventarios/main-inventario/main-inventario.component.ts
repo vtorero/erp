@@ -151,7 +151,7 @@ getSucursales(): void {
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new AddInventario(0,0,0,localStorage.getItem("currentId"),'',0,'',localStorage.getItem("sucursal_id"))
+      data:new AddInventario(0,0,0,localStorage.getItem("currentId"),'',0,'',localStorage.getItem("id_suc"))
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

@@ -139,7 +139,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       console.log(fecha2);
       let fechas = {'ini':fecha1,'fin':fecha2}
           console.log("test",JSON.stringify(fechas));
-      sendInvoice(JSON.stringify(fechas),'https://lh-cjm.com/erp-api/reportes.php/exportar');
+      sendInvoice(JSON.stringify(fechas),'https://lh-cjm.com/erp/erp-api/reportes.php/exportar');
       //this.loadVentas(this.fecha1,this.fecha2,empresa);
       //this.renderDataTableConsulta(ini,fin,empresa);
       }

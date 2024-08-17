@@ -15,6 +15,12 @@
 
 }
 
+.txtdato{
+    color:black !important;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
 .flex-container {
     /* We first create a flex layout context */
     display: flex;
@@ -71,6 +77,9 @@
     right: 0;
 }
 
+
+
+
 .titulo{
     top: 10px;
     text-align: center;
@@ -79,7 +88,6 @@
     border-bottom-right-radius: 10px;
     font-size: 12px;
     line-height: 18px;
-    height: 70px !important;
     display: block;
     color: greenyellow;
     margin: 50px auto;

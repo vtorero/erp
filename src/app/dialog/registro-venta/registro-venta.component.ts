@@ -2,12 +2,13 @@ import { Component, Inject, NgModule, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
-import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
+import { FormArray, FormBuilder,  Validators, FormControl, Form } from '@angular/forms';
 import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
 import { DecimalPipe } from '@angular/common';
+import { map } from 'rxjs';
 declare function connetor_plugin(): void;
 
 
@@ -187,6 +188,7 @@ isValidFieldInArray(formArray:FormArray,index:number){
 openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(EntregaParcialComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
   data: this.data,
+
   });
    dialogo2.afterClosed().subscribe(ux => {
     console.log("len",ux.pendiente);
@@ -263,15 +265,12 @@ imprimir() {
       return;
     }
 
-console.log(this.data.detalle)
-console.log(this.MyForm)
+console.log("detalle",this.data.detalle)
+console.log("miform",this.MyForm)
 const print = this.MyForm.get('imprimir') as FormControl;
 let impresora = this.MyForm.get('impresoras') as FormControl;
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
       data=>{
-        console.log("form",this.MyForm.value)
-        console.log("detallesss",this.data.detalle)
-
         this.reciboneto=this.MyForm.value.neto;
          this.reciboigv=this.MyForm.value.igv;
          this.recibototal=this.MyForm.value.total;
@@ -284,18 +283,24 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
 
 
         this._snackBar.open(data['messaje'],"OK",{duration:5000,verticalPosition:'bottom'});
-       this.MyForm.reset();
-       this.cancelar()
+      // this.MyForm.reset();
+
+       this.cancelar();
 
         },
       error=>{console.log(error)
         this._snackBar.open("Ocurrio un Error","OK",{duration:10000,verticalPosition:'bottom'});
-        this.cancelar()
+       // this.cancelar()
       }
         );
       //this.renderDataTable();
   }
 
+borrarItems(){
+ console.log("borraritems")
+//  this.data.detalle=[];
+
+}
 
   ngOnInit(): void {
     this.getMedioPago();
@@ -378,11 +383,28 @@ this.telefonoCliente=data[0].telefono;
       }
     });
     }
+
   cancelar() {
     this.dialog.closeAll();
-    this.data.precio=0
+    console.log(this.MyForm)
+   if(this.MyForm.status=="VALID"){
+
+    const total =this.data.detalle.length;
+    for (let index = 0; index < total; index++) {
+      console.log(index);
+      this.data.detalle.pop()
+        }
+
+
+    }
 
   }
+
+
+
+    //this.data.precio=0
+
+
 
   cambiaTicket(value: any){
       const total2 = this.MyForm.get('total') as FormControl;

@@ -11,6 +11,7 @@ import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-termin
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
 import { Router } from '@angular/router';
 import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.component';
+import { cloudfunctions } from 'googleapis/build/src/apis/cloudfunctions';
 
 
 
@@ -231,9 +232,10 @@ enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:numb
 }
 
 cancelar() {
-  this.dialog.closeAll();
+  //this.dialog.closeAll();
 
 }
+
 
 openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
   const dialogo2=this.dialog.open(ModDescuentoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
@@ -300,10 +302,15 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
    dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
-        if(ux.despacho!=cantidad){
+        if(ux.despacho>cantidad) {
+          alert('El despacho es mayor a la cantidad registrada');
+          return;
+        }
+
+        if(ux.despacho!=cantidad && ux.despacho<cantidad){
         dato.despacho = ux.despacho
         dato.pendiente=dato.cantidad-ux.despacho
-        console.log(dato)
+       /// console.log(dato)
 
       }
       }
@@ -333,26 +340,21 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
     const dialogo2=this.dialog.open(RegistroVentaComponent,{width:'900px',enterAnimationDuration,exitAnimationDuration ,disableClose: true,
     data: {precio:this.totalMonto,
            detalle:this.dataRecibo
+
     },
     });
-     dialogo2.afterClosed().subscribe(ux => {
-      while(this.dataRecibo.length){
-       this.dataRecibo.pop();
-      }
-      this.totalMonto=0;
 
-     /*  this.api.getApiTablaCriterio('sucursales',ux.id).subscribe(d => {
+    /* dialogo2.afterClosed().subscribe(ux => {
+      //console.log(this.dataRecibo)
 
-        this.sucursal=d[0]['nombre'];
-        localStorage.setItem("sucursal_id",ux.id);
-         });*/
 
-     });
+     })
+*/
+
     }
 
 
   borrarItem(id){
-    console.log(id)
     this.dataRecibo.splice(id,1)
     this.sumarMonto(this.dataRecibo)
 
