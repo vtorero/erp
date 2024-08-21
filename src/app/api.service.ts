@@ -308,7 +308,7 @@ public actualizaPendientesCompra(id_venta:number,id_producto:number,id:number,ca
     'id_producto':id_producto,
     'id':id,
     'cantidad':cantidad,
-    'sucursal':localStorage.getItem("sucursal_id"),
+    'sucursal':localStorage.getItem("id_suc"),
     'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);
@@ -327,7 +327,7 @@ public actualizaPendientesVenta(id_venta:number,id_producto:number,id:number,can
     'id_producto':id_producto,
     'id':id,
     'cantidad':cantidad,
-    'sucursal':localStorage.getItem("sucursal_id"),
+    'sucursal':localStorage.getItem("id_suc"),
     'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);
@@ -348,7 +348,7 @@ public actualizaMontoCompra(id_venta:number,tipoPago:number,numero:string,cuenta
     'cuenta_pago':cuentaPago,
     'pendiente':pendiente,
     'monto':monto,
-    'sucursal':sessionStorage.getItem("sucursal_id"),
+    'sucursal':sessionStorage.getItem("id_suc"),
     'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);
@@ -370,7 +370,7 @@ public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:n
     'cuenta_pago':cuentaPago,
     'pendiente':pendiente,
     'monto':monto,
-    'sucursal':sessionStorage.getItem("sucursal_id"),
+    'sucursal':sessionStorage.getItem("id_suc"),
     'usuario':localStorage.getItem("currentId")
   }
   let json = JSON.stringify(datos);

@@ -300,19 +300,23 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
   data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
+    console.log(ux.cantidad)
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
-        if(ux.despacho>cantidad) {
-          alert('El despacho es mayor a la cantidad registrada');
+        if(dato.cantidad<ux.despacho) {
+          alert(`El despacho de: (${ux.despacho}) es mayor a la cantidad registrada: (${dato.cantidad})`);
           return;
+        }else{
+          dato.despacho = ux.despacho
+          dato.pendiente=dato.cantidad-ux.despacho
         }
 
-        if(ux.despacho!=cantidad && ux.despacho<cantidad){
-        dato.despacho = ux.despacho
-        dato.pendiente=dato.cantidad-ux.despacho
+          //if(ux.despacho!=cantidad && ux.despacho<cantidad){
+
        /// console.log(dato)
 
-      }
+
+
       }
    });
    console.log("cantidad",this.dataRecibo)
