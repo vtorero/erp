@@ -3,6 +3,9 @@
       </a>
 </div>
 <div class="sidebar-wrapper">
+    <div class="mt-1" style="font-weight: bold;text-align:center;display:flex;justify-content: center;">
+        <i class="material-icons">person</i>({{currentname}})
+    </div>
   <div *ngIf="isMobileMenu()">
     <form class="navbar-form">
       <span class="bmd-form-group">
@@ -50,6 +53,7 @@
         </li>
     </ul>
   </div>
+
     <ul class="nav" *ngIf="currentname=='admin'">
            <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
 
