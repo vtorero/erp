@@ -14,3 +14,11 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
 }
 mat-header-cell{font-size: 14px; font-weight: 700;}
 mat-cell{font-size: 13px;  font-weight: 400;color: black !important}
+
+mat-datepicker-toggle
+{
+    float: right !important;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}

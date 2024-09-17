@@ -18,7 +18,7 @@
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Vendedor</mat-label>
-                    <mat-select name="vendedor" formControlName="vendedor"  required>
+                    <mat-select name="vendedor" formControlName="vendedor" required>
                         <mat-option value="">Seleccionar</mat-option>
                         <mat-option *ngFor="let ven of dataVendedores" [value]="ven.id">{{ven.nombre}}</mat-option>
 

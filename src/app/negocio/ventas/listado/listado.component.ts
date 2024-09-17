@@ -106,6 +106,10 @@ if(imp==""){
 
 
 export class ListadoComponent implements OnInit {
+  public selectedMoment = new Date();
+  public selectedMoment2 = new Date();
+  fec1= this.selectedMoment.toDateString().split(" ",4);
+  fec2 = this.selectedMoment2.toDateString().split(" ",4);
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;
@@ -113,6 +117,7 @@ export class ListadoComponent implements OnInit {
   clientetexto:string='Sin Cliente';
   telefonoCliente:string='';
   direccioncliente:string='';
+  currentname:string='';
   textoprecio:any;
   numero_doc:string;
   reciboneto:number=0;
@@ -122,6 +127,8 @@ export class ListadoComponent implements OnInit {
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
   displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
+  dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
+  public id_estado:any=1;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -136,6 +143,7 @@ export class ListadoComponent implements OnInit {
       this.router.navigate(['']);
       }
     this.renderDataTable();
+    this.currentname=localStorage.getItem("currentNombre");
   }
 
   applyFilter(filterValue: string) {
@@ -192,6 +200,18 @@ openBusqueda(){
   }else{
     this._snackBar.open('Debe seleccionar un registro','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
   }
+  }
+
+  consultar(){
+    console.log("first")
+    var fec1 = this.selectedMoment.toDateString().split(" ",4);
+    var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+    let ini=fec1[1]+fec1[2]+fec1[3];
+    let fin=fec2[1]+fec2[2]+fec2[3];
+    console.log("inicio",ini);
+    console.log("fin",fin);
+    console.log("estado",this.id_estado)
+
   }
 
   openImprimir(enterAnimationDuration: string, exitAnimationDuration: string){
