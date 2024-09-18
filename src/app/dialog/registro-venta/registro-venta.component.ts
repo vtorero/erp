@@ -122,7 +122,7 @@ export class RegistroVentaComponent implements OnInit {
     pagos: this.fb.array([this.fb.group({
       tipoPago: ['', Validators.required],
       cuentaPago:['',Validators.required],
-      numero:[''],
+      numero:['',Validators.required],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]
 
     })]),
@@ -225,6 +225,8 @@ this.openEntrega('20ms','20ms')
 onAddToPago():void{
   const PagoGroup = this.fb.group({
 		tipoPago: ['', Validators.required],
+    cuentaPago:['',Validators.required],
+    numero:['', Validators.required],
     montoPago: ['', [Validators.required, Validators.min(0.1)]],
 	});
 	this.Pagos.push(PagoGroup);

@@ -32,7 +32,7 @@
               <mat-form-field appearance="outline">
               <mat-label>Fecha Inicio</mat-label>
               <input name="fecha" [(ngModel)]="selectedMoment" #fecha="ngModel"  matInput [matDatepicker]="picker">
-              <mat-hint>DD/MM/YYYY</mat-hint>
+
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
@@ -41,7 +41,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Fecha Fin</mat-label>
               <input name="fecha2" [(ngModel)]="selectedMoment2"  #fecha2="ngModel" matInput [matDatepicker]="picker2">
-              <mat-hint>DD/MM/YYYY</mat-hint>
+
               <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
@@ -53,7 +53,7 @@
         </mat-select>
       </mat-form-field>
       </div>
-      <div class="col-3 d-flex">
+      <div class="col-3 d-flex pt-1">
         <button type="button" (click)="consultar()"  mat-raised-button color="primary" style="height:50px">
           <i class="material-icons">search</i> Buscar
         </button>
