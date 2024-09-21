@@ -156,6 +156,8 @@ this.dataMedios=data;
 onAddToPago():void{
   const PagoGroup = this.fb.group({
 		tipoPago: ['', Validators.required],
+    cuentaPago:['',Validators.required],
+    numero:['', Validators.required],
     montoPago: ['', [Validators.required, Validators.min(0.1)]],
 	});
 	this.Pagos.push(PagoGroup);
@@ -343,6 +345,9 @@ else{
   }
 */
   cambiaVuelto(precio:number){
+    const tipoD = this.MyForm.get('tipoDoc') as FormControl;
+
+
     var vuelto = this.MyForm.get('vuelto') as FormControl;
     const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
     let depositos=0;
@@ -365,7 +370,13 @@ else{
      else{
       this.vuelto='Vuelto';
      }
-     vuelto.setValue((total-precio).toFixed(2));
+     if(tipoDoc1.value=="Factura"){
+        vuelto.setValue(((total+total*Global.BASE_IGV)-precio).toFixed(2));
+      }else{
+        vuelto.setValue((total-precio).toFixed(2));
+      }
+
+
      this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
         console.log("letra",letra)
      // this.textoprecio=letra;
