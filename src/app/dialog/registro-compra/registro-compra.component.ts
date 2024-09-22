@@ -345,35 +345,36 @@ else{
   }
 */
   cambiaVuelto(precio:number){
-    const tipoD = this.MyForm.get('tipoDoc') as FormControl;
-
-
+    console.log("recibido",precio);
     var vuelto = this.MyForm.get('vuelto') as FormControl;
+    const costoTotal = this.MyForm.get('total') as FormControl;
     const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
+    const mpendiente = this.MyForm.get('montopendiente') as FormControl;
     let depositos=0;
-    let total:number=0;
-        this.MyForm.value.pagos.forEach(element => {
-          console.log(element)
-
-
-
-        depositos+=element.montoPago;
-        console.log("deposito",depositos)
-
-        });
-     total=depositos;
-     if(precio>total){
+    this.MyForm.value.pagos.forEach(element => {
+          depositos+=element.montoPago;
+      });
+     if(precio>depositos){
      this.vuelto='Pendiente';
      const mpendiente = this.MyForm.get('montopendiente') as FormControl;
-      mpendiente.setValue((precio-depositos).toFixed(2));
+     if(tipoDoc1.value=="Factura"){
+      mpendiente.setValue((costoTotal.value-depositos).toFixed(2))
+      //mpendiente.setValue(((precio+precio*Global.BASE_IGV)-depositos).toFixed(2));
+     }else{
+      mpendiente.setValue((costoTotal.value-depositos).toFixed(2));
+     }
      }
      else{
       this.vuelto='Vuelto';
      }
      if(tipoDoc1.value=="Factura"){
-        vuelto.setValue(((total+total*Global.BASE_IGV)-precio).toFixed(2));
+
+      vuelto.setValue((costoTotal.value-depositos).toFixed(2));
+      mpendiente.setValue((costoTotal.value-depositos).toFixed(2));
+      //  vuelto.setValue(((total+total*Global.BASE_IGV)-precio).toFixed(2));
       }else{
-        vuelto.setValue((total-precio).toFixed(2));
+        vuelto.setValue((costoTotal.value-depositos).toFixed(2));
+        mpendiente.setValue((costoTotal.value-depositos).toFixed(2))
       }
 
 

@@ -440,6 +440,7 @@ this.telefonoCliente=data[0].telefono;
 
   cambiaVuelto(precio:number){
 var vuelto = this.MyForm.get('vuelto') as FormControl;
+
 const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;
 let depositos=0;
 let total:number=0;
@@ -449,7 +450,8 @@ let total:number=0;
 
 
     depositos+=element.montoPago;
-    console.log("deposito",depositos)
+    console.log("deposito",depositos);
+
 
     });
  total=depositos;
