@@ -1,67 +1,21 @@
 <?php
 
-
-
 header('Access-Control-Allow-Origin:*');
-
-
-
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
-
-
-
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-
-
-
 header("Allow: GET, POST, OPTIONS, PUT, DELETE");
-
-
-
 $method = $_SERVER['REQUEST_METHOD'];
-
-
-
 if($method == "OPTIONS") {
-
-
-
     die();
-
-
-
 }
-
-
-
 require_once 'vendor/autoload.php';
-
-
-
-
-
-
-
 use Psr\Http\Message\ResponseInterface as Response;
-
-
-
 use Psr\Http\Message\ServerRequestInterface as Request;
-
-
-
-
-
-
-
 $app = new Slim\Slim();
 
 
-
-
-
-$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-
+//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+$db = new mysqli("localhost","root","","aprendea_erp");
 
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -1773,21 +1727,12 @@ $query ="INSERT INTO proveedores (razon_social,direccion, num_documento, departa
 
 
 $db->query($query);
+$result = array("STATUS"=>true,"messaje"=>"Proveedor agregado correctamente");
+
   }
 catch(PDOException $e) {
 $result = array("STATUS"=>true,"messaje"=>$e->getMessage(),"string"=>$query);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -3991,7 +3936,7 @@ $sql1.="group by 1 order by id asc";
 
 
         $resultado = $db->query($sql1);
-       $prods=array();
+        $prods=array();
        $detalle=array();
            while ($fila = $resultado->fetch_array()) {
             $fila['detalle'];
@@ -4267,7 +4212,7 @@ $app->get("/compras",function() use($db,$app){
 $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
-     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id and  v.estado=1 inner join usuarios u on v.id_usuario=u.id order by 1 desc");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
             $prods[]=$fila;
@@ -4509,7 +4454,7 @@ $app->post("/compra",function() use($db,$app){
                  $ultimo_id=$d;
                  }
                  foreach($data->pagos as $pago){
-                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
+                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$data->montopendiente},'{$data->usuario}')";
                 $stmtP = mysqli_prepare($db,$procP);
                 mysqli_stmt_execute($stmtP);
                  }
@@ -4643,8 +4588,9 @@ $app->post("/compra",function() use($db,$app){
                     while ($d = $datos->fetch_object()) {
                      $ultimo_id=$d;
                      }
+
                      foreach($data->pagos as $pago){
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente},{$data->usuario})";
                     $stmtP = mysqli_prepare($db,$procP);
                     mysqli_stmt_execute($stmtP);
                      }
@@ -4727,8 +4673,8 @@ $app->post("/compra",function() use($db,$app){
 
             if($prods[0]["monto_pendiente"]>=$data->monto){
 
-            $query ="INSERT INTO compra_pagos (`id_compra`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`)
-             VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1)";
+            $query ="INSERT INTO compra_pagos (`id_compra`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`,`usuario`)
+             VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1,'{$data->usuario}')";
             $db->query($query);
 
              $query2 ="UPDATE compras SET monto_pendiente=({$prods[0]["monto_pendiente"]}-{$data->monto}) where id={$data->id_venta}";
@@ -4795,7 +4741,7 @@ $app->post("/compra",function() use($db,$app){
 
             if($prods[0]["monto_pendiente"]>=$data->monto){
 
-            $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1)";
+            $query ="INSERT INTO venta_pagos (`id_venta`,`tipoPago`,`numero_operacion`,`cuentaPago`,`monto`,`monto_pendiente`,`estado`,`usuario`)  VALUES({$data->id_venta},{$data->tipo_pago},{$data->numero},{$data->cuenta_pago},{$data->monto},{$prods[0]["monto_pendiente"]}-{$data->monto},1,'{$data->usuario}')";
             $db->query($query);
 
              $query2 ="UPDATE ventas SET monto_pendiente=({$prods[0]["monto_pendiente"]}-{$data->monto}) where id={$data->id_venta}";
@@ -8739,65 +8685,19 @@ function numero_letras(){
 
 
 function ordena_fecha($inicio,$fin){
-
-
-
     $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
-
-
-
     $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
-
-
-
     $mes1=substr($inicio, 0,3);
-
-
-
     $mes2=substr($fin, 0,3);
-
-
-
     $dia1=substr($inicio, 3,2);
-
-
-
-    $dia2=substr($fin, 3,2);
-
-
-
-    $ano1=substr($inicio, 5,4);
-
-
-
+     $dia2=substr($fin, 3,2);
+     $ano1=substr($inicio, 5,4);
     $ano2=substr($fin, 5,4);
-
-
-
-    $fmes1=str_replace($arraymeses,$arraynros,$mes1);
-
-
-
+   $fmes1=str_replace($arraymeses,$arraynros,$mes1);
     $fmes2=str_replace($arraymeses,$arraynros,$mes2);
-
-
-
     $ini=$ano1.'-'.$fmes1.'-'.$dia1;
-
-
-
     $fin=$ano2.'-'.$fmes2.'-'.$dia2;
-
-
-
     return array("inicio"=>$ini,"final"=>$fin);
-
-
-
-
-
-
-
 }
 
 

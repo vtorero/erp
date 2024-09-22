@@ -14,8 +14,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app = new Slim\Slim();
-$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-//$db = new mysqli("localhost","marife","libido16","frdash_dev");
+//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+$db = new mysqli("localhost","root","","aprendea_erp");
+
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 mysqli_set_charset($db, 'utf8');
@@ -125,11 +126,16 @@ $app->post("/reporte",function() use($db,$app){
                         $infoventas[]=$row;
                 }
 
-                $sql_r="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+                /*$sql_r="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
                 and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
 SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
                 and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
 
+*/
+$sql_r="SELECT v.id,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'  union all
+SELECT v.id,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by fecha_registro desc;";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -420,11 +426,15 @@ SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(dat
     /*    $sql="SELECT vp.id,vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
         and vp.fecha_registro BETWEEN '".$ini."' and '".$fin."'";*/
 
-$sql="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
+/*$sql="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
 SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";*/
 
+$sql="SELECT v.id,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'  union all
+SELECT v.id,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by fecha_registro desc;";
 
          $query = $db->query($sql);
 
@@ -436,7 +446,7 @@ and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
                 $fields = array('ID','FECHA','MOVIMIENTO','USUARIO','SUCURSAL','RESPONSABLE','FORMA PAGO' ,'MONTO');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha_registro'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['responsable'],$row['tipopago'],$row['monto']);
+                    $lineData  = array($row['id'],$row['fecha_registro'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['responsable'],$row['tipopago'],$row['aporte']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
