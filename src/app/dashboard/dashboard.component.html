@@ -460,6 +460,12 @@
     <button type="button"  class="enviar"  (click)="enviaExcel()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
         <!--  Columna ID-->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
+                 </mat-cell>
+      </ng-container>
         <ng-container matColumnDef="fecha_registro">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
@@ -484,9 +490,9 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</mat-header-cell>
     <mat-cell *matCellDef="let row">{{row.tipopago}} </mat-cell>
 </ng-container>
-<ng-container matColumnDef="monto">
+<ng-container matColumnDef="aporte">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
-    <mat-cell *matCellDef="let row">{{row.monto}} </mat-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.aporte | number}} </mat-cell>
 </ng-container>
 
           <!-- Columna Nacionalidad -->

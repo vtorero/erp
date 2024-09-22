@@ -5,6 +5,11 @@ import * as Chartist from 'chartist';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Global } from '../global';
+import { Venta } from 'app/modelos/venta';
+import { VerVentaComponent } from 'app/negocio/ventas/ver-venta/ver-venta.component';
+import { MatDialog } from '@angular/material/dialog';
+import { VerCompraComponent } from '../negocio/compras/ver-compra/ver-compra.component';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -30,13 +35,14 @@ function sendInvoice(data,url) {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  public selectedMoment = new Date();
+
+public selectedMoment = new Date();
 public selectedMoment2 = new Date();
 ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
 dataSource: any;
-displayedColumns = ['fecha_registro','Ingreso','usuario','sucursal','responsable','tipopago','monto'];
+displayedColumns = ['id','fecha_registro','Ingreso','usuario','sucursal','responsable','tipopago','aporte'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
@@ -45,6 +51,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
+    public dialog2: MatDialog,
      private api: ApiService
   ) {
 
@@ -139,7 +146,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       console.log(fecha2);
       let fechas = {'ini':fecha1,'fin':fecha2}
           console.log("test",JSON.stringify(fechas));
-      sendInvoice(JSON.stringify(fechas),'https://lh-cjm.com/erp/erp-api/reportes.php/exportar');
+      sendInvoice(JSON.stringify(fechas),Global.BASE_API_URL+'reportes.php/exportar');
       //this.loadVentas(this.fecha1,this.fecha2,empresa);
       //this.renderDataTableConsulta(ini,fin,empresa);
       }
@@ -149,17 +156,11 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
     loadVentas(inicio:string,final:string,empresa:string){
       this.api.getVentaBoletas(inicio,final,empresa)
       .subscribe(data => {
-
         this.dataSource = new MatTableDataSource();
         this.dataSource.data = data['reporte'];
         this.empTbSort.disableClear = true;
         this.dataSource.sort = this.empTbSort;
         this.dataSource.paginator = this.paginator;
-
-
-
-
-
         this.ventaTotal=data['boletas'][0].total;
         this.montoPendiente=data['pendiente'][0].pendiente;
         this.montoCompras = data['gasto'][0].gasto;
@@ -296,4 +297,19 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
     }
 
+    abrirEditar(cod: Venta) {
+      console.log(cod['Ingreso']);
+      if(cod['Ingreso']=='Ingreso'){
+      const dialogo2 = this.dialog2.open(VerVentaComponent, {
+        data: cod,
+        disableClose: false
+      });
+    }
+    if(cod['Ingreso']=='Salida'){
+      const dialogo2 = this.dialog2.open(VerCompraComponent, {
+        data: cod,
+        disableClose: false
+      });
+    }
+    }
 }
