@@ -492,7 +492,7 @@
 </ng-container>
 <ng-container matColumnDef="aporte">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
-    <mat-cell *matCellDef="let row">S/ {{row.aporte | number}} </mat-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.aporte | number:'0.2'}} </mat-cell>
 </ng-container>
 
           <!-- Columna Nacionalidad -->
