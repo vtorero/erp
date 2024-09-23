@@ -203,7 +203,6 @@ openBusqueda(){
   }
 
   consultar(){
-    console.log("first")
     var fec1 = this.selectedMoment.toDateString().split(" ",4);
     var fec2 = this.selectedMoment2.toDateString().split(" ",4);
     let ini=fec1[1]+fec1[2]+fec1[3];
@@ -211,6 +210,15 @@ openBusqueda(){
     console.log("inicio",ini);
     console.log("fin",fin);
     console.log("estado",this.id_estado)
+    this.api.consultaVentas(ini,fin,this.id_estado).subscribe(data=>{
+      this.dataSource = new MatTableDataSource();
+      this.dataSource.data = data;
+      this.empTbSort.disableClear = true;
+      this.dataSource.sort = this.empTbSort;
+      this.dataSource.paginator = this.paginator;
+
+
+    })
 
   }
 

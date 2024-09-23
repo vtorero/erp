@@ -358,6 +358,21 @@ public actualizaMontoCompra(id_venta:number,tipoPago:number,numero:string,cuenta
   )
 }
 
+public consultaVentas(finicio:string,ffin:string,estado:string):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'ini':finicio,
+    'fin':ffin,
+    'estado':estado
+  }
+  let json = JSON.stringify(datos);
+
+  return this._http.post(Global.BASE_API_URL + "api.php/consulta-ventas",{ json: json },
+  { headers: headers });
+}
 
 public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
   let headers = new HttpHeaders().set(
