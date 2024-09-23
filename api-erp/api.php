@@ -4204,7 +4204,39 @@ $app->get("/compras",function() use($db,$app){
 });
 
 
+/** Consultar ventas*/
 
+$app->post("/consulta-ventas",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $json = $app->request->getBody();
+    $j = json_decode($json,true);
+    $dat = json_decode($j['json']);
+    $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+    $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
+
+    $mes1=substr($dat->ini, 0,3);
+    $mes2=substr($dat->fin, 0,3);
+    $dia1=substr($dat->ini, 3,2);
+    $dia2=substr($dat->fin, 3,2);
+    $ano1=substr($dat->ini, 5,4);
+    $ano2=substr($dat->fin, 5,4);
+    $fmes1=str_replace($arraymeses,$arraynros,$mes1);
+    $fmes2=str_replace($arraymeses,$arraynros,$mes2);
+    $ini=$ano1.'-'.$fmes1.'-'.$dia1;
+    $fin=$ano2.'-'.$fmes2.'-'.$dia2;
+
+    $resultado=$db->query("SELECT v.id,v.estado,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id
+    where v.fecha_registro between '{$ini}' and '{$fin}'  and v.estado={$dat->estado} order by 1 desc;");
+
+     $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo $respuesta;
+
+
+});
 
 
 /**listado ventas */
