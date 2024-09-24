@@ -230,6 +230,15 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+getSucursalUsuario(){
+
+   const usuario = localStorage.getItem("currentId");
+   return this._http
+   .get(Global.BASE_API_URL + "api.php/sucursalusuario/"+ usuario, { headers: this.headers })
+   .pipe(map((result) => result));
+
+}
+
 
   getApiTabla(criterio){
     return this._http

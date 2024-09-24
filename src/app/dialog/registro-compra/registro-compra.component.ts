@@ -248,8 +248,7 @@ async getData() {
   }
 
   getSucursales(): void {
-
-    this.api.getApiTabla('/sucursales').subscribe(data => {
+    this.api.getSucursalUsuario().subscribe(data => {
       if(data) {
         this.dataSucursales = data;
       }
