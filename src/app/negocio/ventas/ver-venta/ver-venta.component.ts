@@ -98,8 +98,8 @@ export class VerVentaComponent implements OnInit {
      dialogo2.afterClosed().subscribe(ux => {
       this.dataDetalle.forEach(element => {
        if(element.id==id){
-        this.dataDetalle[index].pendiente=ux.cantidad;
-        this.api.actualizaPendientesVenta(id_venta,id_producto,id,ux.cantidad).subscribe(
+       // this.dataDetalle[index].pendiente=ux.cantidad;
+        this.api.actualizaPendientesVenta(id_venta,id_producto,id,this.dataDetalle[index].pendiente,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },

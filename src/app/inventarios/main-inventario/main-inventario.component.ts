@@ -27,7 +27,7 @@ export class MainInventarioComponent implements OnInit {
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['producto_id','nombre','cantidad','almacen','fecha_actualizacion'];
+  displayedColumns = ['producto_id','codigo','nombre','cantidad','almacen','fecha_actualizacion'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,

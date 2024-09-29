@@ -605,15 +605,16 @@ $app->get("/buscarclientes/:criterio",function($criterio) use($db,$app){
     $app->get("/buscarproducto/:criterio",function($criterio) use($db,$app){
         header("Content-type: application/json; charset=utf-8");
 
+        $sql="SELECT * FROM aprendea_erp.productos where nombre like '%".$criterio."%' OR id like '%".$criterio."%' OR codigo like '%".$criterio."%' ";
         try{
-        $resultado = $db->query("SELECT * FROM aprendea_erp.productos where nombre like '%".$criterio."%' OR id like '%".$criterio."%'");
+        $resultado = $db->query($sql);
         $prods=array();
         while ($fila = $resultado->fetch_array()) {
             $prods[]=$fila;
         }
         $respuesta=json_encode($prods);
         }catch (PDOException $e){
-        $respuesta=json_encode(array("status"=>$e->message));
+        $respuesta=json_encode(array("status"=>$e->message,"query"=>$sql));
         }
 
         echo  $respuesta;
@@ -1164,56 +1165,34 @@ $app->post("/usuario_del",function() use($db,$app){
 
 
 
-$app->get("/articulos/:criterio",function($criterio) use($db,$app){
+$app->post("/buscaarticulos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+           $j = json_decode($json,true);
+           $data = json_decode($j['json']);
 
-$palabras = explode(" ",$criterio);
-
-$criterios="";
-foreach ($palabras as $valor) {
-    $criterios.= " p.nombre like '%".$valor."%' AND";
-}
-
-$refinado=substr($criterios, 0, -3);
-
-
-
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and {$refinado} order by id;");
+           $palabras = explode(" ",$data);
+            $criterios="";
+            foreach ($palabras as $valor) {
+                $criterios.= " p.nombre like '%".$valor."%' AND";
+            }
+            $refinado=substr($criterios, 0, -3);
 
 
 
+ $resultado = $db->query("SELECT p.id,p.codigo, p.nombre,(select nombre from categorias where id=p.id_categoria) categoria,
+ (select nombre from sub_categorias where id=p.id_subcategoria) subcategoria,
+ (select nombre from sub_sub_categorias where id=p.id_sub_sub_categoria) familia,p.unidad,p.precio,p.imagen
+  FROM aprendea_erp.productos p where {$refinado} OR p.codigo like '%{$data}%';");
+
+        /*$resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and {$refinado} order by id;");*/
     $prods=array();
 
-
-
         while ($fila = $resultado->fetch_array()) {
-
-
-
-
-
-
-
             $prods[]=$fila;
-
-
-
         }
-
-
-
         $respuesta=json_encode($prods);
-
-
-
-        echo  $respuesta;
-
-
-
-
-
-
-
+         echo  $respuesta;
     });
 
 
@@ -3335,7 +3314,7 @@ $app->get("/inventarios",function() use($db,$app){
             header("Content-type: application/json; charset=utf-8");
 
 
-            $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id and i.id_almacen={$id}");
+            $resultado = $db->query("SELECT producto_id,a.codigo,a.nombre,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id and i.id_almacen={$id}");
 
             $prods=array();
 
@@ -3824,7 +3803,7 @@ $app->get("/inventario",function() use($db,$app){
 
 
 
-     $resultado = $db->query("SELECT producto_id,a.nombre,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id");
+     $resultado = $db->query("SELECT producto_id,a.nombre,a.codigo,id_almacen, s.nombre as almacen ,cantidad,fecha_actualizacion  FROM aprendea_erp.inventario i, productos a,sucursales s  where i.id_almacen=s.id and a.id=i.producto_id");
 
 
 
@@ -4226,7 +4205,7 @@ $app->post("/consulta-ventas",function() use($db,$app){
     $fin=$ano2.'-'.$fmes2.'-'.$dia2;
 
     $resultado=$db->query("SELECT v.id,v.estado,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id
-    where v.fecha_registro between '{$ini}' and '{$fin}'  and v.estado={$dat->estado} order by 1 desc;");
+    where v.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59'  and v.estado={$dat->estado} order by 1 desc;");
 
      $prods=array();
         while ($fila = $resultado->fetch_array()) {
@@ -4288,6 +4267,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $json = $app->request->getBody();
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
+        $cantidad_acumulada=0;
 
         $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$data->id_producto} and id_sucursal={$data->id_sucursal}  order by id desc limit 1");
 
@@ -4451,6 +4431,7 @@ $app->post("/compra",function() use($db,$app){
     $data = json_decode($j['json']);
     $detalle = json_decode($j['detalle']);
     $fecha=substr($data->fecha,0,10);
+    $cantidad_acumulada=0;
     $valor_total=0;
             try {
                 $almacen=$data->sucursal;
@@ -4607,7 +4588,7 @@ $app->post("/compra",function() use($db,$app){
 
                     foreach($detalle as $item){
                     /*inserta detalla*/
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->despacho},{$item->pendiente},{$item->descuento},{$item->precio})";
                     $stmt = mysqli_prepare($db,$proc);
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
@@ -4621,10 +4602,10 @@ $app->post("/compra",function() use($db,$app){
 
                         $total=number_format($inv["total"]-($item->cantidad*$inv["promedio"]),2, '.', '');
 
-                                $cantidad_acumulada=$inv["cantidad_acumulada"]-$item->cantidad;
+                                $cantidad_acumulada=$inv["cantidad_acumulada"]-($item->cantidad-$item->despacho);
 
                         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                        VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),{$item->cantidad},-{$item->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+                        VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),({$item->cantidad}-{$item->despacho}),-({$item->cantidad}-{$item->despacho}),{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
 
                         }
 
@@ -4632,14 +4613,14 @@ $app->post("/compra",function() use($db,$app){
 
                             $total=number_format($item->cantidad*$item->precio,2, '.', '');
 
-                                    $cantidad_acumulada=-$item->cantidad;
+                                    $cantidad_acumulada=-($item->cantidad-$item->despacho);
 
                             $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                            VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),{$item->cantidad},-{$item->cantidad},{$cantidad_acumulada},{$item->precio},{$item->precio},$total,$data->sucursal,'{$data->usuario}');";
+                            VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),({$item->cantidad}-{$item->despacho}),-({$item->cantidad}-{$item->despacho}),{$cantidad_acumulada},{$item->precio},{$item->precio},$total,$data->sucursal,'{$data->usuario}');";
 
                             }
 
-                        $sql2="UPDATE inventario  SET cantidad = cantidad-{$item->cantidad},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
+                        $sql2="UPDATE inventario SET cantidad = cantidad-{$item->cantidad},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
                         $db->query($sql2);
 
 
@@ -4853,6 +4834,8 @@ $app->post("/compra",function() use($db,$app){
         $json = $app->request->getBody();
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
+        print_r($data);
+        die;
         $resultado = $db->query("SELECT  d.* FROM aprendea_erp.venta_detalle d where id={$data->id} and id_venta={$data->id_venta}");
         $prods=array();
 
@@ -4861,6 +4844,40 @@ $app->post("/compra",function() use($db,$app){
     }
 
     $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_venta']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
+
+    $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$prods[0]['id_producto']} and id_sucursal={$data->sucursal}  order by id desc limit 1");
+    $inv = $resultado->fetch_array();
+
+    //print_r($inv);
+
+    if($inv["precio"]!="0.00"){
+
+        $total=number_format($inv["total"]-($data->cantidad*$inv["promedio"]),2, '.', '');
+
+                $cantidad_acumulada=$inv["cantidad_acumulada"]-($item->cantidad-$item->despacho);
+
+        $sql1="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
+        VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-{$data->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+
+        }
+
+        if($inv["precio"]=="0.00" and $inv["promedio"]=="0.00"){
+
+            $total=number_format($data->cantidad*$inv['precio'],2, '.', '');
+
+                    $cantidad_acumulada=-$data->cantidad;
+
+            $sql1="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
+                VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-{$data->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+
+            }
+
+
+
+
+    $stmt = mysqli_prepare($db,$sql1);
+    mysqli_stmt_execute($stmt);
+                  $stmt->close();
 
     $stmt2 = mysqli_prepare($db,$sql);
     mysqli_stmt_execute($stmt2);

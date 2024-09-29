@@ -327,7 +327,7 @@ public actualizaPendientesCompra(id_venta:number,id_producto:number,id:number,ca
   )
 }
 
-public actualizaPendientesVenta(id_venta:number,id_producto:number,id:number,cantidad:number):Observable<any>{
+public actualizaPendientesVenta(id_venta:number,id_producto:number,id:number,pendiente:number,cantidad:number):Observable<any>{
   let headers = new HttpHeaders().set(
     "Content-Type",
     "application/x-www-form-urlencoded"
@@ -337,6 +337,7 @@ public actualizaPendientesVenta(id_venta:number,id_producto:number,id:number,can
     'id_producto':id_producto,
     'id':id,
     'cantidad':cantidad,
+    'pendiente':pendiente,
     'sucursal':localStorage.getItem("id_suc"),
     'usuario':localStorage.getItem("currentId")
   }
@@ -647,10 +648,11 @@ public delProducto(datos: Productos): Observable<any> {
   );
 }
 
-public BuscarProducto(criterio:string): Observable<any> {
-
-  //return this._http.get<Categoria[]>(Global.BASE_API_URL + 'api.php/categorias', { headers: this.headers });
-  return this._http.get(Global.BASE_API_URL + 'api.php/articulos/' + criterio, { headers: this.headers });
+public BuscarProducto(datos:string): Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/buscaarticulos',
+    { json: json }, { headers: headers });
 }
 
 //*Buscar x Categoria*/
