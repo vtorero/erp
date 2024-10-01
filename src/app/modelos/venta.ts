@@ -6,7 +6,7 @@ export class Venta {
         public id_vendedor:any,
         public id_sucursal:any,
         public cliente:any,
-        public	estado:number,
+        public	estado:string,
         public nro_comprobante:string,
         public fecha:any,
         public fechaPago:any,

@@ -69,17 +69,19 @@ loginUser(usuario,password){
             localStorage.removeItem("currentAvatar");
             localStorage.removeItem("currentEmpresa");
             sessionStorage.removeItem("hashsession");
+            sessionStorage.removeItem("sucursal_id");
             localStorage.setItem("currentId",data['data'][0]['id']);
             localStorage.setItem("id_suc",data['data'][0]['id_sucursal']);
             localStorage.setItem("sucursal",data['data'][0]['sucursal']);
             localStorage.setItem("direccion",data['data'][0]['direccion']);
             localStorage.setItem("telefono",data['data'][0]['telefono']);
             localStorage.setItem("email",data['data'][0]['email']);
-            sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             localStorage.setItem("currentNombre",data['data'][0]['nombre']);
             localStorage.setItem("currentEmpresa",data['data'][0]['nombre']);
             localStorage.setItem("impresora",data['data'][0]['avatar']);
+            sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
+            sessionStorage.setItem("sucursal_id",data['data'][0]['id_sucursal']);
 
             console.log("data",data['data'][0]['nombre']);
 

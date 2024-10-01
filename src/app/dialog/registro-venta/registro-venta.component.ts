@@ -280,7 +280,7 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
           console.log("impresoras",impresora.value);
         //this.imprimir();
         //enviarTicketera(impresora.value,this.data.detalle)
-        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("sucursal_id")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
+        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("id_suc")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
         }
 
 
@@ -318,7 +318,7 @@ borrarItems(){
   sucursal.setValue(sessionStorage.getItem("sucursal_id"));
 
   const vendedor = this.MyForm.get('vendedor') as FormControl;
-  vendedor.setValue(sessionStorage.getItem("sucursal_id"))
+  vendedor.setValue(localStorage.getItem("currentId"))
 
   const toSelect = "Ticket";
   const docum = this.MyForm.get('tipoDoc') as FormControl;

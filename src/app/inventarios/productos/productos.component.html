@@ -18,8 +18,8 @@
         <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
           <i class="material-icons">search</i>
         </button>
-        <button mat-icon-button color="primary" aria-label="Example icon button with a open in new tab icon">
-          <i class="material-icons">file_upload</i>
+        <button mat-icon-button color="primary"  (click)="enviaExcel()" aria-label="Example icon button with a open in new tab icon">
+          <i class="material-icons">file_download</i>
         </button>
         <mat-form-field *ngIf="buscador">
           <input matInput width="350" (keyup)="applyFilter($event.target.value)"

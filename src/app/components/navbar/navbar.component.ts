@@ -26,12 +26,18 @@ export class NavbarComponent implements OnInit {
 cerrar(){
     console.log("ceeeerrrar");
     localStorage.removeItem("currentId");
-    sessionStorage.removeItem("currentUser");
     localStorage.removeItem("currentNombre");
     localStorage.removeItem("currentAvatar");
     localStorage.removeItem("currentEmpresa");
+    localStorage.removeItem("id_suc");
+    localStorage.removeItem("direccion");
+    localStorage.removeItem("email");
+    localStorage.removeItem("sucursal");
+    localStorage.removeItem("telefono");
+    /*Session manage*/
     sessionStorage.removeItem("hashsession");
-    localStorage.removeItem("sucursal_id");
+    sessionStorage.removeItem("currentUser");
+    sessionStorage.removeItem("sucursal_id");
     this.router.navigate(['/']);
 }
 

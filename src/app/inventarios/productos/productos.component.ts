@@ -9,7 +9,24 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
+import { Global } from 'app/global';
 
+function sendInvoice(data,url) {
+  fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/vnd.ms-excel'
+    },
+    body:data
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "productos.xls";
+      link.click();
+    });
+}
 
 @Component({
   selector: 'app-proveedores',
@@ -50,6 +67,11 @@ openBusqueda(){
     this.buscador=true;
   }
 }
+
+enviaExcel(){
+
+  sendInvoice({},Global.BASE_API_URL+'reportes.php/productos');
+    }
 
   selected(row) {
     this.selectedRowIndex=row;
