@@ -3882,9 +3882,11 @@ $app->get("/movimiento/:id",function($id) use($db,$app){
 
     $app->post("/kardex",function() use($db,$app){
         header("Content-type: application/json; charset=utf-8");
+
         $json = $app->request->getBody();
         $j = json_decode($json,true);
         $data = json_decode($j['json'],true);
+
 
         $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
         $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
@@ -3900,10 +3902,7 @@ $app->get("/movimiento/:id",function($id) use($db,$app){
         $fin=$ano2.'-'.$fmes2.'-'.$dia2.' 23:59:59';
 
 
-
-
-
-$sql1="SELECT p.id,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and m.fecha_registro between '{$ini}' and '{$fin}'";
+$sql1="SELECT p.id,p.nombre,p.categoria,m.comentario from movimiento_articulos m, productos p where m.codigo_prod=p.id and m.fecha_registro between '{$ini}' and '{$fin}'";
 
 if(isset($data["producto"]) &&  $data["producto"]!=""){
 $sql1.=" and m.codigo_prod='{$data['producto']}' ";
@@ -3918,10 +3917,10 @@ $sql1.="group by 1 order by id asc";
         $prods=array();
        $detalle=array();
            while ($fila = $resultado->fetch_array()) {
-            $fila['detalle'];
+          /*  $fila['detalle'];
             $fila['promedio'];
             $fila['stock'];
-            $fila['sql']=$sql1;
+            $fila['sql']=$sql1;*/
 
 
            $sql="SELECT @i := @i + 1 as contador ,`movimiento_articulos`.`id`,
@@ -3967,6 +3966,7 @@ $sql1.="group by 1 order by id asc";
 
             $resul_detalle = $db->query($sql);
             while ($filadet = $resul_detalle->fetch_array()) {
+                //$fila['comentario']=$filadet;
                 $fila['detalle'][]=$filadet;
             }
 
@@ -3977,7 +3977,6 @@ $sql1.="group by 1 order by id asc";
 if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
     $sql_promedio.=" and m.id_almacen={$data['sucursal']} ";
     }
-
     $sql_promedio.=" order by m.id desc limit 1";
 
             $resul_promedio = $db->query($sql_promedio);
@@ -3993,15 +3992,13 @@ if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
                 $fila['costo_venta'][]=$filacv;
             }
 
-            $sql_stock="SELECT codigo_prod,sum(cantidad_ingreso) cantidad FROM aprendea_erp.movimiento_articulos where codigo_prod={$fila['id']} ";
+    $sql_stock="SELECT codigo_prod,sum(cantidad_ingreso) cantidad FROM aprendea_erp.movimiento_articulos where codigo_prod={$fila['id']} ";
             if(isset($data['sucursal']) && $data['sucursal']!="0"){
 
                 $sql_stock.=" and id_almacen={$data['sucursal']}";
             }
 
             $sql_stock.=" group by 1";
-
-
 
             $resul_stock = $db->query($sql_stock)->fetch_array();
             $fila['stock']=$resul_stock;
@@ -4018,13 +4015,14 @@ $app->get("/movimientos",function() use($db,$app){
    $prods=array();
    $detalle=array();
        while ($fila = $resultado->fetch_array()) {
-        $fila['detalle'];
+
+       /* $fila['detalle'];
         $fila['promedio'];
         $fila['stock'];
         $fila['total_entrada'];
         $fila['total_salida'];
         $fila['costo_venta'];
-
+*/
 
         $sql="SELECT @i := @i + 1 as contador ,`movimiento_articulos`.`id`,
         `movimiento_articulos`.`tipo_movimiento`,
@@ -4047,7 +4045,7 @@ $app->get("/movimientos",function() use($db,$app){
 
         $resul_detalle = $db->query($sql);
         while ($filadet = $resul_detalle->fetch_array()) {
-            $fila['detalle'][]=$filadet;
+           $fila['detalle'][]=$filadet;
         }
 
 
@@ -4152,7 +4150,9 @@ $app->get("/compras",function() use($db,$app){
 
 
 
-     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,
+     CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,
+     v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id and v.estado=1 order by 1 desc");
 
 
 
@@ -4206,6 +4206,40 @@ $app->post("/consulta-ventas",function() use($db,$app){
 
     $resultado=$db->query("SELECT v.id,v.estado,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id
     where v.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59'  and v.estado={$dat->estado} order by 1 desc;");
+
+     $prods=array();
+        while ($fila = $resultado->fetch_array()) {
+            $prods[]=$fila;
+        }
+        $respuesta=json_encode($prods);
+        echo $respuesta;
+
+
+});
+/**consultar compras */
+
+$app->post("/consulta-compras",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+    $json = $app->request->getBody();
+    $j = json_decode($json,true);
+    $dat = json_decode($j['json']);
+    $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+    $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
+
+    $mes1=substr($dat->ini, 0,3);
+    $mes2=substr($dat->fin, 0,3);
+    $dia1=substr($dat->ini, 3,2);
+    $dia2=substr($dat->fin, 3,2);
+    $ano1=substr($dat->ini, 5,4);
+    $ano2=substr($dat->fin, 5,4);
+    $fmes1=str_replace($arraymeses,$arraynros,$mes1);
+    $fmes2=str_replace($arraymeses,$arraynros,$mes2);
+    $ini=$ano1.'-'.$fmes1.'-'.$dia1;
+    $fin=$ano2.'-'.$fmes2.'-'.$dia2;
+
+    $resultado=$db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,
+    CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,
+    v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id  where v.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and v.estado={$dat->estado} order by 1 desc");
 
      $prods=array();
         while ($fila = $resultado->fetch_array()) {
@@ -4381,7 +4415,7 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $prods=array();
         while ($fila = $resultado->fetch_array()) {
             $sqla="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`cantidad_ingreso`,`precio`,`comentario`,`id_sucursal`,`usuario`)
-            VALUES({$fila['id_producto']},{$fila['id_venta']},'Ingreso',{$fila['id_inventario']},{$fila['cantidad']},{$fila['precio']},'Venta anulada',{$data->datos->id_sucursal},'admin');";
+            VALUES({$fila['id_producto']},{$fila['id_venta']},'Ingreso',{$fila['id_inventario']},{$fila['cantidad']}-{$fila['pendiente']},{$fila['precio']},'Venta anulada',{$data->datos->id_sucursal},'admin');";
 
 
 
@@ -4394,9 +4428,9 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
 
 
 
-        $result = array("STATUS"=>true,"messaje"=>"Ticket nro ".$data->datos->id . " fue anulado correctamente");
+        $result = array("STATUS"=>true,"messaje"=>"Venta nro ".$data->datos->id . " fue anulada correctamente");
     }else{
-        $result = array("STATUS"=>true,"messaje"=>"El ticket ".$data->datos->id." Ya esta anulado");
+        $result = array("STATUS"=>true,"messaje"=>"La venta ".$data->datos->id." Ya esta anulada");
     }
 
         echo  json_encode($result);
@@ -4561,17 +4595,17 @@ $app->post("/compra",function() use($db,$app){
 
 
     $app->post("/venta",function() use($db,$app){
-
-
-
         header("Content-type: application/json; charset=utf-8");
         $json = $app->request->getBody();
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
+
         $detalle = json_decode($j['detalle']);
         $valor_total=0;
                 try {
                    $sql="call p_venta('{$data->usuario}','{$data->vendedor}','{$data->cliente}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
+
+
                    $stmt = mysqli_prepare($db,$sql);
                     mysqli_stmt_execute($stmt);
                     $datos=$db->query("SELECT max(id) ultimo_id FROM ventas");
@@ -4588,7 +4622,7 @@ $app->post("/compra",function() use($db,$app){
 
                     foreach($detalle as $item){
                     /*inserta detalla*/
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->despacho},{$item->pendiente},{$item->descuento},{$item->precio})";
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
                     $stmt = mysqli_prepare($db,$proc);
                     mysqli_stmt_execute($stmt);
                     $stmt->close();
@@ -4597,30 +4631,29 @@ $app->post("/compra",function() use($db,$app){
                      $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$item->id} and id_sucursal={$data->sucursal}  order by id desc limit 1");
                      $inv = $resultado->fetch_array();
 
-
                      if($inv["precio"]!="0.00"){
 
-                        $total=number_format($inv["total"]-($item->cantidad*$inv["promedio"]),2, '.', '');
+                        $total=number_format($inv["total"]-($item->despacho*$inv["promedio"]),2, '.', '');
 
-                                $cantidad_acumulada=$inv["cantidad_acumulada"]-($item->cantidad-$item->despacho);
+                                $cantidad_acumulada=$inv["cantidad_acumulada"]-$item->despacho;
 
                         $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                        VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),({$item->cantidad}-{$item->despacho}),-({$item->cantidad}-{$item->despacho}),{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+                        VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),-{$item->despacho},-{$item->despacho},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
 
                         }
 
                         if($inv["precio"]=="0.00" and $inv["promedio"]=="0.00"){
 
-                            $total=number_format($item->cantidad*$item->precio,2, '.', '');
+                            $total=number_format($item->despacho*$item->precio,2, '.', '');
 
-                                    $cantidad_acumulada=-($item->cantidad-$item->despacho);
+                                    $cantidad_acumulada=-($item->despacho);
 
                             $sql="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                            VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),({$item->cantidad}-{$item->despacho}),-({$item->cantidad}-{$item->despacho}),{$cantidad_acumulada},{$item->precio},{$item->precio},$total,$data->sucursal,'{$data->usuario}');";
+                            VALUES({$item->id},{$ultimo_id->ultimo_id},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$ultimo_id->ultimo_id),{$item->despacho},-{$item->despacho},{$cantidad_acumulada},{$item->precio},{$item->precio},$total,$data->sucursal,'{$data->usuario}');";
 
                             }
 
-                        $sql2="UPDATE inventario SET cantidad = cantidad-{$item->cantidad},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
+                        $sql2="UPDATE inventario SET cantidad = cantidad-{$item->despacho},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$data->sucursal}";
                         $db->query($sql2);
 
 
@@ -4834,8 +4867,7 @@ $app->post("/compra",function() use($db,$app){
         $json = $app->request->getBody();
         $j = json_decode($json,true);
         $data = json_decode($j['json']);
-        print_r($data);
-        die;
+
         $resultado = $db->query("SELECT  d.* FROM aprendea_erp.venta_detalle d where id={$data->id} and id_venta={$data->id_venta}");
         $prods=array();
 
@@ -4843,21 +4875,27 @@ $app->post("/compra",function() use($db,$app){
         $prods[]=$fila;
     }
 
-    $sql="INSERT INTO salidas_articulos  (`codigo`,`id_venta`,`cantidad`,`id_sucursal`,`usuario`)  VALUES({$prods[0]['id_producto']},{$prods[0]['id_venta']},{$prods[0]['pendiente']},$data->sucursal,'{$data->usuario}')";
+    //print_r($prods);
+
+   $cantidad=number_format($prods[0]['cantidad'],2,'.','');
+   $pendiente=number_format($prods[0]['pendiente'],2,'.','');
+
 
     $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$prods[0]['id_producto']} and id_sucursal={$data->sucursal}  order by id desc limit 1");
     $inv = $resultado->fetch_array();
 
-    //print_r($inv);
+   // print_r($inv);
+
 
     if($inv["precio"]!="0.00"){
 
         $total=number_format($inv["total"]-($data->cantidad*$inv["promedio"]),2, '.', '');
 
-                $cantidad_acumulada=$inv["cantidad_acumulada"]-($item->cantidad-$item->despacho);
 
-        $sql1="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-        VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-{$data->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
+                $cantidad_acumulada=$inv["cantidad_acumulada"]-$pendiente;
+
+        $sql1="INSERT INTO movimiento_articulos (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
+        VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-$pendiente-$data->cantidad,$cantidad_acumulada,{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
 
         }
 
@@ -4879,13 +4917,12 @@ $app->post("/compra",function() use($db,$app){
     mysqli_stmt_execute($stmt);
                   $stmt->close();
 
-    $stmt2 = mysqli_prepare($db,$sql);
-    mysqli_stmt_execute($stmt2);
-    $stmt2->close();
+
 
     try {
 
-        $query ="UPDATE venta_detalle SET pendiente={$data->cantidad} where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
+        $query ="UPDATE venta_detalle SET pendiente=$data->cantidad,usuario='{$data->usuario}' where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
+
 
         $db->query($query);
 
@@ -5986,32 +6023,14 @@ $app->get("/pagos-compra/:id",function($id) use($db,$app){
 
         header("Content-type: application/json; charset=utf-8");
 
-
-
         $resultado = $db->query("SELECT a.nombre, d.* FROM aprendea_erp.venta_detalle d,productos a  where a.id=d.id_producto and id_venta={$id}");
-
          $prods=array();
 
-
-
             while ($fila = $resultado->fetch_array()) {
-
-
-
-
-
                 $prods[]=$fila;
-
-
-
             }
 
-
-
             $respuesta=json_encode($prods);
-
-
-
             echo  $respuesta;
 
 
@@ -6314,50 +6333,19 @@ $app->put("/cliente",function() use($db,$app){
 
 
 
-$app->post("/del_cliente",function() use($db,$app){
-
-
+$app->post("/del_compra",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
-
-
-
        $json = $app->request->getBody();
-
-
-
        $j = json_decode($json,true);
-
-
-
        $data = json_decode($j['json']);
 
-
-
-                  $query ="DELETE FROM clientes WHERE id='{$data->cliente->id}'";
-
-
-
-                  if($db->query($query)){
-
-
-
-       $result = array("STATUS"=>true,"messaje"=>"Cliente eliminado correctamente");
-
-
-
+       $query ="UPDATE compras set estado=2 WHERE id='{$data->compra->id}'";
+        if($db->query($query)){
+       $result = array("STATUS"=>true,"messaje"=>"Compra anulada correctamente");
        }
-
-
-
        else{
-
-
-
-        $result = array("STATUS"=>false,"messaje"=>"Error al eliminar el cliente");
-
-
-
+        $result = array("STATUS"=>false,"messaje"=>"Error al anular la compra");
        }
 
 

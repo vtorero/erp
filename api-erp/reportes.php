@@ -14,8 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app = new Slim\Slim();
-$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-//$db = new mysqli("localhost","root","","aprendea_erp");
+//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+$db = new mysqli("localhost","root","","aprendea_erp");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -396,6 +396,41 @@ and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by 
     );
 
         echo json_encode($data);
+
+
+    });
+
+    $app->post("/productos",function() use($db,$app){
+        $fileName = "members-data_" . date('Y-m-d') . ".xls";
+        $lineData =array();
+        $fields = array('');
+        $excelData = implode("\t", array_values($fields)) . "\n";
+
+
+        $sql="SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id desc";
+        $query = $db->query($sql);
+
+        if($query->num_rows > 0){
+            // Output each row of the data
+                $fields = array('ID','CODIGO','DESCRIPCION','CATEGORIA','SUBCATEGORIA','FAMILIA','UNIDAD' ,'PRECIO');
+                $excelData.= implode("\t", array_values($fields)) . "\n";
+                 while($row = $query->fetch_assoc()){
+                    $lineData  = array($row['id'],$row['codigo'],$row['nombre'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['unidad'],$row['precio']);
+                array_walk($lineData,'filterData');
+                $excelData .= implode("\t", array_values($lineData)) . "\n";
+                 }
+
+
+        }else{
+            $excelData .= 'No hay resultados de la consulta...'. "\n";
+        }
+
+        // Headers for download
+       // header("Content-Type: application/vnd.ms-excel");
+       //header("Content-Disposition: attachment; filename=\"$fileName\"");
+
+        // Render excel data
+       echo $excelData;
 
 
     });
