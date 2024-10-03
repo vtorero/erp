@@ -13,6 +13,7 @@ import { Cajas } from './modelos/cajas';
 import { AddInventario } from "./modelos/addinventario";
 import { Venta } from './modelos/venta';
 import {Chart} from 'chart.js/auto';
+import { Compra } from "./modelos/compra";
 
 
 
@@ -368,6 +369,23 @@ public actualizaMontoCompra(id_venta:number,tipoPago:number,numero:string,cuenta
   )
 }
 
+public consultaCompras(finicio:string,ffin:string,estado:string):Observable<any>{
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let datos = {
+    'ini':finicio,
+    'fin':ffin,
+    'estado':estado
+  }
+  let json = JSON.stringify(datos);
+
+  return this._http.post(Global.BASE_API_URL + "api.php/consulta-compras",{ json: json },
+  { headers: headers });
+}
+
+
 public consultaVentas(finicio:string,ffin:string,estado:string):Observable<any>{
   let headers = new HttpHeaders().set(
     "Content-Type",
@@ -578,6 +596,21 @@ public delCliente(datos:Clientes): Observable<any> {
     { headers: headers }
   );
 }
+
+/**eliminar compra */
+public delCompra(datos:Compra): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/del_compra",
+    { json: json },
+    { headers: headers }
+  );
+}
+
 
 /*buscar producto*/
 

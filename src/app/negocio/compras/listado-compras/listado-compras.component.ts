@@ -1,8 +1,7 @@
-
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -14,6 +13,7 @@ import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.componen
 import { VerVentaComponent } from '../../ventas/ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { VerCompraComponent } from '../ver-compra/ver-compra.component';
+import { Compra } from '../../../modelos/compra';
 
 @Component({
   selector: 'app-listado-compras',
@@ -22,19 +22,23 @@ import { VerCompraComponent } from '../ver-compra/ver-compra.component';
 })
 
 export class ListadoComprasComponent implements OnInit {
+  public selectedMoment = new Date();
+  public selectedMoment2 = new Date();
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
+  public id_estado:any=1;
   selection = new SelectionModel(false, []);
   displayedColumns = ['id','cliente','tipoDoc','nro_documento','serie_documento','fechaPago','nombre','valor_total','monto_pendiente','fecha','opciones'];
+  dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
-    public dialog2: MatDialog,
+    public dialog2: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +57,27 @@ openBusqueda(){
   }else{
     this.buscador=true;
   }
+}
+
+
+consultar(){
+  var fec1 = this.selectedMoment.toDateString().split(" ",4);
+  var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+  let ini=fec1[1]+fec1[2]+fec1[3];
+  let fin=fec2[1]+fec2[2]+fec2[3];
+  console.log("inicio",ini);
+  console.log("fin",fin);
+  console.log("estado",this.id_estado)
+  this.api.consultaCompras(ini,fin,this.id_estado).subscribe(data=>{
+    this.dataSource = new MatTableDataSource();
+    this.dataSource.data = data;
+    this.empTbSort.disableClear = true;
+    this.dataSource.sort = this.empTbSort;
+    this.dataSource.paginator = this.paginator;
+
+
+  })
+
 }
 
   selected(row) {
@@ -121,8 +146,8 @@ openBusqueda(){
     enterAnimationDuration,
     exitAnimationDuration,
     data: {
-      clase:'DelProvedor',
-      cliente:this.selectedRowIndex
+      clase:'DelCompra',
+      compra:this.selectedRowIndex
     },
   });
   dialogo2.afterClosed().subscribe(ux => {
@@ -190,10 +215,10 @@ facturar(art:Venta) {
     this.renderDataTable();
 }
 }
-eliminar(art:Clientes) {
+eliminar(art:Compra) {
   console.log("art",art);
   if(art){
-  this.api.delCliente(art).subscribe(
+  this.api.delCompra(art).subscribe(
     data=>{
       this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
       },

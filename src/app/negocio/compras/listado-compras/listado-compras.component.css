@@ -1,16 +1,24 @@
 .example-button-row{
-    background-color: white;
+  background-color: white;
 }
 .mat-row.hovered {
-    background: rgb(146, 107, 107);
+  background: rgb(146, 107, 107);
 }
 
 .mat-row.highlighted {
-  background: #999;
+background: #999;
 }
 
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell{
-  border-bottom: unset;
+border-bottom: unset;
 }
 mat-header-cell{font-size: 14px; font-weight: 700;}
 mat-cell{font-size: 13px;  font-weight: 400;color: black !important}
+
+mat-datepicker-toggle
+{
+  float: right !important;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}

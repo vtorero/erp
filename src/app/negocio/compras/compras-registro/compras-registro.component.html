@@ -63,6 +63,9 @@
                             Cantidad
                         </th>
                         <th>
+                          Recibido
+                        </th>
+                        <th>
                             Precio
                         </th>
                         <th>
@@ -85,6 +88,9 @@
                             </td>
                             <td>
                               <a class="numero_edicion" (click)="openCantidad('20ms','20ms',item.id,item.cantidad,item.nombre)">{{item.cantidad  | number}}</a>
+                            </td>
+                            <td>
+                              <a class="numero_edicion" (click)="openDespacho('20ms','20ms',item.id,item.despacho,item.nombre)">{{item.despacho}}</a>
                             </td>
                            <td>
                                <a class="numero_edicion txtdato" (click)="openPrecio('20ms','20ms',item.id,item.precio,item.nombre)">S/ {{item.precio  | number}}</a>

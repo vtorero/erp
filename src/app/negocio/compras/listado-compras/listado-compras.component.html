@@ -18,10 +18,44 @@
           <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
             <i class="material-icons">search</i>
           </button>
-             <mat-form-field *ngIf="buscador">
-            <input matInput width="350" (keyup)="applyFilter($event.target.value)"
-           placeholder="Escriba algo para filtrar">
-         </mat-form-field>
+          <div style="height:80px" class="row" *ngIf="buscador">
+            <div class="col-3">
+              <mat-form-field >
+                <input matInput width="100" (keyup)="applyFilter($event.target.value)"
+               placeholder="Escriba algo para buscar">
+             </mat-form-field>
+            </div>
+            <div class="col-2">
+              <mat-form-field appearance="outline">
+              <mat-label>Fecha Inicio</mat-label>
+              <input name="fecha" [(ngModel)]="selectedMoment" #fecha="ngModel"  matInput [matDatepicker]="picker">
+
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha Fin</mat-label>
+              <input name="fecha2" [(ngModel)]="selectedMoment2"  #fecha2="ngModel" matInput [matDatepicker]="picker2">
+
+              <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field appearance="outline">
+          <mat-select name="id_estado" [(ngModel)]="id_estado" [(ngModel)]="id_estado">
+          <mat-option *ngFor="let est of dataEstados" [value]="est.id">{{est.value}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      <div class="col-3 d-flex pt-1">
+        <button type="button" (click)="consultar()"  mat-raised-button color="primary" style="height:50px">
+          <i class="material-icons">search</i> Buscar
+        </button>
+      </div>
+         </div>
         </div>
       </div>
     </section>

@@ -10,6 +10,7 @@ import { ModDescuentoComponent } from '../../../dialog/mod-descuento/mod-descuen
 import { SelecTerminalComponent } from '../../../dialog/selec-terminal/selec-terminal.component';
 import { RegistroVentaComponent } from '../../../dialog/registro-venta/registro-venta.component';
 import { RegistroCompraComponent } from '../../../dialog/registro-compra/registro-compra.component';
+import { ModDespachoComponent } from 'app/dialog/mod-despacho/mod-despacho.component';
 
 
 
@@ -222,7 +223,35 @@ enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:numb
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
+openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
+  const dialogo2=this.dialog.open(ModDespachoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+  data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
+  });
+   dialogo2.afterClosed().subscribe(ux => {
+    console.log(ux.cantidad)
+    this.dataRecibo.map(function(dato){
+      if(dato.id == id){
+        if(dato.cantidad<ux.despacho) {
+          alert(`El despacho de: (${ux.despacho}) es mayor a la cantidad registrada: (${dato.cantidad})`);
+          return;
+        }else{
+          dato.despacho = ux.despacho
+          dato.pendiente=dato.cantidad-ux.despacho
+        }
 
+          //if(ux.despacho!=cantidad && ux.despacho<cantidad){
+
+       /// console.log(dato)
+
+
+
+      }
+   });
+   console.log("cantidad",this.dataRecibo)
+   this.sumarMonto(this.dataRecibo)
+   });
+
+}
 cancelar() {
   this.dialog.closeAll();
 

@@ -6,7 +6,7 @@ export class Compra {
         public id_proveedor:any,
         public id_sucursal:any,
         public cliente:any,
-        public	estado:number,
+        public	estado:string,
         public serie_documento:string,
         public nro_documento:string,
         public fecha:any,
@@ -20,6 +20,7 @@ export class Compra {
         public tipoDoc:string,
         public valor_neto:number,
         public observacion:string,
-        public formaPago:string
+        public formaPago:string,
+        public clase:string
         ){}
 }
