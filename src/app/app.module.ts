@@ -52,6 +52,7 @@ import { SelectImpresoraComponent } from './dialog/select-impresora/select-impre
 import { ModoPagoComponent } from './seguridad/modo-pago/modo-pago.component';
 import { ModDespachoComponent } from './dialog/mod-despacho/mod-despacho.component';
 import { AddMediopagoComponent } from './dialog/add-mediopago/add-mediopago.component';
+import { ExportarComprasComponent } from './dialog/exportar-compras/exportar-compras.component';
 
 
 
@@ -113,6 +114,7 @@ import { AddMediopagoComponent } from './dialog/add-mediopago/add-mediopago.comp
      ModoPagoComponent,
      ModDespachoComponent,
      AddMediopagoComponent,
+     ExportarComprasComponent,
 
   ],
   providers: [],

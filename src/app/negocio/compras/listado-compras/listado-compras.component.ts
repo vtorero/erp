@@ -1,7 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component,  OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -10,16 +10,37 @@ import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Clientes } from 'app/modelos/clientes';
 import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.component';
-import { VerVentaComponent } from '../../ventas/ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { VerCompraComponent } from '../ver-compra/ver-compra.component';
 import { Compra } from '../../../modelos/compra';
+import { ExportarComprasComponent } from '../../../dialog/exportar-compras/exportar-compras.component';
+import { Global } from 'app/global';
+
+function sendInvoice(data,url) {
+  fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/vnd.ms-excel'
+    },
+    body:data
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "compras.xls";
+      link.click();
+    });
+}
+
 
 @Component({
   selector: 'app-listado-compras',
   templateUrl: './listado-compras.component.html',
   styleUrls: ['./listado-compras.component.css']
 })
+
+
 
 export class ListadoComprasComponent implements OnInit {
   public selectedMoment = new Date();
@@ -39,7 +60,7 @@ export class ListadoComprasComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private api: ApiService,
     public dialog2: MatDialog
-  ) { }
+      ) { }
 
   ngOnInit(): void {
     this.renderDataTable();
@@ -65,9 +86,7 @@ consultar(){
   var fec2 = this.selectedMoment2.toDateString().split(" ",4);
   let ini=fec1[1]+fec1[2]+fec1[3];
   let fin=fec2[1]+fec2[2]+fec2[3];
-  console.log("inicio",ini);
-  console.log("fin",fin);
-  console.log("estado",this.id_estado)
+
   this.api.consultaCompras(ini,fin,this.id_estado).subscribe(data=>{
     this.dataSource = new MatTableDataSource();
     this.dataSource.data = data;
@@ -139,6 +158,35 @@ consultar(){
      });
 
   }
+
+  openExportar(enterAnimationDuration: string, exitAnimationDuration: string){
+    const dialogo2=this.dialog.open(ExportarComprasComponent, {
+      width: 'auto',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        clase:'Exportar'
+      },
+    });
+    dialogo2.afterClosed().subscribe(ux => {
+      console.log(ux);
+      var fec1 = ux.fechainicio.toDateString().split(" ",4);
+      var fec2 = ux.fechafin.toDateString().split(" ",4);
+      let ini=fec1[1]+fec1[2]+fec1[3];
+      let fin=fec2[1]+fec2[2]+fec2[3];
+      console.log("inicio",ini);
+      console.log("fin",fin);
+     const datos ={
+      fechaincio:ini,
+      fechafin:fin
+     }
+      sendInvoice({datos},Global.BASE_API_URL+'reportes.php/compras');
+
+      //this.facturar(ux);
+     });
+
+  }
+
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddClienteComponent, {

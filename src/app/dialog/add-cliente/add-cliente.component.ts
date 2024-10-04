@@ -13,12 +13,12 @@ import { Proveedor } from 'app/modelos/proveedor';
 
 
 export class AddClienteComponent implements OnInit {
-
+  public selectedMomentReport1 = new Date();
+  public selectedMomentReport2 = new Date();
   constructor(
-    private toastr: MatSnackBar,
     public dialogRef: MatDialogRef<AddClienteComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Proveedor,
-    private api:ApiService
+    @Inject(MAT_DIALOG_DATA) public datos: {clase:string,fechaInicio:string,fechaFin:string},
 
   ) { }
 

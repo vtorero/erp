@@ -5,3 +5,11 @@
   .example-container mat-form-field + mat-form-field {
     margin-left: 8px;
   }
+
+  mat-datepicker-toggle
+{
+  float: right !important;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
