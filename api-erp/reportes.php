@@ -14,8 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app = new Slim\Slim();
-//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-$db = new mysqli("localhost","root","","aprendea_erp");
+$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+//$db = new mysqli("localhost","root","","aprendea_erp");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -399,6 +399,43 @@ and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by 
 
 
     });
+
+    /*reporte compras*/
+
+    $app->post("/compras",function() use($db,$app){
+        $fileName = "members-data_" . date('Y-m-d') . ".xls";
+        $lineData =array();
+        $fields = array('');
+        $excelData = implode("\t", array_values($fields)) . "\n";
+
+
+        $sql="SELECT cd.id_compra,p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha_registro,u.nombre usuario FROM compra_detalle cd, productos p, compras c,usuarios u where cd.id_producto=p.id and cd.id_compra=c.id and c.id_usuario=u.id and c.fecha_registro between '2024-07-03 00:00:00' and '2024-09-30 23:59:59'";
+        $query = $db->query($sql);
+
+        if($query->num_rows > 0){
+            // Output each row of the data
+                $fields = array('ID COMPRA','CODIGO','PRODUCTO','UNIDAD','CANTIDAD','PRECIO','SUBTOTAL' ,'FECHA','USUARIO');
+                $excelData.= implode("\t", array_values($fields)) . "\n";
+                 while($row = $query->fetch_assoc()){
+                    $lineData  = array($row['id_compra'],$row['codigo'],$row['nombre'],$row['unidad'],$row['cantidad'],$row['precio'],$row['subtotal'],$row['fecha_registro'],$row['usuario']);
+                array_walk($lineData,'filterData');
+                $excelData .= implode("\t", array_values($lineData)) . "\n";
+                 }
+
+
+        }else{
+            $excelData .= 'No hay resultados de la consulta...'. "\n";
+        }
+
+
+       echo $excelData;
+
+
+    });
+
+
+
+    /**reporte productos */
 
     $app->post("/productos",function() use($db,$app){
         $fileName = "members-data_" . date('Y-m-d') . ".xls";

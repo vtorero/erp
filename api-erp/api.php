@@ -14,8 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app = new Slim\Slim();
 
 
-//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-$db = new mysqli("localhost","root","","aprendea_erp");
+$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+//$db = new mysqli("localhost","root","","aprendea_erp");
 
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
@@ -4143,39 +4143,15 @@ JOIN ( SELECT @acumulado_salida :=0,
 
 
 $app->get("/compras",function() use($db,$app){
-
-
-
     header("Content-type: application/json; charset=utf-8");
-
-
-
      $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,
      CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,
      v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id and v.estado=1 order by 1 desc");
-
-
-
     $prods=array();
-
-
-
         while ($fila = $resultado->fetch_array()) {
-
-
-
             $prods[]=$fila;
-
-
-
         }
-
-
-
         $respuesta=json_encode($prods);
-
-
-
         echo  $respuesta;
 
 
@@ -4422,8 +4398,8 @@ $app->get("/inventarios/:id",function($id) use($db,$app){
         $sqlb="UPDATE inventario  SET cantidad = cantidad+{$fila['cantidad']},fecha_actualizacion=now() WHERE  producto_id={$fila['id_producto']} and id_almacen={$data->datos->id_sucursal}";
            $stmt2 = mysqli_prepare($db,$sqla);
            $stmt3 = mysqli_prepare($db,$sqlb);
-           mysqli_stmt_execute($stmt2);
-           mysqli_stmt_execute($stmt3);
+         //  mysqli_stmt_execute($stmt2);
+           //mysqli_stmt_execute($stmt3);
             }
 
 
