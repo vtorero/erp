@@ -122,7 +122,7 @@
     </div>
 
     <div  style="height:200px;margin-top:10px;flex-grow:1;">
-      <h4>Detalle Pagos</h4>
+      <h4>Detalle Pagos {{data.monto_pendiente}}</h4>
       <button *ngIf="data.monto_pendiente>0 && data.estado!='Anulado'"  mat-icon-button color="warn">
         &nbsp;&nbsp;Agregar pago: <i class="material-icons"  (click)="openMontoPendiente('20ms','20ms',data.id)" >add_circle</i>
       </button>

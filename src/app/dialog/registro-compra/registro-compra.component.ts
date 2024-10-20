@@ -1,5 +1,5 @@
 import { Component, Inject, NgModule, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl } from '@angular/forms';
@@ -74,6 +74,7 @@ public id_documento:number=0
 
   constructor(public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: Details,
+    public dialogRef: MatDialogRef<RegistroCompraComponent>,
     private api:ApiService,
     private fb:FormBuilder,
     private _snackBar: MatSnackBar,
@@ -257,16 +258,13 @@ async getData() {
 
 
   cancelar() {
-
-    this.dialog.closeAll();
-    console.log(this.MyForm)
-   if(this.MyForm.status=="VALID"){
+    this.dialogRef.close();
+    if(this.MyForm.status=="VALID"){
     const total =this.data.detalle.length;
     for (let index = 0; index < total; index++) {
       console.log(index);
       this.data.detalle.pop()
         }
-
    }
   }
 

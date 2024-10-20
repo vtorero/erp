@@ -3902,7 +3902,7 @@ $app->get("/movimiento/:id",function($id) use($db,$app){
         $fin=$ano2.'-'.$fmes2.'-'.$dia2.' 23:59:59';
 
 
-$sql1="SELECT p.id,p.nombre,p.categoria,m.comentario from movimiento_articulos m, productos p where m.codigo_prod=p.id and m.fecha_registro between '{$ini}' and '{$fin}'";
+$sql1="SELECT p.id,p.codigo,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and m.fecha_registro between '{$ini}' and '{$fin}'";
 
 if(isset($data["producto"]) &&  $data["producto"]!=""){
 $sql1.=" and m.codigo_prod='{$data['producto']}' ";
@@ -4598,7 +4598,7 @@ $app->post("/compra",function() use($db,$app){
 
                     foreach($detalle as $item){
                     /*inserta detalla*/
-                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio})";
+                    $proc="call p_venta_detalle({$ultimo_id->ultimo_id},{$item->id},{$item->id},'{$item->codigo}','',{$item->cantidad},{$item->pendiente},{$item->descuento},{$item->precio},'{$data->usuario}')";
                     $stmt = mysqli_prepare($db,$proc);
                     mysqli_stmt_execute($stmt);
                     $stmt->close();

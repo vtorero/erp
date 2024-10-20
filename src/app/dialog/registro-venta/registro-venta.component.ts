@@ -1,14 +1,11 @@
-import { Component, Inject, NgModule, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl, Form } from '@angular/forms';
-import ConectorPluginV3 from 'app/services/ConectorImpresora';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
-import { DecimalPipe } from '@angular/common';
-import { map } from 'rxjs';
 declare function connetor_plugin(): void;
 
 
@@ -161,7 +158,9 @@ public id_documento:number=0
 
 
   constructor(public dialog: MatDialog,
+    public dialogRef: MatDialogRef<RegistroVentaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Details,
+
     private api:ApiService,
     private fb:FormBuilder,
     private _snackBar: MatSnackBar,
@@ -387,17 +386,15 @@ this.telefonoCliente=data[0].telefono;
     }
 
   cancelar() {
-    this.dialog.closeAll();
+    this.dialogRef.close();
+    //this.dialog.closeAll();
     console.log(this.MyForm)
    if(this.MyForm.status=="VALID"){
-
     const total =this.data.detalle.length;
     for (let index = 0; index < total; index++) {
       console.log(index);
       this.data.detalle.pop()
-        }
-
-
+    }
     }
 
   }

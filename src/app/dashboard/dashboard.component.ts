@@ -42,7 +42,7 @@ ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
 dataSource: any;
-displayedColumns = ['id','fecha_registro','Ingreso','usuario','sucursal','responsable','tipopago','aporte'];
+displayedColumns = ['id','fecha_registro','Ingreso','usuario','sucursal','responsable','aporte'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];

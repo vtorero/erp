@@ -116,7 +116,7 @@
     <div mat-dialog-actions class="float-right">
         <mat-slide-toggle color="primary" name="imprimir" formControlName="imprimir">Imprimir</mat-slide-toggle>&nbsp;&nbsp;
         <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;
-        <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>&nbsp;
+        <button mat-raised-button color="warn"  mat-dialog-close (click)="cancelar()">Cancelar</button>&nbsp;
 
         <button type="button" (click)="onSubmit()"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>

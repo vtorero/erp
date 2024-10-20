@@ -180,7 +180,8 @@ consultar(){
       fechaincio:ini,
       fechafin:fin
      }
-      sendInvoice({datos},Global.BASE_API_URL+'reportes.php/compras');
+     let json = JSON.stringify(datos);
+      sendInvoice(json,Global.BASE_API_URL+'reportes.php/compras');
 
       //this.facturar(ux);
      });
