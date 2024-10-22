@@ -126,18 +126,16 @@ $app->post("/reporte",function() use($db,$app){
                         $infoventas[]=$row;
                 }
 
-                /*$sql_r="SELECT vp.fecha_registro,'Ingreso',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and v.id_usuario=u.id
-                and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
-SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
-                and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";
 
-*/
-$sql_r="SELECT v.id,v.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
-concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,valor_total,(vd.cantidad*vd.precio) aporte
-FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s where  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id  and v.estado=1
-and v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00'  union all
-SELECT v.id,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, valor_total,(vp.monto-vp.monto_pendiente) aporte FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by fecha_registro desc;";
+$sql_r="SELECT v.id,p.nombre as producto,vd.cantidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
+concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
+FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.estado=1
+and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
+union all
+SELECT v.id,p.nombre as producto,vp.cantidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
+vp.fecha_registro
+FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
 
 
@@ -527,21 +525,27 @@ and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
 SELECT vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,monto FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00'";*/
 
-$sql="SELECT v.id,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:00' and '{$fin} 23:59:00' union all
-SELECT v.id,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable, tp.nombre tipopago,valor_total,(vp.monto-vp.monto_pendiente) aporte, vp.monto_pendiente FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
-and vp.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' order by fecha_registro desc";
+$sql="SELECT v.id,p.nombre as producto,vd.cantidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
+concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
+FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.estado=1
+and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
+union all
+SELECT v.id,p.nombre as producto,vp.cantidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
+vp.fecha_registro
+FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
          $query = $db->query($sql);
 
 
 
         if($query->num_rows > 0){
+
             // Output each row of the data
-                $fields = array('ID','FECHA','MOVIMIENTO','USUARIO','SUCURSAL','RESPONSABLE','FORMA PAGO' ,'MONTO');
+                $fields = array('ID','Producto','Cantidad','Precio','Total','Movimiento','Usuario','Sucursal','Fecha');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha_registro'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['responsable'],$row['tipopago'],$row['aporte']);
+                    $lineData  = array($row['id'],$row['producto'],$row['cantidad'],$row['precio'],$row['valor_total'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['fecha_registro']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 

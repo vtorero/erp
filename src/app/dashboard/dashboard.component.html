@@ -466,10 +466,22 @@
                 <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
                  </mat-cell>
       </ng-container>
-        <ng-container matColumnDef="fecha_registro">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
-          <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
-    </ng-container>
+      <ng-container matColumnDef="producto">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Producto</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.producto}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="cantidad">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.cantidad}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="precio">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.precio | number:'1.2-2'}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="valor_total">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.valor_total | number:'1.2-2' }}</mat-cell>
+</ng-container>
     <ng-container matColumnDef="Ingreso">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Movimiento</mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.Ingreso}}</mat-cell>
@@ -482,19 +494,11 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Tienda</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.sucursal}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="responsable">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Responsable</mat-header-cell>
-        <mat-cell *matCellDef="let row">{{row.responsable}} </mat-cell>
-  </ng-container>
-  <!--<ng-container matColumnDef="tipopago">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</mat-header-cell>
-    <mat-cell *matCellDef="let row">{{row.tipopago}} </mat-cell>
-</ng-container>-->
-<ng-container matColumnDef="aporte">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
-    <mat-cell *matCellDef="let row">S/ {{row.aporte | number:'0.2'}} </mat-cell>
-</ng-container>
 
+<ng-container matColumnDef="fecha_registro">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
+</ng-container>
           <!-- Columna Nacionalidad -->
 
         <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
