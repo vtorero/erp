@@ -137,14 +137,26 @@ vp.fecha_registro
 FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-
+$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
+tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
+FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' union all
+SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
+tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
+FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp
+where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'  order by fecha_registro asc;";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
                 while ($row = $ventas_reporte->fetch_array()) {
-                        $infoventas_reporte[]=$row;
+                 $infoventas_reporte[]=$row;
                 }
-
+                $reporte_caja=$db->query($sql_reporte_caja);
+                $info_reporte_caja=array();
+                while ($row = $reporte_caja->fetch_array()) {
+                    $info_reporte_caja[]=$row;
+                }
 
       /*  $factura=$db->query("SELECT v.id,v.tipoDoc, v.id_usuario,case  v.estado when '1' then 'Enviada' when '3' then 'Anulada' end as estado,u.nombre usuario,ve.id id_vendedor,concat(ve.nombre,' ',ve.apellidos) vendedor,c.id id_cliente,c.num_documento,c.direccion,concat(c.razon_social) cliente,igv,monto_igv,valor_neto,valor_total,  comprobante,nro_comprobante,DATE_FORMAT(v.fecha, '%Y-%m-%d') fecha,observacion FROM ventas v,usuarios u,empresas c,vendedor ve where v.estado=1 and v.id_vendedor=ve.id and v.id_cliente=c.id and v.id_usuario=u.id and v.comprobante='Factura' and v.fecha  between  '".$ini."' and '".$fin."' order by v.id desc");
         $infofactura=array();
@@ -214,6 +226,7 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by 
         "sucursales"=>$infosucursales,
         "compras"=>$infocompras,
         "ventas"=>$infoventas,
+        "reporte_caja"=>$info_reporte_caja,
         "reporte"=>$infoventas_reporte,
         "inicio"=>$ini,"final"=>$fin);
 
