@@ -428,18 +428,18 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by 
         $excelData = implode("\t", array_values($fields)) . "\n";
 
 
-        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha_registro desc";
+        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha_registro desc";
 
 
         $query = $db->query($sql);
 
         if($query->num_rows > 0){
             // Output each row of the data
-    $fields = array('ID COMPRA','PROVEEDOR','RUC','NRO_SERIE','NRO_DOC','CODIGO','PRODUCTO','UNIDAD','CANTIDAD','PRECIO','SUBTOTAL','FECHA','USUARIO');
+    $fields = array('ID COMPRA','PROVEEDOR','RUC','NRO_SERIE','NRO_DOC','CODIGO','PRODUCTO','UNIDAD','CANTIDAD','PRECIO','SUBTOTAL','FECHA DE COMPRA','FECHA REGISTRO','USUARIO');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
                     $lineData  = array($row['id_compra'],$row['razon_social'],$row['num_documento'],$row['serie_documento'],
-                    $row['nro_documento'],$row['codigo'],$row['nombre'],$row['unidad'],$row['cantidad'],$row['precio'],$row['subtotal'],$row['fecha_registro'],$row['usuario']);
+                    $row['nro_documento'],$row['codigo'],$row['nombre'],$row['unidad'],$row['cantidad'],$row['precio'],$row['subtotal'],$row['fecha'],$row['fecha_registro'],$row['usuario']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
                  }
