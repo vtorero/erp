@@ -4591,7 +4591,7 @@ $app->post("/compra",function() use($db,$app){
                      }
 
                      foreach($data->pagos as $pago){
-                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$data->montopendiente},{$data->usuario})";
+                    $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$data->montopendiente},{$data->usuario})";
                     $stmtP = mysqli_prepare($db,$procP);
                     mysqli_stmt_execute($stmtP);
                      }

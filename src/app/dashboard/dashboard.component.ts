@@ -42,13 +42,17 @@ ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
 dataSource: any;
+dataSourceCaja: any;
 displayedColumns = ['id','producto','cantidad','precio','valor_total','Ingreso','usuario','sucursal','fecha_registro'];
+displayedCaja = ['id','fecha','sucursal','Ingreso','tipopago','monto','monto_pendiente','usuario','fecha_registro'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
 fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 @ViewChild(MatPaginator) paginator: MatPaginator;
+@ViewChild(MatPaginator) paginatorCaja: MatPaginator;
 @ViewChild('empTbSort') empTbSort = new MatSort();
+@ViewChild('empTbSortcaja') empTbSortcaja = new MatSort();
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
     public dialog2: MatDialog,
@@ -151,16 +155,38 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       //this.renderDataTableConsulta(ini,fin,empresa);
       }
 
+      enviaExcelCaja(){
+        var fec1 = this.selectedMoment.toDateString().split(" ",4);
+        var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+        let ini=fec1[1]+fec1[2]+fec1[3];
+        let fin=fec2[1]+fec2[2]+fec2[3];
+        let fecha1=fec1[2]+'-'+fec1[1]+'-'+fec1[3];;
+        let fecha2=fec2[2]+'-'+fec2[1]+'-'+fec2[3];;
+        console.log(fecha1);
+        console.log(fecha2);
+        let fechas = {'ini':fecha1,'fin':fecha2}
+            console.log("test",JSON.stringify(fechas));
+        sendInvoice(JSON.stringify(fechas),Global.BASE_API_URL+'reportes.php/exportarcaja');
+        //this.loadVentas(this.fecha1,this.fecha2,empresa);
+        //this.renderDataTableConsulta(ini,fin,empresa);
+        }
 
 
     loadVentas(inicio:string,final:string,empresa:string){
       this.api.getVentaBoletas(inicio,final,empresa)
       .subscribe(data => {
         this.dataSource = new MatTableDataSource();
+        this.dataSourceCaja = new MatTableDataSource();
         this.dataSource.data = data['reporte'];
+        this.dataSourceCaja.data = data['reporte_caja'];
+
         this.empTbSort.disableClear = true;
+        this.empTbSortcaja.disableClear = true;
         this.dataSource.sort = this.empTbSort;
+        this.dataSourceCaja.sort=this.empTbSortcaja;
+
         this.dataSource.paginator = this.paginator;
+        //this.dataSourceCaja.paginator = this.paginatorCaja;
         this.ventaTotal=data['boletas'][0].total;
         this.montoPendiente=data['pendiente'][0].pendiente;
         this.montoCompras = data['gasto'][0].gasto;

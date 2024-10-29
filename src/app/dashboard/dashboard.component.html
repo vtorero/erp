@@ -457,7 +457,12 @@
 
 
   <div class="card-body">
-    <button type="button"  class="enviar"  (click)="enviaExcel()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
+
+    <mat-card>
+        <h3>Reporte por Items</h3><hr>
+        <button type="button"  class="enviar"  (click)="enviaExcel()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
+
+
     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
         <!--  Columna ID-->
         <ng-container matColumnDef="id">
@@ -507,7 +512,67 @@
 
       </mat-table>
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10" [showFirstLastButtons]></mat-paginator>
-
+    </mat-card>
 </div>
 
+<div class="card-body">
+
+    <mat-card>
+        <h3>Reporte de Ingresos</h3><hr>
+        <button type="button"  class="enviar"  (click)="enviaExcelCaja()"  mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
+
+
+    <mat-table  [dataSource]="dataSourceCaja"  matSort #empTbSortcaja="matSort">
+        <!--  Columna ID-->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
+                 </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="fecha">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.fecha}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="sucursal">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Sucursal</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.sucursal}}</mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="Ingreso">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Movimiento</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.Ingreso}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="tipopago">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.tipopago}}</mat-cell>
+</ng-container>
+    <ng-container matColumnDef="monto">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+
+      <mat-cell *matCellDef="let row">S/ {{row.monto | number:'1.2-2' }}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="monto_pendiente">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Monto pendiente</mat-header-cell>
+
+    <mat-cell *matCellDef="let row">S/ {{row.monto_pendiente | number:'1.2-2' }}</mat-cell>
+</ng-container>
+       <ng-container matColumnDef="usuario">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fecha_registro">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
+    </ng-container>
+          <!-- Columna Nacionalidad -->
+
+        <mat-header-row *matHeaderRowDef="displayedCaja" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedCaja;"  (click)="selected(row)" [ngClass]="{'highlighted': selectedRowIndex == row}"
+        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10" [showFirstLastButtons]></mat-paginator>
+    </mat-card>
+</div>
 </div>
