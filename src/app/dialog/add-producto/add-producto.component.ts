@@ -19,7 +19,7 @@ dataFamilia:any;
 isLoaded:boolean=false;
 dataArray:any;
 response:any;
-id_cate:any;
+id_categoria:any;
 AddImagen:boolean=false;
 archivo = {
   nombre: null,
@@ -40,18 +40,47 @@ archivo = {
     this.api.getSelectApi('articulo/',this.data.id).subscribe(x => {
       this.response=x;
       console.log("this response",this.response[0].id_categoria)
-      this.id_cate=this.response[0].id_categoria;
+      this.id_categoria=this.response[0].id_categoria;
     });
 
     this.getCate();
-    this.getSubCategoria();
+   this.getSubCategoria();
     this.getFamilia();
     this.getunidad();
   }
 
+  public seleccionarCategoria(event) {
+    const value = event.value;
+    this.api.BuscarPorCategoria(value).subscribe(x => {
+      this.dataSubCategoria=x;
+
+    });
+
+ }
+
+ public seleccionarSubcategoria(event) {
+   const value = event.value;
+   this.api.BuscarPorSubcategoria(value).subscribe(x => {
+   this.dataFamilia=x;
+
+  });
+
+}
+
+public seleccionarFamilia(event) {
+  const value = event.value;
+  console.log(value)
+  this.api.BuscarPorFamilia(this.dataCategoria,this.dataSubCategoria,value,'familia').subscribe(x => {
+  this.dataSource=x;
+
+ });
+}
+
+
   getCate(): void {
     this.api.getApi('categorias').subscribe(data => {
       if(data) {
+        console.log("cate",data)
         this.dataCategoria = data;
       }
     } );

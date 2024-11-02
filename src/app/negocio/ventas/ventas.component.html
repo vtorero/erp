@@ -11,7 +11,7 @@
        <div class="row">
         <div class="col-4">
        <mat-form-field appearance="outline">
-        <mat-label>Familia</mat-label>
+        <mat-label>Categorias</mat-label>
               <mat-select name="id-categoria" value="" (selectionChange)="seleccionarCategoria($event)">
                 <mat-option value="" selected>Categoría</mat-option>
                 <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
@@ -20,6 +20,7 @@
     </div>
     <div class="col-4">
       <mat-form-field appearance="outline">
+        <mat-label>Subcategorias</mat-label>
         <mat-select name="id_subcategoria" value="" (selectionChange)="seleccionarSubcategoria($event)">
           <mat-option value="" selected>Sub Categoría</mat-option>
           <mat-option *ngFor="let subcat of dataSubCategoria" [value]="subcat.id">{{subcat.nombre}}</mat-option>
@@ -28,6 +29,7 @@
     </div>
     <div class="col-4">
       <mat-form-field appearance="outline">
+        <mat-label>Familia</mat-label>
         <mat-select name="id_subcategoria" value="" (selectionChange)="seleccionarFamilia($event)">
           <mat-option value="" selected>Familia</mat-option>
           <mat-option *ngFor="let fam of dataFamilia" [value]="fam.id">{{fam.nombre}}</mat-option>

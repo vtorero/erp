@@ -568,7 +568,7 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'  order by
 
 
      $app->post("/exportarcaja",function() use($db,$app){
-        //header("Content-type: application/json; charset=utf-8");
+        header("Content-type: application/json; charset=utf-8");
         $json = $app->request->getBody();
         $dat = json_decode($json, true);
         $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
