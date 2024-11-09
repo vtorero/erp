@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline">
+    <mat-label>Nombre de subcategoria</mat-label>
+     <input matInput name="nombre"  [(ngModel)]="data.nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre subcategoria" required>
+   </mat-form-field>
+      <div mat-dialog-actions>
+          <button mat-button >Cancelar</button>
+          <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+      </div>
+

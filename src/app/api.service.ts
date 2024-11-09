@@ -296,6 +296,34 @@ public guardarUsuario(datos: Usuario): Observable<any> {
   );
 }
 
+public guardarCategoria(categoria:string): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(categoria);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/categoria",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+public guardarSubCategoria(categoria:string): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(categoria);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/subcategoria",
+    { json: json },
+    { headers: headers }
+  );
+}
+
+
+
 public guardarVendedor(datos: Usuario): Observable<any> {
   let headers = new HttpHeaders().set(
     "Content-Type",
@@ -401,6 +429,8 @@ public consultaVentas(finicio:string,ffin:string,estado:string):Observable<any>{
   return this._http.post(Global.BASE_API_URL + "api.php/consulta-ventas",{ json: json },
   { headers: headers });
 }
+
+
 
 public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
   let headers = new HttpHeaders().set(

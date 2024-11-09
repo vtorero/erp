@@ -1,7 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Productos } from '../../modelos/producto';
+import { AddCategoriaComponent } from '../add-categoria/add-categoria.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddSubCategoriaComponent } from '../add-sub-categoria/add-sub-categoria.component';
 
 
 @Component({
@@ -29,6 +32,8 @@ archivo = {
 
 
   constructor(
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AddProductoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Productos,
     private api:ApiService
@@ -44,7 +49,7 @@ archivo = {
     });
 
     this.getCate();
-   this.getSubCategoria();
+     this.getSubCategoria();
     this.getFamilia();
     this.getunidad();
   }
@@ -151,6 +156,46 @@ public seleccionarFamilia(event) {
     this.dialogRef.close();
   }
 
+  openCategoria(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
+    let index=0;
+    const dialogo2=this.dialog.open(AddCategoriaComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modPendiente',id:id},
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+           this.api.guardarCategoria(ux).subscribe(
+          data=>{
 
+            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+            this.getCate();
+            },
+          erro=>{console.log(erro)}
+            );
+
+
+
+     });
+
+  }
+
+  openSubCategoria(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
+    let index=0;
+    const dialogo2=this.dialog.open(AddSubCategoriaComponent, {width: '450',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modPendiente',id:id},
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+           this.api.guardarSubCategoria(ux).subscribe(
+          data=>{
+
+            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+            this.getSubCategoria();
+            },
+          erro=>{console.log(erro)}
+            );
+
+
+
+     });
+
+  }
 
 }

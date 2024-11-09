@@ -2170,48 +2170,16 @@ $app->get("/categorias",function() use($db,$app){
 
             header("Content-type: application/json; charset=utf-8");
 
-
-
                $json = $app->request->getBody();
-
-
-
                $j = json_decode($json,true);
-
-
-
                $data = json_decode($j['json']);
 
-
-
-
-
-
-
-               $query ="INSERT INTO sub_categorias (id_categoria,nombre) VALUES ({$data->id_categoria},'{$data->nombre}')";
-
-
-
+               $query ="INSERT INTO sub_categorias (nombre) VALUES ('{$data->nombre}')";
                 $proceso=$db->query($query);
-
-
-
                 if($proceso){
-
-
-
                $result = array("STATUS"=>true,"messaje"=>"Subcategoria creada correctamente");
-
-
-
                 }else{
-
-
-
                 $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
-
-
-
                 }
 
 
