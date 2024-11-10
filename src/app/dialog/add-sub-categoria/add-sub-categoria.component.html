@@ -1,3 +1,10 @@
+<mat-form-field appearance="outline" style="width: 95%">
+    <mat-label>Categoria</mat-label>
+              <mat-select  [(ngModel)]="data.id_categoria" name="id_categoria" required>
+                <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
+      </mat-select>
+
+  </mat-form-field>
 <mat-form-field appearance="outline">
     <mat-label>Nombre de subcategoria</mat-label>
      <input matInput name="nombre"  [(ngModel)]="data.nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre subcategoria" required>
