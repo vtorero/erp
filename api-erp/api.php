@@ -2309,54 +2309,31 @@ $app->get("/categorias",function() use($db,$app){
         });
 
 
-
-
-
-        $app->get("/subcategoria/:criterio",function($criterio) use($db,$app){
-
-
-
+$app->get("/subcategoria_categoria/:criterio",function($criterio) use($db,$app){
             header("Content-type: application/json; charset=utf-8");
 
+            $resultado = $db->query("SELECT nombre,id from productos where id_categoria={$criterio} group by 1,2 order by 1 asc");
+            $prods=array();
+                while ($fila = $resultado->fetch_array()) {
+                    $prods[]=$fila;
+                }
+                $respuesta=json_encode($prods);
+                echo  $respuesta;
+    });
 
+
+
+$app->get("/subcategoria/:criterio",function($criterio) use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
 
             $resultado = $db->query("SELECT categoria2 as nombre,id_subcategoria as id ,id_categoria from productos where id_categoria={$criterio} group by 1,2 order by 1 asc;");
-
-
-
             $prods=array();
-
-
-
                 while ($fila = $resultado->fetch_array()) {
-
-
-
-
-
-
-
                     $prods[]=$fila;
-
-
-
                 }
-
-
-
                 $respuesta=json_encode($prods);
-
-
-
                 echo  $respuesta;
-
-
-
-
-
-
-
-        });
+    });
 
 
 

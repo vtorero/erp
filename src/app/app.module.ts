@@ -55,6 +55,7 @@ import { AddMediopagoComponent } from './dialog/add-mediopago/add-mediopago.comp
 import { ExportarComprasComponent } from './dialog/exportar-compras/exportar-compras.component';
 import { AddCategoriaComponent } from './dialog/add-categoria/add-categoria.component';
 import { AddSubCategoriaComponent } from './dialog/add-sub-categoria/add-sub-categoria.component';
+import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component';
 
 
 
@@ -119,6 +120,7 @@ import { AddSubCategoriaComponent } from './dialog/add-sub-categoria/add-sub-cat
      ExportarComprasComponent,
      AddCategoriaComponent,
      AddSubCategoriaComponent,
+     AddFamiliaComponent,
 
   ],
   providers: [],

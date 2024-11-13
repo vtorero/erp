@@ -1,0 +1,22 @@
+<mat-form-field appearance="outline" style="width: 95%">
+    <mat-label>Categoria</mat-label>
+              <mat-select name="id_categoria" required (selectionChange)="seleccionarCategoria($event)">
+                <mat-option *ngFor="let cat of dataCategoria" [value]="cat.id">{{cat.nombre}}</mat-option>
+      </mat-select>
+
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="width: 95%">
+    <mat-label>Sub Categoria</mat-label>
+      <mat-select name="id_subcategoria" required [(ngModel)]="data.id_subCategoria">
+        <mat-option value="" selected>Sub Categoría</mat-option>
+        <mat-option *ngFor="let subcat of dataSubCategoria" [value]="subcat.id">{{subcat.nombre}}</mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-form-field appearance="outline">
+    <mat-label>Nombre de Familia</mat-label>
+     <input matInput name="nombre"  [(ngModel)]="data.nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre familia" required>
+   </mat-form-field>
+      <div mat-dialog-actions>
+          <button mat-button >Cancelar</button>
+          <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+      </div>

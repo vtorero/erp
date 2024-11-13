@@ -5,6 +5,7 @@ import { Productos } from '../../modelos/producto';
 import { AddCategoriaComponent } from '../add-categoria/add-categoria.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddSubCategoriaComponent } from '../add-sub-categoria/add-sub-categoria.component';
+import { AddFamiliaComponent } from '../add-familia/add-familia.component';
 
 
 @Component({
@@ -56,7 +57,7 @@ archivo = {
 
   public seleccionarCategoria(event) {
     const value = event.value;
-    this.api.BuscarPorCategoria(value).subscribe(x => {
+    this.api.BuscarPorSubCategoriaCategoria(value).subscribe(x => {
       this.dataSubCategoria=x;
 
     });
@@ -65,9 +66,8 @@ archivo = {
 
  public seleccionarSubcategoria(event) {
    const value = event.value;
-   this.api.BuscarPorSubcategoria(value).subscribe(x => {
+   this.api.BuscarFamilaPorSubcategoria(value).subscribe(x => {
    this.dataFamilia=x;
-
   });
 
 }
@@ -188,6 +188,27 @@ public seleccionarFamilia(event) {
 
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             this.getSubCategoria();
+            },
+          erro=>{console.log(erro)}
+            );
+
+
+
+     });
+
+  }
+
+  openFamilia(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
+    let index=0;
+    const dialogo2=this.dialog.open(AddFamiliaComponent, {width: '450',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modPendiente',id:id},
+    });
+     dialogo2.afterClosed().subscribe(ux => {
+           this.api.guardarFamilia(ux).subscribe(
+          data=>{
+
+            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+            this.getFamilia();
             },
           erro=>{console.log(erro)}
             );

@@ -51,7 +51,7 @@
           <mat-option  *ngFor="let fam of dataFamilia" [value]="fam.id">{{fam.nombre}}</mat-option>
         </mat-select>
         </mat-form-field>
-        <button mat-icon-button color="warn">
+        <button mat-icon-button color="warn" (click)="openFamilia('20ms','20ms')">
         <i class="material-icons">add_circle</i>
     </button>
   </div>
@@ -79,7 +79,7 @@
 
   <div *ngIf="!AddImagen" style="border:solid 1px #ccc;border-radius:10px;padding: 4px;text-align: center;">
     <img *ngIf="data.imagen==NULL" src="../../../assets/img/producto_defecto.png" >
-    <img *ngIf="data.imagen!=NULL"  src="https://lh-cjm.com/erp-api/upload/{{ data.imagen}}" >
+    <img *ngIf="data.imagen!=''"  src="https://lh-cjm.com/erp-api/upload/{{ data.imagen}}" >
   </div>
    <input #fileInput type="file" class="form-control" (change)="seleccionarArchivo($event)" />
 

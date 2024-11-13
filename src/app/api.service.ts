@@ -322,7 +322,18 @@ public guardarSubCategoria(categoria:string): Observable<any> {
   );
 }
 
-
+public guardarFamilia(familia:string): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(familia);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/familia",
+    { json: json },
+    { headers: headers }
+  );
+}
 
 public guardarVendedor(datos: Usuario): Observable<any> {
   let headers = new HttpHeaders().set(
@@ -718,12 +729,21 @@ public BuscarProducto(datos:string): Observable<any> {
     { json: json }, { headers: headers });
 }
 
+public BuscarPorSubCategoriaCategoria(id:string): Observable<any> {
+  return this._http.get(Global.BASE_API_URL + 'api.php/subcategoria_categoria/' +id, { headers: this.headers });
+}
+
 //*Buscar x Categoria*/
 public BuscarPorCategoria(id:string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/subcategoria/' +id, { headers: this.headers });
 }
 
 /**buscar x familia */
+
+
+public BuscarFamilaPorSubcategoria(id:string): Observable<any> {
+  return this._http.get(Global.BASE_API_URL + 'api.php/familia_subcategoria/' +id, { headers: this.headers });
+}
 
 public BuscarPorSubcategoria(id:string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/familia/' +id, { headers: this.headers });
