@@ -126,7 +126,7 @@ export class ListadoComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
+  displayedColumns = ['id','id_cliente','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   public id_estado:any=1;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -238,9 +238,9 @@ openBusqueda(){
       this.textoprecio=letra;
 
       });
-      this.wait(2000);
-
-        this.api.getApiTablaCriterio('clientes',ux.cliente.id).subscribe(data => {
+      this.wait(3000);
+        console.log("ux",ux.cliente.id_cliente);
+        this.api.getApiTablaCriterio('clientes',ux.cliente.id_cliente).subscribe(data => {
           if(data[0].nombre) {
       this.clientetexto=data[0].nombre;
       this.numero_doc=data[0].num_documento;
