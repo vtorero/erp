@@ -1183,7 +1183,7 @@ $app->post("/buscaarticulos",function() use($db,$app){
  $resultado = $db->query("SELECT p.id,p.codigo, p.nombre,(select nombre from categorias where id=p.id_categoria) categoria,
  (select nombre from sub_categorias where id=p.id_subcategoria) subcategoria,
  (select nombre from sub_sub_categorias where id=p.id_sub_sub_categoria) familia,p.unidad,p.precio,p.imagen
-  FROM aprendea_erp.productos p where {$refinado} OR p.codigo like '%{$data}%';");
+  FROM aprendea_erp.productos p where {$refinado} OR p.codigo like '%{$data}%' OR p.codigobarras like '%{$data}%';");
 
         /*$resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p INNER join categorias c on p.id_categoria=c.id INNER join sub_categorias sc on p.id_subcategoria=sc.id INNER join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id and {$refinado} order by id;");*/
     $prods=array();
@@ -1217,7 +1217,7 @@ $app->get("/articulos",function() use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id desc");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.codigobarras,p.nombre,c.nombre categoria,sc.nombre subcategoria,fa.nombre familia, p.unidad,p.precio,p.imagen FROM productos p LEFT join categorias c on p.id_categoria=c.id LEFT join sub_categorias sc on p.id_subcategoria=sc.id LEFT join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id order by id desc");
 
 
 
@@ -1324,8 +1324,8 @@ $app->get("/articulos",function() use($db,$app){
            file_put_contents($filePath, $archivo);
 
            try{
-            $query = "INSERT INTO productos (`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`nombre`,`unidad`,`precio`,`imagen`)
-             values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->codigo}','{$data->nombre}','{$data->unidad}',{$data->precio},'{$data->nombre_imagen}')";
+            $query = "INSERT INTO productos (`id_categoria`,`id_subcategoria`,`id_sub_sub_categoria`,`codigo`,`codigobarras`,`nombre`,`unidad`,`precio`,`imagen`)
+             values({$data->id_categoria} ,{$data->id_subcategoria},{$data->id_familia},'{$data->codigo}','{$data->codigobarras}','{$data->nombre}','{$data->unidad}',{$data->precio},'{$data->nombre_imagen}')";
             $proceso=$db->query($query);
 
 
@@ -1390,9 +1390,9 @@ $app->get("/articulos",function() use($db,$app){
                if(isset($data->nombre_imagen)){
                 $filePath = $_SERVER['DOCUMENT_ROOT']."/erp-api/upload/".$data->nombre_imagen;
                 file_put_contents($filePath, $archivo);
-                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio},imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',codigobarras='{$data->codigobarras}',unidad='{$data->unidad}',precio={$data->precio},imagen='{$data->nombre_imagen}' WHERE id={$data->id}";
                 }else{
-                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',unidad='{$data->unidad}',precio={$data->precio} WHERE id={$data->id}";
+                $query = "UPDATE `productos` SET id_categoria={$data->id_categoria}, id_subcategoria={$data->id_subcategoria},id_sub_sub_categoria={$data->id_familia},nombre='{$data->nombre}',codigo='{$data->codigo}',codigobarras='{$data->codigobarras}',unidad='{$data->unidad}',precio={$data->precio} WHERE id={$data->id}";
                 }
 
 
@@ -2093,184 +2093,120 @@ $app->get("/categorias",function() use($db,$app){
 
 
     $app->post("/categoria",function() use($db,$app){
-
-
-
         header("Content-type: application/json; charset=utf-8");
-
-
-
            $json = $app->request->getBody();
-
-
-
            $j = json_decode($json,true);
-
-
-
            $data = json_decode($j['json']);
-
-
-
-
-
-
-
             $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
-
-
-
-
-
-
-
             $query ="INSERT INTO categorias (nombre) VALUES ('"."{$nombre}"."')";
-
-
-
             $proceso=$db->query($query);
-
-
-
             if($proceso){
-
-
-
            $result = array("STATUS"=>true,"messaje"=>"Categoria creada correctamente");
-
-
-
             }else{
-
-
-
             $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
-
-
-
             }
-
-
-
             echo  json_encode($result);
-
-
-
         });
 
 
-
-
-
-
-
         $app->post("/subcategoria",function() use($db,$app){
-
-
-
-            header("Content-type: application/json; charset=utf-8");
-
+           header("Content-type: application/json; charset=utf-8");
                $json = $app->request->getBody();
                $j = json_decode($json,true);
                $data = json_decode($j['json']);
-
-               $query ="INSERT INTO sub_categorias (nombre) VALUES ('{$data->nombre}')";
+               $query ="INSERT INTO sub_categorias (id_categoria,nombre) VALUES ({$data->id_categoria},'{$data->nombre}')";
                 $proceso=$db->query($query);
                 if($proceso){
                $result = array("STATUS"=>true,"messaje"=>"Subcategoria creada correctamente");
                 }else{
                 $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
                 }
-
-
-
                 echo  json_encode($result);
-
-
-
         });
 
-
-
-
+        $app->post("/familia",function() use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+                $json = $app->request->getBody();
+                $j = json_decode($json,true);
+                $data = json_decode($j['json']);
+                $query ="INSERT INTO sub_sub_categorias (id_subcategoria,nombre) VALUES ({$data->id_subCategoria},'{$data->nombre}')";
+                 $proceso=$db->query($query);
+                 if($proceso){
+                $result = array("STATUS"=>true,"messaje"=>"Familia creada correctamente");
+                 }else{
+                 $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
+                 }
+                 echo  json_encode($result);
+         });
 
         /*buscar general*/
 
 
-
         $app->post("/buscargeneral", function() use($db,$app){
-
             header("Content-type: application/json; charset=utf-8");
-
-
-
             $json = $app->request->getBody();
-
             $j = json_decode($json,true);
-
             $data = json_decode($j['json']);
-
-
-
             if($data->tipo=='categoria'){
-
             $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat}";
-
             }
-
-
-
             if($data->tipo=='subcategoria'){
-
             $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat} and id_subcategoria={$data->sub}";
-
             }
-
             if($data->tipo=='familia'){
-
              $sql="SELECT * FROM aprendea_erp.productos where  id_categoria={$data->cat} and id_subcategoria={$data->sub} and id_sub_sub_categoria={$data->fam}";
-
             }
-
-
-
             $resultado = $db->query($sql);
-
             $prods=array();
-
             while ($fila = $resultado->fetch_array()) {
-
                 $prods[]=$fila;
-
               }
-
-
-
                $respuesta=json_encode($prods);
-
               echo $respuesta;
-
-
-
             });
 
+            $app->get("/familia_subcategoria/:criterio",function($criterio) use($db,$app){
+
+                header("Content-type: application/json; charset=utf-8");
+                 $resultado = $db->query("SELECT id,nombre from sub_sub_categorias where id_subcategoria={$criterio} group by 1,2 order by 2 asc");
+                 $prods=array();
+                     while ($fila = $resultado->fetch_array()) {
+                     $prods[]=$fila;
+                     }
+                     $respuesta=json_encode($prods);
+                     echo  $respuesta;
+             });
+
+
+  $app->get("/familia/:criterio",function($criterio) use($db,$app){
+
+           header("Content-type: application/json; charset=utf-8");
+            $resultado = $db->query("SELECT f.nombre,p.id_sub_sub_categoria as id ,p.id_subcategoria from productos p,sub_sub_categorias f where p.id_sub_sub_categoria=f.id and p.id_subcategoria={$criterio} group by 1,2 order by 1 asc");
+            $prods=array();
+                while ($fila = $resultado->fetch_array()) {
+                $prods[]=$fila;
+                }
+                $respuesta=json_encode($prods);
+                echo  $respuesta;
+        });
 
 
 
-
-
-
-
-
-        $app->get("/familia/:criterio",function($criterio) use($db,$app){
-
-
-
+        $app->get("/subcategoria_categoria/:criterio",function($criterio) use($db,$app){
             header("Content-type: application/json; charset=utf-8");
 
+            $resultado = $db->query("SELECT nombre,id from sub_categorias where id_categoria={$criterio} group by 1,2 order by 1 asc");
+            $prods=array();
+                while ($fila = $resultado->fetch_array()) {
+                    $prods[]=$fila;
+                }
+                $respuesta=json_encode($prods);
+                echo  $respuesta;
+    });
 
-
-            $resultado = $db->query("SELECT categoria3 as nombre,id_sub_sub_categoria as id ,id_subcategoria from productos where id_subcategoria={$criterio} group by 1,2 order by 1 asc");
+        $app->get("/subcategoria/:criterio",function($criterio) use($db,$app){
+            header("Content-type: application/json; charset=utf-8");
+            $resultado = $db->query("SELECT sc.nombre,p.id_subcategoria as id ,p.id_categoria from productos p, sub_categorias sc where p.id_subcategoria=sc.id and p.id_categoria={$criterio} group by 1,2 order by 1 asc;");
 
 
 
@@ -2307,33 +2243,6 @@ $app->get("/categorias",function() use($db,$app){
 
 
         });
-
-
-$app->get("/subcategoria_categoria/:criterio",function($criterio) use($db,$app){
-            header("Content-type: application/json; charset=utf-8");
-
-            $resultado = $db->query("SELECT nombre,id from productos where id_categoria={$criterio} group by 1,2 order by 1 asc");
-            $prods=array();
-                while ($fila = $resultado->fetch_array()) {
-                    $prods[]=$fila;
-                }
-                $respuesta=json_encode($prods);
-                echo  $respuesta;
-    });
-
-
-
-$app->get("/subcategoria/:criterio",function($criterio) use($db,$app){
-            header("Content-type: application/json; charset=utf-8");
-
-            $resultado = $db->query("SELECT categoria2 as nombre,id_subcategoria as id ,id_categoria from productos where id_categoria={$criterio} group by 1,2 order by 1 asc;");
-            $prods=array();
-                while ($fila = $resultado->fetch_array()) {
-                    $prods[]=$fila;
-                }
-                $respuesta=json_encode($prods);
-                echo  $respuesta;
-    });
 
 
 
@@ -2542,15 +2451,13 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
 
     $app->post("/producto",function() use($db,$app){
-
-
-
         header("Content-type: application/json; charset=utf-8");
            $json = $app->request->getBody();
            $j = json_decode($json,true);
            $data = json_decode($j['json']);
 
            $codigo=(is_array($data->codigo))? array_shift($data->codigo): $data->codigo;
+           $codigobarras=(is_array($data->codigobarras))? array_shift($data->codigobarras): $data->codigobarras;
             $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
             $peso=(is_array($data->peso))? array_shift($data->peso): $data->peso;
             $costo=(is_array($data->costo))? array_shift($data->costo): $data->costo;
@@ -2558,8 +2465,9 @@ $app->get("/producto/:id",function($id) use($db,$app){
             $sub_categoria=(is_array($data->id_subcategoria))? array_shift($data->id_subcategoria): $data->id_subcategoria;
             $usuario=(is_array($data->usuario))? array_shift($data->usuario): $data->usuario;
 
-           $query ="INSERT INTO productos (codigo,nombre,peso,costo,id_categoria,id_subcategoria,usuario) VALUES ("
+           $query ="INSERT INTO productos (codigo,codigobarras,nombre,peso,costo,id_categoria,id_subcategoria,usuario) VALUES ("
           ."'{$codigo}',"
+          ."'{$codigobarras}',"
           ."'{$nombre}',"
           ."'{$peso}',"
           ."{$costo},"
@@ -2567,19 +2475,10 @@ $app->get("/producto/:id",function($id) use($db,$app){
           ."{$sub_categoria},"
           ."'{$usuario}'".")";
 
-
-
-
-
-
+          print_r($query);
+          die();
 
           $insert=$db->query($query);
-
-
-
-
-
-
 
            $result = array("STATUS"=>true,"messaje"=>"Producto creado correctamente");
 
@@ -2606,25 +2505,11 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
 
             $json = $app->request->getBody();
-
-
-
             $j = json_decode($json,true);
-
-
-
             $data = json_decode($j['json']);
 
-
-
-
-
-
-
             $codigo=(is_array($data->codigo))? array_shift($data->codigo): $data->codigo;
-
-
-
+            $codigobarras=(is_array($data->codigobarras))? array_shift($data->codigobarras): $data->codigobarras;
             $nombre=(is_array($data->nombre))? array_shift($data->nombre): $data->nombre;
 
 
@@ -2646,37 +2531,12 @@ $app->get("/producto/:id",function($id) use($db,$app){
 
 
             $sub_categoria=(is_array($data->id_subcategoria))? array_shift($data->id_subcategoria): $data->id_subcategoria;
-
-
-
             $usuario=(is_array($data->usuario))? array_shift($data->usuario): $data->usuario;
-
-
-
-
-
-
-
-            $sql = "UPDATE productos SET codigo='".$codigo."', nombre='".$nombre."',peso=".$peso.",costo=".$costo.", precio_sugerido=".$precio.",id_categoria=".$categoria.",id_subcategoria=".$sub_categoria.",usuario='".$usuario."' WHERE id={$data->id}";
-
-
-
+            $sql = "UPDATE productos SET codigo='".$codigo."',codigobarras='".$codigobarras."', nombre='".$nombre."',peso=".$peso.",costo=".$costo.", precio_sugerido=".$precio.",id_categoria=".$categoria.",id_subcategoria=".$sub_categoria.",usuario='".$usuario."' WHERE id={$data->id}";
             try {
-
-
-
             $db->query($sql);
-
-
-
              $result = array("STATUS"=>true,"messaje"=>"Producto actualizado correctamente","string"=>$sql);
-
-
-
              echo  json_encode($result);
-
-
-
             }
 
 

@@ -210,7 +210,7 @@ verSucursales():void{
       width: 'auto',
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','','','',0,'',0,'','','','Nuevo','','')
+      data:new Productos('','','','','','','','',0,'',0,'','','','Nuevo','','')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

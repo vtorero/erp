@@ -1,8 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
-import { Categoria } from 'app/modelos/categoria';
 import { Subcategoria } from 'app/modelos/subcategoria';
 
 @Component({
@@ -13,8 +11,9 @@ import { Subcategoria } from 'app/modelos/subcategoria';
 export class AddSubCategoriaComponent implements OnInit {
   dataCategoria:any;
   constructor(
-    private _snackBar: MatSnackBar,
+
     private api:ApiService,
+    public dialogRef: MatDialogRef<AddSubCategoriaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Subcategoria
 
   ) { }
@@ -30,4 +29,8 @@ this.getCate();
       }
     } );
   }
+  cancelar() {
+    this.dialogRef.close();
+  }
+
 }

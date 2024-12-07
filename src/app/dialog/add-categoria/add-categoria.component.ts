@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Categoria } from 'app/modelos/categoria';
 import { DetaPagos } from 'app/modelos/detapagos';
@@ -13,6 +13,7 @@ export class AddCategoriaComponent implements OnInit {
 dataCategoria:any;
   constructor(
     private api:ApiService,
+    public dialogRef: MatDialogRef<AddCategoriaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Categoria
 
   ) { }
@@ -29,4 +30,9 @@ dataCategoria:any;
       }
     } );
   }
+
+  cancelar() {
+    this.dialogRef.close();
+  }
+
 }

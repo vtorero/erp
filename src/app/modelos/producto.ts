@@ -2,6 +2,7 @@ export class Productos{
     constructor(
         public id :string,
         public codigo: string,
+        public codigobarras: string,
         public nombre: string,
         public unidad: string,
         public descripcion: string,

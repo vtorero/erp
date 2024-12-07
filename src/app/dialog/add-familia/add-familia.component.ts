@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from 'app/api.service';
 import { Familia } from 'app/modelos/familia';
 
@@ -15,7 +14,7 @@ export class AddFamiliaComponent implements OnInit {
   dataUnidad:any;
   dataSubCategoria:any;
   constructor(
-    private _snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<AddFamiliaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Familia,
     private api:ApiService
   ) { }
@@ -51,4 +50,8 @@ export class AddFamiliaComponent implements OnInit {
     });
 
  }
+ cancelar() {
+  this.dialogRef.close();
+}
+
 }

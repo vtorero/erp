@@ -47,6 +47,10 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
                     <mat-cell *matCellDef="let row"> {{row.codigo}}</mat-cell>
               </ng-container>
+              <ng-container matColumnDef="codigobarras">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Código de Barras</mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.codigobarras}}</mat-cell>
+          </ng-container>
                      <ng-container matColumnDef="nombre">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
                         <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
