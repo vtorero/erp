@@ -73,11 +73,11 @@
             <div class="col-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
-                    <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>
+                    <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)" value="0"  type="text" required>
                 </mat-form-field>
                 </div>
                 <div class="col-1">
-                    <button mat-icon-button color="warn" *ngIf="i==0"  (click)="onAddToPago()">
+                                  <button mat-icon-button color="warn" *ngIf="i==0" (click)="onAddToPago()" [disabled]="habilitarPagos">
                         <i class="material-icons">add_circle</i>
                     </button>
                     <button  mat-icon-button color="warn" *ngIf="i>0"  (click)="onDeletePago(i)">

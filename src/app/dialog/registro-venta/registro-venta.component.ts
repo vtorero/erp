@@ -154,6 +154,7 @@ textoprecio:any;
 reciboneto:number=0;
 reciboigv:number=0;
 recibototal:number=0;
+habilitarPagos:boolean=true;
 public id_documento:number=0
 
 
@@ -441,22 +442,24 @@ this.telefonoCliente=data[0].telefono;
     let total:number=0;
         this.MyForm.value.pagos.forEach(element => {
           console.log(element)
-
-
-
         depositos+=element.montoPago;
         console.log("deposito",depositos)
+
 
         });
      total=depositos;
      if(precio>total){
      this.vuelto='Pendiente';
+     this.habilitarPagos=false;
      const mpendiente = this.MyForm.get('montopendiente') as FormControl;
       mpendiente.setValue((precio-depositos).toFixed(2));
      }
      else{
-      this.vuelto='Vuelto';
+      this.vuelto='Vueltos';
+      this.habilitarPagos=true;
+      console.log("habilitapagos",this.habilitarPagos);
      }
+     //this.habilitarPagos=false;
      vuelto.setValue((total-precio).toFixed(2));
      this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
         console.log("letra",letra)

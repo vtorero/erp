@@ -97,24 +97,25 @@ export class VerVentaComponent implements OnInit {
     });
      dialogo2.afterClosed().subscribe(ux => {
       this.dataDetalle.forEach(element => {
-       if(element.id==id){
-        this.dataDetalle[index].pendiente=ux.cantidad;
-        this.dataDetalle[index].despacho=ux.cantidad;
-        this.api.actualizaPendientesVenta(id_venta,id_producto,id,this.dataDetalle[index].pendiente,ux.cantidad).subscribe(
+        if(element.id==id){
+          if(ux.cantidad < this.dataDetalle[index].cantidad) {
+           this.dataDetalle[index].pendiente=ux.cantidad;
+           this.api.actualizaPendientesVenta(id_venta,id_producto,id,this.dataDetalle[index].pendiente,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
-          erro=>{console.log(erro)}
+            erro=>{console.log(erro)}
             );
+          }else{
 
+          this._snackBar.open('Error en la cantidad ingresada debe ser menor a la cantidad de venta','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'bottom'});
+          }
 
         }
        index++;
       });
 
-      console.log("ux",id_venta)
-
-     });
+   });
 
   }
 

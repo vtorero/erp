@@ -88,16 +88,21 @@ export class VerCompraComponent implements OnInit {
     data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
     });
      dialogo2.afterClosed().subscribe(ux => {
+
       this.dataDetalle.forEach(element => {
        if(element.id==id){
-        this.dataDetalle[index].pendiente=ux.cantidad;
-        this.api.actualizaPendientesCompra(id_venta,id_producto,id,ux.cantidad).subscribe(
+          if(ux.cantidad <= this.dataDetalle[index].cantidad) {
+           this.dataDetalle[index].pendiente=ux.cantidad;
+           this.api.actualizaPendientesCompra(id_venta,id_producto,id,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
-          erro=>{console.log(erro)}
+            erro=>{console.log(erro)}
             );
+          }else{
 
+          this._snackBar.open('Error en la cantidad ingresada','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'bottom'});
+          }
 
         }
        index++;

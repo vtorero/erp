@@ -303,8 +303,9 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
   });
    dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){
+      console.log(ux);
       if(dato.id == id){
-        if(ux.cantidad!=cantidad){
+        if(ux.cantidad<=cantidad){
         dato.cantidad = ux.cantidad
 
       }
