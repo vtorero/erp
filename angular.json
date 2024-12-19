@@ -34,7 +34,9 @@
               "node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js",
               "node_modules/bootstrap-notify/bootstrap-notify.js",
               "node_modules/chartist/dist/chartist.js",
-              "src/assets/js/plugin_impresora_termica.js"
+              "src/assets/js/plugin_impresora_termica.js",
+              "src/assets/js/letras.js",
+              "src/assets/js/imprimir.js"
             ],
             "allowedCommonJsDependencies": [
               "rxjs/add/operator/filter",

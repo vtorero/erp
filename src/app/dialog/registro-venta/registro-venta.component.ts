@@ -7,100 +7,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
 declare function connetor_plugin(): void;
-
-
-
-function imprSelec(nombre) {
-  var ficha = document.getElementById(nombre);
-  var ventimp = window.open(' ','popimpr','left=200,top=200,width=800,height=620');
-  ventimp.document.write( ficha.innerHTML );
-  //ventimp.document.close();
-  ventimp.print();
-  ventimp.close();
-}
-
-
-
-async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string,reciboneto:number,reciboigv:number,recibototal:number){
-  const fecha = new Date();
-  let imp = localStorage.getItem("impresora");
-if(imp==""){
-  console.log("impresora vacia")
-  this.snackBar.open("Impresora no configurada", undefined, { duration: 8000, verticalPosition: 'bottom', panelClass: ['snackbar-error'] });
-}
-
-  let nombreImpresora = imp;
-            let api_key = "123456"
-            const conector = new connetor_plugin()
-                        conector.textaling("center")
-                       conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
-                       conector.feed("1")
-                       conector.fontsize("2")
-                       conector.text(localStorage.getItem("sucursal"))
-                        conector.fontsize("1")
-                        conector.text("Ferreteria y materiales de contruccion")
-                        if(localStorage.getItem("email")!='-'){
-                        conector.text(localStorage.getItem("email"))
-                        }
-                        conector.text(localStorage.getItem("direccion"))
-                        conector.text("Telefonos: "+localStorage.getItem("telefono"))
-                        conector.text("Lima - Lima")
-                        conector.text("RUC: 2053799520")
-                        conector.feed("1")
-                        conector.textaling("left")
-                        conector.text("ADQUIRIENTE:")
-                        conector.text(cliente)
-                        if(direccion!=''){
-                        conector.text("Direccion:"+direccion)
-                        }
-                        if(telefono!=''){
-                          conector.text("Telefono:"+telefono)
-                        }
-                        conector.textaling("left")
-                        conector.text("Fecha:"+fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
-                        conector.text("Numero de ticket:"+ticket)
-                        conector.feed("1")
-                        conector.textaling("center")
-                        conector.text("Descripcion      Cant.     Precio     Importe")
-                        conector.text("===============================================")
-                        for (let index = 0; index < datos.length; index++) {
-                          const element = datos[index];
-                          var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
-                          var subtotal = element.cantidad * element.precio-(element.descuento*element.cantidad);
-                          conector.textaling("left");
-                          conector.text(index+1+") "+element.nombre);
-                          conector.textaling("right");
-                          conector.text("           "+element.cantidad+"        S/ "+(precio/element.cantidad).toFixed(2)+"        S/ "+subtotal.toFixed(2))
-                          conector.textaling("center")
-                          conector.text("---------------------------------------------")
-                        }
-                        conector.feed("1")
-                        conector.textaling("center")
-                        conector.text("==============================================")
-                        conector.fontsize("1")
-                        conector.textaling("right")
-                        conector.text("Op. Gravadas: S/ "+reciboneto)
-                        if(form.value.igv>0){
-                        conector.text("I.G.V: S/ "+reciboigv)
-                        }
-                        conector.text("Total: S/ "+recibototal)
-
-                         conector.feed("1")
-                        conector.textaling("center")
-                        conector.text("**********************************")
-                        conector.text("SON: "+pago+" SOLES")
-
-                        const resp = await conector.imprimir(nombreImpresora, api_key);
-                        if (resp === true) {
-
-                             console.log("imprimio: "+resp)
-                        } else {
-                             console.log("Problema al imprimir: "+resp)
-
-                        }
-
-}
-
+declare function NumerosALetras(numero:number):any;
+declare function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal):void;
 
 @Component({
   selector: 'app-registro-venta',
@@ -159,7 +67,7 @@ public id_documento:number=0
 
 
   constructor(public dialog: MatDialog,
-    public dialogRef: MatDialogRef<RegistroVentaComponent>,
+   public dialogRef: MatDialogRef<RegistroVentaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Details,
 
     private api:ApiService,
@@ -252,14 +160,6 @@ async getData() {
   }
 }
 
-imprimir() {
-
-
-  imprSelec("recibo");
-
-}
-
-
 
    onSubmit():void{
     if(this.MyForm.invalid){
@@ -267,8 +167,9 @@ imprimir() {
       return;
     }
 
-console.log("detalle",this.data.detalle)
-console.log("miform",this.MyForm)
+console.log("detalle",this.data.detalle);
+console.log("miform",this.MyForm);
+stop;
 const print = this.MyForm.get('imprimir') as FormControl;
 let impresora = this.MyForm.get('impresoras') as FormControl;
     this.api.guardaVentas(this.MyForm.value,this.data.detalle).subscribe(
@@ -444,8 +345,6 @@ this.telefonoCliente=data[0].telefono;
           console.log(element)
         depositos+=element.montoPago;
         console.log("deposito",depositos)
-
-
         });
      total=depositos;
      if(precio>total){
@@ -455,16 +354,20 @@ this.telefonoCliente=data[0].telefono;
       mpendiente.setValue((precio-depositos).toFixed(2));
      }
      else{
+      const mpendiente = this.MyForm.get('montopendiente') as FormControl;
+      mpendiente.setValue((precio-depositos).toFixed(2));
       this.vuelto='Vueltos';
       this.habilitarPagos=true;
+      console.log("pendientes",precio-depositos)
       console.log("habilitapagos",this.habilitarPagos);
      }
      //this.habilitarPagos=false;
      vuelto.setValue((total-precio).toFixed(2));
-     this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
+     /*this.api.getNumeroALetras(precio.toString()).subscribe(letra => {
         console.log("letra",letra)
       this.textoprecio=letra;
-      });
+      });*/
+      this.textoprecio=NumerosALetras(precio);
     /*
       if(tipoDoc1.value=="Factura"){
         const total3 = this.MyForm.get('total') as FormControl;

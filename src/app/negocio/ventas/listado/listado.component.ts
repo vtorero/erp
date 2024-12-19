@@ -14,8 +14,7 @@ import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { Router } from '@angular/router';
 declare function connetor_plugin(): void;
-
-
+declare function NumerosALetras(numero:number): any;
 
 async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string,reciboneto:number,reciboigv:number,recibototal:number){
   const fecha = new Date();
@@ -84,18 +83,23 @@ if(imp==""){
                          conector.feed("1")
                         conector.textaling("center")
                         conector.text("**********************************")
-                        conector.text("SON: "+pago+" SOLES")
+                        conector.text("SON:"+pago)
+                        try {
+                          const resp = await conector.imprimir(nombreImpresora, api_key);
+                          if (resp === true) {
 
-                        const resp = await conector.imprimir(nombreImpresora, api_key);
-                        if (resp === true) {
+                               console.log("imprimio: "+resp)
+                          } else {
+                               console.log("Problema al imprimir: "+resp)
 
-                             console.log("imprimio: "+resp)
-                        } else {
-                             console.log("Problema al imprimir: "+resp)
+                          }
+
+                        } catch (error) {
+                          console.log("Problema al imprimir: "+error);
 
                         }
 
-}
+                     }
 
 
 @Component({
@@ -234,19 +238,20 @@ openBusqueda(){
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
-      this.api.getNumeroALetras(ux.datos.valor_total).subscribe(letra => {
+      /*this.api.getNumeroALetras(ux.datos.valor_total).subscribe(letra => {
       this.textoprecio=letra;
 
-      });
-      this.wait(3000);
-        console.log("ux",ux.cliente.id_cliente);
-        this.api.getApiTablaCriterio('clientes',ux.cliente.id_cliente).subscribe(data => {
-          if(data[0].nombre) {
-      this.clientetexto=data[0].nombre;
-      this.numero_doc=data[0].num_documento;
-      this.direccioncliente=data[0].direccion;
-      this.telefonoCliente=data[0].telefono;
-          }
+      });*/
+     // this.textoprecio=NumerosALetras(10);
+     //this.textoprecio= ux.datos.valor_total.toString();
+     this.textoprecio = NumerosALetras(ux.datos.valor_total);
+     this.api.getApiTablaCriterio('clientes',ux.cliente.id_cliente).subscribe(data => {
+     if(data[0].nombre) {
+        this.clientetexto=data[0].nombre;
+        this.numero_doc=data[0].num_documento;
+        this.direccioncliente=data[0].direccion;
+        this.telefonoCliente=data[0].telefono;
+        }
         });
       this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
     imprimirTicket(x,ux,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+localStorage.getItem("id_suc")+"-"+ux.datos.id,this.reciboneto,this.reciboigv,this.recibototal)
