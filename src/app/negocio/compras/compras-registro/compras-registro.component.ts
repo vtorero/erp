@@ -8,11 +8,9 @@ import { ModPrecioComponent } from '../../../dialog/mod-precio/mod-precio.compon
 import { ModCantidadComponent } from '../../../dialog/mod-cantidad/mod-cantidad.component';
 import { ModDescuentoComponent } from '../../../dialog/mod-descuento/mod-descuento.component';
 import { SelecTerminalComponent } from '../../../dialog/selec-terminal/selec-terminal.component';
-import { RegistroVentaComponent } from '../../../dialog/registro-venta/registro-venta.component';
 import { RegistroCompraComponent } from '../../../dialog/registro-compra/registro-compra.component';
 import { ModDespachoComponent } from 'app/dialog/mod-despacho/mod-despacho.component';
-
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -67,14 +65,12 @@ export class ComprasRegistroComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
-    private api: ApiService,
-
-
+    private _snackBar: MatSnackBar,
+    private api: ApiService
   ) { }
 
   ngOnInit(): void {
     let suc=  localStorage.getItem("sucursal_id");
-    console.log("sss",suc);
     if(suc==null){
     this.openTerminal('20ms','20ms');
     }else{
@@ -84,8 +80,7 @@ export class ComprasRegistroComponent implements OnInit {
         this.sucursal=d[0]['nombre'];
         localStorage.setItem("sucursal_id",this.sucursal_id);
         this.getCate();
-       // this.getSubCategoria();
-       // this.getFamilia();
+
          });
     }
 
@@ -120,7 +115,6 @@ export class ComprasRegistroComponent implements OnInit {
 
   public seleccionarCategoria(event) {
     const value = event.value;
-    console.log(value);
     this.categoria=value;
     this.api.BuscarPorCategoria(value).subscribe(x => {
       this.dataSubCategoria=x;
@@ -135,8 +129,6 @@ export class ComprasRegistroComponent implements OnInit {
  public seleccionarSubcategoria(event) {
    const value = event.value;
    this.subcategoria=value;
-   console.log("subcategoria",this.familia);
-   console.log(value)
    this.api.BuscarPorSubcategoria(value).subscribe(x => {
    this.dataFamilia=x;
    this.loading=false
@@ -149,7 +141,7 @@ export class ComprasRegistroComponent implements OnInit {
 
 public seleccionarFamilia(event) {
   const value = event.value;
-  console.log(value)
+
   this.api.BuscarPorFamilia(this.categoria,this.subcategoria,value,'familia').subscribe(x => {
   this.dataSource=x;
   this.loading=false
@@ -173,7 +165,6 @@ renderDataTable() {
 }
 
 applyFilter(filterValue: string) {
-  console.log(filterValue)
   this.loading=true;
   filterValue = filterValue.trim();
   filterValue = filterValue.toLowerCase();
@@ -224,15 +215,20 @@ enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:numb
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }
+
+
+
 openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:number,cantidad:number,nombre:string){
   const dialogo2=this.dialog.open(ModDespachoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
   data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
-    console.log(ux.cantidad)
-    this.dataRecibo.map(function(dato){
+     this.dataRecibo.map(function(dato){
       if(dato.id == id){
         if(dato.cantidad<ux.despacho) {
+         // let mensaje=`El despacho de: (${ux.despacho}) es mayor a la cantidad registrada: (${dato.cantidad})`;
+          //this.alertar("orrrr");
+          //this._snackBar.open("mensaje","OK",{duration:3000,verticalPosition:'top', horizontalPosition:'right', panelClass: ['warning']});
           alert(`El despacho de: (${ux.despacho}) es mayor a la cantidad registrada: (${dato.cantidad})`);
           return;
         }else{
@@ -257,7 +253,9 @@ cancelar() {
   this.dialog.closeAll();
 
 }
-
+alertar(mensaje:string):void{
+  this._snackBar.open(mensaje,"OK",{duration:2000,verticalPosition:'bottom',horizontalPosition:'right',panelClass: ['warning']});
+}
 openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
   const dialogo2=this.dialog.open(ModDescuentoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
   data: {clase:'modPrecio',producto:id,precio:precio,nombre:nombre},
@@ -303,15 +301,13 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
   });
    dialogo2.afterClosed().subscribe(ux => {
     this.dataRecibo.map(function(dato){
-      console.log(ux);
-      if(dato.id == id){
-        if(ux.cantidad<=cantidad){
-        dato.cantidad = ux.cantidad
 
-      }
+      if(dato.id == id){
+       // if(ux.cantidad<=cantidad){
+        dato.cantidad = ux.cantidad
+      //}
       }
    });
-   console.log("cantidad",this.dataRecibo)
    this.sumarMonto(this.dataRecibo)
    });
 

@@ -1,5 +1,4 @@
-<h1 mat-dialog-title>Registrar venta</h1>
-
+<h1 mat-dialog-title>Registro de Venta</h1>
 <form [formGroup]="MyForm" autocomplete="off">
     <div mat-dialog-content>
         <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
@@ -102,7 +101,7 @@
             <div class="col-6">
                 <mat-form-field appearance="outline">
                     <mat-label>Comentario</mat-label>
-                    <input matInput  name="comentario" formControlName="comentario"  type="text" placeholder="Comentario">
+                    <textarea matInput placeholder="Comentario" formControlName="comentario"></textarea>
                 </mat-form-field>
             </div>
         </div>

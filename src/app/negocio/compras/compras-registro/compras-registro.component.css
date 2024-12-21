@@ -5,6 +5,9 @@
     width: 300px;
     height: 40px;
 }
+::ng-deep .warning{
+    background: 'yellow';
+ }
 .numero_edicion{
     cursor: pointer;
     display: block;
