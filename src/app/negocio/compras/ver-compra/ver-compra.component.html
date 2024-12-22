@@ -108,11 +108,11 @@
         </ng-container>
         <ng-container matColumnDef="precio">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
-          <mat-cell *matCellDef="let row">S/. {{row.precio | number }} </mat-cell>
+          <mat-cell *matCellDef="let row">S/ {{row.precio | number }} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="subtotal">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Subtotal</mat-header-cell>
-          <mat-cell *matCellDef="let row">S/.{{ row.subtotal | number }}
+          <mat-cell *matCellDef="let row">S/ {{ row.subtotal | number }}
           </mat-cell>
         </ng-container>
          <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
