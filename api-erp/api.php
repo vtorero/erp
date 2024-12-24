@@ -4249,10 +4249,20 @@ $app->post("/compra",function() use($db,$app){
     $detalle = json_decode($j['detalle']);
     $fecha=substr($data->fecha,0,10);
     $cantidad_acumulada=0;
+    $valor_pendiente=0;
+    $data_total=0;
     $valor_total=0;
             try {
+
+                if($data->montopendiente<0){
+                    $pendiente=0;
+
+                }else{
+                    $pendiente=$data->montopendiente;
+                }
+
             $almacen=$data->sucursal;
-               $sql="call p_compra('{$data->usuario}','{$data->seriedoc}','{$data->nrodocumento}','{$fecha}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$data->montopendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
+               $sql="call p_compra('{$data->usuario}','{$data->seriedoc}','{$data->nrodocumento}','{$fecha}','{$data->proveedor}',{$data->sucursal},'{$data->entrega}','{$data->tipoDoc}',{$data->neto},{$data->total},{$pendiente},{$data->total}-{$data->neto},'{$data->comentario}')";
 
                $stmt = mysqli_prepare($db,$sql);
                 mysqli_stmt_execute($stmt);
@@ -4261,11 +4271,30 @@ $app->post("/compra",function() use($db,$app){
                 while ($d = $datos->fetch_object()) {
                  $ultimo_id=$d;
                  }
-                 foreach($data->pagos as $pago){
-                $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$data->montopendiente},'{$data->usuario}')";
-                $stmtP = mysqli_prepare($db,$procP);
-                mysqli_stmt_execute($stmtP);
-                 }
+
+                 if (count($data->pagos)==1) {
+
+                    foreach($data->pagos as $pago){
+                        $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$pendiente},'{$data->usuario}')";
+                        $stmtP = mysqli_prepare($db,$procP);
+                        mysqli_stmt_execute($stmtP);
+                    }
+
+                 } else{
+                    $valor_total=$data->total;
+                    foreach($data->pagos as $pago){
+                        $valor_total-=$pago->montoPago;
+                        if($valor_total<0){
+                            $pago->montoPago=$pago->montoPago+$data->montopendiente;
+                            $valor_total=0;
+                        }
+                        $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$valor_total},'{$data->usuario}')";
+                        $stmtP = mysqli_prepare($db,$procP);
+                        mysqli_stmt_execute($stmtP);
+
+                }
+
+            }
 
                 foreach($detalle as $item){
                 /*inserta detalle*/
@@ -4283,7 +4312,7 @@ $app->post("/compra",function() use($db,$app){
                         {$data->usuario},
                         {$almacen})";
 
-                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now() WHERE  producto_id={$item->id} and id_almacen={$almacen}";
+                $sql2="UPDATE inventario  SET cantidad = cantidad+{$item->cantidad}-{$item->pendiente},fecha_actualizacion=now()  WHERE producto_id={$item->id} and id_almacen={$almacen}";
 
                 $stmt2 = mysqli_prepare($db,$sql);
                 $stmt3 = mysqli_prepare($db,$sql2);
@@ -4343,20 +4372,15 @@ $app->post("/compra",function() use($db,$app){
                      }
 
                      }else{
+                        $valor_total=$data->total;
                         foreach($data->pagos as $pago){
-                        $data_total+=$pago->montoPago;
-
-                        $valor_pendiente-=($data->total-$pago->montoPago);
-                        if($data->total< $data_total){
-                            $pendiente=0;
-
-                        }else{
-                            $pendiente=$valor_pendiente;
+                        $valor_total-=$pago->montoPago;
+                        if($valor_total<0){
+                            $pago->montoPago=$pago->montoPago+$data->montopendiente;
+                            $valor_total=0;
                         }
-                        print_r($data->total);
-                        print_r($data_total);
-                        die();
-                        $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$pendiente},{$data->usuario})";
+
+                        $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$valor_total},{$data->usuario})";
 
                         $stmtP = mysqli_prepare($db,$procP);
                         mysqli_stmt_execute($stmtP);
@@ -4562,20 +4586,26 @@ $app->post("/compra",function() use($db,$app){
                 $prods[]=$fila;
             }
 
+
          /*Registrar movimientos*/
+          if($data->cantidad==0) {
+            $cantidad=$prods[0]["pendiente"];
+          } else{
+            $cantidad=$data->cantidad;
+          }
+
          $sql="CALL p_registrar_movimiento(
             {$data->id_producto},
             {$data->id_venta},
             'Ingreso',
-           {$data->cantidad},
+            {$cantidad},
             {$objetos['precio']},
             {$data->usuario},
             {$data->sucursal})";
 
-print_r($sql);
-die();
 
-            $sql2="UPDATE inventario  SET cantidad = cantidad+{$data->cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->sucursal}";
+
+            $sql2="UPDATE inventario  SET cantidad = cantidad+{$cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->sucursal}";
 
             $stmt2 = mysqli_prepare($db,$sql);
             $stmt3 = mysqli_prepare($db,$sql2);
@@ -4626,42 +4656,27 @@ die();
    $pendiente=number_format($prods[0]['pendiente'],2,'.','');
 
 
-    $resultado = $db->query("SELECT * FROM aprendea_erp.movimiento_articulos where codigo_prod={$prods[0]['id_producto']} and id_sucursal={$data->sucursal}  order by id desc limit 1");
-    $inv = $resultado->fetch_array();
+         /*Registrar movimientos*/
+         if($data->cantidad==0) {
+            $cantidad=$prods[0]["pendiente"];
+          } else{
+            $cantidad=$data->cantidad;
+          }
 
-   // print_r($inv);
-
-
-    if($inv["precio"]!="0.00"){
-
-        $total=number_format($inv["total"]-($data->cantidad*$inv["promedio"]),2, '.', '');
-
-
-                $cantidad_acumulada=$inv["cantidad_acumulada"]-$pendiente;
-
-        $sql1="INSERT INTO movimiento_articulos (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-        VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-$pendiente-$data->cantidad,$cantidad_acumulada,{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
-
-        }
-
-        if($inv["precio"]=="0.00" and $inv["promedio"]=="0.00"){
-
-            $total=number_format($data->cantidad*$inv['precio'],2, '.', '');
-
-                    $cantidad_acumulada=-$data->cantidad;
-
-            $sql1="INSERT INTO movimiento_articulos  (`codigo_prod`,`id_venta`,`tipo_movimiento`,`id_almacen`,`comentario`,`cantidad_movimiento`,`cantidad_salida`,`cantidad_acumulada`,`precio`,`promedio`,`total`,`id_sucursal`,`usuario`)
-                VALUES({$data->id_producto},{$data->id_venta},'Salida',{$data->sucursal},CONCAT('vta. nro: ',$data->id_venta),{$data->cantidad},-{$data->cantidad},{$cantidad_acumulada},{$inv["promedio"]},{$inv["promedio"]},$total,$data->sucursal,'{$data->usuario}');";
-
-            }
+         $sql="CALL p_registrar_movimiento(
+            {$data->id_producto},
+            {$data->id_venta},
+            'Salida',
+            {$cantidad},
+            {$objetos['precio']},
+            {$data->usuario},
+            {$data->sucursal})";
 
 
 
-
-    $stmt = mysqli_prepare($db,$sql1);
+    $stmt = mysqli_prepare($db,$sql);
     mysqli_stmt_execute($stmt);
                   $stmt->close();
-
 
 
     try {
