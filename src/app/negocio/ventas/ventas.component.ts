@@ -11,9 +11,6 @@ import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-termin
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
 import { Router } from '@angular/router';
 import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.component';
-import { cloudfunctions } from 'googleapis/build/src/apis/cloudfunctions';
-
-
 
 
 
@@ -79,7 +76,7 @@ export class VentasComponent implements OnInit {
       this.router.navigate(['']);
       }
 
-    let suc=  sessionStorage.getItem("sucursal_id");
+    let suc = sessionStorage.getItem("sucursal_id");
 
     if(suc==null){
     this.openTerminal('20ms','20ms');
@@ -348,12 +345,10 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
     },
     });
 
-    /* dialogo2.afterClosed().subscribe(ux => {
+     dialogo2.afterClosed().subscribe(ux => {
       //console.log(this.dataRecibo)
-
-
      })
-*/
+
 
     }
 

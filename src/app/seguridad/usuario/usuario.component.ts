@@ -161,9 +161,14 @@ eliminar(art:Usuario) {
   if(art){
   this.api.eliminarUsuario(art).subscribe(
     data=>{
+      if(data['success']){
       this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-      },
-    erro=>{console.log(erro)}
+    }else{
+      this._snackBar.open(data['message'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+    }
+    },
+    erro=>{console.log("returl",erro)
+    }
       );
     this.renderDataTable();
 }

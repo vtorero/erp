@@ -47,3 +47,14 @@
   <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Si</button>
 </div>
 </div>
+<div *ngIf="data.clase=='DelProducto'">
+  <h1 mat-dialog-title>Eliminar registro</h1>
+<div mat-dialog-content>
+  ¿Desea eliminar el Producto?
+  {{data.producto.nombre}}
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button  mat-dialog-close>No</button>
+  <button mat-raised-button [mat-dialog-close]="data"  mat-dialog-close cdkFocusInitial>Si</button>
+</div>
+</div>

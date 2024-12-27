@@ -70,6 +70,7 @@ loginUser(usuario,password){
             localStorage.removeItem("currentEmpresa");
             sessionStorage.removeItem("hashsession");
             sessionStorage.removeItem("sucursal_id");
+            localStorage.removeItem("sucursal_id");
             localStorage.setItem("currentId",data['data'][0]['id']);
             localStorage.setItem("id_suc",data['data'][0]['id_sucursal']);
             localStorage.setItem("sucursal",data['data'][0]['sucursal']);
@@ -82,9 +83,7 @@ loginUser(usuario,password){
             sessionStorage.setItem("currentUser",data['data'][0]['nombre']);
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
             sessionStorage.setItem("sucursal_id",data['data'][0]['id_sucursal']);
-
-            console.log("data",data['data'][0]['nombre']);
-
+            localStorage.setItem("sucursal_id",data['data'][0]['id_sucursal']);
             if(data['data'][0]['nombre']=='admin'){
             this.router.navigate(['/dashboard']);
           }else{

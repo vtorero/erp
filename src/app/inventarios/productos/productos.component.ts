@@ -10,6 +10,7 @@ import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 import { Global } from 'app/global';
+import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -115,8 +116,10 @@ enviaExcel(){
   }
   }
 
+
+
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
-  const dialogo2=this.dialog.open(AddProductoComponent, {
+  const dialogo2=this.dialog.open(OpenDialogComponent, {
     width: 'auto',
     enterAnimationDuration,
     exitAnimationDuration,
@@ -137,13 +140,15 @@ enviaExcel(){
 
     const dialogo1 =this.dialog.open(AddProductoComponent, {
       width: 'auto',
+      //disableClose: true,
       enterAnimationDuration,
       exitAnimationDuration,
       data:new Productos('','','','','','','','',0,'',0,'','','','Nuevo','','')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
-       this.agregar(us)
+       this.agregar(us);
+      //this.renderDataTable();
      });
   }
 
@@ -163,14 +168,19 @@ enviaExcel(){
 
 
   agregar(art:Productos) {
-    if(art){
+    console.log("articulo",art.nombre);
+    if(art.nombre!=""){
     this.api.GuardarProducto(art).subscribe(
       data=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         },
-      erro=>{console.log(erro)}
+      erro=>{console.log(erro)
+
+        this._snackBar.open('El producto debe tener una imagen de referencia','OK',{duration:5000,horizontalPosition:'right',verticalPosition:'top'});
+      }
+
         );
-      this.renderDataTable();
+     // this.renderDataTable();
   }
 }
 

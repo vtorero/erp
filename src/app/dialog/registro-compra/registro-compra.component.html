@@ -1,10 +1,10 @@
-<h1 mat-dialog-title>Registrar Compra</h1>
+
 <form [formGroup]="MyForm" (ngSubmit)="onSubmit()" autocomplete="off">
     <div mat-dialog-content>
-        <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
-        <div class="row">
-
-            <div class="col-6">
+             <div class="row">
+            <div class="col-10"><h1 mat-dialog-title>Registro de Compra</h1></div>
+            <div class="col-2"> <button class="close" mat-button mat-dialog-title (click)="cancelar() ">x</button></div>
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
                     <mat-select name="id_documento" formControlName="tipoDoc" required>
@@ -16,7 +16,7 @@
 
                 </mat-form-field>
             </div>
-            <div class="col-2">
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Serie Doc.</mat-label>
                     <input matInput  name="seriedoc" formControlName="seriedoc"  type="text" placeholder="Serie doc">
@@ -47,7 +47,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Fecha de compra</mat-label>
                     <input name="fecha" formControlName="fecha"  matInput [matDatepicker]="picker">
-                    <mat-hint>DD/MM/YYYY</mat-hint>
+                 <!--  <mat-hint>DD/MM/YYYY</mat-hint>-->
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
@@ -55,14 +55,13 @@
             <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Almacen Destino</mat-label>
-                    <mat-select  formControlName="almacen" required [(ngModel)]="data.almacen" >
-                     <mat-option value="">Seleccionar</mat-option>
-                     <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id">{{suc.nombre}}</mat-option>
+                    <mat-select  formControlName="almacen" required [(ngModel)]="sucursalselect">
+                      <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id" >{{suc.nombre}}</mat-option>
                      </mat-select>
                   </mat-form-field>
             </div>
-            <div formArrayName="pagos">
-                <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
+            <div formArrayName="pagos" style="width:98%;">
+        <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
             <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Forma de pago</mat-label>
@@ -72,7 +71,7 @@
                     </mat-select>
                     </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-2">
             <mat-form-field appearance="outline">
                 <mat-label>A la cuenta</mat-label>
                 <mat-select name="cuentaPago" formControlName="cuentaPago" required>
@@ -81,7 +80,7 @@
                 </mat-select>
             </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Nro Operación</mat-label>
                     <input matInput name="numero" formControlName="numero" type="text">
@@ -93,7 +92,7 @@
                     <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)"  value="0"  type="text" required>
                 </mat-form-field>
                 </div>
-                <div class="col-1">
+                <div class="col-3">
                     <button mat-icon-button color="warn" *ngIf="i==0"  (click)="onAddToPago()">
                         <i class="material-icons">add_circle</i>
                     </button>
@@ -131,7 +130,7 @@
     </mat-select>
     </mat-form-field>-->
     <div mat-dialog-actions class="float-right">
-        <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;
+        <!--<mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;-->
          <button mat-raised-button color="warn" mat-dialog-close (click)="cancelar()">Cancelar</button>&nbsp;
         <button type="submit"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>

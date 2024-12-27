@@ -192,7 +192,7 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
 
         },
       error=>{console.log(error)
-        this._snackBar.open("Ocurrio un Error","OK",{duration:10000,verticalPosition:'bottom'});
+        this._snackBar.open("Ocurrio un Error","OK",{duration:10000,verticalPosition:'top'});
        // this.cancelar()
       }
         );
@@ -356,7 +356,7 @@ this.telefonoCliente=data[0].telefono;
      else{
       const mpendiente = this.MyForm.get('montopendiente') as FormControl;
       mpendiente.setValue((precio-depositos).toFixed(2));
-      this.vuelto='Vueltos';
+      this.vuelto='Vuelto';
       this.habilitarPagos=true;
       console.log("pendientes",precio-depositos)
       console.log("habilitapagos",this.habilitarPagos);

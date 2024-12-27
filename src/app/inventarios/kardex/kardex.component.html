@@ -90,10 +90,11 @@
               <mat-card *ngFor="let datos of dataSource" class="card" class="example-card">
                 <mat-card-header>
                    <mat-card-title>({{datos.codigo}}) {{datos.nombre}}
-                    <br >  promedio: S/ {{datos.promedio[0].promedio | number}} <br>
+
+                    <br ><span *ngIf="datos.promedio!=undefined">promedio: S/ {{datos.promedio[0].promedio | number}} <br>
                      Stock: <strong>{{datos.promedio[0].cantidad_acumulada}} / {{datos.promedio[0].unidad}}</strong><br>
                     Costo de Venta: S/ {{datos.costo_venta[0].costo | number}}<br>
-
+                  </span>
                   </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>

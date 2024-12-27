@@ -68,6 +68,7 @@ montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
 montoTotal:any;
+sucursalselect:string='';
 public id_documento:number=0
 
 
@@ -220,6 +221,7 @@ async getData() {
   usuario.setValue(localStorage.getItem("currentId"));
   const sucursal = this.MyForm.get('sucursal') as FormControl;
   sucursal.setValue(localStorage.getItem("sucursal_id"));
+  this.sucursalselect=localStorage.getItem("sucursal_id");
   }
 
 

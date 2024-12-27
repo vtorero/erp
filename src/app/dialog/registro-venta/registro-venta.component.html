@@ -1,9 +1,12 @@
-<h1 mat-dialog-title>Registro de Venta</h1>
+
 <form [formGroup]="MyForm" autocomplete="off">
     <div mat-dialog-content>
-        <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
         <div class="row">
-            <div class="col-6">
+            <div class="col-10"><h1 mat-dialog-title>Registro de Venta</h1></div>
+            <div class="col-2"><button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button></div>
+        </div>
+        <div class="row">
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
                     <mat-select name="id_documento" formControlName="tipoDoc">
@@ -14,7 +17,7 @@
 
                 </mat-form-field>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <mat-form-field appearance="outline">
                     <mat-label>Vendedor</mat-label>
                     <mat-select name="vendedor" formControlName="vendedor" required>
@@ -26,7 +29,7 @@
                 </mat-form-field>
 
             </div>
-            <div class="col-12">
+            <div class="col-4">
                 <!--<input matInput class="form-control" placeholder="Buscar categoria..">-->
 
                 <mat-form-field appearance="outline">
@@ -42,7 +45,8 @@
                 </mat-form-field>
 
             </div>
-            <div formArrayName="pagos">
+            <hr>
+            <div formArrayName="pagos" style="margin-left:15px;">
                 <div class="row" *ngFor="let pag of Pagos.controls; let i = index" [formGroupName]="i" >
                     <div class="col-3">
                         <mat-form-field appearance="outline">
@@ -63,13 +67,13 @@
 
                 </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <mat-form-field appearance="outline">
                     <mat-label>Nro Operación</mat-label>
-                    <input matInput name="numero" formControlName="numero" type="text">
+                    <input matInput name="numero" formControlName="numero" type="text" required>
                 </mat-form-field>
                 </div>
-            <div class="col-2">
+            <div class="col-3">
                 <mat-form-field appearance="outline">
                     <mat-label>Monto recibido</mat-label>
                     <input matInput name="montoRecibido" formControlName="montoPago" mask="separator.2" prefix="S/ " (focusout)="cambiaVuelto(data.precio)" value="0"  type="text" required>
@@ -115,55 +119,11 @@
     </mat-form-field>-->
     <div mat-dialog-actions class="float-right">
         <mat-slide-toggle color="primary" name="imprimir" formControlName="imprimir">Imprimir</mat-slide-toggle>&nbsp;&nbsp;
-        <mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;
+        <!--<mat-slide-toggle color="primary" name="entrega" formControlName="entrega" (ngModelChange)="alerta()">Entrega Parcial</mat-slide-toggle>&nbsp;&nbsp;-->
         <button mat-raised-button color="warn"  mat-dialog-close (click)="cancelar()">Cancelar</button>&nbsp;
 
         <button type="button" (click)="onSubmit()"  mat-raised-button color="primary"  [disabled]="!MyForm.valid"  cdkFocusInitial><i class="material-icons">save</i> Registrar</button>
     </div>
 </form>
-<!--<button (click)="imprimir()">print</button>
-{{this.MyForm.value | json }}-->
-
-
-<div id="recibo">
-    <div style="display:flex;margin-bottom:14px;">
-    <div style="text-align:right;padding-left:20px;"><img src="https://lh-cjm.com/assets/img/logo-erp.png" width="40px" height="40px"/></div>
-    <div style="font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:left;font-weight:bold;padding-top: 12px;padding-right:40px;">LAS HERMANITAS<br>
-</div>
-    </div>
-
-        <br>
-        <strong style="Font-family:Arial, Helvetica,sans-serif;font-size: 15px;font-weight:700;">ADQUIRIENTE</strong><br>
-        <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px">
-        I.E/DNI: {{numero_doc}}<br>
-        {{clientetexto}}<br>
-        {{direccioncliente}}<br>
-        <br>
-        </div>
-
-
-      <div style="Font-family:Arial, Helvetica, sans-serif;font-size: 14;font-weight: bold;width:100%; text-align: center;">DESCRIPCION&nbsp;   CANT.&nbsp;  U.M.&nbsp    PRECIO&nbsp; IMPORTE</div>
-        <hr>
-            <div *ngFor="let det of data.detalle">
-                <div style="color:black;Font-family:Arial, Helvetica, sans-serif;font-size:15px;display:flex;justify-content:flex-start">{{det.nombre}}</div>
-              <div style="Font-family:Arial, Helvetica, sans-serif;font-size:14px;display:flex;justify-content:flex-end">{{det.cantidad}}
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  NIU &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S/ {{det.precio}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  S/ {{det.cantidad * det.precio-(det.descuento*det.cantidad)| number }}</div>
-        <div style="text-align:center;width: 100%;margin:0 auto;"><hr class="separador"/></div>
-      </div>
-
-    <div style="display:flex;justify-content:flex-end;font-family:Arial, Helvetica, sans-serif;font-size:16px;">
-    <div style="text-align:right;font-weight:700;">Op. Gravadas: S/&nbsp; <br>I.G.V: S/&nbsp; <br>Total: S/&nbsp; </div>
-    <div style="text-align:right;font-weight: 600;">{{MyForm.value.neto | number }}<br>
-        {{MyForm.value.igv | number}}<br>
-        {{MyForm.value.total | number}}
-    </div>
-    </div>
-    <div *ngIf="MyForm.value.montopendiente>0" style="text-align:right;font-weight:700;height:30px;">Pendiente: S/ &nbsp; {{MyForm.value.montopendiente | number}} </div>
-    <hr>
-   <div style="font-family:Arial, Helvetica, sans-serif;font-size:14px;font-weight:400;width:100%;text-align:center;">
-        SON: {{textoprecio}} SOLES <br>
-        Gracias por su preferencia.</div>
-        </div>
-
 <!--<pre>{{impresoras| json}}</pre>
 <pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>-->
