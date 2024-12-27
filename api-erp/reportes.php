@@ -14,8 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 
 $app = new Slim\Slim();
-$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-//$db = new mysqli("localhost","root","","aprendea_erp");
+//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+$db = new mysqli("localhost","root","","aprendea_erp");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -140,12 +140,12 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by 
 $sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
 tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' union all
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
 SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
 tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp
 where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'  order by id,fecha_registro asc";
+and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0  order by id,fecha_registro asc";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -593,12 +593,12 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'  order by
         $sql="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
         tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
         FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id and v.estado=1
-        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' union all
+        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
         SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
         tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
         FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp
         where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id and v.estado=1
-        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'  order by id,fecha_registro asc;";
+        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 order by id,fecha_registro asc;";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){

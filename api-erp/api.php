@@ -16,8 +16,6 @@ $app = new Slim\Slim();
 
 //$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 $db = new mysqli("localhost","root","","aprendea_erp");
-
-
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 
@@ -1080,82 +1078,40 @@ $app->put("/usuario",function() use($db,$app){
 });
 
 
-
-
-
-
-
 $app->post("/usuario_del",function() use($db,$app){
-
-
-
-    header("Content-type: application/json; charset=utf-8");
-
-
-
+//   header("Content-type: application/json; charset=utf-8");
        $json = $app->request->getBody();
-
-
-
        $j = json_decode($json,true);
+      $data = json_decode($j['json']);
+      $sql="call p_usuario_del({$data->usuario->id})";
 
 
+      try {
+        $stmt = $db->prepare("call p_usuario_del( ? )");
+        $stmt->bind_param("i", $data->usuario->id);
+        $stmt->execute();
 
-       $data = json_decode($j['json']);
+        $response = [
+            'success' => true,
+            'message' => 'Registro eliminado exitosamente.'
+        ];
+    } catch (mysqli_sql_exception $e) {
+        if ($e->getCode() === 1451) { // Clave foránea no permite eliminar
+            $response = [
+                'success' => false,
+                'message' => 'No se puede eliminar el registro porque está relacionado con otros datos.'
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Error en la base de datos: ' . $e->getMessage()
+            ];
+        }
+        //$app->response()->status(500);
+    }
 
-
-
-       try {
-
-
-
-
-
-
-
-        $sql="call p_usuario_del({$data->usuario->id})";
-
-
-
-        $stmt = mysqli_prepare($db,$sql);
-
-
-
-        mysqli_stmt_execute($stmt);
-
-
-
-        $result = array("STATUS"=>true,"messaje"=>"Usuario eliminado correctamente");
-
-
-
-       }
-
-
-
-        catch(PDOException $e) {
-
-
-
-            $result = array("STATUS"=>true,"messaje"=>$e->getMessage());
-
-
-
-             }
-
-
-
-        $respuesta=json_encode($result);
-
-
-
-        echo  $respuesta;
-
-
-
-
-
-
+    $app->response()->header('Content-Type', 'application/json');
+    echo json_encode($response);
 
 });
 
@@ -1408,68 +1364,38 @@ $app->get("/articulos",function() use($db,$app){
             });
 
 
-
-
-
-
-
-
-
-
-
             $app->post("/del_producto",function() use($db,$app){
-
-
-
                 header("Content-type: application/json; charset=utf-8");
-
-
-
                    $json = $app->request->getBody();
-
-
-
                    $j = json_decode($json,true);
-
-
-
                    $data = json_decode($j['json']);
 
+                   try {
+                     $stmt = $db->prepare("DELETE FROM `productos` WHERE id=?");
+                     $stmt->bind_param("i", $data->producto->id);
+                     $stmt->execute();
 
+                     $response = [
+                         'success' => true,
+                         'message' => 'Registro eliminado exitosamente.'
+                     ];
+                 } catch (mysqli_sql_exception $e) {
+                     if ($e->getCode() === 1451) { // Clave foránea no permite eliminar
+                         $response = [
+                             'success' => false,
+                             'message' => 'No se puede eliminar el registro porque está relacionado con otros datos.'
+                         ];
+                     } else {
+                         $response = [
+                             'success' => false,
+                             'message' => 'Error en la base de datos: ' . $e->getMessage()
+                         ];
+                     }
+                     //$app->response()->status(500);
+                 }
 
-
-
-
-
-                    $query = "DELETE FROM `productos` WHERE id={$data->producto->id}";
-
-
-
-                    $proceso=$db->query($query);
-
-
-
-                    if($proceso){
-
-
-
-                   $result = array("STATUS"=>true,"messaje"=>"Producto eliminado correctamente");
-
-
-
-                    }else{
-
-
-
-                    $result = array("STATUS"=>false,"messaje"=>"Ocurrio un error en la creación");
-
-
-
-                    }
-
-
-
-                    echo  json_encode($result);
+                 $app->response()->header('Content-Type', 'application/json');
+                 echo json_encode($response);
 
 
 
@@ -3743,10 +3669,11 @@ $sql1.="group by 1 order by id desc";
            `movimiento_articulos`.`promedio`,
            ROUND(`movimiento_articulos`.`cantidad_acumulada`*`movimiento_articulos`.`precio`,2) as costo,
            `movimiento_articulos`.`comentario`,
-
            DATE_FORMAT(`movimiento_articulos`.`fecha_registro`,'%d-%m-%Y') AS fecha_registro from movimiento_articulos, sucursales s,productos p ,unidad u
-       cross join (select @i := 0) r where s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id  and `movimiento_articulos`.precio<>0 and codigo_prod={$fila['id']}";
-
+       cross join (select @i := 0) r WHERE
+       NOT (`movimiento_articulos`.cantidad_ingreso=0 AND `movimiento_articulos`.cantidad_salida=0) and
+        s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id and `movimiento_articulos`.precio <> 0
+        and codigo_prod={$fila['id']}";
 
 
                        if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
@@ -3766,7 +3693,7 @@ $sql1.="group by 1 order by id desc";
                 }
 
 
-                $sql.=" order by id asc";
+                $sql.=" order by id desc";
 
 
 
@@ -3818,7 +3745,7 @@ if(isset($data["sucursal"]) && $data["sucursal"]!="0"){
 
 $app->get("/movimientos",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and (m.cantidad_ingreso>0 or cantidad_salida<0) group by 1 order by id asc;");
+    $resultado = $db->query("SELECT p.id,p.codigo,p.nombre,p.categoria from movimiento_articulos m, productos p where m.codigo_prod=p.id and (m.cantidad_ingreso> 0 or cantidad_salida< 0) group by 1 order by id desc;");
    $prods=array();
    $detalle=array();
        while ($fila = $resultado->fetch_array()) {
@@ -3848,7 +3775,10 @@ $app->get("/movimientos",function() use($db,$app){
         `movimiento_articulos`.`comentario`,
 
         DATE_FORMAT(`movimiento_articulos`.`fecha_registro`,'%d-%m-%Y') AS fecha_registro from movimiento_articulos, sucursales s,productos p ,unidad u
-    cross join (select @i := 0) r where s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id  and `movimiento_articulos`.precio<>0 and codigo_prod={$fila['id']}  order by id asc;";
+    cross join (select @i := 0) r WHERE
+       not (`movimiento_articulos`.`cantidad_ingreso`=0 AND
+        `movimiento_articulos`.`cantidad_salida`=0) AND
+    s.id=id_sucursal and p.unidad=u.codigo  and `movimiento_articulos`.codigo_prod=p.id  and `movimiento_articulos`.precio<>0 and codigo_prod={$fila['id']}  order by id desc;";
 
         $resul_detalle = $db->query($sql);
         while ($filadet = $resul_detalle->fetch_array()) {
@@ -3857,7 +3787,7 @@ $app->get("/movimientos",function() use($db,$app){
 
 
 $sql_promedio="SELECT promedio,cantidad_acumulada,u.nombre as unidad from movimiento_articulos m,productos p, unidad u
-where  m.codigo_prod=p.id and p.unidad=u.codigo and  codigo_prod={$fila['id']} order by m.id asc limit 1";
+where  m.codigo_prod=p.id and p.unidad=u.codigo and  codigo_prod={$fila['id']} order by m.id desc limit 1";
 
 /*
 $sql_promedio="SELECT * FROM
@@ -4668,7 +4598,7 @@ $app->post("/compra",function() use($db,$app){
             {$data->id_venta},
             'Salida',
             {$cantidad},
-            {$objetos['precio']},
+            {$prods[0]['precio']},
             {$data->usuario},
             {$data->sucursal})";
 
@@ -4682,9 +4612,11 @@ $app->post("/compra",function() use($db,$app){
     try {
 
         $query ="UPDATE venta_detalle SET pendiente=$data->cantidad,usuario='{$data->usuario}' where id_venta={$data->id_venta} and id_producto={$data->id_producto}";
-
-
         $db->query($query);
+
+        $sql2="UPDATE inventario SET cantidad = cantidad-{$cantidad},fecha_actualizacion=now() WHERE  producto_id={$data->id_producto} and id_almacen={$data->sucursal}";
+        $db->query($sql2);
+
 
         $result = array("STATUS"=>true,"messaje"=>"Pendientes actualizados correctamente");
 
