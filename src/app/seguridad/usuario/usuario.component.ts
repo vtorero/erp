@@ -157,7 +157,6 @@ openBusqueda(){
 }
 
 eliminar(art:Usuario) {
-  console.log("art",art);
   if(art){
   this.api.eliminarUsuario(art).subscribe(
     data=>{

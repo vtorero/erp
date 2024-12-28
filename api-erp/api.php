@@ -14,8 +14,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app = new Slim\Slim();
 
 
-//$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
-$db = new mysqli("localhost","root","","aprendea_erp");
+$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
+//$db = new mysqli("localhost","root","","aprendea_erp");
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 
