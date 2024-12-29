@@ -15,6 +15,7 @@ import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.com
 
 
 
+
 interface Elemento {
   id:number;
   nombre: string;
@@ -174,9 +175,27 @@ renderDataTable() {
     });
 }
 
+onEnter(event: KeyboardEvent): void {
+  const inputElement = event.target as HTMLInputElement;
+   console.log('Enter presionado. Valor del input:', inputElement.value);
+  setTimeout(() => {
+    const producto = document.querySelector("body > app-root > app-admin-layout > div.wrapper > div.main-panel.ps > app-ventas > div > div > div > div:nth-child(1) > div.resultado > ul > li") as HTMLElement;
+
+   if(producto!=undefined){
+    producto.click();
+    }else{
+      alert("Código de Barras no existe");
+    }
+    inputElement.value='';
+  }, 500); // 2000 milisegundos = 2 segundos
+
+
+
+  // Puedes realizar otras acciones aquí
+}
+
 applyFilter(filterValue: string) {
-  this.criterio=filterValue
-  console.log(filterValue)
+  this.criterio=filterValue;
   this.loading=true;
   filterValue = filterValue.trim();
   filterValue = filterValue.toLowerCase();
@@ -185,6 +204,7 @@ applyFilter(filterValue: string) {
     this.dataSource=x;
     this.loading=false
   }
+
   )
 }else{
   this.renderDataTable()
@@ -334,6 +354,10 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
        });
 
    });
+  }
+  seleccionarProducto(event: KeyboardEvent) {
+    event.preventDefault(); // Evita el comportamiento por defecto (por ejemplo, envío de formulario)
+    console.log('Enter con producto');
   }
 
   openRegistro(enterAnimationDuration: string, exitAnimationDuration:string){

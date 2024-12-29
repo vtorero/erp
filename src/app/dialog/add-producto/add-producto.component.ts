@@ -42,6 +42,12 @@ archivo = {
 
   }
 
+  disableEnter(event: KeyboardEvent) {
+    event.preventDefault(); // Evita el comportamiento por defecto (por ejemplo, envío de formulario)
+    console.log('Enter deshabilitado');
+  }
+
+
   ngOnInit() {
     this.api.getSelectApi('articulo/',this.data.id).subscribe(x => {
       this.response=x;

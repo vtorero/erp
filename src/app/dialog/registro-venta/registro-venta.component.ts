@@ -336,6 +336,21 @@ this.telefonoCliente=data[0].telefono;
       }
      //
   }
+
+  tipoPago(e:any){
+    if(e.value==1){
+      const usuarioid=localStorage.getItem("currentId");
+      const tipoPagoValue = this.MyForm.get('pagos')?.get([0])?.get('numero');
+      const caja = this.MyForm.get('pagos')?.get([0])?.get('cuentaPago');
+      tipoPagoValue.setValue('---');
+      if(usuarioid=="3" || usuarioid=="1" ){
+        console.log("eca")
+        caja.setValue("2");
+      } else if(usuarioid=="2"){
+        caja.setValue("1");
+      }
+  }
+  }
   cambiaVuelto(precio:number){
     var vuelto = this.MyForm.get('vuelto') as FormControl;
     const tipoDoc1 = this.MyForm.get('tipoDoc') as FormControl;

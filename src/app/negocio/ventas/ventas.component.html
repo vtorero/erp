@@ -6,7 +6,7 @@
       <div class="col-6">
         <mat-form-field appearance="outline">
           <mat-label>Buscar Producto</mat-label>
-          <input matInput width="500"  [(ngModel)]="criterio" placeholder="Buscar producto por nombre o código"(keyup)="applyFilter($event.target.value)">
+          <input matInput width="500"  [(ngModel)]="criterio" placeholder="Buscar producto por nombre o código"(keyup)="applyFilter($event.target.value)" (keydown.enter)="onEnter($event)">
        </mat-form-field>
        <div class="row">
         <div class="col-4">

@@ -8,20 +8,20 @@
   <div class="col-3">
     <mat-form-field appearance="outline">
       <mat-label>Codigo</mat-label>
-        <input matInput [(ngModel)]="data.codigo" name="codigo" type="text">
+        <input matInput [(ngModel)]="data.codigo" name="codigo" (keydown.enter)="disableEnter($event)"  type="text">
 
       </mat-form-field>
   </div>
   <dib class="col-3">
     <mat-form-field appearance="outline">
       <mat-label>Codigo de Barras</mat-label>
-        <input matInput [(ngModel)]="data.codigobarras" name="codigobarras" type="text">
+        <input matInput [(ngModel)]="data.codigobarras" (keydown.enter)="disableEnter($event)"  name="codigobarras" type="text">
       </mat-form-field>
   </dib>
   <div class="col-6">
       <mat-form-field appearance="outline">
       <mat-label>Nombre Producto</mat-label>
-        <input matInput [(ngModel)]="data.nombre" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" required>
+        <input matInput [(ngModel)]="data.nombre" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" required (keydown.enter)="disableEnter($event)" >
         <mat-hint align="end"> {{data.nombre.length}}</mat-hint>
       </mat-form-field>
     </div>

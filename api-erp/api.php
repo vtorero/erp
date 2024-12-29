@@ -4203,9 +4203,14 @@ $app->post("/compra",function() use($db,$app){
                  }
 
                  if (count($data->pagos)==1) {
-
+                    $valor_total=$data->total;
                     foreach($data->pagos as $pago){
-                        $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$pendiente},'{$data->usuario}')";
+                        $valor_total-=$pago->montoPago;
+                        if($valor_total<0){
+                            $pago->montoPago=$pago->montoPago+$data->montopendiente;
+                            $valor_total=0;
+                        }
+                        $procP="call p_compra_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$pendiente},'{$data->usuario}')";
                         $stmtP = mysqli_prepare($db,$procP);
                         mysqli_stmt_execute($stmtP);
                     }
@@ -4294,8 +4299,14 @@ $app->post("/compra",function() use($db,$app){
                      }
 
                      if (count($data->pagos)==1) {
+                        $valor_total=$data->total;
                         foreach($data->pagos as $pago){
-                        $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$data->total},{$pendiente},{$data->usuario})";
+                            $valor_total-=$pago->montoPago;
+                            if($valor_total<0){
+                                $pago->montoPago=$pago->montoPago+$data->montopendiente;
+                                $valor_total=0;
+                            }
+                        $procP="call p_venta_pago({$ultimo_id->ultimo_id},'{$pago->tipoPago}','{$pago->numero}','{$pago->cuentaPago}',{$pago->montoPago},{$pendiente},{$data->usuario})";
                         $stmtP = mysqli_prepare($db,$procP);
                         mysqli_stmt_execute($stmtP);
 
