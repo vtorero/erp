@@ -76,11 +76,10 @@ enviaExcel(){
 
   selected(row) {
     this.selectedRowIndex=row;
-    console.log('selectedRow',row)
   }
 
   editar(){
-    console.log(this.selectedRowIndex);
+
   }
 
   renderDataTable() {
@@ -185,11 +184,14 @@ enviaExcel(){
 }
 
 eliminar(art:Productos) {
-  console.log("art",art);
   if(art){
   this.api.delProducto(art).subscribe(
     data=>{
-      this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+      if(data['messaje']=='success'){
+      this._snackBar.open(data['message'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+    } else{
+      this._snackBar.open(data['message'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+    }
       },
     erro=>{console.log(erro)}
       );
