@@ -187,7 +187,7 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
 
         this._snackBar.open(data['messaje'],"OK",{duration:5000,verticalPosition:'bottom'});
       // this.MyForm.reset();
-
+      localStorage.removeItem('detalle');
        this.cancelar();
 
         },

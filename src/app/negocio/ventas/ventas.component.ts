@@ -87,6 +87,10 @@ export class VentasComponent implements OnInit {
         this.sucursal=d[0]['nombre'];
         sessionStorage.setItem("sucursal_id",this.sucursal_id);
          });
+         const data = JSON.parse(localStorage.getItem('detalle') || 'null');
+         this.dataRecibo=data;
+         this.sumarMonto(this.dataRecibo);
+
     }
 
     this.usuario=localStorage.getItem("currentNombre");
@@ -231,6 +235,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
 
   }
+
   this.sumarMonto(array)
     // Si el elemento no existe, agregarlo al array
 
@@ -239,15 +244,15 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
   sumarMonto(array: Details[]){
     this.totalMonto=0;
 
- array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)})
-  }
+ array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)
+ })
+ }
 
 
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
-
-}
-
+localStorage.setItem("detalle",JSON.stringify(this.dataRecibo))
+ }
 cancelar() {
   //this.dialog.closeAll();
 
@@ -266,10 +271,13 @@ openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:n
         dato.descuento=(dato.precio*(ux.descuento/100));
 
       }
+
       }
    });
+   localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
    this.sumarMonto(this.dataRecibo)
-   console.log("datarecibo",this.dataRecibo)
+
+
   });
 
 }
@@ -289,6 +297,7 @@ openPrecio(enterAnimationDuration: string, exitAnimationDuration: string,id:numb
       }
    });
    this.sumarMonto(this.dataRecibo)
+   localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
   });
 
 }
@@ -306,7 +315,7 @@ openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
       }
       }
    });
-   console.log("cantidad",this.dataRecibo)
+   localStorage.setItem("detalle",JSON.stringify(this.dataRecibo))
    this.sumarMonto(this.dataRecibo)
    });
 
@@ -317,7 +326,7 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
   data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
-    console.log(ux.cantidad)
+
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
         if(dato.cantidad<ux.despacho) {
@@ -326,6 +335,7 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
         }else{
           dato.despacho = ux.despacho
           dato.pendiente=dato.cantidad-ux.despacho
+
         }
 
           //if(ux.despacho!=cantidad && ux.despacho<cantidad){
@@ -333,10 +343,10 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
        /// console.log(dato)
 
 
-
       }
    });
    console.log("cantidad",this.dataRecibo)
+   localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
    this.sumarMonto(this.dataRecibo)
    });
 
@@ -371,6 +381,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
      dialogo2.afterClosed().subscribe(ux => {
       //console.log(this.dataRecibo)
+      this.totalMonto=0;
      })
 
 
@@ -380,6 +391,7 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
   borrarItem(id){
     this.dataRecibo.splice(id,1)
     this.sumarMonto(this.dataRecibo)
+    localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
 
   }
 
