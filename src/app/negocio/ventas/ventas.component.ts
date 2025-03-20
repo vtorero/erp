@@ -87,8 +87,11 @@ export class VentasComponent implements OnInit {
         this.sucursal=d[0]['nombre'];
         sessionStorage.setItem("sucursal_id",this.sucursal_id);
          });
-         const data = JSON.parse(localStorage.getItem('detalle') || 'null');
-         this.dataRecibo=data;
+         if(localStorage.getItem('detalle')){
+          this.dataRecibo=JSON.parse(localStorage.getItem('detalle'));
+         }
+         //const data = JSON.parse(localStorage.getItem('detalle') || 'null');
+         //this.dataRecibo=data;
          this.sumarMonto(this.dataRecibo);
 
     }
@@ -217,7 +220,8 @@ applyFilter(filterValue: string) {
 
 }
 existeElemento(array: Details[], elemento: Details): boolean {
-  return array.some(item => item.id === elemento.id);
+  //return array.some(item => item.id === elemento.id);
+  return array && array.length > 0 ? array.some(item => item.id === elemento.id) : false;
 }
 
 sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,desc: number): void {
@@ -231,12 +235,12 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
     });
   } else {
-    // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
-
+    if(array){
+          array.push({id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+        }
   }
 
-  this.sumarMonto(array)
+  this.sumarMonto(array);
     // Si el elemento no existe, agregarlo al array
 
   }
@@ -244,15 +248,23 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
   sumarMonto(array: Details[]){
     this.totalMonto=0;
 
- array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)
- })
- }
+ if(array){
+    array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)});
+  }
+}
 
 
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+  console.log(this.dataRecibo);
+  console.log(id);
+  console.log(codigo);
+  console.log(nombre);
+  console.log(cantidad);
+  console.log(precio);
+this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 localStorage.setItem("detalle",JSON.stringify(this.dataRecibo))
  }
+
 cancelar() {
   //this.dialog.closeAll();
 
@@ -326,7 +338,6 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
   data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
   });
    dialogo2.afterClosed().subscribe(ux => {
-
     this.dataRecibo.map(function(dato){
       if(dato.id == id){
         if(dato.cantidad<ux.despacho) {

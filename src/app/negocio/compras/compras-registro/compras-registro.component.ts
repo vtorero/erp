@@ -212,6 +212,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
+  console.log(this.dataRecibo);
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 
 }

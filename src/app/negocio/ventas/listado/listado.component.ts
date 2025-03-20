@@ -17,7 +17,11 @@ declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number): any;
 
 async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string,telefono:string,pago:string,ticket:string,reciboneto:number,reciboigv:number,recibototal:number){
-  const fecha = new Date();
+
+  let fecha = new Date(datos[0].fecha_registro);
+//  console.log(fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
+  
+
   let imp = localStorage.getItem("impresora");
 if(imp==""){
   console.log("impresora vacia")
@@ -254,6 +258,7 @@ openBusqueda(){
         }
         });
       this.api.GetDetalleVenta(ux.datos.id).subscribe(x => {
+        console.log("ccc",x);
     imprimirTicket(x,ux,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+localStorage.getItem("id_suc")+"-"+ux.datos.id,this.reciboneto,this.reciboigv,this.recibototal)
         });
      });
