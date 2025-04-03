@@ -71,7 +71,6 @@
                     <p class="card-category">Usuario: {{currentname}}</p>
                 </div>
                 <div class="card-body">
-
                     <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
                         <!--  Columna ID-->
                         <ng-container matColumnDef="id">
@@ -82,10 +81,18 @@
                       <mat-header-cell *matHeaderCellDef mat-sort-header>ID Cliente</mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.id_cliente}}</mat-cell>
                 </ng-container>
+                <ng-container matColumnDef="num_documento">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Documento</mat-header-cell>
+                  <mat-cell *matCellDef="let row"> {{row.num_documento}}</mat-cell>
+            </ng-container>
                     <ng-container matColumnDef="cliente">
                       <mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.cliente}}</mat-cell>
                 </ng-container>
+                <ng-container matColumnDef="telefono">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{row.telefono}} </mat-cell>
+            </ng-container>
                        <ng-container matColumnDef="tipoDoc">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Documento</mat-header-cell>
                           <mat-cell *matCellDef="let row">{{row.tipoDoc}} </mat-cell>

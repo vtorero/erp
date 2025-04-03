@@ -2,13 +2,14 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
-import { Venta } from 'app/modelos/venta';
 import { Details } from '../../../modelos/details';
 import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-final.component';
 import { ModCantidadComponent } from 'app/dialog/mod-cantidad/mod-cantidad.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetaPagos } from '../../../modelos/detapagos';
 import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente.component';
+import { VentaVer } from 'app/modelos/ventaVer';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-ver-venta',
@@ -28,13 +29,14 @@ export class VerVentaComponent implements OnInit {
     public dialog: MatDialog,
     private api:ApiService,
     private _snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data:Venta,
+    @Inject(MAT_DIALOG_DATA) public data:VentaVer,
     @Inject(MAT_DIALOG_DATA) public detalle:Details,
     @Inject(MAT_DIALOG_DATA) public detapago:DetaPagos,
 
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+
     this.api.GetDetalleVenta(this.data.id).subscribe(x => {
       this.dataDetalle = new MatTableDataSource();
       this.exampleArray=x;
@@ -42,6 +44,9 @@ export class VerVentaComponent implements OnInit {
       this.data.detalleVenta=this.exampleArray;
 
       });
+
+      await this.getDataCliente(this.data.id_cliente);
+
 
       this.api.GetDetallePago(this.data.id).subscribe(d => {
         this.dataPagos = new MatTableDataSource();
@@ -56,6 +61,19 @@ export class VerVentaComponent implements OnInit {
     this.getVendedor();
   }
 
+  async getDataCliente(id: any) {
+    try {
+      this.dataClientes = await lastValueFrom(this.api.getApiTablaCriterio('clientes', id));
+    } catch (error) {
+      console.error('Error al obtener datos del cliente:', error);
+    }
+  }
+
+  /*getDataCliente(id:any) {
+   return this.api.getApiTablaCriterio('clientes',id).subscribe(dat=>{
+      this.dataClientes=dat;
+    })
+  }*/
   getVendedor(): void {
     this.api.getApi('vendedores').subscribe(data => {
       if(data) {

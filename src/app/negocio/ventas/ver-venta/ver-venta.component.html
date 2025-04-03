@@ -16,14 +16,23 @@
           </mat-form-field>
             </div>
 
-          <div class="col-6">
-            <mat-form-field>
-              <mat-label>Vendedor</mat-label>
-              <mat-select name="id_vendedor" #id_vendedor="ngModel" [(ngModel)]="data.id_vendedor" disabled="disabled">
-                <mat-option *ngFor="let ven of dataVendedores" [value]="ven.id">{{ven.nombre}}</mat-option>
-                </mat-select>
-            </mat-form-field>
+          <div class="col-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Documento</mat-label>
+                <input matInput [(ngModel)]="dataClientes[0].num_documento" name="num_documento" maxlength="110" minlength="2" type="text" placeholder="Documento" readonly>
+                </mat-form-field>
 
+            
+        
+          </div>
+          <div class="col-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Teléfono</mat-label>
+                <input matInput [(ngModel)]="dataClientes[0].telefono" name="telefono" maxlength="110" minlength="2" type="text" placeholder="Teléfono" readonly>
+                </mat-form-field>
+              
+
+          
           </div>
           <div class="col-6">
             <mat-form-field appearance="outline">
@@ -41,8 +50,12 @@
               <mat-label>Cliente</mat-label>
                 <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
                 </mat-form-field>
+                <mat-form-field appearance="outline">
+                <mat-label>Dirección</mat-label>
+                <input matInput [(ngModel)]="dataClientes[0].direccion" name="direccion" maxlength="110" minlength="2" type="text" placeholder="Dirección" readonly>
+                </mat-form-field>
           </div>
-             <div class="row">
+        <div class="row">
             <div class="col-4 offset-1">
               <mat-form-field>
                 <mat-label>Valor neto S/</mat-label>
@@ -63,6 +76,7 @@
               </mat-form-field>
                   </div>
             </div>
+           
     </div>
         </div>
     </form>

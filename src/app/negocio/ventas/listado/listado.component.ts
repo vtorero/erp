@@ -121,6 +121,7 @@ export class ListadoComponent implements OnInit {
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;
+  dataCliente:any;
   dataDetalle:any;
   clientetexto:string='Sin Cliente';
   telefonoCliente:string='';
@@ -182,6 +183,7 @@ openBusqueda(){
     this.api.getApi('ventas').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
+      console.log("VEtas",x)
       this.empTbSort.disableClear = true;
       this.dataSource.sort = this.empTbSort;
       this.dataSource.paginator = this.paginator;
