@@ -75,13 +75,16 @@ export class ComprasRegistroComponent implements OnInit {
     this.openTerminal('20ms','20ms');
     }else{
       this.sucursal_id=suc;
-      console.log("thissss",suc)
+
         this.api.getApiTablaCriterio('sucursales',this.sucursal_id).subscribe(d => {
         this.sucursal=d[0]['nombre'];
         localStorage.setItem("sucursal_id",this.sucursal_id);
         this.getCate();
-
          });
+
+         if(localStorage.getItem('detallec')){
+          this.dataRecibo=JSON.parse(localStorage.getItem('detallec'));
+         }
     }
 
     this.usuario=localStorage.getItem("currentNombre");
@@ -214,7 +217,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
   console.log(this.dataRecibo);
  this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
-
+ localStorage.setItem("detallec",JSON.stringify(this.dataRecibo))
 }
 
 
@@ -254,6 +257,21 @@ cancelar() {
   this.dialog.closeAll();
 
 }
+
+proforma(){
+
+  this.dataRecibo.forEach(item => {
+    if (item.id) {
+      //item.cantidad += cantidad;
+      item.despacho=0;
+    }
+    });
+    localStorage.setItem("detallec",JSON.stringify(this.dataRecibo));
+
+  console.log(this.dataRecibo);
+
+}
+
 alertar(mensaje:string):void{
   this._snackBar.open(mensaje,"OK",{duration:2000,verticalPosition:'bottom',horizontalPosition:'right',panelClass: ['warning']});
 }
@@ -342,10 +360,9 @@ openTerminal(enterAnimationDuration: string, exitAnimationDuration:string){
 
 
   borrarItem(id){
-    console.log(id)
     this.dataRecibo.splice(id,1)
     this.sumarMonto(this.dataRecibo)
-
+    localStorage.setItem("detallec",JSON.stringify(this.dataRecibo));
   }
 
 

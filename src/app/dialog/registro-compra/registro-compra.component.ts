@@ -201,6 +201,7 @@ async getData() {
         },
       error=>{console.log(error)
         this._snackBar.open("Ocurrio un Error","OK",{duration:10000,verticalPosition:'bottom'});
+        localStorage.removeItem('detallec');
         this.cancelar()
       }
         );

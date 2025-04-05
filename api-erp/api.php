@@ -3881,7 +3881,7 @@ JOIN ( SELECT @acumulado_salida :=0,
 
 $app->get("/compras",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-     $resultado = $db->query("SELECT v.id,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,
+     $resultado = $db->query("SELECT v.id,c.id as id_proveedor,c.telefono,c.num_documento,c.razon_social as cliente,u.nombre,v.tipoDoc,v.serie_documento,v.nro_documento,v.id_sucursal,DATE_FORMAT(v.fecha, '%d-%m-%Y') fecha,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,
      CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,
      v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente,v.observacion FROM compras v inner join proveedores c on v.id_proveedor=c.id inner join usuarios u on v.id_usuario=u.id and v.estado=1 order by 1 desc");
     $prods=array();
@@ -5924,7 +5924,7 @@ $app->get("/cliente/:id",function($id) use($db,$app){
 
 
 
-    $resultado = $db->query("SELECT `id`, `nombre`,`apellido`,`direccion`,`telefono`,`num_documento` FROM `clientes` where id={$id}");
+    $resultado = $db->query("SELECT `id`, `nombre`,`apellido`,`direccion`,`num_documento` FROM `clientes` where id={$id}");
 
 
 

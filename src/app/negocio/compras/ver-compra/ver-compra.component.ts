@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ApiService } from 'app/api.service';
-import { Venta } from 'app/modelos/venta';
 import { Details } from '../../../modelos/details';
 import { EntregaFinalComponent } from '../../../dialog/entrega-final/entrega-final.component';
 import { ModCantidadComponent } from 'app/dialog/mod-cantidad/mod-cantidad.component';
@@ -10,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetaPagos } from '../../../modelos/detapagos';
 import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente.component';
 import { Compra } from '../../../modelos/compra';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-ver-compra',
@@ -20,6 +20,7 @@ export class VerCompraComponent implements OnInit {
   displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
   displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
+  dataAdicional:any;
   dataDetalle:any;
   dataProveedores:any;
   dataPagos:any;
@@ -35,8 +36,9 @@ export class VerCompraComponent implements OnInit {
 
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.api.GetDetalleCompra(this.data.id).subscribe(x => {
+
       this.dataDetalle = new MatTableDataSource();
       this.exampleArray=x;
       this.dataDetalle=this.exampleArray
@@ -54,7 +56,20 @@ export class VerCompraComponent implements OnInit {
 
     this.getProveedor();
     this.cargaSucursales();
+    await this.getDataProveedor(this.data.id_proveedor);
+    console.log(this.data.id_proveedor)
+    console.log(this.data.num_documento)
+    console.log(this.data.telefono)
 
+  }
+
+  async getDataProveedor(id: any) {
+    try {
+      this.dataAdicional = await lastValueFrom(this.api.getApiTablaCriterio('proveedores', id));
+    } catch (error) {
+      console.error('Error al obtener datos del cliente:', error);
+    }
+    //this.cargando=false;
   }
 
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number){

@@ -1,4 +1,11 @@
-<div>
+<!-- ejemplo.component.html -->
+<div *ngIf="cargando" class="loading-container">
+  <p>Cargando...</p>
+  <!-- Puedes usar un spinner también -->
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!cargando">
   <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
@@ -22,17 +29,17 @@
                 <input matInput [(ngModel)]="dataClientes[0].num_documento" name="num_documento" maxlength="110" minlength="2" type="text" placeholder="Documento" readonly>
                 </mat-form-field>
 
-            
-        
+
+
           </div>
           <div class="col-3">
             <mat-form-field appearance="outline">
               <mat-label>Teléfono</mat-label>
                 <input matInput [(ngModel)]="dataClientes[0].telefono" name="telefono" maxlength="110" minlength="2" type="text" placeholder="Teléfono" readonly>
                 </mat-form-field>
-              
 
-          
+
+
           </div>
           <div class="col-6">
             <mat-form-field appearance="outline">
@@ -48,7 +55,7 @@
           <div class="col-6">
             <mat-form-field appearance="outline">
               <mat-label>Cliente</mat-label>
-                <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
+                <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="" readonly>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
                 <mat-label>Dirección</mat-label>
@@ -76,7 +83,7 @@
               </mat-form-field>
                   </div>
             </div>
-           
+
     </div>
         </div>
     </form>

@@ -51,7 +51,7 @@ function unidades(num) {
           case 5:
             return 'QUINCE';
           default:
-            return 'DIECI' + unidades(numUnidad).toLowerCase();
+            return 'DIECI' + unidades(numUnidad);
         }
       case 2:
         switch (numUnidad) {
@@ -169,8 +169,8 @@ function unidades(num) {
       letrasCentavos: '',
       letrasMonedaPlural: 'SOLES',
       letrasMonedaSingular: 'SOL',
-      letrasMonedaCentavoPlural: '/100 CTS.',
-      letrasMonedaCentavoSingular: '/100 CTS.'
+      letrasMonedaCentavoPlural: '/100 CMS.',
+      letrasMonedaCentavoSingular: '/100 CMS.'
     };
 
     if (data.centavos >= 0) {

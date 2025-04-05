@@ -8,7 +8,7 @@ import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.comp
 import { Global } from 'app/global';
 declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number):any;
-declare function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal):void;
+declare function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal,vuelto,monto_vuelto):void;
 
 @Component({
   selector: 'app-registro-venta',
@@ -181,7 +181,7 @@ let impresora = this.MyForm.get('impresoras') as FormControl;
           console.log("impresoras",impresora.value);
         //this.imprimir();
         //enviarTicketera(impresora.value,this.data.detalle)
-        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("id_suc")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal)
+        imprimirTicket(this.data.detalle,this.MyForm,this.clientetexto,this.direccioncliente,this.telefonoCliente,this.textoprecio,"T00"+sessionStorage.getItem("id_suc")+"-"+data['numero'],this.reciboneto,this.reciboigv,this.recibototal,this.vuelto,this.montoVuelto)
         }
 
 
@@ -367,12 +367,14 @@ this.telefonoCliente=data[0].telefono;
      this.habilitarPagos=false;
      const mpendiente = this.MyForm.get('montopendiente') as FormControl;
       mpendiente.setValue((precio-depositos).toFixed(2));
+      this.montoVuelto=(precio-depositos).toFixed(2)
      }
      else{
       const mpendiente = this.MyForm.get('montopendiente') as FormControl;
       mpendiente.setValue((precio-depositos).toFixed(2));
       this.vuelto='Vuelto';
       this.habilitarPagos=true;
+      this.montoVuelto=(precio-depositos).toFixed(2);
       console.log("pendientes",precio-depositos)
       console.log("habilitapagos",this.habilitarPagos);
      }

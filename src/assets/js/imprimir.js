@@ -1,4 +1,4 @@
-async function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal){
+async function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal,vuelto,monto_vuelto){
     const fecha = new Date();
     let imp = localStorage.getItem("impresora");
   if(imp==""){
@@ -10,7 +10,7 @@ async function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,
               let api_key = "123456"
               const conector = new connetor_plugin()
                           conector.textaling("center")
-                         conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
+                         conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp.png")
                          conector.feed("1")
                          conector.fontsize("2")
                          conector.text(localStorage.getItem("sucursal"))
@@ -56,7 +56,7 @@ async function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,
                           conector.text("==============================================")
                           conector.fontsize("1")
                           conector.textaling("right")
-                          conector.text("Op. Gravadas: S/ "+reciboneto)
+                          //conector.text("Op. Gravadas: S/ "+reciboneto)
                           if(form.value.igv>0){
                           conector.text("I.G.V: S/ "+reciboigv)
                           }
@@ -66,7 +66,9 @@ async function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,
                           conector.textaling("center")
                           conector.text("**********************************")
                           conector.text("SON:"+pago)
-
+                          if(monto_vuelto!=0){
+                          conector.text(vuelto+":"+monto_vuelto)
+                          }
                           const resp = await conector.imprimir(nombreImpresora, api_key);
                           if (resp === true) {
 

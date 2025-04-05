@@ -90,8 +90,7 @@ export class VentasComponent implements OnInit {
          if(localStorage.getItem('detalle')){
           this.dataRecibo=JSON.parse(localStorage.getItem('detalle'));
          }
-         //const data = JSON.parse(localStorage.getItem('detalle') || 'null');
-         //this.dataRecibo=data;
+
          this.sumarMonto(this.dataRecibo);
 
     }
@@ -256,11 +255,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 
 enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
   console.log(this.dataRecibo);
-  console.log(id);
-  console.log(codigo);
-  console.log(nombre);
-  console.log(cantidad);
-  console.log(precio);
+
 this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 localStorage.setItem("detalle",JSON.stringify(this.dataRecibo))
  }
@@ -270,6 +265,19 @@ cancelar() {
 
 }
 
+proforma(){
+
+  this.dataRecibo.forEach(item => {
+    if (item.id) {
+      //item.cantidad += cantidad;
+      item.despacho=0;
+    }
+    });
+    localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
+
+  console.log(this.dataRecibo);
+
+}
 
 openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
   const dialogo2=this.dialog.open(ModDescuentoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,

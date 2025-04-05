@@ -35,10 +35,20 @@
             </mat-form-field>
           </div>
           <div class="col-6">
-            <mat-form-field appearance="outline">
-              <mat-label>Fecha de Compra</mat-label>
-                <input matInput [(ngModel)]="data.fecha" name="fecha" maxlength="110" minlength="2" type="text"  readonly>
-                </mat-form-field>
+              <div class="row">
+                <div class="col-6">
+                  <mat-form-field appearance="outline">
+                  <mat-label>RUC</mat-label>
+                  <input matInput [(ngModel)]="data.num_documento" name="num_documento" maxlength="110" minlength="2" type="text"  readonly>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field appearance="outline">
+                  <mat-label>Teléfono</mat-label>
+                  <input matInput [(ngModel)]="data.telefono" name="telefono" maxlength="110" minlength="2" type="text"  readonly>
+                  </mat-form-field>
+                </div>
+              </div>
                 <div class="row">
                   <div class="col-6">
                     <mat-form-field appearance="outline">

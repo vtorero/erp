@@ -20,9 +20,9 @@ async function imprimirTicket(datos:any,form:any,cliente:string,direccion:string
 
   let fecha = new Date(datos[0].fecha_registro);
 //  console.log(fecha.toLocaleDateString() +" "+ fecha.getHours()+":"+fecha .getMinutes()+":"+fecha.getSeconds())
-  
 
-  let imp = localStorage.getItem("impresora");
+
+let imp = localStorage.getItem("impresora");
 if(imp==""){
   console.log("impresora vacia")
   this.snackBar.open("Impresora no configurada", undefined, { duration: 8000, verticalPosition: 'bottom', panelClass: ['snackbar-error'] });
@@ -32,7 +32,7 @@ if(imp==""){
             let api_key = "123456"
             const conector = new connetor_plugin()
                         conector.textaling("center")
-                       conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp-b-n.jpg");
+                       conector.img_url("https://lh-cjm.com/erp/assets/img/logo-erp.png");
                        conector.feed("1")
                        conector.fontsize("2")
                        conector.text(localStorage.getItem("sucursal"))
@@ -61,7 +61,8 @@ if(imp==""){
                         conector.feed("1")
                         conector.textaling("center")
                         conector.text("Descripcion      Cant.     Precio     Importe")
-                        conector.text("===============================================")
+                        conector.text("=============================================")
+
                         for (let index = 0; index < datos.length; index++) {
                           const element = datos[index];
                           var precio =element.cantidad * element.precio -(element.descuento*element.cantidad)
@@ -69,16 +70,17 @@ if(imp==""){
                           conector.textaling("left");
                           conector.text(index+1+") "+element.nombre);
                           conector.textaling("right");
-                          conector.text("           "+element.cantidad+"        S/ "+(precio/element.cantidad).toFixed(2)+"        S/ "+subtotal.toFixed(2))
-                          conector.textaling("center")
+                          conector.text("          "+element.cantidad+"       S/ "+(precio/element.cantidad).toFixed(2)+"       S/ "+subtotal.toFixed(2))
+                                                    conector.textaling("center")
                           conector.text("---------------------------------------------")
+
                         }
                         conector.feed("1")
                         conector.textaling("center")
                         conector.text("==============================================")
                         conector.fontsize("1")
                         conector.textaling("right")
-                        conector.text("Op. Gravadas: S/ "+form.datos.valor_neto)
+
                         if(form.datos.igv>0){
                         conector.text("I.G.V: S/ "+form.datos.igv)
                         }

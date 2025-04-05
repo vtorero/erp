@@ -25,6 +25,7 @@ export class VerVentaComponent implements OnInit {
   dataPagos:any;
   exampleArray:any;
   sucursales:any;
+  cargando:boolean=true;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
@@ -36,6 +37,7 @@ export class VerVentaComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
+
 
     this.api.GetDetalleVenta(this.data.id).subscribe(x => {
       this.dataDetalle = new MatTableDataSource();
@@ -67,6 +69,7 @@ export class VerVentaComponent implements OnInit {
     } catch (error) {
       console.error('Error al obtener datos del cliente:', error);
     }
+    this.cargando=false;
   }
 
   /*getDataCliente(id:any) {
