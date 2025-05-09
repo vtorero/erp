@@ -547,6 +547,10 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</mat-header-cell>
     <mat-cell *matCellDef="let row"> {{row.tipopago}}</mat-cell>
 </ng-container>
+<ng-container matColumnDef="nombre">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Cuenta</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.nombre}}</mat-cell>
+</ng-container>
     <ng-container matColumnDef="monto">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
 

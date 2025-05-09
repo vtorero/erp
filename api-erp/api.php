@@ -3970,7 +3970,7 @@ $app->post("/consulta-compras",function() use($db,$app){
 $app->get("/ventas",function() use($db,$app){
 
     header("Content-type: application/json; charset=utf-8");
-     $resultado = $db->query("SELECT v.id,c.num_documento,c.telefono,c.id as id_cliente,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id and  v.estado=1 inner join usuarios u on v.id_usuario=u.id where DATE_FORMAT(v.fecha_registro, '%d-%m-%Y')=DATE_FORMAT(now(), '%d-%m-%Y') order by 1 desc");
+     $resultado = $db->query("SELECT v.id,c.num_documento,c.telefono,c.direccion,c.id as id_cliente,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id and  v.estado=1 inner join usuarios u on v.id_usuario=u.id where DATE_FORMAT(v.fecha_registro, '%d-%m-%Y')=DATE_FORMAT(now(), '%d-%m-%Y') order by 1 desc");
     $prods=array();
         while ($fila = $resultado->fetch_array()) {
             $prods[]=$fila;
