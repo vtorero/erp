@@ -43,8 +43,10 @@ montoPendiente:any;
 montoCompras:any;
 dataSource: any;
 dataSourceCaja: any;
+dataClienteRank:any;
 displayedColumns = ['id','producto','cantidad','precio','valor_total','Ingreso','usuario','sucursal','fecha_registro'];
 displayedCaja = ['id','fecha','sucursal','Ingreso','tipopago','nombre','monto','monto_pendiente','usuario','fecha_registro'];
+displayedClientes = ['id','nombre','total','pendiente','pedidos'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
 fec2 = this.selectedMoment2.toDateString().split(" ",4);
 fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
@@ -53,6 +55,8 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 @ViewChild(MatPaginator) paginatorCaja: MatPaginator;
 @ViewChild('empTbSort') empTbSort = new MatSort();
 @ViewChild('empTbSortcaja') empTbSortcaja = new MatSort();
+@ViewChild('empTbSortcliente') empTbSortcliente = new MatSort();
+
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
     public dialog2: MatDialog,
@@ -177,13 +181,19 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       .subscribe(data => {
         this.dataSource = new MatTableDataSource();
         this.dataSourceCaja = new MatTableDataSource();
+        this.dataClienteRank= new MatTableDataSource();
         this.dataSource.data = data['reporte'];
         this.dataSourceCaja.data = data['reporte_caja'];
+        this.dataClienteRank.data = data['clientes_tabla'];
 
         this.empTbSort.disableClear = true;
         this.empTbSortcaja.disableClear = true;
+        this.empTbSortcliente.disableClear=true;
         this.dataSource.sort = this.empTbSort;
         this.dataSourceCaja.sort=this.empTbSortcaja;
+        this.dataClienteRank.sort=this.empTbSortcliente;
+
+      
 
         this.dataSource.paginator = this.paginator;
         //this.dataSourceCaja.paginator = this.paginatorCaja;

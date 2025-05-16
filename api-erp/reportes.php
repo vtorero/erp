@@ -19,7 +19,8 @@ $db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-mysqli_set_charset($db, 'utf8');
+//mysqli_set_charset($db, 'utf8');
+$db->set_charset("utf8mb4");
 if (mysqli_connect_errno()) {
     printf("Conexiónes fallida: %s\n", mysqli_connect_error());
     exit();
@@ -95,12 +96,18 @@ $app->post("/reporte",function() use($db,$app){
 
 
 
-            $clientes=$db->query("SELECT c.nombre,count(id_cliente) total from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 1 order by 2 desc limit 5");
+            $clientes=$db->query("SELECT c.nombre,sum(v.valor_total) total,sum(v.monto_pendiente) pendiente, count(id_cliente) pedidos from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 1 order by 2 desc limit 5");
             $infoclientes=array();
             while ($row = $clientes->fetch_array()) {
                     $infoclientes[]=$row;
                 }
 
+
+            $clientes_tabla=$db->query("SELECT c.id,c.nombre,sum(v.valor_total) total,sum(v.monto_pendiente) pendiente, count(id_cliente) pedidos from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 1,2 order by 3 desc");
+            $infoclientestabla=array();
+            while ($row = $clientes_tabla->fetch_array()) {
+                    $infoclientestabla[]=$row;
+                }
 
 
 
@@ -137,15 +144,13 @@ vp.fecha_registro
 FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
-tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
-FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
-SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
-tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
-FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp
-where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0  order by id,fecha_registro asc";
+$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente 
+FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
+and v.id=vp.id_venta and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 
+union all 
+SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente 
+FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
+and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -223,6 +228,7 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.mo
         "gasto"=>$infogasto,
         "productos"=>$infoproducto,
         "clientes"=>$infoclientes,
+        "clientes_tabla"=>$infoclientestabla,
         "sucursales"=>$infosucursales,
         "compras"=>$infocompras,
         "ventas"=>$infoventas,
@@ -487,7 +493,7 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.mo
                 $fields = array('ID','CODIGO','DESCRIPCION','CATEGORIA','SUBCATEGORIA','FAMILIA','UNIDAD' ,'PRECIO');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['codigo'],$row['nombre'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['unidad'],$row['precio']);
+                    $lineData  = array($row['id'],$row['codigo'],limpiarCadena($row['nombre']),$row['categoria'],$row['subcategoria'],$row['familia'],$row['unidad'],$row['precio']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
                  }
@@ -506,6 +512,71 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.mo
 
 
     });
+
+/*
+    $app->post("/productos", function() use($db, $app) {
+        $fileName = "productos_" . date('Y-m-d') . ".xls";
+        $excelData = "";
+    
+        // Encabezados de la tabla
+        $fields = array('ID', 'CODIGO', 'DESCRIPCION', 'CATEGORIA', 'SUBCATEGORIA', 'FAMILIA', 'UNIDAD', 'PRECIO');
+        $excelData .= implode("\t", array_values($fields)) . "\n";
+    
+        // Consulta a la base de datos
+        $sql = "SELECT p.id, p.codigo, p.nombre, c.nombre AS categoria, 
+                       sc.nombre AS subcategoria, fa.nombre AS familia, 
+                       p.unidad, p.precio 
+                FROM productos p 
+                LEFT JOIN categorias c ON p.id_categoria = c.id 
+                LEFT JOIN sub_categorias sc ON p.id_subcategoria = sc.id 
+                LEFT JOIN sub_sub_categorias fa ON p.id_sub_sub_categoria = fa.id 
+                ORDER BY p.id DESC";
+        $query = $db->query($sql);
+    
+        if ($query->num_rows > 0) {
+            while ($row = $query->fetch_assoc()) {
+                // Convertir los datos a UTF-8 para evitar errores de codificación
+                $row = array_map(function($value) {
+                    return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
+                }, $row);
+    
+                $lineData = array($row['id'], $row['codigo'],iconv('ISO-8859-1', 'UTF-8', $row['nombre']) , 
+                $row['categoria'], $row['subcategoria'], 
+                $row['familia'], $row['unidad'], $row['precio']);
+                $excelData .= implode("\t", array_values($lineData)) . "\n";
+            }
+        } else {
+            $excelData .= "No hay resultados de la consulta...\n";
+        }
+    
+        // Configurar la descarga como Excel con codificación UTF-8
+  
+        //echo "\xEF\xBB\xBF"; // BOM para que Excel detecte UTF-8
+    
+        // Imprimir el contenido del archivo
+        echo $excelData;
+    });
+    */
+    function limpiarCadena($cadena) {
+        // Eliminar acentos y caracteres especiales
+        $acentos = array(
+            'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u', 'ñ' => 'n',
+            'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U', 'Ñ' => 'N',
+            'ä' => 'a', 'ë' => 'e', 'ï' => 'i', 'ö' => 'o', 'ü' => 'u', 'ÿ' => 'y',
+            'Ä' => 'A', 'Ë' => 'E', 'Ï' => 'I', 'Ö' => 'O', 'Ü' => 'U', 'Ÿ' => 'Y',
+            // Agregar otros caracteres especiales que desees reemplazar
+        );
+    
+        // Reemplazar los caracteres acentuados
+        $cadena = strtr($cadena, $acentos);
+        
+        // Eliminar caracteres no alfanuméricos (excepto espacios)
+        $cadena = preg_replace("[^a-zA-Z0-9\s]", "", $cadena);
+    
+        return $cadena;
+    }
+    
+
 
      $app->post("/exportar",function() use($db,$app){
         //header("Content-type: application/json; charset=utf-8");
@@ -591,23 +662,23 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.mo
         $excelData = implode("\t", array_values($fields)) . "\n";
 
         $sql="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
-        tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
-        FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id and v.estado=1
+        tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente
+        FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and  v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id and v.estado=1
         and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
         SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
-        tp.nombre tipopago,valor_total,vp.monto, vp.monto_pendiente
-        FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp
-        where vp.tipoPago=tp.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id and v.estado=1
+        tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente
+        FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c
+        where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id and v.estado=1
         and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 order by id,fecha_registro asc;";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){
 
             // Output each row of the data
-                $fields = array('ID','Fecha','Fecha Registro','Movimiento','Usuario','Sucursal','Medio pago','Monto','Monto Pendiente');
+                $fields = array('ID','Fecha','Fecha Registro','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Monto','Monto Pendiente');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['Ingreso'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['monto'],$row['monto_pendiente']);
+                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['Ingreso'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['monto'],$row['monto_pendiente']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 

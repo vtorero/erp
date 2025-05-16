@@ -456,6 +456,7 @@
   </div>-->
 
 
+
   <div class="card-body">
 
     <mat-card>
@@ -573,6 +574,48 @@
 
         <mat-header-row *matHeaderRowDef="displayedCaja" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedCaja;"  (click)="selected(row)" [ngClass]="{'highlighted': selectedRowIndex == row}"
+        (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
+
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10" [showFirstLastButtons]></mat-paginator>
+    </mat-card>
+</div>
+  <div class="card-body">
+
+    <mat-card>
+        <h3>Ranking cliente comprador</h3><hr>
+        <button type="button"  class="enviar" (click)="enviaExcel()" mat-raised-button color="primary"  cdkFocusInitial><i class="material-icons">search</i> Exportar Excel</button>
+
+
+    <mat-table  [dataSource]="dataClienteRank"  matSort #empTbSortcliente="matSort">
+        <!--  Columna ID-->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+                <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
+                 </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre/Razón social</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.nombre}}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.total | number:'1.2-2'}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="pendiente">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
+    <mat-cell *matCellDef="let row">S/ {{row.pendiente | number:'1.2-2'}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="pedidos">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Pedidos</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{row.pedidos}}</mat-cell>
+</ng-container>
+
+          <!-- Columna Nacionalidad -->
+
+        <mat-header-row *matHeaderRowDef="displayedClientes" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedClientes;"  (click)="selected(row)" [ngClass]="{'highlighted': selectedRowIndex == row}"
         (mouseover)="row.hovered = true" (mouseout)="row.hovered = false"></mat-row>
 
       </mat-table>
