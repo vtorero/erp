@@ -472,6 +472,22 @@
                 <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
                  </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="fecha_registro">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
+</ng-container>
+  <ng-container matColumnDef="num_documento">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Documento</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.num_documento}} </mat-cell>
+</ng-container>
+  <ng-container matColumnDef="nombre">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Razón social</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.nombre}} </mat-cell>
+</ng-container>
+ <ng-container matColumnDef="codigo">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
+</ng-container>
       <ng-container matColumnDef="producto">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Producto</mat-header-cell>
         <mat-cell *matCellDef="let row">{{row.producto}}</mat-cell>
@@ -479,6 +495,10 @@
   <ng-container matColumnDef="cantidad">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
     <mat-cell *matCellDef="let row"> {{row.cantidad}}</mat-cell>
+</ng-container>
+  <ng-container matColumnDef="unidad">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Unidad</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.unidad}}</mat-cell>
 </ng-container>
 <ng-container matColumnDef="precio">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
@@ -496,15 +516,12 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
     </ng-container>
-        <ng-container matColumnDef="sucursal">
+        <!--<ng-container matColumnDef="sucursal">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Tienda</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.sucursal}} </mat-cell>
-    </ng-container>
+    </ng-container>-->
 
-<ng-container matColumnDef="fecha_registro">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>
-</ng-container>
+
           <!-- Columna Nacionalidad -->
 
         <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>

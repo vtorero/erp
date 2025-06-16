@@ -3917,7 +3917,7 @@ $app->post("/consulta-ventas",function() use($db,$app){
     $ini=$ano1.'-'.$fmes1.'-'.$dia1;
     $fin=$ano2.'-'.$fmes2.'-'.$dia2;
 
-    $resultado=$db->query("SELECT v.id,v.estado,c.id as id_cliente,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id
+    $resultado=$db->query("SELECT v.id,v.estado,c.num_documento,c.telefono,c.direccion,c.id as id_cliente,c.nombre as cliente,u.nombre,v.tipoDoc,v.id_vendedor,v.id_sucursal,DATE_FORMAT(v.fecha_registro, '%d-%m-%Y') fechaPago,IF(v.pendientes=0,'No','Si') pendientes,v.igv,v.monto_igv,v.descuento,v.valor_neto,v.valor_total,v.monto_pendiente, CASE WHEN v.estado ='1' THEN 'Registrado' WHEN v.estado = '2' THEN 'Anulado' END estado,v.observacion FROM ventas v inner join clientes c on v.id_cliente=c.id inner join usuarios u on v.id_usuario=u.id
     where v.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59'  and v.estado={$dat->estado} order by 1 desc;");
 
      $prods=array();

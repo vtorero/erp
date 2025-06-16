@@ -44,7 +44,7 @@ montoCompras:any;
 dataSource: any;
 dataSourceCaja: any;
 dataClienteRank:any;
-displayedColumns = ['id','producto','cantidad','precio','valor_total','Ingreso','usuario','sucursal','fecha_registro'];
+displayedColumns = ['id','fecha_registro','num_documento','nombre','codigo','producto','cantidad','unidad','precio','valor_total','Ingreso','usuario'];
 displayedCaja = ['id','fecha','sucursal','Ingreso','tipopago','nombre','monto','monto_pendiente','usuario','fecha_registro'];
 displayedClientes = ['id','nombre','total','pendiente','pedidos'];
 fec1= this.selectedMoment.toDateString().split(" ",4);

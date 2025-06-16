@@ -134,14 +134,14 @@ $app->post("/reporte",function() use($db,$app){
                 }
 
 
-$sql_r="SELECT v.id,p.nombre as producto,vd.cantidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
+$sql_r="SELECT v.id,c.num_documento,c.nombre,p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
 concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
-FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.estado=1
+FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
 and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
 union all
-SELECT v.id,p.nombre as producto,vp.cantidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
+SELECT v.id,c.num_documento,c.nombre,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
 vp.fecha_registro
-FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
+FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id 
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
 $sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente 
@@ -601,24 +601,24 @@ and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
 
-        $sql="SELECT v.id,p.nombre as producto,vd.cantidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
+        $sql="SELECT v.id,c.num_documento,c.nombre,p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
         concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
-        FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.estado=1
+        FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
         and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
         union all
-        SELECT v.id,p.nombre as producto,vp.cantidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
+        SELECT v.id,c.num_documento,c.nombre,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
         vp.fecha_registro
-        FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p  where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id and v.estado=1
+        FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
         and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){
 
             // Output each row of the data
-                $fields = array('ID','Producto','Cantidad','Precio','Total','Movimiento','Usuario','Sucursal','Fecha');
+                $fields = array('ID','Fecha','Documento','Razon Social','Producto','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['producto'],$row['cantidad'],$row['precio'],$row['valor_total'],$row['Ingreso'], $row['usuario'],$row['sucursal'],$row['fecha_registro']);
+                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['producto'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['Ingreso'], $row['usuario'],$row['sucursal']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
@@ -637,6 +637,56 @@ and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 
 
      });
 
+      $app->post("/exportarclientes",function() use($db,$app){
+        //header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $dat = json_decode($json, true);
+        $arraymeses=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+        $arraynros=array('01','02','03','04','05','06','07','08','09','10','11','12');
+        $mes1=substr($dat['ini'], 3,3);
+        $mes2=substr($dat['fin'], 3,3);
+        $dia1=substr($dat['ini'], 0,2);
+        $dia2=substr($dat['fin'], 0,2);
+        $ano1=substr($dat['ini'], 7,4);
+        $ano2=substr($dat['fin'], 7,4);
+        $fmes1=str_replace($arraymeses,$arraynros,$mes1);
+        $fmes2=str_replace($arraymeses,$arraynros,$mes2);
+        $ini=$ano1.'-'.$fmes1.'-'.$dia1;
+        $fin=$ano2.'-'.$fmes2.'-'.$dia2;
+
+
+        $fileName = "members-data_" . date('Y-m-d') . ".xls";
+        $lineData =array();
+        $fields = array('');
+        $excelData = implode("\t", array_values($fields)) . "\n";
+
+        $sql="SELECT c.id,c.nombre,sum(v.valor_total) total,sum(v.monto_pendiente) pendiente, count(id_cliente) pedidos from ventas v, clientes c where v.id_cliente=c.id AND  v.fecha_registro between '".$ini." 00:00:00' and '".$fin." 23:59:00' group by 1,2 order by 3 desc";
+
+                $query = $db->query($sql);
+        if($query->num_rows > 0){
+
+            // Output each row of the data
+                $fields = array('ID','Nombre','Total','Pendiente','Pedidos');
+                $excelData.= implode("\t", array_values($fields)) . "\n";
+                 while($row = $query->fetch_assoc()){
+                    $lineData  = array($row['id'],$row['nombre'],$row['total'],$row['pendiente'],$row['pedidos']);
+                array_walk($lineData,'filterData');
+                $excelData .= implode("\t", array_values($lineData)) . "\n";
+
+
+            }
+        }else{
+            $excelData .= 'No hay resultados de la consulta...'. "\n";
+        }
+
+        // Headers for download
+       // header("Content-Type: application/vnd.ms-excel");
+       //header("Content-Disposition: attachment; filename=\"$fileName\"");
+
+        // Render excel data
+       echo $excelData;
+
+     });
 
      $app->post("/exportarcaja",function() use($db,$app){
         header("Content-type: application/json; charset=utf-8");
