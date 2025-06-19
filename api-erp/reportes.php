@@ -447,7 +447,7 @@ and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 
         $excelData = implode("\t", array_values($fields)) . "\n";
 
 
-        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha_registro desc";
+        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha_registro desc";
 
 
         $query = $db->query($sql);
