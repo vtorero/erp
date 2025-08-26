@@ -134,23 +134,23 @@ $app->post("/reporte",function() use($db,$app){
                 }
 
 
-$sql_r="SELECT v.id,c.num_documento,c.nombre,p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
+$sql_r="SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono, p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
 concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
 FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
 and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
 union all
-SELECT v.id,c.num_documento,c.nombre,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
+SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
 vp.fecha_registro
 FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id 
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente 
-FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
-and v.id=vp.id_venta and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 
+$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente 
+FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
+and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 
 union all 
-SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente 
-FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
-and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
+SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente 
+FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
+and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -447,18 +447,18 @@ and v.id=vp.id_compra and vp.usuario=u.id and vp.fecha_registro between '{$ini} 
         $excelData = implode("\t", array_values($fields)) . "\n";
 
 
-        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha_registro desc";
+        $sql="SELECT cd.id_compra,pr.razon_social,pr.num_documento,c.tipoDoc,c.serie_documento,c.nro_documento, p.codigo,p.nombre,p.unidad,cd.cantidad,cd.precio,cd.subtotal,c.fecha,c.fecha_registro,u.nombre usuario FROM compra_detalle cd,productos p, compras c,usuarios u,proveedores pr where cd.id_producto=p.id and cd.id_compra=c.id and c.id_proveedor=pr.id and c.id_usuario=u.id and c.fecha between '{$ini} 00:00:00' and '{$fin} 23:59:59' order by c.fecha asc";
 
 
         $query = $db->query($sql);
 
         if($query->num_rows > 0){
             // Output each row of the data
-    $fields = array('ID COMPRA','PROVEEDOR','RUC','NRO_SERIE','NRO_DOC','CODIGO','PRODUCTO','UNIDAD','CANTIDAD','PRECIO','SUBTOTAL','FECHA DE COMPRA','FECHA REGISTRO','USUARIO');
+    $fields = array('Fecha','Tipo de documento','Serie','Documento','Numero','Nombre Razon Social ','Codigo','Descripcion del producto','Precio de compra','Cantidad','U.M','ID ','Fecha de registro','Movimiento','Usuario');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id_compra'],$row['razon_social'],$row['num_documento'],$row['serie_documento'],
-                    $row['nro_documento'],$row['codigo'],$row['nombre'],$row['unidad'],$row['cantidad'],$row['precio'],$row['subtotal'],$row['fecha'],$row['fecha_registro'],$row['usuario']);
+                    $lineData  = array(substr($row['fecha'],0,11),$row['tipoDoc'],$row['serie_documento'],$row['num_documento'],$row['nro_documento'],$row['razon_social']
+                    ,$row['codigo'],$row['nombre'],$row['precio'],$row['cantidad'],$row['unidad'],$row['id_compra'],$row['fecha_registro'],'Salida',$row['usuario']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
                  }
