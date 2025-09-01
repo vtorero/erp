@@ -546,6 +546,9 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
             <mat-cell *matCellDef="let row">
                 <a mat-stroked-button (click)="abrirEditar(row)">{{row.id}}</a>
+                   <button mat-icon-button color="primary" (click)="openPDF(row)"  aria-label="Example icon button with a menu icon">
+            <i class="material-icons">download</i>
+          </button>
                  </mat-cell>
       </ng-container>
       <ng-container matColumnDef="fecha">

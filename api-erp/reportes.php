@@ -8,9 +8,13 @@ if($method == "OPTIONS") {
     die();
 }
 require_once 'vendor/autoload.php';
-require_once 'vendor/regression.php';
+require_once 'vendor/fpdf.php';
+//require __DIR__ . '../../vendor/autoload.php';  // ajusta ruta al vendor
+//require_once 'vendor/regression.php';
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Dompdf\Dompdf;
+
 
 
 $app = new Slim\Slim();
@@ -141,15 +145,15 @@ and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
 union all
 SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
 vp.fecha_registro
-FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id 
+FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-$sql_reporte_caja="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente 
-FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
-and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 
-union all 
-SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente 
-FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id 
+$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente
+FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
+and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0
+union all
+SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente
+FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
@@ -517,42 +521,42 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
     $app->post("/productos", function() use($db, $app) {
         $fileName = "productos_" . date('Y-m-d') . ".xls";
         $excelData = "";
-    
+
         // Encabezados de la tabla
         $fields = array('ID', 'CODIGO', 'DESCRIPCION', 'CATEGORIA', 'SUBCATEGORIA', 'FAMILIA', 'UNIDAD', 'PRECIO');
         $excelData .= implode("\t", array_values($fields)) . "\n";
-    
+
         // Consulta a la base de datos
-        $sql = "SELECT p.id, p.codigo, p.nombre, c.nombre AS categoria, 
-                       sc.nombre AS subcategoria, fa.nombre AS familia, 
-                       p.unidad, p.precio 
-                FROM productos p 
-                LEFT JOIN categorias c ON p.id_categoria = c.id 
-                LEFT JOIN sub_categorias sc ON p.id_subcategoria = sc.id 
-                LEFT JOIN sub_sub_categorias fa ON p.id_sub_sub_categoria = fa.id 
+        $sql = "SELECT p.id, p.codigo, p.nombre, c.nombre AS categoria,
+                       sc.nombre AS subcategoria, fa.nombre AS familia,
+                       p.unidad, p.precio
+                FROM productos p
+                LEFT JOIN categorias c ON p.id_categoria = c.id
+                LEFT JOIN sub_categorias sc ON p.id_subcategoria = sc.id
+                LEFT JOIN sub_sub_categorias fa ON p.id_sub_sub_categoria = fa.id
                 ORDER BY p.id DESC";
         $query = $db->query($sql);
-    
+
         if ($query->num_rows > 0) {
             while ($row = $query->fetch_assoc()) {
                 // Convertir los datos a UTF-8 para evitar errores de codificación
                 $row = array_map(function($value) {
                     return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
                 }, $row);
-    
-                $lineData = array($row['id'], $row['codigo'],iconv('ISO-8859-1', 'UTF-8', $row['nombre']) , 
-                $row['categoria'], $row['subcategoria'], 
+
+                $lineData = array($row['id'], $row['codigo'],iconv('ISO-8859-1', 'UTF-8', $row['nombre']) ,
+                $row['categoria'], $row['subcategoria'],
                 $row['familia'], $row['unidad'], $row['precio']);
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
             }
         } else {
             $excelData .= "No hay resultados de la consulta...\n";
         }
-    
+
         // Configurar la descarga como Excel con codificación UTF-8
-  
+
         //echo "\xEF\xBB\xBF"; // BOM para que Excel detecte UTF-8
-    
+
         // Imprimir el contenido del archivo
         echo $excelData;
     });
@@ -566,16 +570,16 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
             'Ä' => 'A', 'Ë' => 'E', 'Ï' => 'I', 'Ö' => 'O', 'Ü' => 'U', 'Ÿ' => 'Y',
             // Agregar otros caracteres especiales que desees reemplazar
         );
-    
+
         // Reemplazar los caracteres acentuados
         $cadena = strtr($cadena, $acentos);
-        
+
         // Eliminar caracteres no alfanuméricos (excepto espacios)
         $cadena = preg_replace("[^a-zA-Z0-9\s]", "", $cadena);
-    
+
         return $cadena;
     }
-    
+
 
 
      $app->post("/exportar",function() use($db,$app){
@@ -748,6 +752,121 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
      });
 
 
+     $app->get("/boleta/:id", function ($id) use ($db,$app) {
+
+
+     $resultado = $db->query("SELECT a.nombre,a.unidad, d.*,c.nombre as cliente,c.num_documento,v.*,pa.*,tp.tipo FROM aprendea_erp.venta_detalle d,venta_pagos pa,productos a,ventas v,clientes c,tipoPago tp  where a.id=d.id_producto and pa.tipoPago=tp.id and d.id_venta=v.id and v.id=pa.id_venta and v.id_cliente=c.id and v.id={$id}");
+         $prods=array();
+
+            while ($fila = $resultado->fetch_array()) {
+                $prods[]=$fila;
+            }
+        // Crear PDF
+       $pdf = new FPDF();
+        //$pdf = new FPDF('P','mm',array(210,250));
+        $pdf->AddPage();
+        $pdf->SetFont('Arial','',12);
+        $pageWidth = $pdf->GetPageWidth();
+
+// Ancho de la imagen
+        $imgWidth = 90;
+
+// Calcular posición X centrada
+        $x = ($pageWidth - $imgWidth) / 2;
+
+// Insertar imagen centrada arriba
+        $pdf->Image('logo.png', $x, 10, $imgWidth);
+         $pdf->Ln(34);
+
+// Texto centrado debajo del logo
+        $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(0,6,'FERRETERIA Y MATERIALES DE CONSTRUCCION LAS',0,1,'C');  // centrado
+         $pdf->Cell(0,10,' HERMANITAS E.I.R.L.',0,1,'C');  // centrado
+        $pdf->SetFont('Arial','',17);
+        $pdf->Cell(0,8,'Whatsap/Telefono: 902 715 979',0,1,'C');
+        $pdf->Cell(0,8,'lashermanitas_bertha@hotmail.com',0,1,'C');
+        $pdf->Cell(0,8,'LT. 9 MZ. E COO. LA ESPERANZA - Santiago de Surco',0,1,'C');
+        $pdf->Cell(0,8,'- Lima - Lima',0,1,'C');
+           $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(0,8,'RUC: 20537929520',0,1,'C');
+        $pdf->Cell(0,8,'BOLETA DE VENTA ELECTRONICA',0,1,'C');
+        $pdf->Cell(0,8,'NRO:'.$prods[0]['id_venta'],0,1,'C');
+        $pdf->Ln(10);
+         $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(0,8,'ADQUIRIENTE',0,1,'L');
+        $pdf->SetFont('Arial','',15);
+        $pdf->Cell(0,8,$prods[0]['cliente'],0,1,'L');
+        $pdf->Cell(0,8,'DOC:'.$prods[0]['num_documento'],0,1,'L');
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial','B',17);
+            $pdf->Cell(0,8,'FECHA:'.substr($prods[0]['fecha_registro'],8,2).'/'.substr($prods[0]['fecha_registro'],5,2).'/'.substr($prods[0]['fecha_registro'],0,4).' - '.substr($prods[0]['fecha_registro'],11,9),0,1,'L');    
+            $pdf->SetFont('Arial','',17);
+            $pdf->Cell(0,8,'FORMA PAGO:'.strtoupper($prods[0]['tipo']),0,1,'L');
+// centrado
+
+        // Encabezados
+    
+        $pdf->SetFont('Arial','B',14);
+        $pdf->Cell(85,10,'DESCRIPCION',0,0,'L');
+        $pdf->Cell(30,10,'CANTIDAD',0,0,'C');
+        $pdf->Cell(20,10,'U.M',0,0,'C');
+        $pdf->Cell(30,10,'PRECIO',0,0,'C');
+        $pdf->Cell(30,10,'IMPORTE',0,1,'C');
+        $pdf->Cell(150,2,'--------------------------------------------------------------------------------------------------------------------',0,1);
+        $pdf->Ln();
+        // Datos
+         $pdf->SetLineWidth(0);
+        $pdf->SetFont('Arial','',13);
+        foreach ($prods as $prod) {
+            $pdf->Cell(130,6,$prod['nombre'],0,1);
+            $pdf->Cell(95,6,'',0,0);
+            $pdf->Cell(30,6,round($prod['cantidad'],2),0,0);
+            $pdf->Cell(20,6,$prod['unidad'],0,0);
+            $pdf->Cell(28,6,round($prod['precio'],2),0,0);
+            $pdf->Cell(28,6,round($prod['subtotal'],2),0,1);
+            
+            
+        }
+        $pdf->Ln();
+         $pdf->SetFont('Arial','B',14);
+        $pdf->Cell(150,2,'--------------------------------------------------------------------------------------------------------------------',0,1);
+    $pdf->Ln();
+    $pdf->Cell(115); // espacio en blanco a la izquierda
+    $pdf->SetFont('Arial','B',16);
+    $pdf->Cell(40,8,'OP. AGRAVADAS S/',0,0,'R');
+    $pdf->SetFont('Arial','',15);
+    $pdf->Cell(30,8,$prods[0]['valor_total'],0,1,'R');
+    
+ 
+    $pdf->Cell(115); // espacio en blanco a la izquierda
+    $pdf->SetFont('Arial','B',16);
+    $pdf->Cell(40,8,'TOTAL S/',0,0,'R');
+    $pdf->SetFont('Arial','',14);
+    $pdf->Cell(30,8,$prods[0]['valor_total'],0,1,'R');
+    $pdf->Cell(150,2,'--------------------------------------------------------------------------------------------------------------------',0,1);
+    $cantidad=numeroALetras($prods[0]['valor_total']);
+   $pdf->SetFont('Arial','',17);
+     $pdf->Cell(180,14,$cantidad,0,1,'C');
+      $pdf->SetFont('Arial','',14);
+$pdf->Cell(150,2,'--------------------------------------------------------------------------------------------------------------------',0,1);
+      $pdf->SetFont('Arial','B',16);
+     $pdf->Cell(35,14,strtoupper($prods[0]['tipo']),0,0,'L');
+     $pdf->SetFont('Arial','',14);
+        $pdf->Cell(20,14,'S/ '.$prods[0]['valor_total'],0,1,'L');
+$pdf->Cell(150,2,'--------------------------------------------------------------------------------------------------------------------',0,1);
+
+
+//$pdf->SetDrawColor(0,0,0);
+      //  $pdf->SetLineWidth(1);
+       // $pdf->Line(10,150,150,150);
+        // Devolver como respuesta HTTP
+        $app->response->headers->set('Content-Type', 'application/pdf');
+        $app->response->headers->set('Content-Disposition', 'inline; filename="reporte.pdf"');
+        echo $pdf->Output('S'); // "S" = output como string (no descarga directa)
+    });
+
+
+
      function filterData(&$str){
         $str = preg_replace("/\t/", "\\t", $str);
         $str = preg_replace("/\r?\n/", "\\n", $str);
@@ -766,5 +885,69 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         return $data;
 
     }
+
+function numeroALetras($numero) {
+    $unidad = [
+        '', 'UNO', 'DOS', 'TRES', 'CUATRO', 'CINCO',
+        'SEIS', 'SIETE', 'OCHO', 'NUEVE', 'DIEZ',
+        'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE',
+        'DIECISÉIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE', 'VEINTE'
+    ];
+
+    $decenas = [
+        20 => 'VEINTE', 30 => 'TREINTA', 40 => 'CUARENTA',
+        50 => 'CINCUENTA', 60 => 'SESENTA',
+        70 => 'SETENTA', 80 => 'OCHENTA', 90 => 'NOVENTA'
+    ];
+
+    $centenas = [
+        100 => 'CIEN', 200 => 'DOSCIENTOS', 300 => 'TRESCIENTOS',
+        400 => 'CUATROCIENTOS', 500 => 'QUINIENTOS',
+        600 => 'SEISCIENTOS', 700 => 'SETECIENTOS',
+        800 => 'OCHOCIENTOS', 900 => 'NOVECIENTOS'
+    ];
+
+    $numero = number_format($numero, 2, '.', '');
+    list($entero, $decimal) = explode('.', $numero);
+
+    $entero = (int)$entero;
+    $decimal = (int)$decimal;
+
+    $convertir = function($n) use (&$convertir, $unidad, $decenas, $centenas) {
+        if ($n == 0) return 'CERO';
+        if ($n <= 20) return $unidad[$n];
+        if ($n < 100) {
+            $d = (int) (floor($n / 10) * 10);
+            $r = $n % 10;
+            return $decenas[$d] . ($r > 0 ? ' Y ' . $convertir($r) : '');
+        }
+        if ($n < 1000) {
+            $c = (int) (floor($n / 100) * 100);
+            $r = $n % 100;
+            if ($n == 100) return 'CIEN';
+            return $centenas[$c] . ($r > 0 ? ' ' . $convertir($r) : '');
+        }
+        if ($n < 1000000) {
+            $m = floor($n / 1000);
+            $r = $n % 1000;
+            $mil = ($m == 1) ? 'MIL' : $convertir($m) . ' MIL';
+            return $mil . ($r > 0 ? ' ' . $convertir($r) : '');
+        }
+        if ($n < 1000000000) {
+            $mi = floor($n / 1000000);
+            $r = $n % 1000000;
+            $millones = ($mi == 1) ? 'UN MILLÓN' : $convertir($mi) . ' MILLONES';
+            return $millones . ($r > 0 ? ' ' . $convertir($r) : '');
+        }
+        return '';
+    };
+
+    $texto = $convertir($entero);
+    if ($decimal > 0) {
+        $texto .= ' CON ' . str_pad($decimal, 2, '0', STR_PAD_LEFT) . '/100';
+    }
+    return "SON: " . $texto . " SOLES";
+}
+
 
 $app->run();

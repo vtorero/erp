@@ -42,6 +42,12 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  descargarFactura(id: number) {
+    return this._http.get(Global.BASE_API_URL + "reportes.php/boleta/" + id, {
+      responseType: 'blob'  // importante para PDFs
+    });
+  }
+
   get getCurrentUser(){
     let user = sessionStorage.getItem("currentUser");
     if(!user){

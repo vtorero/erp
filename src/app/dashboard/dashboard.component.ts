@@ -41,6 +41,7 @@ public selectedMoment2 = new Date();
 ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
+datos:any;
 dataSource: any;
 dataSourceCaja: any;
 dataClienteRank:any;
@@ -332,6 +333,27 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
 
     }
+
+openPDF(cod: Venta){
+  console.log(cod);
+  this.datos=cod['id'];
+  console.log(this.datos.id);
+this.api.descargarFactura(this.datos.id) // id de factura
+      .subscribe((pdfBlob: Blob) => {
+        const fileURL = URL.createObjectURL(pdfBlob);
+
+        // Opción 1: Abrir en nueva pestaña
+        window.open(fileURL);
+
+        // Opción 2: Descargar directamente
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = 'boleta-'+this.datos.id+'.pdf';
+        a.click();
+        URL.revokeObjectURL(fileURL);
+      });
+
+}
 
     abrirEditar(cod: Venta) {
       console.log(cod['Ingreso']);

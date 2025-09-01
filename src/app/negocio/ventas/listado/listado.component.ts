@@ -13,6 +13,9 @@ import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.componen
 import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { Router } from '@angular/router';
+import { cloudresourcemanager } from 'googleapis/build/src/apis/cloudresourcemanager';
+import { HttpClient } from '@angular/common/http';
+import { Global } from 'app/global';
 declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number): any;
 
@@ -123,6 +126,7 @@ export class ListadoComponent implements OnInit {
   position = new FormControl('below');
   buscador:boolean=false;
   dataSource: any;
+  datos:any;
   dataCliente:any;
   dataDetalle:any;
   clientetexto:string='Sin Cliente';
@@ -147,6 +151,7 @@ export class ListadoComponent implements OnInit {
     private api: ApiService,
     public dialog2: MatDialog,
     private router:Router
+    
   ) { }
 
   ngOnInit(): void {
@@ -185,7 +190,6 @@ openBusqueda(){
     this.api.getApi('ventas').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
-      console.log("VEtas",x)
       this.empTbSort.disableClear = true;
       this.dataSource.sort = this.empTbSort;
       this.dataSource.paginator = this.paginator;
@@ -233,6 +237,28 @@ openBusqueda(){
     })
 
   }
+
+openPDF(){
+  console.log(this.selectedRowIndex);
+  this.datos=this.selectedRowIndex;
+  console.log(this.datos.id);
+this.api.descargarFactura(this.datos.id) // id de factura
+      .subscribe((pdfBlob: Blob) => {
+        const fileURL = URL.createObjectURL(pdfBlob);
+
+        // Opción 1: Abrir en nueva pestaña
+        window.open(fileURL);
+
+        // Opción 2: Descargar directamente
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = 'boleta-'+this.datos.id+'.pdf';
+        a.click();
+        URL.revokeObjectURL(fileURL);
+      });
+
+}
+
 
   openImprimir(enterAnimationDuration: string, exitAnimationDuration: string){
     const dialogo2=this.dialog.open(AddClienteComponent, {
