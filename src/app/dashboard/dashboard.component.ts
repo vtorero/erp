@@ -335,20 +335,17 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
     }
 
 openPDF(cod: Venta){
-  console.log(cod);
-  this.datos=cod['id'];
-  console.log(this.datos.id);
-this.api.descargarFactura(this.datos.id) // id de factura
+this.api.descargarFactura(cod['id']) // id de factura
       .subscribe((pdfBlob: Blob) => {
         const fileURL = URL.createObjectURL(pdfBlob);
 
         // Opción 1: Abrir en nueva pestaña
-        window.open(fileURL);
+       // window.open(fileURL);
 
         // Opción 2: Descargar directamente
         const a = document.createElement('a');
         a.href = fileURL;
-        a.download = 'boleta-'+this.datos.id+'.pdf';
+        a.download = 'boleta-'+cod['id']+'.pdf';
         a.click();
         URL.revokeObjectURL(fileURL);
       });

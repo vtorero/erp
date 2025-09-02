@@ -755,7 +755,7 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
      $app->get("/boleta/:id", function ($id) use ($db,$app) {
 
 
-     $resultado = $db->query("SELECT a.nombre,a.unidad, d.*,c.nombre as cliente,c.num_documento,v.*,pa.*,tp.tipo FROM aprendea_erp.venta_detalle d,venta_pagos pa,productos a,ventas v,clientes c,tipoPago tp  where a.id=d.id_producto and pa.tipoPago=tp.id and d.id_venta=v.id and v.id=pa.id_venta and v.id_cliente=c.id and v.id={$id}");
+     $resultado = $db->query("SELECT a.nombre,a.unidad, d.*,c.nombre as cliente,c.num_documento,v.*,pa.*,tp.tipo,s.direccion,s.email,s.nombre as local,s.telefono FROM aprendea_erp.venta_detalle d,venta_pagos pa,productos a,ventas v,clientes c,tipoPago tp,sucursales s where s.id=v.id_sucursal and a.id=d.id_producto and pa.tipoPago=tp.id and d.id_venta=v.id and v.id=pa.id_venta and v.id_cliente=c.id and v.id={$id}");
          $prods=array();
 
             while ($fila = $resultado->fetch_array()) {
@@ -780,12 +780,16 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
 
 // Texto centrado debajo del logo
         $pdf->SetFont('Arial','B',16);
+         if($prods[0]['local']!="C.J.M"){   
         $pdf->Cell(0,6,'FERRETERIA Y MATERIALES DE CONSTRUCCION LAS',0,1,'C');  // centrado
-         $pdf->Cell(0,10,' HERMANITAS E.I.R.L.',0,1,'C');  // centrado
+        $pdf->Cell(0,10,' HERMANITAS E.I.R.L.',0,1,'C');  // centrado
+         }else{
+            $pdf->Cell(0,6,$prods[0]['local'],0,1,'C');  // centrado
+         }   
         $pdf->SetFont('Arial','',17);
-        $pdf->Cell(0,8,'Whatsap/Telefono: 902 715 979',0,1,'C');
-        $pdf->Cell(0,8,'lashermanitas_bertha@hotmail.com',0,1,'C');
-        $pdf->Cell(0,8,'LT. 9 MZ. E COO. LA ESPERANZA - Santiago de Surco',0,1,'C');
+        $pdf->Cell(0,8,'Whatsap/Telefono: '.$prods[0]['telefono'],0,1,'C');
+        $pdf->Cell(0,8,$prods[0]['email'],0,1,'C');
+        $pdf->Cell(0,8,$prods[0]['direccion'],0,1,'C');
         $pdf->Cell(0,8,'- Lima - Lima',0,1,'C');
            $pdf->SetFont('Arial','B',16);
         $pdf->Cell(0,8,'RUC: 20537929520',0,1,'C');
