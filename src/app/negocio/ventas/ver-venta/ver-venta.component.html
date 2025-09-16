@@ -14,7 +14,7 @@
           <div class="col-6">
             <mat-form-field appearance="outline">
               <mat-label>Tipo de Documento</mat-label>
-              <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
+              <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" readonly>
                   <mat-option >Seleccionar</mat-option>
                   <mat-option value="Ticket">Ticket</mat-option>
                   <mat-option value="Boleta">Boleta</mat-option>
@@ -51,6 +51,16 @@
                 </mat-option>
                 </mat-select>
             </mat-form-field>
+            <div class="row">
+              <div class="col-10"> <mat-form-field appearance="outline">
+                <mat-label>Observación</mat-label>
+                <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
+                  
+                </mat-form-field></div>
+              <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:40px;">save</i></div>
+            </div>
+
+               
           </div>
           <div class="col-6">
             <mat-form-field appearance="outline">
@@ -66,13 +76,13 @@
             <div class="col-4 offset-1">
               <mat-form-field>
                 <mat-label>Valor neto S/</mat-label>
-                <input matInput name="valor_neto"  type="number"   [(ngModel)]="data.valor_neto" readonly>
+                <input matInput name="valor_neto"  type="number"   [(ngModel)]="data.valor_total" readonly>
               </mat-form-field>
                </div>
             <div class="col-3">
               <mat-form-field>
                 <mat-label>Monto IGV S/</mat-label>
-                  <input matInput name="monto_igv"  type="number" [(ngModel)]="data.monto_igv" readonly>
+                  <input matInput name="monto_igv"  type="number" value="0.00" readonly>
               </mat-form-field>
               </div>
 

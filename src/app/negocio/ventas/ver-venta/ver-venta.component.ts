@@ -77,6 +77,10 @@ export class VerVentaComponent implements OnInit {
       this.dataClientes=dat;
     })
   }*/
+save(d){
+  console.log(d);
+}
+
   getVendedor(): void {
     this.api.getApi('vendedores').subscribe(data => {
       if(data) {
