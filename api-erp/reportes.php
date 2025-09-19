@@ -139,20 +139,20 @@ $app->post("/reporte",function() use($db,$app){
 
 
 $sql_r="SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono, p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
-concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
+concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro,v.observacion
 FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
 and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
 union all
 SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
-vp.fecha_registro
+vp.fecha_registro,v.observacion
 FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente
+$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0
 union all
-SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente
+SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
 

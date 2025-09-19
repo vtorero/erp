@@ -441,89 +441,50 @@ $app->post("/permisos",function() use($db,$app){
 });
 
 
-
-/*Agregar vendedor*/
-
+/*actualiza observacion venta*/
 
 
-
-
-$app->post("/vendedor",function() use($db,$app){
-
-
-
+$app->post("/observacion",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
-
-
-
        $json = $app->request->getBody();
-
-
-
        $j = json_decode($json,true);
-
-
-
-       $data = json_decode($j['json']);
-
-
+       
+  
 
        try {
-
-
-
-
-
-
-
-        $sql="call p_vendedor('{$data->nombre}','{$data->correo}','{$data->rol}',{$data->estado})";
-
-
-
+        $sql="UPDATE ventas set observacion='{$j["observacion"]}' WHERE id='{$j["id"]}'";
         $stmt = mysqli_prepare($db,$sql);
-
-
-
         mysqli_stmt_execute($stmt);
-
-
-
-        $result = array("STATUS"=>true,"messaje"=>"Vendedor registrado correctamente");
-
-
-
+        $result = array("STATUS"=>true,"messaje"=>"Observación registrada","sql"=>$sql);
         }
 
-
-
-        catch(PDOException $e) {
-
-
-
-
-
-
-
+       catch(PDOException $e) {
         $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
 
+    }
+             echo  json_encode($result);
+});
 
 
+/*Agregar vendedor*/
+$app->post("/vendedor",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+       $json = $app->request->getBody();
+       $j = json_decode($json,true);
+       $data = json_decode($j['json']);
 
+       try {
+        $sql="call p_vendedor('{$data->nombre}','{$data->correo}','{$data->rol}',{$data->estado})";
+        $stmt = mysqli_prepare($db,$sql);
+        mysqli_stmt_execute($stmt);
+        $result = array("STATUS"=>true,"messaje"=>"Vendedor registrado correctamente");
+        }
 
-
+       catch(PDOException $e) {
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
 
     }
-
-
-
-
-
-
-
              echo  json_encode($result);
-
-
-
 });
 
 

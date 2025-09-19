@@ -512,6 +512,10 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Movimiento</mat-header-cell>
       <mat-cell *matCellDef="let row"> {{row.Ingreso}}</mat-cell>
 </ng-container>
+   <ng-container matColumnDef="observacion">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.observacion}} </mat-cell>
+    </ng-container>
        <ng-container matColumnDef="usuario">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
@@ -582,6 +586,7 @@
 
     <mat-cell *matCellDef="let row">S/ {{row.monto_pendiente | number:'1.2-2' }}</mat-cell>
 </ng-container>
+ 
        <ng-container matColumnDef="usuario">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>
