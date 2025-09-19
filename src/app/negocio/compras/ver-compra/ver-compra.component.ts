@@ -162,4 +162,15 @@ export class VerCompraComponent implements OnInit {
 
   }
 
+  save(d){
+  console.log(d);
+    this.api.observacioncompra(d).subscribe(
+      data=>{
+        this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+           },
+      erro=>{console.log(erro)}
+    );
+
+}
+
 }

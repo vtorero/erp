@@ -272,6 +272,15 @@ observacion(venta:any){
     }, { headers: this.headers }).pipe(map(data => data));
 }
 
+/*Registrar observacion  compra*/
+
+observacioncompra(venta:any){
+      const url = Global.BASE_API_URL + 'api.php/observacioncompra';
+    return this._http.post(url,{
+        id: venta.id,
+        observacion: venta.observacion
+    }, { headers: this.headers }).pipe(map(data => data));
+}
 
 public getCajasUsuario(usuario: string): Observable<any> {
   return this._http.get(Global.BASE_API_URL + 'api.php/cajas/' + usuario,

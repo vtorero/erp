@@ -33,6 +33,15 @@
                 </mat-option>
                 </mat-select>
             </mat-form-field>
+      <div class="row">
+              <div class="col-10"> <mat-form-field appearance="outline">
+                <mat-label>Observación</mat-label>
+                <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
+                  
+                </mat-form-field></div>
+              <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
+            </div>
+
           </div>
           <div class="col-6">
               <div class="row">

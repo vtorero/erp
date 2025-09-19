@@ -440,29 +440,39 @@ $app->post("/permisos",function() use($db,$app){
 
 });
 
+$app->post("/observacioncompra",function() use($db,$app){
+    header("Content-type: application/json; charset=utf-8");
+       $json = $app->request->getBody();
+       $j = json_decode($json,true);
+       try {
+        $sql="UPDATE compras set observacion='{$j["observacion"]}' WHERE id='{$j["id"]}'";
+        $stmt = mysqli_prepare($db,$sql);
+        mysqli_stmt_execute($stmt);
+        $result = array("STATUS"=>true,"messaje"=>"Observación registrada","sql"=>$sql);
+        }
+       catch(PDOException $e) {
+        $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
+    }
+      echo  json_encode($result);
+});
+
+
 
 /*actualiza observacion venta*/
-
-
 $app->post("/observacion",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
        $json = $app->request->getBody();
        $j = json_decode($json,true);
-       
-  
-
        try {
         $sql="UPDATE ventas set observacion='{$j["observacion"]}' WHERE id='{$j["id"]}'";
         $stmt = mysqli_prepare($db,$sql);
         mysqli_stmt_execute($stmt);
         $result = array("STATUS"=>true,"messaje"=>"Observación registrada","sql"=>$sql);
         }
-
        catch(PDOException $e) {
         $result = array("STATUS"=>false,"messaje"=>$e->getMessage());
-
     }
-             echo  json_encode($result);
+      echo  json_encode($result);
 });
 
 
