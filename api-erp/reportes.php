@@ -150,11 +150,11 @@ and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by 
 
 $sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
-and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 and v.estado='1' 
+and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1' 
 union all
 SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
-and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 ORDER BY `Ingreso` DESC";
+and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `Ingreso` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -793,8 +793,8 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         $pdf->Cell(0,8,'- Lima - Lima',0,1,'C');
            $pdf->SetFont('Arial','B',16);
         $pdf->Cell(0,8,'RUC: 20537929520',0,1,'C');
-        $pdf->Cell(0,8,'BOLETA DE VENTA ELECTRONICA',0,1,'C');
-        $pdf->Cell(0,8,'NRO:'.$prods[0]['id_venta'],0,1,'C');
+        $pdf->Cell(0,8,'TICKET NRO:'.$prods[0]['id_venta'],0,1,'C');
+       // $pdf->Cell(0,8,'NRO:'.$prods[0]['id_venta'],0,1,'C');
         $pdf->Ln(10);
          $pdf->SetFont('Arial','B',16);
         $pdf->Cell(0,8,'ADQUIRIENTE',0,1,'L');

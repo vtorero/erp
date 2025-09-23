@@ -40,10 +40,16 @@ loading = false;
   }
 
   ingresar(){
-console.log(this.form)
+   
 const usuario = this.form.value.usuario;
 const password = this.form.value.password;
+if(usuario!="" && password!=""){
 this.loginUser(usuario,password)
+}else{
+  this._snackBar.open('Debe ingresar los datos de acceso','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+  return;
+}
+
 }
 
 /*fakeLoading(){
@@ -87,11 +93,12 @@ loginUser(usuario,password){
             if(data['data'][0]['nombre']=='admin'){
             this.router.navigate(['/dashboard']);
           }else{
+            this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             this.router.navigate(['/ventas/venta-rapida']);
           }
 
           }else{
-
+this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             this.error();
 
 
@@ -103,7 +110,7 @@ loginUser(usuario,password){
 }
 
 error(){
-  this.router.navigate(['/login']);
+this.router.navigate(['/login']);
 this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
 this.loading=false;
 }
