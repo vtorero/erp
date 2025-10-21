@@ -559,14 +559,23 @@
         <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
         <mat-cell *matCellDef="let row">{{row.fecha}}</mat-cell>
   </ng-container>
+    <ng-container matColumnDef="cliente">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.cliente}}</mat-cell>
+</ng-container>
+
+    <ng-container matColumnDef="num_documento">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Documento</mat-header-cell>
+    <mat-cell *matCellDef="let row"> {{row.num_documento}}</mat-cell>
+</ng-container>
   <ng-container matColumnDef="sucursal">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Sucursal</mat-header-cell>
     <mat-cell *matCellDef="let row"> {{row.sucursal}}</mat-cell>
 </ng-container>
 
-<ng-container matColumnDef="Ingreso">
+<ng-container matColumnDef="VENTA">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Movimiento</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.Ingreso}}</mat-cell>
+    <mat-cell *matCellDef="let row"> {{row.VENTA}}</mat-cell>
 </ng-container>
 <ng-container matColumnDef="tipopago">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de pago</mat-header-cell>

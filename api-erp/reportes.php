@@ -52,6 +52,22 @@ $app->get("/inventario/:id",function($id) use($db,$app){
 
 });
 
+$app->post("/encuesta",function() use($db,$app){
+     header("Content-type: application/json; charset=utf-8");
+    $json = $app->request->getBody();
+    $data = json_decode($json, true);
+
+ 
+
+ if (json_last_error() !== JSON_ERROR_NONE) {
+        $app->halt(400, json_encode(["error" => "JSON inválido"]));
+    }
+
+    echo json_encode($data);
+
+});
+
+
 $app->post("/reporte",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
     $json = $app->request->getBody();
@@ -148,13 +164,13 @@ vp.fecha_registro,v.observacion
 FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
 and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
 
-$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
+$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1' 
 union all
-SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
+SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
-and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `Ingreso` DESC";
+and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `Venta` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
