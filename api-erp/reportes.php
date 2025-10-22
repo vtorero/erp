@@ -154,23 +154,50 @@ $app->post("/reporte",function() use($db,$app){
                 }
 
 
-$sql_r="SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono, p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
-concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro,v.observacion
-FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
-and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
-union all
-SELECT v.id,c.num_documento,c.nombre as cliente,c.id as id_cliente,c.direccion,c.telefono,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
-vp.fecha_registro,v.observacion
-FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
-and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
+$sql_r="SELECT *
+        FROM (
+            SELECT v.id, c.num_documento, c.nombre AS cliente, c.id AS id_cliente, c.direccion, c.telefono,
+                   p.codigo, p.nombre AS producto, vd.cantidad, p.unidad, vd.precio,
+                   (vd.cantidad * vd.precio) AS valor_total, 'Venta' AS tipo_movimiento,
+                   u.nombre AS usuario, s.nombre AS sucursal,
+                   CONCAT(DATE_FORMAT(vd.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
+                   vd.fecha_registro, v.observacion
+            FROM venta_detalle vd
+            JOIN ventas v ON v.id = vd.id_venta
+            JOIN productos p ON p.id = vd.id_producto
+            JOIN usuarios u ON u.id = v.id_usuario
+            JOIN sucursales s ON s.id = v.id_sucursal
+            JOIN clientes c ON c.id = v.id_cliente
+            WHERE v.estado = 1
+              AND vd.fecha_registro >= '{$ini}' 
+              AND vd.fecha_registro < '{$fin}'
+            
+            UNION ALL
+            
+            SELECT v.id, c.num_documento, c.nombre AS cliente, c.id AS id_cliente, c.direccion, c.telefono,
+                   p.codigo, p.nombre AS producto, vp.cantidad, p.unidad, vp.precio,
+                   (vp.cantidad * vp.precio) AS valor_total, 'Compra' AS tipo_movimiento,
+                   u.nombre AS usuario, s.nombre AS sucursal,
+                   CONCAT(DATE_FORMAT(vp.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
+                   vp.fecha_registro, v.observacion
+            FROM compra_detalle vp
+            JOIN compras v ON v.id = vp.id_compra
+            JOIN productos p ON p.id = vp.id_producto
+            JOIN usuarios u ON u.id = v.id_usuario
+            JOIN sucursales s ON s.id = v.id_sucursal
+            JOIN clientes c ON c.id = v.id_proveedor
+            WHERE vp.fecha_registro >= '{$ini} 00:00:01' 
+              AND vp.fecha_registro < '{$fin} 23:59:59' 
+        ) AS t
+        ORDER BY t.fecha_registro DESC";
 
-$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta',u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
+$sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta' AS tipo_movimiento,u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1' 
 union all
-SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra',u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
+SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra'as tipo_movimiento,u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
-and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `Venta` DESC";
+and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `fecha_registro` DESC";
 
                 $ventas_reporte=$db->query($sql_r);
                 $infoventas_reporte=array();
@@ -254,7 +281,8 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         "ventas"=>$infoventas,
         "reporte_caja"=>$info_reporte_caja,
         "reporte"=>$infoventas_reporte,
-        "inicio"=>$ini,"final"=>$fin);
+        "inicio"=>$ini,"final"=>$fin,
+        "sql"=>$sql_reporte_caja);
 
         echo json_encode($data);
 
