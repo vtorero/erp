@@ -1,0 +1,1 @@
+[22-Oct-2025 15:56:02 UTC] PHP Fatal error:  Allowed memory size of 419430400 bytes exhausted (tried to allocate 20480 bytes) in /home/aprendea/public_html/erp/erp-api/reportes.php on line 177

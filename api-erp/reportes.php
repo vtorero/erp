@@ -759,11 +759,11 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
 
-        $sql="SELECT v.id,v.fecha,vp.fecha_registro,'Ingreso',u.nombre usuario, s.nombre sucursal,
+        $sql="SELECT v.id,v.fecha,vp.fecha_registro,'VENTA' as movimiento,u.nombre usuario, s.nombre sucursal,
         tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente,v.observacion
         FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and  v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id and v.estado=1
         and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
-        SELECT v.id,v.fecha,vp.fecha_registro,'Salida',u.nombre usuario ,s.nombre sucursal,
+        SELECT v.id,v.fecha,vp.fecha_registro,'COMPRA' as movimiento,u.nombre usuario ,s.nombre sucursal,
         tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente,v.observacion
         FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c
         where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id and v.estado=1
@@ -776,7 +776,7 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
                 $fields = array('ID','Fecha','Fecha Registro','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Monto','Monto Pendiente','Observacion');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['Ingreso'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
+                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['movimiento'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 

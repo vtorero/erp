@@ -10,6 +10,7 @@ import { Venta } from 'app/modelos/venta';
 import { VerVentaComponent } from 'app/negocio/ventas/ver-venta/ver-venta.component';
 import { MatDialog } from '@angular/material/dialog';
 import { VerCompraComponent } from '../negocio/compras/ver-compra/ver-compra.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -43,6 +44,7 @@ montoPendiente:any;
 montoCompras:any;
 datos:any;
 dataSource: any;
+ selectedRowIndex:any;
 dataSourceCaja: any;
 dataClienteRank:any;
 displayedColumns = ['id','fecha_registro','num_documento','nombre','codigo','producto','cantidad','unidad','precio','valor_total','Ingreso','observacion','usuario'];
@@ -61,7 +63,9 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   constructor(
     @Inject(MAT_DATE_LOCALE) private _locale: string,
     public dialog2: MatDialog,
-     private api: ApiService
+    public dialog: MatDialog,
+     private api: ApiService,
+     private _snackBar: MatSnackBar
   ) {
 
 
@@ -354,17 +358,23 @@ this.api.descargarFactura(cod['id']) // id de factura
 
     abrirEditar(cod: Venta) {
       console.log(cod['Ingreso']);
-      if(cod['Ingreso']=='Ingreso'){
+      if(cod['tipo_movimiento']=='Venta'){
       const dialogo2 = this.dialog2.open(VerVentaComponent, {
         data: cod,
         disableClose: false
       });
     }
-    if(cod['Ingreso']=='Salida'){
+    if(cod['tipo_movimiento']=='Compra'){
       const dialogo2 = this.dialog2.open(VerCompraComponent, {
         data: cod,
         disableClose: false
       });
     }
     }
+
+      selected(row) {
+    this.selectedRowIndex=row;
+    console.log('selectedRow',row)
+  }
+
 }
