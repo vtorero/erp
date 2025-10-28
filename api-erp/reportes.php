@@ -57,7 +57,7 @@ $app->post("/encuesta",function() use($db,$app){
     $json = $app->request->getBody();
     $data = json_decode($json, true);
 
- 
+
 
  if (json_last_error() !== JSON_ERROR_NONE) {
         $app->halt(400, json_encode(["error" => "JSON inválido"]));
@@ -169,11 +169,11 @@ $sql_r="SELECT *
             JOIN sucursales s ON s.id = v.id_sucursal
             JOIN clientes c ON c.id = v.id_cliente
             WHERE v.estado = 1
-              AND vd.fecha_registro >= '{$ini}' 
-              AND vd.fecha_registro < '{$fin}'
-            
+              AND vd.fecha_registro >= '{$ini} 00:00:01'
+              AND vd.fecha_registro < '{$fin} 23:59:59'
+
             UNION ALL
-            
+
             SELECT v.id, c.num_documento, c.nombre AS cliente, c.id AS id_cliente, c.direccion, c.telefono,
                    p.codigo, p.nombre AS producto, vp.cantidad, p.unidad, vp.precio,
                    (vp.cantidad * vp.precio) AS valor_total, 'Compra' AS tipo_movimiento,
@@ -186,14 +186,14 @@ $sql_r="SELECT *
             JOIN usuarios u ON u.id = v.id_usuario
             JOIN sucursales s ON s.id = v.id_sucursal
             JOIN clientes c ON c.id = v.id_proveedor
-            WHERE vp.fecha_registro >= '{$ini} 00:00:01' 
-              AND vp.fecha_registro < '{$fin} 23:59:59' 
+            WHERE vp.fecha_registro >= '{$ini} 00:00:01'
+              AND vp.fecha_registro < '{$fin} 23:59:59'
         ) AS t
         ORDER BY t.fecha_registro DESC";
 
 $sql_reporte_caja="SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta' AS tipo_movimiento,u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c ,clientes cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
-and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1' 
+and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1'
 union all
 SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra'as tipo_movimiento,u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, tp.nombre tipopago,c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
 FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c,proveedores cl where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id
@@ -649,24 +649,72 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
 
-        $sql="SELECT v.id,c.num_documento,c.nombre,p.codigo, p.nombre as producto,vd.cantidad,p.unidad,vd.precio,(vd.cantidad*vd.precio) valor_total,'Ingreso',u.nombre usuario, s.nombre sucursal,
-        concat(date_format(vd.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,v.fecha_registro
-        FROM aprendea_erp.venta_detalle vd,ventas v,usuarios u,sucursales s, productos p,clientes c where vd.id_producto=p.id and  v.id_sucursal=s.id and v.id=vd.id_venta and v.id_usuario=u.id and v.id_cliente=c.id and v.estado=1
-        and v.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59'
-        union all
-        SELECT v.id,c.num_documento,c.nombre,p.codigo,p.nombre as producto,vp.cantidad,p.unidad,vp.precio,(vp.cantidad*vp.precio) valor_total,'Salida',u.nombre usuario ,s.nombre sucursal,concat(date_format(vp.fecha_registro, '%Y-%m-%d'),'-T0',s.id,v.id) responsable,
-        vp.fecha_registro
-        FROM compra_detalle vp,compras v,usuarios u,sucursales s,productos p,clientes c where vp.id_producto=p.id and v.id_sucursal=s.id and v.id=vp.id_compra and v.id_usuario=u.id
-        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' order by fecha_registro desc";
+        $sql="SELECT  v.id,
+    c.num_documento,
+    c.nombre,
+    p.codigo,
+    cat.nombre AS categoria,
+    scat.nombre AS subcategoria,
+    sscat.nombre AS familia,
+    p.nombre AS producto,
+    vd.cantidad,
+    p.unidad,
+    vd.precio,
+    (vd.cantidad * vd.precio) AS valor_total,
+    'Venta' AS movimiento,
+    u.nombre AS usuario,
+    s.nombre AS sucursal,
+    CONCAT(DATE_FORMAT(vd.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
+    v.fecha_registro
+  FROM venta_detalle vd
+  INNER JOIN ventas v ON v.id = vd.id_venta
+  INNER JOIN usuarios u ON v.id_usuario = u.id
+  INNER JOIN sucursales s ON v.id_sucursal = s.id
+  INNER JOIN clientes c ON v.id_cliente = c.id
+  INNER JOIN productos p ON vd.id_producto = p.id
+  INNER JOIN categorias cat ON p.id_categoria = cat.id
+  INNER JOIN sub_categorias scat ON cat.id = scat.id_categoria
+  INNER JOIN sub_sub_categorias sscat ON scat.id = sscat.id_subcategoria
+  WHERE    v.estado = 1
+    AND v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' UNION ALL  SELECT
+    v.id,
+    c.num_documento,
+    c.nombre,
+    p.codigo,
+    cat.nombre AS categoria,
+    scat.nombre AS subcategoria,
+    sscat.nombre AS familia,
+    p.nombre AS producto,
+    vp.cantidad,
+    p.unidad,
+    vp.precio,
+    (vp.cantidad * vp.precio) AS valor_total,
+    'Compra' AS movimiento,
+    u.nombre AS usuario,
+    s.nombre AS sucursal,
+    CONCAT(DATE_FORMAT(vp.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
+    vp.fecha_registro
+  FROM compra_detalle vp
+  INNER JOIN compras v ON v.id = vp.id_compra
+  INNER JOIN usuarios u ON v.id_usuario = u.id
+  INNER JOIN sucursales s ON v.id_sucursal = s.id
+  LEFT JOIN clientes c ON v.id_proveedor = c.id  -- depende de tu modelo
+  INNER JOIN productos p ON vp.id_producto = p.id
+  INNER JOIN categorias cat ON p.id_categoria = cat.id
+  INNER JOIN sub_categorias scat ON cat.id = scat.id_categoria
+  INNER JOIN sub_sub_categorias sscat ON scat.id = sscat.id_subcategoria
+  WHERE
+    vp.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00'
+ORDER BY fecha_registro DESC";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){
 
             // Output each row of the data
-                $fields = array('ID','Fecha','Documento','Razon Social','Producto','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal');
+                $fields = array('ID','Fecha','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Famiia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['producto'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['Ingreso'], $row['usuario'],$row['sucursal']);
+                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['codigo'],$row['producto'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['movimiento'], $row['usuario'],$row['sucursal']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
@@ -824,12 +872,12 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
 
 // Texto centrado debajo del logo
         $pdf->SetFont('Arial','B',16);
-         if($prods[0]['local']!="C.J.M"){   
+         if($prods[0]['local']!="C.J.M"){
         $pdf->Cell(0,6,'FERRETERIA Y MATERIALES DE CONSTRUCCION LAS',0,1,'C');  // centrado
         $pdf->Cell(0,10,' HERMANITAS E.I.R.L.',0,1,'C');  // centrado
          }else{
             $pdf->Cell(0,6,$prods[0]['local'],0,1,'C');  // centrado
-         }   
+         }
         $pdf->SetFont('Arial','',17);
         $pdf->Cell(0,8,'Whatsap/Telefono: '.$prods[0]['telefono'],0,1,'C');
         $pdf->Cell(0,8,$prods[0]['email'],0,1,'C');
@@ -847,13 +895,13 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         $pdf->Cell(0,8,'DOC:'.$prods[0]['num_documento'],0,1,'L');
         $pdf->Ln(10);
         $pdf->SetFont('Arial','B',17);
-            $pdf->Cell(0,8,'FECHA:'.substr($prods[0]['fecha_registro'],8,2).'/'.substr($prods[0]['fecha_registro'],5,2).'/'.substr($prods[0]['fecha_registro'],0,4).' - '.substr($prods[0]['fecha_registro'],11,9),0,1,'L');    
+            $pdf->Cell(0,8,'FECHA:'.substr($prods[0]['fecha_registro'],8,2).'/'.substr($prods[0]['fecha_registro'],5,2).'/'.substr($prods[0]['fecha_registro'],0,4).' - '.substr($prods[0]['fecha_registro'],11,9),0,1,'L');
             $pdf->SetFont('Arial','',17);
             $pdf->Cell(0,8,'FORMA PAGO:'.strtoupper($prods[0]['tipo']),0,1,'L');
 // centrado
 
         // Encabezados
-    
+
         $pdf->SetFont('Arial','B',14);
         $pdf->Cell(85,10,'DESCRIPCION',0,0,'L');
         $pdf->Cell(30,10,'CANTIDAD',0,0,'C');
@@ -872,8 +920,8 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
             $pdf->Cell(20,6,$prod['unidad'],0,0);
             $pdf->Cell(28,6,round($prod['precio'],2),0,0);
             $pdf->Cell(28,6,round($prod['subtotal'],2),0,1);
-            
-            
+
+
         }
         $pdf->Ln();
          $pdf->SetFont('Arial','B',14);
@@ -884,8 +932,8 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
     $pdf->Cell(40,8,'OP. AGRAVADAS S/',0,0,'R');
     $pdf->SetFont('Arial','',15);
     $pdf->Cell(30,8,$prods[0]['valor_total'],0,1,'R');
-    
- 
+
+
     $pdf->Cell(115); // espacio en blanco a la izquierda
     $pdf->SetFont('Arial','B',16);
     $pdf->Cell(40,8,'TOTAL S/',0,0,'R');

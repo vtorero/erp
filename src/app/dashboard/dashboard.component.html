@@ -508,9 +508,9 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
     <mat-cell *matCellDef="let row">S/ {{row.valor_total | number:'1.2-2' }}</mat-cell>
 </ng-container>
-    <ng-container matColumnDef="Ingreso">
+    <ng-container matColumnDef="tipo_movimiento">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Movimiento</mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{row.Ingreso}}</mat-cell>
+      <mat-cell *matCellDef="let row"> {{row.tipo_movimiento}}</mat-cell>
 </ng-container>
    <ng-container matColumnDef="observacion">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
