@@ -21,9 +21,18 @@
           <button mat-icon-button color="primary" (click)="openAnular('10ms','10ms')" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon">
             <i class="material-icons">delete</i>
           </button>
-          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
+      <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
             <i class="material-icons">search</i>
           </button>
+         <!-- <button [hidden]="selectedIds.size === 0" mat-icon-button color="primary" (click)="enviarSeleccion()" aria-label="Example icon button with a heart icon">
+            <i class="material-icons">login</i>
+          </button>-->
+
+
+          <button mat-raised-button color="primary" (click)="enviarSeleccion()"
+          [hidden]="selectedIds.size === 0"><i class="material-icons">login</i>
+    Exportar
+  </button>    
           <div style="height:80px" class="row" *ngIf="buscador">
             <div class="col-3">
               <mat-form-field >
@@ -74,12 +83,31 @@
                     <p class="card-category">Usuario: {{currentname}}</p>
                 </div>
                 <div class="card-body">
-                    <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
+                    <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort" class="mat-elevation-z2">
                         <!--  Columna ID-->
+             <ng-container matColumnDef="selec">
+    <th mat-header-cell *matHeaderCellDef>
+      <!-- (Opcional) checkbox para seleccionar todo -->
+      <mat-checkbox
+        [checked]="isAllSelected()"
+        [indeterminate]="isIndeterminate()"
+        (change)="toggleAll($event.checked)">
+      </mat-checkbox>
+    </th>
+
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox
+        [checked]="isSelected(row.id)"
+        (change)="toggleRow(row.id, $event.checked)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
                         <ng-container matColumnDef="id">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>IDs</mat-header-cell>
                           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
-                    </ng-container>
+                      </ng-container>
+                
                     <ng-container matColumnDef="id_cliente">
                       <mat-header-cell *matHeaderCellDef mat-sort-header>ID Cliente</mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.id_cliente}}</mat-cell>

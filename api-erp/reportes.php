@@ -650,13 +650,12 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
         $excelData = implode("\t", array_values($fields)) . "\n";
 
         $sql="SELECT  v.id,
-    c.num_documento,
-    c.nombre,
+    cl.num_documento,
+    cl.nombre,
     p.codigo,
-    cat.nombre AS categoria,
-    scat.nombre AS subcategoria,
-    sscat.nombre AS familia,
     p.nombre AS producto,
+    c.nombre categoria,
+    sc.nombre subcategoria,fa.nombre familia,
     vd.cantidad,
     p.unidad,
     vd.precio,
@@ -665,26 +664,25 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
     u.nombre AS usuario,
     s.nombre AS sucursal,
     CONCAT(DATE_FORMAT(vd.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
-    v.fecha_registro
+    v.fecha_registro,
+    v.observacion
   FROM venta_detalle vd
   INNER JOIN ventas v ON v.id = vd.id_venta
   INNER JOIN usuarios u ON v.id_usuario = u.id
   INNER JOIN sucursales s ON v.id_sucursal = s.id
-  INNER JOIN clientes c ON v.id_cliente = c.id
+  INNER JOIN clientes cl ON v.id_cliente = cl.id
   INNER JOIN productos p ON vd.id_producto = p.id
-  INNER JOIN categorias cat ON p.id_categoria = cat.id
-  INNER JOIN sub_categorias scat ON cat.id = scat.id_categoria
-  INNER JOIN sub_sub_categorias sscat ON scat.id = sscat.id_subcategoria
+ join categorias c on p.id_categoria=c.id  join sub_categorias sc on p.id_subcategoria=sc.id  join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id
   WHERE    v.estado = 1
-    AND v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' UNION ALL  SELECT
+AND v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' UNION ALL  
+SELECT
     v.id,
-    c.num_documento,
-    c.nombre,
+    cl.num_documento,
+    cl.nombre,
     p.codigo,
-    cat.nombre AS categoria,
-    scat.nombre AS subcategoria,
-    sscat.nombre AS familia,
     p.nombre AS producto,
+   c.nombre categoria,
+    sc.nombre subcategoria,fa.nombre familia,
     vp.cantidad,
     p.unidad,
     vp.precio,
@@ -693,28 +691,26 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
     u.nombre AS usuario,
     s.nombre AS sucursal,
     CONCAT(DATE_FORMAT(vp.fecha_registro, '%Y-%m-%d'), '-T0', s.id, v.id) AS responsable,
-    vp.fecha_registro
+    vp.fecha_registro,
+    v.observacion
   FROM compra_detalle vp
   INNER JOIN compras v ON v.id = vp.id_compra
   INNER JOIN usuarios u ON v.id_usuario = u.id
   INNER JOIN sucursales s ON v.id_sucursal = s.id
-  LEFT JOIN clientes c ON v.id_proveedor = c.id  -- depende de tu modelo
+  LEFT JOIN clientes cl ON v.id_proveedor = cl.id  -- depende de tu modelo
   INNER JOIN productos p ON vp.id_producto = p.id
-  INNER JOIN categorias cat ON p.id_categoria = cat.id
-  INNER JOIN sub_categorias scat ON cat.id = scat.id_categoria
-  INNER JOIN sub_sub_categorias sscat ON scat.id = sscat.id_subcategoria
-  WHERE
-    vp.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00'
+  join categorias c on p.id_categoria=c.id join sub_categorias sc on p.id_subcategoria=sc.id  join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id
+   and vp.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00'
 ORDER BY fecha_registro DESC";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){
 
             // Output each row of the data
-                $fields = array('ID','Fecha','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Famiia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal');
+                $fields = array('ID','Fecha','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Famiia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal','Observacion');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['codigo'],$row['producto'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['movimiento'], $row['usuario'],$row['sucursal']);
+                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['codigo'],$row['producto'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['movimiento'], $row['usuario'],$row['sucursal'],$row['observacion']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
@@ -807,24 +803,65 @@ ORDER BY fecha_registro DESC";
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
 
-        $sql="SELECT v.id,v.fecha,vp.fecha_registro,'VENTA' as movimiento,u.nombre usuario, s.nombre sucursal,
-        tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente,v.observacion
-        FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,tipoPago tp,cajas c where vp.tipoPago=tp.id and vp.cuentaPago=c.id and  v.id_sucursal=s.id and v.id=vp.id_venta and vp.usuario=u.id and v.estado=1
-        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 union all
-        SELECT v.id,v.fecha,vp.fecha_registro,'COMPRA' as movimiento,u.nombre usuario ,s.nombre sucursal,
-        tp.nombre tipopago,c.nombre as cuenta,valor_total,vp.monto, vp.monto_pendiente,v.observacion
-        FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,tipoPago tp,cajas c
-        where vp.tipoPago=tp.id and vp.cuentaPago=c.id and v.id_sucursal=s.id and v.id=vp.id_compra and vp.usuario=u.id and v.estado=1
-        and vp.fecha_registro  between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>0 order by id,fecha_registro asc;";
+        $sql="SELECT
+  vp.id_venta as id,
+  vp.fecha_registro,
+  v.fecha,
+  cl.num_documento AS documento,
+  cl.nombre        AS cliente,
+  'VENTA'          AS movimiento,
+  u.nombre         AS usuario,
+  s.nombre         AS sucursal,
+  tp.nombre        AS tipopago,
+  c.nombre         AS cuenta,
+  vp.numero_operacion,
+  vp.monto,
+  vp.monto_pendiente,
+  v.observacion
+FROM aprendea_erp.venta_pagos AS vp
+JOIN aprendea_erp.ventas      AS v  ON v.id       = vp.id_venta and v.estado=1
+JOIN aprendea_erp.clientes    AS cl ON cl.id      = v.id_cliente
+JOIN aprendea_erp.sucursales  AS s  ON s.id       = v.id_sucursal
+JOIN aprendea_erp.usuarios    AS u  ON u.id       = vp.usuario
+JOIN aprendea_erp.tipoPago    AS tp ON tp.id      = vp.tipoPago
+JOIN aprendea_erp.cajas       AS c  ON c.id       = vp.cuentaPago
+WHERE
+vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'  
+union all
+SELECT
+  vp.id_compra as id,
+  vp.fecha_registro,
+  v.fecha,
+  cl.num_documento AS documento,
+  cl.razon_social        AS cliente,
+  'COMPRA'          AS movimiento,
+  u.nombre         AS usuario,
+  s.nombre         AS sucursal,
+  tp.nombre        AS tipopago,
+  c.nombre         AS cuenta,
+vp.numero_operacion,
+  vp.monto,
+  vp.monto_pendiente,
+  v.observacion
+FROM aprendea_erp.compra_pagos AS vp
+JOIN aprendea_erp.compras      AS v  ON v.id       = vp.id_compra and v.estado=1
+JOIN aprendea_erp.proveedores    AS cl ON cl.id      = v.id_proveedor
+JOIN aprendea_erp.sucursales  AS s  ON s.id       = v.id_sucursal
+JOIN aprendea_erp.usuarios    AS u  ON u.id       = vp.usuario
+JOIN aprendea_erp.tipoPago    AS tp ON tp.id      = vp.tipoPago
+JOIN aprendea_erp.cajas       AS c  ON c.id       = vp.cuentaPago
+WHERE
+vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'   
+ORDER BY fecha_registro DESC";
 
                 $query = $db->query($sql);
         if($query->num_rows > 0){
 
             // Output each row of the data
-                $fields = array('ID','Fecha','Fecha Registro','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Monto','Monto Pendiente','Observacion');
+                $fields = array('ID','Fecha','Fecha Registro','Documento','Cli/Prov','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Operacion','Monto','Monto Pendiente','Observacion');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['movimiento'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
+                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['documento'],$row['cliente'],$row['movimiento'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['numero_operacion'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 

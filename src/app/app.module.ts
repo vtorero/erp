@@ -56,6 +56,9 @@ import { ExportarComprasComponent } from './dialog/exportar-compras/exportar-com
 import { AddCategoriaComponent } from './dialog/add-categoria/add-categoria.component';
 import { AddSubCategoriaComponent } from './dialog/add-sub-categoria/add-sub-categoria.component';
 import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+
 
 
 
@@ -65,6 +68,7 @@ import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component'
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatCheckboxModule,
     RouterModule,
     AppRoutingModule,
     LoginModule,

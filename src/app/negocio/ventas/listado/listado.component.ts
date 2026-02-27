@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Clientes } from 'app/modelos/clientes';
@@ -13,9 +14,7 @@ import { AddClienteComponent } from 'app/dialog/add-cliente/add-cliente.componen
 import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { Router } from '@angular/router';
-import { cloudresourcemanager } from 'googleapis/build/src/apis/cloudresourcemanager';
 import { HttpClient } from '@angular/common/http';
-import { Global } from 'app/global';
 declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number): any;
 
@@ -141,7 +140,9 @@ export class ListadoComponent implements OnInit {
   selectedRowIndex:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','id_cliente','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
+  selectedIds = new Set<number>();
+
+  displayedColumns = ['selec','id','id_cliente','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   public id_estado:any=1;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -150,9 +151,12 @@ export class ListadoComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private api: ApiService,
     public dialog2: MatDialog,
-    private router:Router
+    private router:Router,
+    private http: HttpClient
     
   ) { }
+  
+
 
   ngOnInit(): void {
     if(this.api.getCurrentUser==false){
@@ -457,6 +461,49 @@ abrirEditar(cod: Venta) {
     }
   });
 }
+
+ isSelected(id: number): boolean {
+    return this.selectedIds.has(id);
+  }
+
+  toggleRow(id: number, checked: boolean): void {
+    if (checked) this.selectedIds.add(id);
+    else this.selectedIds.delete(id);
+  }
+isAllSelected(): boolean {
+    const total = this.dataSource.data.length;
+    return total > 0 && this.selectedIds.size === total;
+  }
+
+  isIndeterminate(): boolean {
+    const total = this.dataSource.data.length;
+    return this.selectedIds.size > 0 && this.selectedIds.size < total;
+  }
+
+  toggleAll(checked: boolean): void {
+    this.selectedIds.clear();
+    if (checked) {
+      for (const row of this.dataSource.data) this.selectedIds.add(row.id);
+    }
+  }
+
+    enviarSeleccion(): void {
+    const payload = {
+      ids: Array.from(this.selectedIds),
+    };
+
+    this.http.post('/api/tu-endpoint', payload).subscribe({
+      next: (res) => {
+        console.log('OK', res);
+        // opcional: limpiar selección
+        this.selectedIds.clear();
+      },
+      error: (err) => {
+        console.error('Error POST', err);
+      },
+    });
+  }
+
 
 
   clickedRows = new Set<Usuario>();
