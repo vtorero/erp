@@ -15,6 +15,7 @@ import { VerVentaComponent } from '../ver-venta/ver-venta.component';
 import { Venta } from 'app/modelos/venta';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { Global } from 'app/global';
 declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number): any;
 
@@ -492,7 +493,7 @@ isAllSelected(): boolean {
       ids: Array.from(this.selectedIds),
     };
 
-    this.http.post('/api/tu-endpoint', payload).subscribe({
+    this.http.post(Global.BASE_API_URL+'reportes.php/enviarboletas', payload).subscribe({
       next: (res) => {
         console.log('OK', res);
         // opcional: limpiar selección

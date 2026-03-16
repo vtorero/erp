@@ -67,6 +67,20 @@ $app->post("/encuesta",function() use($db,$app){
 
 });
 
+$app->post("/enviarboletas",function() use($db,$app){
+        //header("Content-type: application/json; charset=utf-8");
+        $json = $app->request->getBody();
+        $dat = json_decode($json, true);
+        $fileName = "members-data_" . date('Y-m-d') . ".xls";
+        $lineData =array();
+        $fields = array('');
+        $excelData = implode("\t", array_values($fields)) . "\n";
+
+
+        echo $dat;
+
+});
+
 
 $app->post("/reporte",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
