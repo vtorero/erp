@@ -110,6 +110,22 @@ if(imp==""){
 
                      }
 
+function sendInvoice(data,url) {
+  fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/vnd.ms-excel'
+    },
+    body:JSON.stringify(data) 
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "boletas.xls";
+      link.click();
+    });
+}
 
 @Component({
   selector: 'app-listado',
@@ -493,7 +509,9 @@ isAllSelected(): boolean {
       ids: Array.from(this.selectedIds),
     };
 
-    this.http.post(Global.BASE_API_URL+'reportes.php/enviarboletas', payload).subscribe({
+sendInvoice(payload,Global.BASE_API_URL+'reportes.php/enviarboletas');
+
+  /*  this.http.post(Global.BASE_API_URL+'reportes.php/enviarboletas', payload).subscribe({
       next: (res) => {
         console.log('OK', res);
         // opcional: limpiar selección
@@ -502,7 +520,7 @@ isAllSelected(): boolean {
       error: (err) => {
         console.error('Error POST', err);
       },
-    });
+    });*/
   }
 
 

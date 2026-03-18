@@ -79,25 +79,29 @@ $app->post("/enviarboletas",function() use($db,$app){
         $resultado = implode(", ", $dat['ids']);
         
 
-$sql="SELECT 
-	c.num_documento,
-    v.id procura,
-    ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS item,
-    p.nombre producto,
-    d.cantidad,
-    d.precio as 'precio unitario',
-    p.codigo,
-    p.unidad as 'CODIGO UNIAD',
-    'B' AS  'TIPO DOCUMENTO'
-    
-FROM ventas v
-JOIN venta_detalle d ON v.id = d.id_venta
-JOIN productos p ON d.id_producto=p.id
-JOIN clientes c ON v.id_cliente=c.id
-WHERE v.id in (".$resultado.")   
-ORDER BY v.id, item;";
+$sql="SELECT c.num_documento as 'RUC CLIENTE', v.id Procura,ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item,p.nombre Producto,    d.cantidad as Cantidad,
+    d.precio as 'PRECIO UNITARIO',p.codigo AS 'CODIGO PRODUCTO',p.unidad as 'CODIGO UNIAD','B' AS  'TIPO DOCUMENTO'    
+FROM ventas v JOIN venta_detalle d ON v.id = d.id_venta JOIN productos p ON d.id_producto=p.id JOIN clientes c ON v.id_cliente=c.id
+WHERE v.id in (".$resultado.") ORDER BY v.id, item;";
 
-echo($sql);
+    $query = $db->query($sql);
+
+   if($query->num_rows > 0){
+            // Output each row of the data
+                $fields = array('RUC CLIENTE','Procura','Item','Producto','Cantidad','PRECIO UNITARIO','CODIGO PRODUCTO' ,'CODIGO UNIAD','TIPO DOCUMENTO');
+                $excelData.= implode("\t", array_values($fields)) . "\n";
+                 while($row = $query->fetch_assoc()){
+                    $lineData  = array($row['RUC CLIENTE'],$row['Procura'],$row['Item'],limpiarCadena($row['Producto']),$row['Cantidad'],$row['PRECIO UNITARIO'],$row['CODIGO PRODUCTO'],$row['CODIGO UNIAD'],$row['TIPO DOCUMENTO']);
+                array_walk($lineData,'filterData');
+                $excelData .= implode("\t", array_values($lineData)) . "\n";
+                 }
+
+
+        }else{
+            $excelData .= 'No hay resultados de la consulta...'. "\n";
+        }
+
+    echo $excelData;
 
 });
 
