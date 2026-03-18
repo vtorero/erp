@@ -76,8 +76,28 @@ $app->post("/enviarboletas",function() use($db,$app){
         $fields = array('');
         $excelData = implode("\t", array_values($fields)) . "\n";
 
+        $resultado = implode(", ", $dat['ids']);
+        
 
-        echo $dat;
+$sql="SELECT 
+	c.num_documento,
+    v.id procura,
+    ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS item,
+    p.nombre producto,
+    d.cantidad,
+    d.precio as 'precio unitario',
+    p.codigo,
+    p.unidad as 'CODIGO UNIAD',
+    'B' AS  'TIPO DOCUMENTO'
+    
+FROM ventas v
+JOIN venta_detalle d ON v.id = d.id_venta
+JOIN productos p ON d.id_producto=p.id
+JOIN clientes c ON v.id_cliente=c.id
+WHERE v.id in (".$resultado.")   
+ORDER BY v.id, item;";
+
+echo($sql);
 
 });
 
