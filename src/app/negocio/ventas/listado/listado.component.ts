@@ -159,7 +159,7 @@ export class ListadoComponent implements OnInit {
   selection = new SelectionModel(false, []);
   selectedIds = new Set<number>();
 
-  displayedColumns = ['selec','id','id_cliente','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
+  displayedColumns = ['selec','id','num_documento','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   public id_estado:any=1;
   @ViewChild(MatPaginator) paginator: MatPaginator;
