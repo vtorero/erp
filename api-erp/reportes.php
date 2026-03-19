@@ -752,7 +752,8 @@ ORDER BY fecha_registro DESC";
                 $fields = array('ID','Fecha','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Famiia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal','Observacion');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha_registro'],$row['num_documento'],$row['nombre'],$row['codigo'],$row['producto'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['movimiento'], $row['usuario'],$row['sucursal'],$row['observacion']);
+                    $doc = str_pad($row['num_documento'], 8, "0", STR_PAD_LEFT);
+                    $lineData  = array($row['id'],$row['fecha_registro'],'="'.$doc.'"',$row['nombre'],$row['codigo'],$row['producto'],$row['categoria'],$row['subcategoria'],$row['familia'],$row['cantidad'],$row['unidad'],$row['precio'],$row['valor_total'],$row['movimiento'], $row['usuario'],$row['sucursal'],$row['observacion']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
@@ -903,7 +904,8 @@ ORDER BY fecha_registro DESC";
                 $fields = array('ID','Fecha','Fecha Registro','Documento','Cli/Prov','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Operacion','Monto','Monto Pendiente','Observacion');
                 $excelData.= implode("\t", array_values($fields)) . "\n";
                  while($row = $query->fetch_assoc()){
-                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],$row['documento'],$row['cliente'],$row['movimiento'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['numero_operacion'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
+                    $doc = str_pad($row['documento'], 8, "0", STR_PAD_LEFT);
+                    $lineData  = array($row['id'],$row['fecha'],$row['fecha_registro'],'="'.$doc.'"',$row['cliente'],$row['movimiento'],$row['usuario'],$row['sucursal'], $row['tipopago'],$row['cuenta'],$row['numero_operacion'],$row['monto'],$row['monto_pendiente'],$row['observacion']);
                 array_walk($lineData,'filterData');
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
 
