@@ -79,12 +79,7 @@ $app->post("/enviarboletas",function() use($db,$app){
         $resultado = implode(", ", $dat['ids']);
         
 
-$sql="SELECT c.num_documento, v.id Procura,ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item,p.nombre Producto,    d.cantidad as Cantidad,
-    d.precio as 'PRECIO UNITARIO',p.codigo AS 'CODIGO PRODUCTO',p.unidad as 'CODIGO UNIAD','B' AS  'TIPO DOCUMENTO'    
-FROM ventas v JOIN venta_detalle d ON v.id = d.id_venta JOIN productos p ON d.id_producto=p.id JOIN clientes c ON v.id_cliente=c.id
-WHERE v.id in (".$resultado.") ORDER BY v.id, item;";
-
-
+$sql="SELECT c.num_documento, DENSE_RANK() OVER (ORDER BY v.id) AS Procura, ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item, p.nombre AS Producto, d.cantidad AS Cantidad, d.precio AS 'PRECIO UNITARIO', p.codigo AS 'CODIGO PRODUCTO', p.unidad AS 'CODIGO UNIAD', c.num_documento, CASE WHEN c.num_documento = '00000000000' OR LENGTH(c.num_documento) < 11 THEN 'B' ELSE 'F' END AS 'TIPO DOCUMENTO' FROM ventas v JOIN venta_detalle d ON v.id = d.id_venta JOIN productos p ON d.id_producto = p.id JOIN clientes c ON v.id_cliente = c.id WHERE v.id IN (".$resultado.") ORDER BY v.id, Item;";
     $query = $db->query($sql);
 
    if($query->num_rows > 0){
@@ -106,7 +101,6 @@ WHERE v.id in (".$resultado.") ORDER BY v.id, item;";
         }
 
     echo $excelData;
-
 });
 
 
