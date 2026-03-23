@@ -73,8 +73,8 @@ $app->post("/enviarboletas",function() use($db,$app){
         $dat = json_decode($json, true);
         $fileName = "members-data_" . date('Y-m-d') . ".xls";
         $lineData =array();
-        $fields = array('');
-        $excelData = implode("\t", array_values($fields)) . "\n";
+        //$fields = array('');
+        //$excelData = implode("\t", array_values($fields)) . "\n";
 
         $resultado = implode(", ", $dat['ids']);
         
