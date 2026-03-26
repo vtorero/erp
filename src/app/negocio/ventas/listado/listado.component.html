@@ -97,7 +97,8 @@
 
     <td mat-cell *matCellDef="let row">
       <mat-checkbox
-        [checked]="isSelected(row.id)"
+        [checked]="isSelected(row.id) || row.tipoDoc!=='Ticket'"
+        [disabled]="row.tipoDoc!=='Ticket'"
         (change)="toggleRow(row.id, $event.checked)">
       </mat-checkbox>
     </td>

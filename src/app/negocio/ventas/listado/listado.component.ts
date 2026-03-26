@@ -511,16 +511,9 @@ isAllSelected(): boolean {
 
 sendInvoice(payload,Global.BASE_API_URL+'reportes.php/enviarboletas');
 
-  /*  this.http.post(Global.BASE_API_URL+'reportes.php/enviarboletas', payload).subscribe({
-      next: (res) => {
-        console.log('OK', res);
-        // opcional: limpiar selección
-        this.selectedIds.clear();
-      },
-      error: (err) => {
-        console.error('Error POST', err);
-      },
-    });*/
+   this.renderDataTable();
+
+    
   }
 
 
