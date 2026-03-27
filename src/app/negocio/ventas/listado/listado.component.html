@@ -32,7 +32,7 @@
           <button mat-raised-button color="primary" (click)="enviarSeleccion()"
           [hidden]="selectedIds.size === 0"><i class="material-icons">login</i>
     Exportar
-  </button>    
+  </button>
           <div style="height:80px" class="row" *ngIf="buscador">
             <div class="col-3">
               <mat-form-field >
@@ -108,7 +108,7 @@
                           <mat-header-cell *matHeaderCellDef mat-sort-header>IDs</mat-header-cell>
                           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
                       </ng-container>
-                
+
                     <ng-container matColumnDef="id_cliente">
                       <mat-header-cell *matHeaderCellDef mat-sort-header>ID Cliente</mat-header-cell>
                       <mat-cell *matCellDef="let row"> {{row.id_cliente}}</mat-cell>

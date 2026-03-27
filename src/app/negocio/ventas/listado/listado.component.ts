@@ -6,7 +6,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ApiService } from 'app/api.service';
 import { Usuario } from 'app/modelos/usuario';
 import { Clientes } from 'app/modelos/clientes';
@@ -116,7 +115,7 @@ function sendInvoice(data,url) {
     headers: {
       'Content-Type': 'application/vnd.ms-excel'
     },
-    body:JSON.stringify(data) 
+    body:JSON.stringify(data)
   })
     .then(response => response.blob())
     .then(blob => {
@@ -162,17 +161,19 @@ export class ListadoComponent implements OnInit {
   displayedColumns = ['selec','id','num_documento','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   public id_estado:any=1;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild('empTbSort') empTbSort = new MatSort();
+//  @ViewChild(MatPaginator) paginator: MatPaginator;
+  //@ViewChild('empTbSort') empTbSort = new MatSort();
+@ViewChild(MatSort) empTbSort!: MatSort;
+@ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
     public dialog2: MatDialog,
     private router:Router,
     private http: HttpClient
-    
+
   ) { }
-  
+
 
 
   ngOnInit(): void {
@@ -208,12 +209,21 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('ventas').subscribe(x => {
+    this.api.getApi('ventas').subscribe(xas => {
+
       this.dataSource = new MatTableDataSource();
-      this.dataSource.data = x;
-      this.empTbSort.disableClear = true;
+      //this.dataSource = new MatTableDataSource(x);
+      this.dataSource.data = xas;
+
+      setTimeout(() => {
+        this.dataSource.sort = this.empTbSort;
+        this.dataSource.paginator = this.paginator;
+        this.empTbSort.disableClear = true;
+      });
+
+      /*this.empTbSort.disableClear = true;
       this.dataSource.sort = this.empTbSort;
-      this.dataSource.paginator = this.paginator;
+      this.dataSource.paginator = this.paginator;*/
       },
       error => {
         console.log('Error de conexion de datatable!' + error);
@@ -513,7 +523,7 @@ sendInvoice(payload,Global.BASE_API_URL+'reportes.php/enviarboletas');
 
    this.renderDataTable();
 
-    
+
   }
 
 
