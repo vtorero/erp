@@ -112,16 +112,16 @@ if(imp==""){
 function sendInvoice(data,url) {
   fetch(url, {
     method: 'post',
-    headers: {
+    /*headers: {
       'Content-Type': 'application/vnd.ms-excel'
-    },
+    },*/
     body:JSON.stringify(data)
   })
     .then(response => response.blob())
     .then(blob => {
       var link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = "boletas.xls";
+      link.download = "boletas.xlsx";
       link.click();
     });
 }
@@ -519,7 +519,7 @@ isAllSelected(): boolean {
       ids: Array.from(this.selectedIds),
     };
 
-sendInvoice(payload,Global.BASE_API_URL+'reportes.php/enviarboletas');
+sendInvoice(payload,'https://coctelite.kvconsult.com/excel/exportar.php');
 
    this.renderDataTable();
 

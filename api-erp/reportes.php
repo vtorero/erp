@@ -13,6 +13,8 @@ require_once 'vendor/fpdf.php';
 //require_once 'vendor/regression.php';
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+//use PhpOffice\PhpSpreadsheet\Spreadsheet;
+//use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Dompdf\Dompdf;
 
 
@@ -71,15 +73,16 @@ $app->post("/enviarboletas",function() use($db,$app){
         //header("Content-type: application/json; charset=utf-8");
         $json = $app->request->getBody();
         $dat = json_decode($json, true);
-        $fileName = "members-data_" . date('Y-m-d') . ".xls";
+        $fileName = "members-data_" . date('Y-m-d') . ".xlsx";
         $lineData =array();
+
         //$fields = array('');
         //$excelData = implode("\t", array_values($fields)) . "\n";
 
         $resultado = implode(", ", $dat['ids']);
-        
 
-$sql="SELECT c.num_documento, DENSE_RANK() OVER (ORDER BY v.id) AS Procura, ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item, p.nombre AS Producto, d.cantidad AS Cantidad, d.precio AS 'PRECIO UNITARIO', p.codigo AS 'CODIGO PRODUCTO', p.unidad AS 'CODIGO UNIAD', c.num_documento, CASE WHEN c.num_documento = '00000000000' OR LENGTH(c.num_documento) < 11 THEN 'B' ELSE 'F' END AS 'TIPO DOCUMENTO' FROM ventas v JOIN venta_detalle d ON v.id = d.id_venta JOIN productos p ON d.id_producto = p.id JOIN clientes c ON v.id_cliente = c.id WHERE v.id IN (".$resultado.") ORDER BY v.id, Item;";
+
+$sql="SELECT v.id, c.num_documento, DENSE_RANK() OVER (ORDER BY v.id) AS Procura, ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item, p.nombre AS Producto, d.cantidad AS Cantidad, d.precio AS 'PRECIO UNITARIO', p.codigo AS 'CODIGO PRODUCTO', p.unidad AS 'CODIGO UNIAD', c.num_documento, CASE WHEN c.num_documento = '00000000000' OR LENGTH(c.num_documento) < 11 THEN 'B' ELSE 'F' END AS 'TIPO DOCUMENTO' FROM ventas v JOIN venta_detalle d ON v.id = d.id_venta JOIN productos p ON d.id_producto = p.id JOIN clientes c ON v.id_cliente = c.id WHERE v.id IN (".$resultado.") ORDER BY v.id, Item;";
     $query = $db->query($sql);
 
    if($query->num_rows > 0){
@@ -92,6 +95,17 @@ $sql="SELECT c.num_documento, DENSE_RANK() OVER (ORDER BY v.id) AS Procura, ROW_
 
                     $lineData  = array(  '="'.$doc.'"',$row['Procura'],$row['Item'],limpiarCadena($row['Producto']),$row['Cantidad'],$row['PRECIO UNITARIO'],$row['CODIGO PRODUCTO'],$row['CODIGO UNIAD'],$row['TIPO DOCUMENTO']);
                 array_walk($lineData,'filterData');
+
+                $tipodocu = '';
+
+                    if($row['TIPO DOCUMENTO']=='B'){
+                        $tipodocu='Boleta';
+                    } elseif($row['TIPO DOCUMENTO']=='F'){
+                        $tipodocu='Factura';
+                    }
+                    $sqlup="UPDATE ventas set tipoDoc='".$tipodocu."' WHERE id=".$row['id'];
+                    $query1 = $db->query($sqlup);
+
                 $excelData .= implode("\t", array_values($lineData)) . "\n";
                  }
 
@@ -103,6 +117,85 @@ $sql="SELECT c.num_documento, DENSE_RANK() OVER (ORDER BY v.id) AS Procura, ROW_
     echo $excelData;
 });
 
+/*
+
+$app->post("/enviarboletas", function() use ($db, $app) {
+
+    $json = $app->request->getBody();
+    $dat = json_decode($json, true);
+
+    $resultado = implode(", ", $dat['ids']);
+
+    $sql = "SELECT v.id, c.num_documento,
+        DENSE_RANK() OVER (ORDER BY v.id) AS Procura,
+        ROW_NUMBER() OVER(PARTITION BY v.id ORDER BY d.id) AS Item,
+        p.nombre AS Producto, d.cantidad AS Cantidad,
+        d.precio AS PRECIO_UNITARIO,
+        p.codigo AS CODIGO_PRODUCTO,
+        p.unidad AS CODIGO_UNIDAD,
+        CASE
+            WHEN c.num_documento = '00000000000' OR LENGTH(c.num_documento) < 11 THEN 'B'
+            ELSE 'F'
+        END AS TIPO_DOCUMENTO
+    FROM ventas v
+    JOIN venta_detalle d ON v.id = d.id_venta
+    JOIN productos p ON d.id_producto = p.id
+    JOIN clientes c ON v.id_cliente = c.id
+    WHERE v.id IN ($resultado)
+    ORDER BY v.id, Item";
+
+    $query = $db->query($sql);
+
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Cabecera
+    $headers = ['RUC CLIENTE','Procura','Item','Producto','Cantidad',
+                'PRECIO UNITARIO','CODIGO PRODUCTO','CODIGO UNIDAD','TIPO DOCUMENTO'];
+
+    foreach ($headers as $i => $h) {
+        $sheet->setCellValueByColumnAndRow($i+1, 1, $h);
+    }
+
+    $fila = 2;
+
+    while($row = $query->fetch_assoc()) {
+
+        $doc = str_pad($row['num_documento'], 8, "0", STR_PAD_LEFT);
+        $tipodocu = ($row['TIPO_DOCUMENTO']=='B') ? 'Boleta' : 'Factura';
+
+        $sheet->fromArray([
+            $doc,
+            $row['Procura'],
+            $row['Item'],
+            limpiarCadena($row['Producto']),
+            $row['Cantidad'],
+            $row['PRECIO_UNITARIO'],
+            $row['CODIGO_PRODUCTO'],
+            $row['CODIGO_UNIDAD'],
+            $tipodocu
+        ], null, 'A'.$fila);
+
+        // update
+        $db->query("UPDATE ventas SET tipoDoc='$tipodocu' WHERE id=".$row['id']);
+
+        $fila++;
+    }
+
+    // ⚠️ LIMPIAR BUFFER (MUY IMPORTANTE en Slim 2)
+    if (ob_get_length()) ob_end_clean();
+
+    $fileName = "reporte_" . date('Y-m-d') . ".xlsx";
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header("Content-Disposition: attachment;filename=\"$fileName\"");
+    header('Cache-Control: max-age=0');
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('php://output');
+
+    exit;
+});*/
 
 $app->post("/reporte",function() use($db,$app){
     header("Content-type: application/json; charset=utf-8");
@@ -710,7 +803,7 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_
   INNER JOIN productos p ON vd.id_producto = p.id
  join categorias c on p.id_categoria=c.id  join sub_categorias sc on p.id_subcategoria=sc.id  join sub_sub_categorias fa on p.id_sub_sub_categoria=fa.id
   WHERE    v.estado = 1
-AND v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' UNION ALL  
+AND v.fecha_registro between '{$ini} 00:00:00' and '{$fin} 23:59:00' UNION ALL
 SELECT
     v.id,
     cl.num_documento,
@@ -863,7 +956,7 @@ JOIN aprendea_erp.usuarios    AS u  ON u.id       = vp.usuario
 JOIN aprendea_erp.tipoPago    AS tp ON tp.id      = vp.tipoPago
 JOIN aprendea_erp.cajas       AS c  ON c.id       = vp.cuentaPago
 WHERE
-vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'  
+vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'
 union all
 SELECT
   vp.id_compra as id,
@@ -888,7 +981,7 @@ JOIN aprendea_erp.usuarios    AS u  ON u.id       = vp.usuario
 JOIN aprendea_erp.tipoPago    AS tp ON tp.id      = vp.tipoPago
 JOIN aprendea_erp.cajas       AS c  ON c.id       = vp.cuentaPago
 WHERE
-vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'   
+vp.fecha_registro  between '{$ini}  00:00:01' and '{$fin} 23:59:59'
 ORDER BY fecha_registro DESC";
 
                 $query = $db->query($sql);
