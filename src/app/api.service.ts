@@ -255,7 +255,7 @@ getSucursalUsuario(){
 /**usuario  */
 
   loginUser(usuario: string, password: string) {
-    const url = Global.BASE_API_URL + 'api.php/login';
+    const url = Global.BASE_API_URL + 'login';
     return this._http.post(url,{
         usuario: usuario,
         password: password

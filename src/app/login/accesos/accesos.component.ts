@@ -40,7 +40,7 @@ loading = false;
   }
 
   ingresar(){
-   
+
 const usuario = this.form.value.usuario;
 const password = this.form.value.password;
 if(usuario!="" && password!=""){
@@ -67,7 +67,7 @@ loginUser(usuario,password){
   event.preventDefault();
     if(usuario){
         this.api.loginUser(usuario,password).subscribe(data=>{
-          if(data['rows']==1) {
+          if(data['rows']>=1) {
             console.log(data['data'][0]);
             localStorage.removeItem("currentId");
             sessionStorage.removeItem("currentUser");
