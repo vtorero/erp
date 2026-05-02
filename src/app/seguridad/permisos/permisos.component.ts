@@ -61,7 +61,7 @@ openBusqueda(){
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('/permisos').subscribe(x => {
+    this.api.getApi('permisos').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
       this.empTbSort.disableClear = true;

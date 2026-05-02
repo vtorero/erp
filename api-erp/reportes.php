@@ -20,13 +20,13 @@ use Dompdf\Dompdf;
 
 
 $app = new Slim\Slim();
-$db = new mysqli("lh-cjm.com","aprendea_erp","erp2023*","aprendea_erp");
+$db = new mysqli("localhost","aprendea_erp","erp2023*","aprendea_erp");
 //$db = new mysqli("localhost","root","","aprendea_erp");
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 //mysqli_set_charset($db, 'utf8');
-//$db->set_charset("utf8mb4");
+$db->set_charset("utf8mb4");
 if (mysqli_connect_errno()) {
     printf("Conexiónes fallida: %s\n", mysqli_connect_error());
     exit();

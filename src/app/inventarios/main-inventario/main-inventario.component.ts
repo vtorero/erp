@@ -96,7 +96,7 @@ getSucursales(): void {
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('/inventario').subscribe(x => {
+    this.api.getApi('inventario').subscribe(x => {
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = x;
       this.empTbSort.disableClear = true;
