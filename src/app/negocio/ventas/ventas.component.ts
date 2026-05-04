@@ -11,6 +11,7 @@ import { SelecTerminalComponent } from '../../dialog/selec-terminal/selec-termin
 import { RegistroVentaComponent } from '../../dialog/registro-venta/registro-venta.component';
 import { Router } from '@angular/router';
 import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -67,7 +68,8 @@ export class VentasComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    private router:Router
+    private router:Router,
+      private _snackBar: MatSnackBar,
 
 
   ) { }
@@ -265,18 +267,21 @@ cancelar() {
 
 }
 
+cargarDetalles(){
+   if(localStorage.getItem('detalle')){
+          this.dataRecibo=JSON.parse(localStorage.getItem('detalle'));
+         }
+}
+
 proforma(){
+     this.dataRecibo.forEach((dato: any) => {
+    dato.pendiente = dato.cantidad - 0;
+  });
 
-  this.dataRecibo.forEach(item => {
-    if (item.id) {
-      //item.cantidad += cantidad;
-      item.despacho=0;
-    }
-    });
-    localStorage.setItem("detalle",JSON.stringify(this.dataRecibo));
+  localStorage.setItem("detalle", JSON.stringify(this.dataRecibo));
 
-  console.log(this.dataRecibo);
-
+  this.cargarDetalles();
+      this._snackBar.open("Esta venta será proforma","OK",{duration:5000,verticalPosition:'bottom'});
 }
 
 openDescuento(enterAnimationDuration: string, exitAnimationDuration: string,id:number,precio:number,nombre:string){
@@ -355,13 +360,15 @@ openDespacho(enterAnimationDuration: string, exitAnimationDuration: string,id:nu
           dato.despacho = ux.despacho
           dato.pendiente=dato.cantidad-ux.despacho
 
+           localStorage.setItem("detalle",JSON.stringify(dato));
+
         }
 
           //if(ux.despacho!=cantidad && ux.despacho<cantidad){
 
        /// console.log(dato)
 
-
+  
       }
    });
    console.log("cantidad",this.dataRecibo)

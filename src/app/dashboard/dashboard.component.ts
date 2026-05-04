@@ -24,7 +24,7 @@ function sendInvoice(data,url) {
     .then(blob => {
       var link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.download = "reporte.xls";
+      link.download = "reporte.xlsx";
       link.click();
     });
 }
@@ -180,6 +180,21 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
         //this.renderDataTableConsulta(ini,fin,empresa);
         }
 
+    enviaExcelclientes(){
+      var fec1 = this.selectedMoment.toDateString().split(" ",4);
+      var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+      let ini=fec1[1]+fec1[2]+fec1[3];
+      let fin=fec2[1]+fec2[2]+fec2[3];
+      let fecha1=fec1[2]+'-'+fec1[1]+'-'+fec1[3];;
+      let fecha2=fec2[2]+'-'+fec2[1]+'-'+fec2[3];;
+      console.log(fecha1);
+      console.log(fecha2);
+      let fechas = {'ini':fecha1,'fin':fecha2}
+          console.log("test",JSON.stringify(fechas));
+      sendInvoice(JSON.stringify(fechas),Global.BASE_API_URL+'reportes.php/exportarclientes');
+      //this.loadVentas(this.fecha1,this.fecha2,empresa);
+      //this.renderDataTableConsulta(ini,fin,empresa);
+      }
 
     loadVentas(inicio:string,final:string,empresa:string){
       this.api.getVentaBoletas(inicio,final,empresa)

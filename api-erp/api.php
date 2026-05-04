@@ -1186,48 +1186,17 @@ $app->get("/articulos",function() use($db,$app){
 
     $app->get("/articulo/:id",function($id) use($db,$app){
 
-
-
         header("Content-type: application/json; charset=utf-8");
 
-
-
         $resultado = $db->query("SELECT p.*,p.id_sub_sub_categoria id_familia FROM productos p  WHERE id={$id}");
-
-
-
         $prods=array();
-
-
-
             while ($fila = $resultado->fetch_array()) {
-
-
-
-
-
-
-
                 $prods[]=$fila;
-
-
-
             }
-
-
 
             $respuesta=json_encode($prods);
 
-
-
             echo  $respuesta;
-
-
-
-
-
-
-
     });
 
 
