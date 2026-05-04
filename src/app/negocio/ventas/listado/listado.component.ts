@@ -519,7 +519,7 @@ isAllSelected(): boolean {
       ids: Array.from(this.selectedIds),
     };
 
-sendInvoice(payload,Global.BASE_API_URL_EXCEL+'excel/exportar.php');
+sendInvoice(payload,Global.BASE_API_URL+'reportes.php/enviarboletas');
 
    this.renderDataTable();
 
