@@ -11,6 +11,7 @@ import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 import { Global } from 'app/global';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
+import { EditProductoComponent } from 'app/dialog/edit-producto/edit-producto.component';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -99,12 +100,14 @@ enviaExcel(){
   openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
     if(this.selectedRowIndex){
       this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
-        const dialog= this.dialog.open(AddProductoComponent, {
+        const dialog= this.dialog.open(EditProductoComponent, {
           width: '800px',
           enterAnimationDuration,
           exitAnimationDuration,
-          data: x[0]
-        });
+            data:x
+        ,
+
+         });
         dialog.afterClosed().subscribe(ux => {
           if (ux!= undefined)
           this.update(ux)

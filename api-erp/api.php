@@ -1202,7 +1202,111 @@ $app->get("/articulos",function() use($db,$app){
 
 
 
+    $app->put('/producto', function ($request, $response) use ($pdo) {
 
+        header("Content-Type: application/json; charset=utf-8");
+
+        $body = $request->getBody()->getContents();
+
+        $j = json_decode($body, true);
+
+        $data = json_decode($j['json']);
+
+        try {
+
+            // GUARDAR IMAGEN
+            if (isset($data->nombre_imagen) && !empty($data->nombre_imagen)) {
+
+                $archivo = base64_decode($data->imagen);
+
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . "/erp-api/upload/" . $data->nombre_imagen;
+
+                file_put_contents($filePath, $archivo);
+
+                $sql = "UPDATE productos SET
+                            id_categoria = :id_categoria,
+                            id_subcategoria = :id_subcategoria,
+                            id_sub_sub_categoria = :id_familia,
+                            nombre = :nombre,
+                            codigo = :codigo,
+                            codigobarras = :codigobarras,
+                            unidad = :unidad,
+                            precio = :precio,
+                            imagen = :imagen
+                        WHERE id = :id";
+
+                $stmt = $pdo->prepare($sql);
+
+                $proceso = $stmt->execute([
+                    ':id_categoria' => $data->id_categoria,
+                    ':id_subcategoria' => $data->id_subcategoria,
+                    ':id_familia' => $data->id_familia,
+                    ':nombre' => $data->nombre,
+                    ':codigo' => $data->codigo,
+                    ':codigobarras' => $data->codigobarras,
+                    ':unidad' => $data->unidad,
+                    ':precio' => $data->precio,
+                    ':imagen' => $data->nombre_imagen,
+                    ':id' => $data->id
+                ]);
+
+            } else {
+
+                $sql = "UPDATE productos SET
+                            id_categoria = :id_categoria,
+                            id_subcategoria = :id_subcategoria,
+                            id_sub_sub_categoria = :id_familia,
+                            nombre = :nombre,
+                            codigo = :codigo,
+                            codigobarras = :codigobarras,
+                            unidad = :unidad,
+                            precio = :precio
+                        WHERE id = :id";
+
+                $stmt = $pdo->prepare($sql);
+
+                $proceso = $stmt->execute([
+                    ':id_categoria' => $data->id_categoria,
+                    ':id_subcategoria' => $data->id_subcategoria,
+                    ':id_familia' => $data->id_familia,
+                    ':nombre' => $data->nombre,
+                    ':codigo' => $data->codigo,
+                    ':codigobarras' => $data->codigobarras,
+                    ':unidad' => $data->unidad,
+                    ':precio' => $data->precio,
+                    ':id' => $data->id
+                ]);
+            }
+
+            if ($proceso) {
+
+                $result = [
+                    "STATUS" => true,
+                    "messaje" => "Producto actualizado correctamente"
+                ];
+
+            } else {
+
+                $result = [
+                    "STATUS" => false,
+                    "messaje" => "Ocurrió un error en la actualización"
+                ];
+            }
+
+        } catch (PDOException $e) {
+
+            $result = [
+                "STATUS" => false,
+                "messaje" => $e->getMessage()
+            ];
+        }
+
+        $response->getBody()->write(json_encode($result));
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+    });
 
 
 

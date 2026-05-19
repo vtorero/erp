@@ -57,6 +57,7 @@ import { AddCategoriaComponent } from './dialog/add-categoria/add-categoria.comp
 import { AddSubCategoriaComponent } from './dialog/add-sub-categoria/add-sub-categoria.component';
 import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { EditProductoComponent } from './dialog/edit-producto/edit-producto.component';
 
 
 
@@ -125,6 +126,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
      AddCategoriaComponent,
      AddSubCategoriaComponent,
      AddFamiliaComponent,
+     EditProductoComponent,
 
   ],
   providers: [],
