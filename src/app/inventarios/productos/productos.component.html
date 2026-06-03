@@ -75,6 +75,10 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
           <mat-cell *matCellDef="let row"> S/ {{row.precio}} </mat-cell>
     </ng-container>
+    <ng-container matColumnDef="precio_compra">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Precio Compra</mat-header-cell>
+      <mat-cell *matCellDef="let row"> S/ {{row.precio_compra}} </mat-cell>
+</ng-container>
 
                         <!-- Columna Nacionalidad -->
 

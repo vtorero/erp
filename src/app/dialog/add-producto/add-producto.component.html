@@ -71,10 +71,16 @@
     </mat-form-field>
 
   </div>
-  <div class="col-12">
+  <div class="col-6">
     <mat-form-field appearance="outline">
       <mat-label>Precio</mat-label>
       <input matInput [(ngModel)]="data.precio" name="precio" type="number" placeholder="Precio" required>
+    </mat-form-field>
+  </div>
+  <div class="col-5">
+    <mat-form-field appearance="outline">
+      <mat-label>Precio Compra</mat-label>
+      <input matInput [(ngModel)]="data.precio_compra" name="precio_compra" type="number" placeholder="Precio Compra" required>
     </mat-form-field>
   </div>
     </div>

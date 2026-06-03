@@ -44,7 +44,7 @@ export class ProductosComponent implements OnInit {
   cancela: boolean = false;
   prod:Productos;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','codigo','codigobarras','nombre','categoria','subcategoria','familia','unidad','precio'];
+  displayedColumns = ['id','codigo','codigobarras','nombre','categoria','subcategoria','familia','unidad','precio','precio_compra'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   constructor(public dialog: MatDialog,
@@ -145,7 +145,7 @@ enviaExcel(){
       //disableClose: true,
       enterAnimationDuration,
       exitAnimationDuration,
-      data:new Productos('','','','','','','','',0,'',0,'','','','Nuevo','','')
+      data:new Productos('','','','','','','','',0,'',0,'','','','','Nuevo','','')
     });
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)

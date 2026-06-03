@@ -14,6 +14,7 @@ export class Productos{
         public marca:string,
         public costo:string,
         public precio:string,
+        public precio_compra:string,
         public clase:string,
         public imagen:string,
         public nombre_imagen:string
