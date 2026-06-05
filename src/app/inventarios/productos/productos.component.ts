@@ -89,7 +89,7 @@ export class ProductosComponent implements OnInit {
       console.log(filas);
 
       this.http.post(
-        'https://tu-api.com/actualizar-precios',
+        Global.BASE_API_URL+'actualizar-precios',
         { productos: filas }
       ).subscribe({
         next: (resp) => {
