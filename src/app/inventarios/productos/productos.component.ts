@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,6 +12,8 @@ import { AddProductoComponent } from '../../dialog/add-producto/add-producto.com
 import { Global } from 'app/global';
 import { OpenDialogComponent } from 'app/dialog/open-dialog/open-dialog.component';
 import { EditProductoComponent } from 'app/dialog/edit-producto/edit-producto.component';
+import * as XLSX from 'xlsx';
+import { HttpClient } from '@angular/common/http';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -47,14 +49,62 @@ export class ProductosComponent implements OnInit {
   displayedColumns = ['id','codigo','codigobarras','nombre','categoria','subcategoria','familia','unidad','precio','precio_compra'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.renderDataTable();
   }
+  seleccionarExcel() {
+    this.fileInput.nativeElement.click();
+  }
+
+  cargarExcel(event: any) {
+
+    const archivo = event.target.files[0];
+
+    if (!archivo) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+
+      const data = e.target.result;
+
+      const workbook = XLSX.read(data, {
+        type: 'binary'
+      });
+
+      const hoja = workbook.Sheets[workbook.SheetNames[0]];
+
+      const filas = XLSX.utils.sheet_to_json(hoja);
+
+      console.log(filas);
+
+      this.http.post(
+        'https://tu-api.com/actualizar-precios',
+        { productos: filas }
+      ).subscribe({
+        next: (resp) => {
+          alert('Precios actualizados');
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+
+    };
+
+    reader.readAsBinaryString(archivo);
+  }
+
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
