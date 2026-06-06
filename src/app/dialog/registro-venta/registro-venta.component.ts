@@ -25,7 +25,7 @@ export class RegistroVentaComponent implements OnInit {
     vendedor: ['', Validators.required],
     cliente: ['0', Validators.required],
     pagos: this.fb.array([this.fb.group({
-      tipoPago: ['', Validators.required],
+      /*tipoPago: ['', Validators.required],*/
       cuentaPago:['',Validators.required],
       numero:['',Validators.required],
       montoPago: [0, [Validators.required, Validators.min(0.0)]]

@@ -55,12 +55,12 @@
               <div class="col-10"> <mat-form-field appearance="outline">
                 <mat-label>Observación</mat-label>
                 <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
-                  
+
                 </mat-form-field></div>
               <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
             </div>
 
-               
+
           </div>
           <div class="col-6">
             <mat-form-field appearance="outline">
@@ -152,10 +152,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
         </ng-container>
-        <ng-container matColumnDef="nombre">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
-        </ng-container>
+
         <ng-container matColumnDef="caja">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Caja</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.caja}} </mat-cell>

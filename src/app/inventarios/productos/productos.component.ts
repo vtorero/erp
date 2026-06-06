@@ -49,7 +49,6 @@ export class ProductosComponent implements OnInit {
   displayedColumns = ['id','codigo','codigobarras','nombre','categoria','subcategoria','familia','unidad','precio','precio_compra'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
-
   @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -69,7 +68,9 @@ export class ProductosComponent implements OnInit {
     const archivo = event.target.files[0];
 
     if (!archivo) {
+      console.log("retorna")
       return;
+
     }
 
     const reader = new FileReader();
@@ -89,11 +90,13 @@ export class ProductosComponent implements OnInit {
       console.log(filas);
 
       this.http.post(
-        Global.BASE_API_URL+'actualizar-precios',
+        Global.BASE_API_URL+'api.php/actualizar-precios',
         { productos: filas }
       ).subscribe({
         next: (resp) => {
-          alert('Precios actualizados');
+          this._snackBar.open('Datos actualizados correctamente','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+          this.renderDataTable();
+          event.target.value = '';
         },
         error: (err) => {
           console.error(err);

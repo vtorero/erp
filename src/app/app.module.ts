@@ -58,6 +58,7 @@ import { AddSubCategoriaComponent } from './dialog/add-sub-categoria/add-sub-cat
 import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EditProductoComponent } from './dialog/edit-producto/edit-producto.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -75,6 +76,7 @@ import { EditProductoComponent } from './dialog/edit-producto/edit-producto.comp
     LoginModule,
     SharedModule,
     ComponentsModule,
+    MatTooltipModule,
     NgxMaskModule.forRoot()
   ],
   declarations: [
