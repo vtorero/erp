@@ -496,9 +496,9 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
     <mat-cell *matCellDef="let row"> {{row.cantidad}}</mat-cell>
 </ng-container>
-  <ng-container matColumnDef="unidad">
+  <ng-container matColumnDef="unidad_medida">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Unidad</mat-header-cell>
-    <mat-cell *matCellDef="let row"> {{row.unidad}}</mat-cell>
+    <mat-cell *matCellDef="let row"> {{row.unidad_medida}}</mat-cell>
 </ng-container>
 <ng-container matColumnDef="precio">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
@@ -595,7 +595,7 @@
 
     <mat-cell *matCellDef="let row">S/ {{row.monto_pendiente | number:'1.2-2' }}</mat-cell>
 </ng-container>
- 
+
        <ng-container matColumnDef="usuario">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.usuario}} </mat-cell>

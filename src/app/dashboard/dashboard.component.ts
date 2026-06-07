@@ -47,7 +47,7 @@ dataSource: any;
  selectedRowIndex:any;
 dataSourceCaja: any;
 dataClienteRank:any;
-displayedColumns = ['id','fecha_registro','num_documento','nombre','codigo','producto','cantidad','unidad','precio','valor_total','tipo_movimiento','observacion','usuario'];
+displayedColumns = ['id','fecha_registro','num_documento','nombre','codigo','producto','cantidad','unidad_medida','precio','valor_total','tipo_movimiento','observacion','usuario'];
 displayedCaja = ['id','fecha','cliente','num_documento','sucursal','tipo_movimiento','tipopago','nombre','monto','monto_pendiente','usuario','observacion','fecha_registro'];
 displayedClientes = ['id','nombre','total','pendiente','pedidos'];
 fec1= this.selectedMoment.toDateString().split(" ",4);
@@ -213,7 +213,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
         this.dataSourceCaja.sort=this.empTbSortcaja;
         this.dataClienteRank.sort=this.empTbSortcliente;
 
-      
+
 
         this.dataSource.paginator = this.paginator;
         //this.dataSourceCaja.paginator = this.paginatorCaja;
