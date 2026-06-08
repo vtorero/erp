@@ -20,16 +20,16 @@ use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
 /*Produccion*/
-//$dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
-//$usuario="aprendea_erp"
-//$clave="erp2023*"
+$dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
+$usuario="aprendea_erp";
+$clave="erp2023*";
 
-/*Local dev*/
+/*Local dev
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
 
-
+*/
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -154,11 +154,11 @@ and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and v.id=vd.i
         ["{$ini}","{$fin}"],
         [$ini,$fin],
         "SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta' AS tipo_movimiento,u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion
-FROM aprendea_erp.venta_pagos vp,ventas v,usuarios u,sucursales s,cajas c ,clientes cl where vp.cuentaPago=c.id and v.id_sucursal=s.id
+FROM venta_pagos vp,ventas v,usuarios u,sucursales s,cajas c ,clientes cl where vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1'
 union all
 SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra'as tipo_movimiento,u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion
-FROM aprendea_erp.compra_pagos vp,compras v,usuarios u,sucursales s,cajas c,proveedores cl where  vp.cuentaPago=c.id and v.id_sucursal=s.id
+FROM compra_pagos vp,compras v,usuarios u,sucursales s,cajas c,proveedores cl where  vp.cuentaPago=c.id and v.id_sucursal=s.id
 and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `fecha_registro` DESC"
     );
 
