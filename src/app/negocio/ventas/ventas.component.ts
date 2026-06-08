@@ -26,6 +26,7 @@ interface Elemento {
   despacho:number;
   pendiente: number;
   precio:number;
+  compra:number,
   descuento:number,
   detalle:any
 }
@@ -57,7 +58,7 @@ export class VentasComponent implements OnInit {
   dataTabla:any;
   totalMonto:number=0;
   totalDescuento:number=0;
-  dataToDisplay = [];
+  dataToDisplay:any = [];
   loading:boolean=false;
   dataRecibo:Details[] = []
   exampleArray: any[] = [];
@@ -104,7 +105,7 @@ export class VentasComponent implements OnInit {
   }
 
 
-  public seleccionarCategoria(event) {
+  public seleccionarCategoria(event:any) {
     const value = event.value;
     console.log(value);
     this.categoria=value;
@@ -118,7 +119,7 @@ export class VentasComponent implements OnInit {
      });
  }
 
- public seleccionarSubcategoria(event) {
+ public seleccionarSubcategoria(event:any) {
    const value = event.value;
    this.subcategoria=value;
    console.log("subcategoria",this.familia);
@@ -133,7 +134,7 @@ export class VentasComponent implements OnInit {
    });
 }
 
-public seleccionarFamilia(event) {
+public seleccionarFamilia(event:any) {
   const value = event.value;
   console.log(value)
   this.api.BuscarPorFamilia(this.categoria,this.subcategoria,value,'familia').subscribe(x => {
@@ -255,10 +256,10 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
 }
 
 
-enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
+enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number,compra:number){
   console.log(this.dataRecibo);
 
-this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre: nombre,codigo:codigo,almacen:0,precio:precio,compra:compra, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
 localStorage.setItem("detalle",JSON.stringify(this.dataRecibo))
  }
 
