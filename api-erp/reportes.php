@@ -19,17 +19,17 @@ use Dompdf\Dompdf;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion*/
+/*Produccion
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
 $clave="erp2023*";
-
-/*Local dev
+*/
+/*Local dev*/
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
 
-*/
+
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -139,11 +139,11 @@ $app->post('/reporte', function (Request $request, Response $response) use ($pdo
     $sql_reporte = str_replace(
         ["{$ini}","{$fin}"],
         [$ini,$fin],
-        "SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta' AS tipo_movimiento,u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion,vd.cantidad,p.nombre producto,p.codigo,p.unidad unidad_medida
+        "SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Venta' AS tipo_movimiento,u.nombre usuario,cl.nombre as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre, valor_total,vp.monto, vp.monto_pendiente,v.observacion,vd.cantidad,p.nombre producto,p.codigo,p.unidad unidad_medida,vd.precio
 FROM venta_pagos vp,ventas v,venta_detalle vd,usuarios u,sucursales s,cajas c ,clientes cl,productos p where  vp.cuentaPago=c.id and v.id_sucursal=s.id and vd.id_producto=p.id
 and v.id=vp.id_venta and v.id_cliente=cl.id and vp.usuario=u.id and v.id=vd.id_venta and vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 and v.estado='1'
 union all
-SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra'as tipo_movimiento,u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion,vd.cantidad,p.nombre producto,p.codigo,p.unidad unidad_medida
+SELECT v.id,cl.num_documento,v.fecha,vp.fecha_registro,'Compra'as tipo_movimiento,u.nombre usuario ,cl.razon_social as cliente,cl.direccion,cl.telefono, s.nombre sucursal, c.nombre,valor_total,vp.monto, vp.monto_pendiente,v.observacion,vd.cantidad,p.nombre producto,p.codigo,p.unidad unidad_medida,vd.precio
 FROM compra_pagos vp,compras v,compra_detalle vd,usuarios u,sucursales s,cajas c,proveedores cl,productos p where  vp.cuentaPago=c.id and v.id_sucursal=s.id and vd.id_producto=p.id
 and v.id=vp.id_compra and v.id_proveedor=cl.id and vp.usuario=u.id and v.id=vd.id_compra and  vp.fecha_registro between '{$ini} 00:00:01' and '{$fin} 23:59:59' and vp.monto>=0 ORDER BY `fecha_registro` DESC"
     );

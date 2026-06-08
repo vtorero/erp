@@ -23,8 +23,9 @@ interface Elemento {
   despacho:number;
   pendiente: number;
   precio:number;
-  descuento:number,
-  detalle:any
+  precio_compra:number;
+  descuento:number;
+  detalle:any;
 }
 
 
@@ -199,7 +200,7 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
     });
   } else {
     // Si el elemento no existe, agregarlo al array
-    array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,descuento:desc,detalle:null});
+    array.push({ id:elemento.id,nombre:elemento.nombre,codigo:elemento.codigo,almacen:0,cantidad:cantidad,despacho:cantidad,pendiente:0,precio:elemento.precio,precio_compra:elemento.precio_compra,descuento:desc,detalle:null});
 
   }
   this.sumarMonto(array)
@@ -214,9 +215,9 @@ sumarCantidadSiExiste(array: Details[], elemento: Elemento, cantidad: number,des
   }
 
 
-enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number){
+enviarProducto(id:number,codigo:string,nombre:string,cantidad:number,precio:number,compra:number){
   console.log(this.dataRecibo);
- this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
+ this.sumarCantidadSiExiste(this.dataRecibo, {id:id,nombre:nombre,codigo:codigo,almacen:0,precio:precio,precio_compra:compra, cantidad:cantidad,despacho:cantidad,pendiente:0,descuento:0,detalle:null},1,0);
  localStorage.setItem("detallec",JSON.stringify(this.dataRecibo))
 }
 

@@ -9,6 +9,7 @@ export class Details {
         public pendiente:number,
         public almacen:number,
         public precio: number,
+        public precio_compra:number,
         public descuento: number,
         public detalle:any
 

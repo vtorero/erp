@@ -486,6 +486,7 @@ $app->post('/buscaarticulos', function (Request $request, Response $response) us
                     fa.nombre AS familia,
                     p.unidad,
                     p.precio,
+                    p.precio_compra,
                     p.imagen
                 FROM productos p
                 LEFT JOIN categorias c ON p.id_categoria = c.id
@@ -2700,6 +2701,223 @@ $app->post('/actualizar-precios', function ($request, $response) use ($pdo) {
     $response->getBody()->write(json_encode([
         'success' => true
     ]));
+
+    return $response
+        ->withHeader('Content-Type', 'application/json');
+});
+
+
+
+$app->post('/agregar-inventario', function (Request $request, Response $response) use ($pdo) {
+
+    $body = $request->getBody()->getContents();
+    $j = json_decode($body, true);
+    $data = json_decode($j['json']);
+
+
+
+    $cantidad_acumulada = 0;
+
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM movimiento_articulos
+        WHERE codigo_prod = :producto
+        AND id_sucursal = :sucursal
+        ORDER BY id DESC
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        ':producto' => $data->id_producto,
+        ':sucursal' => $data->id_sucursal
+    ]);
+
+    $inv = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$inv) {
+        $inv = [
+            'precio' => 0,
+            'cantidad_acumulada' => 0,
+            'cantidad_ingreso' => 0,
+            'total' => 0,
+            'promedio' => 0
+        ];
+    }
+
+    if ($data->operacion === 'Ingreso') {
+
+        if ($inv['precio'] == 0 || $inv['cantidad_acumulada'] == 0) {
+
+            $promedio = ($inv['cantidad_acumulada'] == 0)
+                ? $data->precio
+                : ($data->cantidad / $data->precio);
+
+            $sql = "
+                INSERT INTO movimiento_articulos
+                (
+                    codigo_prod,
+                    tipo_movimiento,
+                    id_almacen,
+                    comentario,
+                    cantidad_movimiento,
+                    cantidad_ingreso,
+                    cantidad_acumulada,
+                    precio,
+                    promedio,
+                    total,
+                    id_sucursal,
+                    usuario
+                )
+                VALUES
+                (
+                    :codigo_prod,
+                    :tipo_movimiento,
+                    :id_almacen,
+                    :comentario,
+                    :cantidad_movimiento,
+                    :cantidad_ingreso,
+                    :cantidad_acumulada,
+                    :precio,
+                    :promedio,
+                    :total,
+                    :id_sucursal,
+                    :usuario
+                )
+            ";
+
+            $params = [
+                ':codigo_prod' => $data->id_producto,
+                ':tipo_movimiento' => $data->operacion,
+                ':id_almacen' => $data->id_sucursal,
+                ':comentario' => $data->comentario,
+                ':cantidad_movimiento' => $data->cantidad,
+                ':cantidad_ingreso' => $data->cantidad,
+                ':cantidad_acumulada' => $data->cantidad,
+                ':precio' => $data->precio,
+                ':promedio' => $promedio,
+                ':total' => $data->cantidad * $data->precio,
+                ':id_sucursal' => $data->id_sucursal,
+                ':usuario' => $data->usuario
+            ];
+
+        } else {
+
+            $cantidad_ingreso = $data->cantidad + floatval($inv['cantidad_ingreso']);
+            $total = round(
+                ($data->cantidad * $data->precio) + floatval($inv['total']),
+                2
+            );
+
+            if (floatval($inv['cantidad_acumulada']) <= 0) {
+
+                $promedio =
+                    (
+                        floatval($inv['total']) +
+                        ($data->cantidad * $data->precio)
+                    )
+                    /
+                    (
+                        floatval($inv['cantidad_acumulada']) +
+                        $data->cantidad
+                    );
+
+                $cantidad_acumulada =
+                    floatval($inv['cantidad_acumulada']) +
+                    $data->cantidad;
+
+            } else {
+
+                $promedio =
+                    (
+                        floatval($inv['total']) +
+                        ($data->cantidad * $data->precio)
+                    )
+                    /
+                    (
+                        floatval($inv['cantidad_acumulada']) +
+                        $data->cantidad
+                    );
+
+                $cantidad_ingreso = $data->cantidad;
+
+                $cantidad_acumulada =
+                    floatval($inv['cantidad_acumulada']) +
+                    $data->cantidad;
+            }
+
+            $sql = "
+                INSERT INTO movimiento_articulos
+                (
+                    codigo_prod,
+                    tipo_movimiento,
+                    id_almacen,
+                    comentario,
+                    cantidad_movimiento,
+                    cantidad_ingreso,
+                    cantidad_acumulada,
+                    precio,
+                    promedio,
+                    total,
+                    id_sucursal,
+                    usuario
+                )
+                VALUES
+                (
+                    :codigo_prod,
+                    :tipo_movimiento,
+                    :id_almacen,
+                    :comentario,
+                    :cantidad_movimiento,
+                    :cantidad_ingreso,
+                    :cantidad_acumulada,
+                    :precio,
+                    :promedio,
+                    :total,
+                    :id_sucursal,
+                    :usuario
+                )
+            ";
+
+            $params = [
+                ':codigo_prod' => $data->id_producto,
+                ':tipo_movimiento' => $data->operacion,
+                ':id_almacen' => $data->id_sucursal,
+                ':comentario' => $data->comentario,
+                ':cantidad_movimiento' => $data->cantidad,
+                ':cantidad_ingreso' => $cantidad_ingreso,
+                ':cantidad_acumulada' => $cantidad_acumulada,
+                ':precio' => $data->precio,
+                ':promedio' => $promedio,
+                ':total' => $total,
+                ':id_sucursal' => $data->id_sucursal,
+                ':usuario' => $data->usuario
+            ];
+        }
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+
+        $stmt = $pdo->prepare("
+            UPDATE inventario
+            SET cantidad = cantidad + :cantidad,
+                fecha_actualizacion = NOW()
+            WHERE producto_id = :producto
+            AND id_almacen = :almacen
+        ");
+
+        $stmt->execute([
+            ':cantidad' => $data->cantidad,
+            ':producto' => $data->id_producto,
+            ':almacen' => $data->id_sucursal
+        ]);
+    }
+
+    $result = [
+        'STATUS' => true,
+        'messaje' => 'Inventario registrado correctamente'
+    ];
+
+    $response->getBody()->write(json_encode($result));
 
     return $response
         ->withHeader('Content-Type', 'application/json');
