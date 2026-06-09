@@ -19,16 +19,16 @@ use Dompdf\Dompdf;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion
+/*Produccion*/
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
-$clave="erp2023*";*/
+$clave="erp2023*";
 
-/*Local dev*/
+/*Local dev
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
-
+*/
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
