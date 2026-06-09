@@ -22,8 +22,8 @@ $app = AppFactory::create();
 /*Produccion
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
-$clave="erp2023*";
-*/
+$clave="erp2023*";*/
+
 /*Local dev*/
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";

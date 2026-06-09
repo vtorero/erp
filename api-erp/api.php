@@ -15,13 +15,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-//$pdo = new mysqli("lh-cjm.com","aprendea_erp","erp2023*","aprendea_erp")
-//$dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
-//$usuario="aprendea_erp"
-//$clave="erp2023*"
+/*Produccion
+$dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
+$usuario="aprendea_erp";
+$clave="erp2023*";*/
+/**desarrollo */
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
+
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
