@@ -19,16 +19,16 @@ use Dompdf\Dompdf;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion
+/*Produccion*/
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
-$clave="erp2023*";*/
+$clave="erp2023*";
 
-/*Local dev*/
+/*Local dev
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
-
+*/
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
@@ -739,20 +739,18 @@ $app->post('/exportarclientes', function (Request $request, Response $response) 
 
 
 
-
 $app->get('/boleta/{id}', function (Request $request, Response $response, $args) use ($pdo) {
 
     $id = $args['id'];
 
     $sql = "SELECT a.nombre,a.unidad, d.*,c.nombre as cliente,c.num_documento,
-                   v.*,pa.*,tp.tipo,s.direccion,s.email,
+                   v.*,pa.*,'',s.direccion,s.email,
                    s.nombre as local,s.telefono
             FROM venta_detalle d
             INNER JOIN productos a ON a.id=d.id_producto
             INNER JOIN ventas v ON d.id_venta=v.id
             INNER JOIN clientes c ON v.id_cliente=c.id
             INNER JOIN venta_pagos pa ON v.id=pa.id_venta
-            INNER JOIN tipoPago tp ON pa.tipoPago=tp.id
             INNER JOIN sucursales s ON s.id=v.id_sucursal
             WHERE v.id = :id";
 
@@ -1051,6 +1049,10 @@ $app->post('/productos', function (Request $request, Response $response) use ($p
             ->withStatus(500);
     }
 });
+
+
+
+
 
 
 $app->run();
