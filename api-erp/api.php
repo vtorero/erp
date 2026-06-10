@@ -15,16 +15,15 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion*/
+/*Produccion
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
-$clave="erp2023*";
-
-/*Local dev
+$clave="erp2023*";*/
+/**desarrollo */
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
-*/
+
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
@@ -2096,117 +2095,42 @@ $app->put('/producto', function ($request, $response) use ($pdo) {
     try {
 
         // GUARDAR IMAGEN
-        if (!empty($data->imagen) && !empty($data->nombre_imagen)) {
+        if (isset($data->nombre_imagen) && !empty($data->nombre_imagen)) {
 
-// GUARDAR IMAGEN
-if (!empty($data->imagen) && !empty($data->nombre_imagen)) {
+            $archivo = base64_decode($data->imagen);
 
-    $archivo = base64_decode($data->imagen);
+            $filePath = $_SERVER['DOCUMENT_ROOT'] . "/erp-api/upload/" . $data->nombre_imagen;
 
-    $filePath = $_SERVER['DOCUMENT_ROOT'] . "/erp-api/upload/" . $data->nombre_imagen;
+            file_put_contents($filePath, $archivo);
 
-    // Crear imagen desde el contenido binario
-    $image = @imagecreatefromstring($archivo);
+            $sql = "UPDATE productos SET
+                        id_categoria = :id_categoria,
+                        id_subcategoria = :id_subcategoria,
+                        id_sub_sub_categoria = :id_familia,
+                        nombre = :nombre,
+                        codigo = :codigo,
+                        codigobarras = :codigobarras,
+                        unidad = :unidad,
+                        precio = :precio,
+                        precio_compra=:precio_compra,
+                        imagen = :imagen
+                    WHERE id = :id";
 
-    if (!$image) {
-        throw new Exception("La imagen recibida no es válida");
-    }
+            $stmt = $pdo->prepare($sql);
 
-    // Obtener dimensiones originales
-    $width = imagesx($image);
-    $height = imagesy($image);
-
-    // Redimensionar si supera el ancho máximo
-    $maxWidth = 1200;
-
-    if ($width > $maxWidth) {
-
-        $newWidth = $maxWidth;
-        $newHeight = intval(($height * $newWidth) / $width);
-
-        $resized = imagecreatetruecolor($newWidth, $newHeight);
-
-        // Fondo blanco para imágenes PNG transparentes
-        $white = imagecolorallocate($resized, 255, 255, 255);
-        imagefill($resized, 0, 0, $white);
-
-        imagecopyresampled(
-            $resized,
-            $image,
-            0,
-            0,
-            0,
-            0,
-            $newWidth,
-            $newHeight,
-            $width,
-            $height
-        );
-
-        imagedestroy($image);
-        $image = $resized;
-    }
-
-    // Comprimir hasta llegar a 100 KB aprox.
-    $maxSize = 100 * 1024; // 100 KB
-    $quality = 90;
-    $compressed = null;
-
-    do {
-
-        ob_start();
-        imagejpeg($image, null, $quality);
-        $compressed = ob_get_clean();
-
-        if (strlen($compressed) <= $maxSize) {
-            break;
-        }
-
-        $quality -= 5;
-
-    } while ($quality >= 10);
-
-    file_put_contents($filePath, $compressed);
-
-    imagedestroy($image);
-
-    // Para verificar en los logs
-    error_log(
-        "Imagen guardada: " .
-        round(filesize($filePath) / 1024, 2) .
-        " KB - Calidad: " . $quality
-    );
-
-    $sql = "UPDATE productos SET
-                id_categoria = :id_categoria,
-                id_subcategoria = :id_subcategoria,
-                id_sub_sub_categoria = :id_familia,
-                nombre = :nombre,
-                codigo = :codigo,
-                codigobarras = :codigobarras,
-                unidad = :unidad,
-                precio = :precio,
-                precio_compra = :precio_compra,
-                imagen = :imagen
-            WHERE id = :id";
-
-    $stmt = $pdo->prepare($sql);
-
-    $proceso = $stmt->execute([
-        ':id_categoria' => $data->id_categoria,
-        ':id_subcategoria' => $data->id_subcategoria,
-        ':id_familia' => $data->id_familia,
-        ':nombre' => $data->nombre,
-        ':codigo' => $data->codigo,
-        ':codigobarras' => $data->codigobarras,
-        ':unidad' => $data->unidad,
-        ':precio' => $data->precio,
-        ':precio_compra' => $data->precio_compra,
-        ':imagen' => $data->nombre_imagen,
-        ':id' => $data->id
-    ]);
-}
-
+            $proceso = $stmt->execute([
+                ':id_categoria' => $data->id_categoria,
+                ':id_subcategoria' => $data->id_subcategoria,
+                ':id_familia' => $data->id_familia,
+                ':nombre' => $data->nombre,
+                ':codigo' => $data->codigo,
+                ':codigobarras' => $data->codigobarras,
+                ':unidad' => $data->unidad,
+                ':precio' => $data->precio,
+                ':precio_compra' => $data->precio_compra,
+                ':imagen' => $data->nombre_imagen,
+                ':id' => $data->id
+            ]);
 
         } else {
 
@@ -2782,44 +2706,6 @@ $app->post('/actualizar-precios', function ($request, $response) use ($pdo) {
 
     return $response
         ->withHeader('Content-Type', 'application/json');
-});
-
-$app->get('/articulos/{criterio}', function (Request $request, Response $response, $args) use ($pdo) {
-
-    $criterio = $args['criterio'];
-
-    try {
-
-        $stmt = $pdo->prepare("
-            SELECT *
-            FROM productos
-            WHERE nombre LIKE :criterio
-               OR codigo LIKE :criterio
-        ");
-
-        $like = "%{$criterio}%";
-
-        $stmt->execute([
-            'criterio' => $like
-        ]);
-
-        $prods = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $respuesta = json_encode($prods);
-
-    } catch (PDOException $e) {
-
-        $respuesta = json_encode([
-            "status" => false,
-            "message" => $e->getMessage()
-        ]);
-    }
-
-    $response->getBody()->write($respuesta);
-
-    return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withStatus(200);
 });
 
 
