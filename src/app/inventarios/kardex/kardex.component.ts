@@ -10,6 +10,8 @@ import { Usuario } from 'app/modelos/usuario';
 import { Productos } from '../../modelos/producto';
 import { AddProductoComponent } from '../../dialog/add-producto/add-producto.component';
 import { Kardex } from 'app/modelos/kardex';
+import { AgregarInventarioComponent } from 'app/dialog/agregar-inventario/agregar-inventario.component';
+import { AddInventario } from 'app/modelos/addinventario';
 
 @Component({
   selector: 'app-kardex',
@@ -48,7 +50,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   ) { }
 
   ngOnInit(): void {
-    this.renderDataTable();
+    //this.renderDataTable();
     this.verSucursales();
   }
 
@@ -90,7 +92,7 @@ public seleccionarCategoria(event) {
   console.log(value);
 
 if(value==0){
-  this.renderDataTable()
+  //this.renderDataTable()
 }else{
   this.api.getInventarios(value).subscribe(x => {
     this.dataSource.data = x;
@@ -167,25 +169,24 @@ verSucursales():void{
 }
 
 
-  openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    if(this.selectedRowIndex){
-      this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
-        const dialog= this.dialog.open(AddProductoComponent, {
-          width: '800px',
-          enterAnimationDuration,
-          exitAnimationDuration,
-          data: x[0]
-        });
-        dialog.afterClosed().subscribe(ux => {
-          if (ux!= undefined)
-          this.update(ux)
+openDialogEdit(enterAnimationDuration: string, exitAnimationDuration: string): void {
+  if(this.selectedRowIndex){
+    this.api.getSelectApi('articulo/',this.selectedRowIndex.id).subscribe(x => {
+      const dialog= this.dialog.open(AgregarInventarioComponent, {
+        width: '800px',
+        enterAnimationDuration,
+        exitAnimationDuration,
+        data: x[0]
       });
-     });
-  }else{
-    this._snackBar.open('Debe seleccionar un registro','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-  }
-  }
-
+      dialog.afterClosed().subscribe(ux => {
+        if (ux!= undefined)
+        this.update(ux)
+    });
+   });
+}else{
+  this._snackBar.open('Debe seleccionar un registro','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+}
+}
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddProductoComponent, {
     width: 'auto',
@@ -204,19 +205,22 @@ verSucursales():void{
 }
 
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
 
-    const dialogo1 =this.dialog.open(AddProductoComponent, {
-      width: 'auto',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      data:new Productos('','','','','','','','',0,'',0,'','','','','Nuevo','','')
-    });
-    dialogo1.afterClosed().subscribe(us => {
-      if (us!= undefined)
-       this.agregar(us)
-     });
-  }
+openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+
+  const dialogo1 =this.dialog.open(AgregarInventarioComponent, {
+    width: 'auto',
+    enterAnimationDuration,
+    exitAnimationDuration,
+    data:new AddInventario(0,0,0,localStorage.getItem("currentId"),'',0,'',localStorage.getItem("id_suc"))
+  });
+  dialogo1.afterClosed().subscribe(us => {
+    if (us!= undefined)
+     this.agregar(us);
+     this.renderDataTable();
+   });
+
+}
 
   update(art:Productos) {
     if(art){
