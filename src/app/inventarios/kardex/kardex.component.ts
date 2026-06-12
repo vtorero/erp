@@ -217,7 +217,7 @@ openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void 
   dialogo1.afterClosed().subscribe(us => {
     if (us!= undefined)
      this.agregar(us);
-     this.renderDataTable();
+     //this.renderDataTable();
    });
 
 }
@@ -237,7 +237,20 @@ openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void 
 }
 
 
-  agregar(art:Productos) {
+agregar(art:AddInventario) {
+  if(art){
+  this.api.AgregarInventario(art).subscribe(
+    data=>{
+      this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+      },
+    erro=>{console.log(erro)}
+      );
+    //this.renderDataTable();
+}
+}
+
+
+  /*agregar(art:Productos) {
     if(art){
     this.api.GuardarProducto(art).subscribe(
       data=>{
@@ -248,7 +261,7 @@ openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void 
       this.renderDataTable();
   }
 }
-
+*/
 eliminar(art:Productos) {
   console.log("art",art);
   if(art){
