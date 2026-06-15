@@ -50,7 +50,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   ) { }
 
   ngOnInit(): void {
-    //this.renderDataTable();
+    this.renderDataTable();
     this.verSucursales();
   }
 
@@ -138,7 +138,7 @@ selectSearch(value: string) {
 
   renderDataTable() {
     this.selectedRowIndex=null
-    this.api.getApi('movimientos').subscribe(x => {
+    this.api.getApi('kardex').subscribe(x => {
       //this.dataSource = new MatTableDataSource();
       this.dataSource = x;
       console.log("dat",x);
