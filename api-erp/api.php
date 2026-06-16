@@ -15,16 +15,16 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion*/
+/*Produccion
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
 $clave="erp2023*";
-
-/*Local dev
+*/
+/*Local dev*/
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
-*/
+
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
@@ -932,33 +932,269 @@ $app->get('/buscarproducto/{criterio}', function (Request $request, Response $re
 });
 
 
+$app->get('/kardex', function (Request $request, Response $response) use ($pdo) {
+
+    header("Content-Type: application/json; charset=utf-8");
+
+    // Fecha actual
+    $ini = date('Y-m-d') . ' 00:00:00';
+    $fin = date('Y-m-d') . ' 23:59:59';
+
+    try {
+
+        /*
+        |--------------------------------------------------------------------------
+        | PRODUCTOS + STOCK + ÚLTIMO PROMEDIO
+        |--------------------------------------------------------------------------
+        */
+
+        $sqlProductos = "
+            SELECT DISTINCT
+                p.id,
+                p.codigo,
+                p.nombre,
+                p.categoria,
+
+                (
+                    SELECT ma.promedio
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                    ORDER BY ma.id DESC
+                    LIMIT 1
+                ) AS promedio,
+
+                (
+                    SELECT ma.cantidad_acumulada
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                    ORDER BY ma.id DESC
+                    LIMIT 1
+                ) AS cantidad_acumulada,
+
+                (
+                    SELECT COALESCE(SUM(ma.cantidad_ingreso) - SUM(ma.cantidad_salida),0)
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                ) AS stock
+
+            FROM movimiento_articulos m
+            INNER JOIN productos p ON p.id = m.codigo_prod
+
+            WHERE m.fecha_registro BETWEEN :ini AND :fin
+
+            ORDER BY p.id DESC
+        ";
+
+        $stmt = $pdo->prepare($sqlProductos);
+        $stmt->execute([
+            ':ini' => $ini,
+            ':fin' => $fin
+        ]);
+
+        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($productos)) {
+
+            $response->getBody()->write(json_encode([]));
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
+        }
+
+        $ids = array_column($productos, 'id');
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        $sqlDetalle = "
+            SELECT
+                m.id,
+                m.codigo_prod,
+                m.tipo_movimiento,
+                s.nombre AS almacen,
+                m.id_compra,
+                m.id_venta,
+                m.cantidad_acumulada,
+                u.nombre AS unidad,
+                m.cantidad_movimiento,
+                ROUND(m.cantidad_acumulada * m.promedio,2) AS p_total,
+                m.cantidad_ingreso,
+                m.cantidad_salida,
+                m.precio,
+                m.promedio,
+                ROUND(m.cantidad_acumulada * m.precio,2) AS costo,
+                m.comentario,
+                m.fecha_registro
+
+            FROM movimiento_articulos m
+
+            INNER JOIN sucursales s
+                ON s.id = m.id_sucursal
+
+            INNER JOIN productos p
+                ON p.id = m.codigo_prod
+
+            INNER JOIN unidad u
+                ON u.codigo = p.unidad
+
+            WHERE m.codigo_prod IN ($placeholders)
+
+            AND m.fecha_registro BETWEEN ? AND ?
+
+            AND NOT (
+                m.cantidad_ingreso = 0
+                AND m.cantidad_salida = 0
+            )
+
+            AND m.precio <> 0
+
+            ORDER BY
+                m.codigo_prod,
+                m.id DESC
+        ";
+
+        $detalleParams = $ids;
+        $detalleParams[] = $ini;
+        $detalleParams[] = $fin;
+
+        $stmtDetalle = $pdo->prepare($sqlDetalle);
+        $stmtDetalle->execute($detalleParams);
+
+        $detalles = $stmtDetalle->fetchAll(PDO::FETCH_ASSOC);
+
+        $detallePorProducto = [];
+
+        foreach ($detalles as $detalle) {
+
+            $detallePorProducto[$detalle['codigo_prod']][] = [
+                'id'                 => $detalle['id'],
+                'tipo_movimiento'    => $detalle['tipo_movimiento'],
+                'almacen'            => $detalle['almacen'],
+                'id_compra'          => $detalle['id_compra'],
+                'id_venta'           => $detalle['id_venta'],
+                'cantidad_acumulada' => $detalle['cantidad_acumulada'],
+                'unidad'             => $detalle['unidad'],
+                'cantidad_movimiento'=> $detalle['cantidad_movimiento'],
+                'p_total'            => $detalle['p_total'],
+                'cantidad_ingreso'   => $detalle['cantidad_ingreso'],
+                'cantidad_salida'    => $detalle['cantidad_salida'],
+                'precio'             => $detalle['precio'],
+                'promedio'           => $detalle['promedio'],
+                'costo'              => $detalle['costo'],
+                'comentario'         => $detalle['comentario'],
+                'fecha_registro'     => date(
+                    'd-m-Y H:i:s',
+                    strtotime($detalle['fecha_registro'])
+                )
+            ];
+        }
+
+        foreach ($productos as &$producto) {
+
+            $producto['promedio'] = [
+                'promedio' => $producto['promedio'],
+                'cantidad_acumulada' => $producto['cantidad_acumulada']
+            ];
+
+            $producto['stock'] = [
+                'cantidad' => $producto['stock']
+            ];
+
+            $producto['detalle'] =
+                $detallePorProducto[$producto['id']] ?? [];
+        }
+
+        unset($producto);
+
+        $response->getBody()->write(
+            json_encode($productos, JSON_UNESCAPED_UNICODE)
+        );
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
+
+    } catch (PDOException $e) {
+
+        $response->getBody()->write(json_encode([
+            'STATUS' => false,
+            'message' => $e->getMessage()
+        ]));
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(500);
+    }
+});
+
+
+
+
 $app->post('/kardex', function (Request $request, Response $response) use ($pdo) {
+
+    header("Content-Type: application/json; charset=utf-8");
 
     $body = $request->getBody()->getContents();
     $j = json_decode($body, true);
     $data = json_decode($j['json'], true);
 
-    // 🔹 Conversión de fechas (igual a tu lógica)
     $arraymeses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $arraynros  = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 
-    $mes1 = substr($data['inicio'], 0,3);
-    $mes2 = substr($data['fin'], 0,3);
-    $dia1 = substr($data['inicio'], 3,2);
-    $dia2 = substr($data['fin'], 3,2);
-    $ano1 = substr($data['inicio'], 5,4);
-    $ano2 = substr($data['fin'], 5,4);
+    $mes1 = substr($data['inicio'], 0, 3);
+    $mes2 = substr($data['fin'], 0, 3);
 
-    $ini = $ano1.'-'.str_replace($arraymeses,$arraynros,$mes1).'-'.$dia1.' 00:00:01';
-    $fin = $ano2.'-'.str_replace($arraymeses,$arraynros,$mes2).'-'.$dia2.' 23:59:59';
+    $dia1 = substr($data['inicio'], 3, 2);
+    $dia2 = substr($data['fin'], 3, 2);
+
+    $ano1 = substr($data['inicio'], 5, 4);
+    $ano2 = substr($data['fin'], 5, 4);
+
+    $ini = $ano1 . '-' . str_replace($arraymeses, $arraynros, $mes1) . '-' . $dia1 . ' 00:00:01';
+    $fin = $ano2 . '-' . str_replace($arraymeses, $arraynros, $mes2) . '-' . $dia2 . ' 23:59:59';
 
     try {
 
-        // 🔹 Query principal
-        $sql1 = "SELECT p.id, p.codigo, p.nombre, p.categoria
-                 FROM movimiento_articulos m
-                 INNER JOIN productos p ON m.codigo_prod = p.id
-                 WHERE m.fecha_registro BETWEEN :ini AND :fin";
+        /*
+        |--------------------------------------------------------------------------
+        | PRODUCTOS + STOCK + ÚLTIMO PROMEDIO
+        |--------------------------------------------------------------------------
+        */
+
+        $sqlProductos = "
+            SELECT DISTINCT
+                p.id,
+                p.codigo,
+                p.nombre,
+                p.categoria,
+
+                (
+                    SELECT ma.promedio
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                    ORDER BY ma.id DESC
+                    LIMIT 1
+                ) AS promedio,
+
+                (
+                    SELECT ma.cantidad_acumulada
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                    ORDER BY ma.id DESC
+                    LIMIT 1
+                ) AS cantidad_acumulada,
+
+                (
+                    SELECT COALESCE(SUM(ma.cantidad_ingreso) - SUM(ma.cantidad_salida),0)
+                    FROM movimiento_articulos ma
+                    WHERE ma.codigo_prod = p.id
+                ) AS stock
+
+            FROM movimiento_articulos m
+            INNER JOIN productos p ON p.id = m.codigo_prod
+
+            WHERE m.fecha_registro BETWEEN :ini AND :fin
+        ";
 
         $params = [
             ':ini' => $ini,
@@ -966,113 +1202,190 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
         ];
 
         if (!empty($data['producto'])) {
-            $sql1 .= " AND m.codigo_prod = :producto";
+            $sqlProductos .= " AND m.codigo_prod = :producto";
             $params[':producto'] = $data['producto'];
         }
 
-        $sql1 .= " GROUP BY p.id ORDER BY p.id DESC";
+        $sqlProductos .= " ORDER BY p.id DESC";
 
-        $stmt = $pdo->prepare($sql1);
+        $stmt = $pdo->prepare($sqlProductos);
         $stmt->execute($params);
 
         $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $prods = [];
+        if (empty($productos)) {
 
-        foreach ($productos as $fila) {
+            $response->getBody()->write(json_encode([]));
 
-            $id = $fila['id'];
-
-            // 🔹 DETALLE
-            $sqlDetalle = "SELECT
-                                m.id,
-                                m.tipo_movimiento,
-                                s.nombre AS almacen,
-                                m.id_compra,
-                                m.id_venta,
-                                m.cantidad_acumulada,
-                                u.nombre AS unidad,
-                                m.cantidad_movimiento,
-                                ROUND(m.cantidad_acumulada*m.promedio,2) AS p_total,
-                                m.cantidad_ingreso,
-                                m.cantidad_salida,
-                                m.precio,
-                                m.promedio,
-                                ROUND(m.cantidad_acumulada*m.precio,2) AS costo,
-                                m.comentario,
-                                DATE_FORMAT(m.fecha_registro,'%d-%m-%Y') AS fecha_registro
-                            FROM movimiento_articulos m
-                            INNER JOIN sucursales s ON s.id = m.id_sucursal
-                            INNER JOIN productos p ON m.codigo_prod = p.id
-                            INNER JOIN unidad u ON p.unidad = u.codigo
-                            WHERE m.codigo_prod = :id
-                              AND NOT (m.cantidad_ingreso = 0 AND m.cantidad_salida = 0)
-                              AND m.precio <> 0";
-
-            $paramsDetalle = [':id' => $id];
-
-            if (!empty($data['sucursal']) && $data['sucursal'] != "0") {
-                $sqlDetalle .= " AND m.id_almacen = :sucursal";
-                $paramsDetalle[':sucursal'] = $data['sucursal'];
-            }
-
-            if (!empty($data['movimiento']) && $data['movimiento'] != "0") {
-                $sqlDetalle .= " AND m.tipo_movimiento = :movimiento";
-                $paramsDetalle[':movimiento'] = $data['movimiento'];
-            }
-
-            if (!empty($data['compra'])) {
-                $sqlDetalle .= " AND m.id_compra = :compra";
-                $paramsDetalle[':compra'] = $data['compra'];
-            }
-
-            if (!empty($data['venta'])) {
-                $sqlDetalle .= " AND m.id_venta = :venta";
-                $paramsDetalle[':venta'] = $data['venta'];
-            }
-
-            $sqlDetalle .= " ORDER BY m.id DESC";
-
-            $stmtDet = $pdo->prepare($sqlDetalle);
-            $stmtDet->execute($paramsDetalle);
-
-            $fila['detalle'] = $stmtDet->fetchAll(PDO::FETCH_ASSOC);
-
-            // 🔹 PROMEDIO
-            $sqlProm = "SELECT promedio, cantidad_acumulada
-                        FROM movimiento_articulos
-                        WHERE codigo_prod = :id
-                        ORDER BY id DESC LIMIT 1";
-
-            $stmtProm = $pdo->prepare($sqlProm);
-            $stmtProm->execute([':id' => $id]);
-            $fila['promedio'] = $stmtProm->fetch(PDO::FETCH_ASSOC);
-
-            // 🔹 STOCK
-            $sqlStock = "SELECT
-                            SUM(cantidad_ingreso) - SUM(cantidad_salida) AS cantidad
-                         FROM movimiento_articulos
-                         WHERE codigo_prod = :id";
-
-            $stmtStock = $pdo->prepare($sqlStock);
-            $stmtStock->execute([':id' => $id]);
-            $fila['stock'] = $stmtStock->fetch(PDO::FETCH_ASSOC);
-
-            $prods[] = $fila;
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         }
 
-        $response->getBody()->write(json_encode($prods));
+        /*
+        |--------------------------------------------------------------------------
+        | IDs DE PRODUCTOS
+        |--------------------------------------------------------------------------
+        */
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        $ids = array_column($productos, 'id');
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        /*
+        |--------------------------------------------------------------------------
+        | DETALLES (UNA SOLA CONSULTA)
+        |--------------------------------------------------------------------------
+        */
+
+        $sqlDetalle = "
+            SELECT
+                m.id,
+                m.codigo_prod,
+                m.tipo_movimiento,
+                s.nombre AS almacen,
+                m.id_compra,
+                m.id_venta,
+                m.cantidad_acumulada,
+                u.nombre AS unidad,
+                m.cantidad_movimiento,
+                ROUND(m.cantidad_acumulada * m.promedio,2) AS p_total,
+                m.cantidad_ingreso,
+                m.cantidad_salida,
+                m.precio,
+                m.promedio,
+                ROUND(m.cantidad_acumulada * m.precio,2) AS costo,
+                m.comentario,
+                m.fecha_registro
+
+            FROM movimiento_articulos m
+
+            INNER JOIN sucursales s
+                ON s.id = m.id_sucursal
+
+            INNER JOIN productos p
+                ON p.id = m.codigo_prod
+
+            INNER JOIN unidad u
+                ON u.codigo = p.unidad
+
+            WHERE m.codigo_prod IN ($placeholders)
+
+            AND NOT (
+                m.cantidad_ingreso = 0
+                AND m.cantidad_salida = 0
+            )
+
+            AND m.precio <> 0
+        ";
+
+        $detalleParams = $ids;
+
+        if (!empty($data['sucursal']) && $data['sucursal'] != "0") {
+            $sqlDetalle .= " AND m.id_almacen = ?";
+            $detalleParams[] = $data['sucursal'];
+        }
+
+        if (!empty($data['movimiento']) && $data['movimiento'] != "0") {
+            $sqlDetalle .= " AND m.tipo_movimiento = ?";
+            $detalleParams[] = $data['movimiento'];
+        }
+
+        if (!empty($data['compra'])) {
+            $sqlDetalle .= " AND m.id_compra = ?";
+            $detalleParams[] = $data['compra'];
+        }
+
+        if (!empty($data['venta'])) {
+            $sqlDetalle .= " AND m.id_venta = ?";
+            $detalleParams[] = $data['venta'];
+        }
+
+        $sqlDetalle .= "
+            ORDER BY
+                m.codigo_prod,
+                m.id DESC
+        ";
+
+        $stmtDetalle = $pdo->prepare($sqlDetalle);
+        $stmtDetalle->execute($detalleParams);
+
+        $detalles = $stmtDetalle->fetchAll(PDO::FETCH_ASSOC);
+
+        /*
+        |--------------------------------------------------------------------------
+        | AGRUPAR DETALLES POR PRODUCTO
+        |--------------------------------------------------------------------------
+        */
+
+        $detallePorProducto = [];
+
+        foreach ($detalles as $detalle) {
+
+            $detallePorProducto[$detalle['codigo_prod']][] = [
+                'id'                 => $detalle['id'],
+                'tipo_movimiento'    => $detalle['tipo_movimiento'],
+                'almacen'            => $detalle['almacen'],
+                'id_compra'          => $detalle['id_compra'],
+                'id_venta'           => $detalle['id_venta'],
+                'cantidad_acumulada' => $detalle['cantidad_acumulada'],
+                'unidad'             => $detalle['unidad'],
+                'cantidad_movimiento'=> $detalle['cantidad_movimiento'],
+                'p_total'            => $detalle['p_total'],
+                'cantidad_ingreso'   => $detalle['cantidad_ingreso'],
+                'cantidad_salida'    => $detalle['cantidad_salida'],
+                'precio'             => $detalle['precio'],
+                'promedio'           => $detalle['promedio'],
+                'costo'              => $detalle['costo'],
+                'comentario'         => $detalle['comentario'],
+                'fecha_registro'     => date(
+                    'd-m-Y',
+                    strtotime($detalle['fecha_registro'])
+                )
+            ];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | ARMAR RESPUESTA
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ($productos as &$producto) {
+
+            $producto['promedio'] = [
+                'promedio' => $producto['promedio'],
+                'cantidad_acumulada' => $producto['cantidad_acumulada']
+            ];
+
+            $producto['stock'] = [
+                'cantidad' => $producto['stock']
+            ];
+
+            $producto['detalle'] =
+                $detallePorProducto[$producto['id']] ?? [];
+        }
+
+        unset($producto);
+
+        $response->getBody()->write(
+            json_encode($productos, JSON_UNESCAPED_UNICODE)
+        );
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(200);
 
     } catch (PDOException $e) {
 
         $response->getBody()->write(json_encode([
-            "STATUS" => false,
-            "message" => $e->getMessage()
+            'STATUS' => false,
+            'message' => $e->getMessage()
         ]));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(500);
     }
 });
 

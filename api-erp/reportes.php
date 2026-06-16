@@ -19,16 +19,16 @@ use Dompdf\Dompdf;
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
-/*Produccion*/
+/*Produccion
 $dsn = "mysql:host=lh-cjm.com;dbname=aprendea_erp;port=3306;charset=utf8";
 $usuario="aprendea_erp";
 $clave="erp2023*";
-
-/*Local dev
+*/
+/*Local dev*/
 $dsn = "mysql:host=localhost;dbname=erp;port=3306;charset=utf8";
 $usuario="root";
 $clave= "";
-*/
+
 
 try {
     $pdo = new PDO($dsn, $usuario, $clave, [
@@ -808,7 +808,7 @@ $app->get('/boleta/{id}', function (Request $request, Response $response, $args)
     $pdf->Cell(0,8,'FECHA:'.date('d/m/Y H:i:s', strtotime($prods[0]['fecha_registro'])),0,1,'L');
 
     $pdf->SetFont('Arial','',17);
-    $pdf->Cell(0,8,'FORMA PAGO:'.strtoupper($prods[0]['tipo']),0,1,'L');
+    //$pdf->Cell(0,8,'FORMA PAGO:'.strtoupper($prods[0]['tipo']),0,1,'L');
 
     // ENCABEZADO
     $pdf->SetFont('Arial','B',14);
@@ -862,7 +862,7 @@ $app->get('/boleta/{id}', function (Request $request, Response $response, $args)
     $pdf->Cell(150,2,str_repeat('-',100),0,1);
 
     $pdf->SetFont('Arial','B',16);
-    $pdf->Cell(35,14,strtoupper($prods[0]['tipo']),0,0,'L');
+    //$pdf->Cell(35,14,strtoupper($prods[0]['tipo']),0,0,'L');
 
     $pdf->SetFont('Arial','',14);
     $pdf->Cell(20,14,'S/ '.$prods[0]['valor_total'],0,1,'L');
