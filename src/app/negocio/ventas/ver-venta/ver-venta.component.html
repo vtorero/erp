@@ -116,6 +116,12 @@
           <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
 
         </ng-container>
+        <ng-container matColumnDef="opciones">
+          <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
+          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">boton</span></mat-cell>
+
+        </ng-container>
+
         <ng-container matColumnDef="pendiente">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
           <mat-cell *matCellDef="let row">

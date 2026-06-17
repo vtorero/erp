@@ -17,7 +17,7 @@ import { lastValueFrom } from 'rxjs';
   styleUrls: ['./ver-venta.component.css']
 })
 export class VerVentaComponent implements OnInit {
-  displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal','opciones'];
   displayedColumnsPago = ['id','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataDetalle:any;
@@ -26,6 +26,7 @@ export class VerVentaComponent implements OnInit {
   exampleArray:any;
   sucursales:any;
   cargando:boolean=true;
+  esadmin:boolean=false;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
@@ -61,6 +62,9 @@ export class VerVentaComponent implements OnInit {
     this.getCliente();
     this.cargaSucursales();
     this.getVendedor();
+    if(localStorage.getItem("currentNombre")=="admin"){
+      this.esadmin=true;
+    }
   }
 
   async getDataCliente(id: any) {
