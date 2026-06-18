@@ -118,7 +118,12 @@
         </ng-container>
         <ng-container matColumnDef="opciones">
           <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
-          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">boton</span></mat-cell>
+          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
+              <button  mat-icon-button color="warn">
+        &nbsp;&nbsp;Anular <i class="material-icons"  (click)="anularProducto(row.id,data)" >add_circle</i>
+      </button>
+            
+            </span></mat-cell>
 
         </ng-container>
 

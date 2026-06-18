@@ -92,6 +92,10 @@ save(d){
 
 }
 
+anularProducto(id:any,data:any){
+console.log(id,data)
+}
+
   getVendedor(): void {
     this.api.getApi('vendedores').subscribe(data => {
       if(data) {
