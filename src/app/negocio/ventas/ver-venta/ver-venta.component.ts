@@ -92,8 +92,8 @@ save(d){
 
 }
 
-anularProducto(id:any,data:any){
-console.log(id,data)
+anularProducto(data:any){
+console.log(data)
 }
 
   getVendedor(): void {
