@@ -1050,8 +1050,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
 
             ORDER BY
                 m.codigo_prod,
-                m.id DESC
-        ";
+                m.id DESC";
 
         $detalleParams = $ids;
         $detalleParams[] = $ini;
@@ -1162,39 +1161,55 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
         */
 
         $sqlProductos = "
-            SELECT DISTINCT
-                p.id,
-                p.codigo,
-                p.nombre,
-                p.categoria,
+    SELECT
+        p.id,
+        p.codigo,
+        p.nombre,
+        p.categoria,
 
-                (
-                    SELECT ma.promedio
-                    FROM movimiento_articulos ma
-                    WHERE ma.codigo_prod = p.id
-                    ORDER BY ma.id DESC
-                    LIMIT 1
-                ) AS promedio,
+        ult.promedio,
+        ult.cantidad_acumulada,
 
-                (
-                    SELECT ma.cantidad_acumulada
-                    FROM movimiento_articulos ma
-                    WHERE ma.codigo_prod = p.id
-                    ORDER BY ma.id DESC
-                    LIMIT 1
-                ) AS cantidad_acumulada,
+        ult.cantidad_acumulada AS stock
 
-                (
-                    SELECT COALESCE(SUM(ma.cantidad_ingreso) - SUM(ma.cantidad_salida),0)
-                    FROM movimiento_articulos ma
-                    WHERE ma.codigo_prod = p.id
-                ) AS stock
+    FROM productos p
 
-            FROM movimiento_articulos m
-            INNER JOIN productos p ON p.id = m.codigo_prod
+    INNER JOIN (
 
-            WHERE m.fecha_registro BETWEEN :ini AND :fin
-        ";
+        SELECT
+            m1.codigo_prod,
+            m1.promedio,
+            m1.cantidad_acumulada
+
+        FROM movimiento_articulos m1
+
+        INNER JOIN (
+
+            SELECT
+                codigo_prod,
+                MAX(id) AS id
+
+            FROM movimiento_articulos
+
+            WHERE fecha_registro <= :fin
+
+            GROUP BY codigo_prod
+
+        ) mx ON mx.id = m1.id
+
+    ) ult ON ult.codigo_prod = p.id
+
+    WHERE EXISTS (
+
+
+    SELECT 1
+    FROM movimiento_articulos ma
+    WHERE ma.codigo_prod = p.id
+      AND fecha_registro BETWEEN :ini AND :fin
+
+
+    )
+";
 
         $params = [
             ':ini' => $ini,
@@ -1202,11 +1217,14 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
         ];
 
         if (!empty($data['producto'])) {
-            $sqlProductos .= " AND m.codigo_prod = :producto";
+            $sqlProductos .= " AND codigo_prod = :producto";
             $params[':producto'] = $data['producto'];
         }
 
         $sqlProductos .= " ORDER BY p.id DESC";
+
+        //echo $sqlProductos;
+        //exit;
 
         $stmt = $pdo->prepare($sqlProductos);
         $stmt->execute($params);
@@ -1269,20 +1287,25 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             INNER JOIN unidad u
                 ON u.codigo = p.unidad
 
-            WHERE m.codigo_prod IN ($placeholders)
+          WHERE m.codigo_prod IN ($placeholders)
+
+            AND m.fecha_registro BETWEEN ? AND ?
 
             AND NOT (
                 m.cantidad_ingreso = 0
                 AND m.cantidad_salida = 0
-            )
+                )
 
             AND m.precio <> 0
         ";
 
         $detalleParams = $ids;
 
+        $detalleParams[] = $ini;
+        $detalleParams[] = $fin;
+
         if (!empty($data['sucursal']) && $data['sucursal'] != "0") {
-            $sqlDetalle .= " AND m.id_almacen = ?";
+            $sqlDetalle .= " AND m.id_sucursal = ?";
             $detalleParams[] = $data['sucursal'];
         }
 

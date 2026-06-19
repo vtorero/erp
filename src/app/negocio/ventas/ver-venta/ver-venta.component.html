@@ -54,10 +54,10 @@
             <div class="row">
               <div class="col-10"> <mat-form-field appearance="outline">
                 <mat-label>Observación</mat-label>
-                <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
+                <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación" >
 
                 </mat-form-field></div>
-              <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
+              <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;" matTooltip="Guardar">save</i></div>
             </div>
 
 
@@ -119,8 +119,8 @@
         <ng-container matColumnDef="opciones">
           <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
           <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
-              <button  mat-icon-button color="warn">
-        &nbsp;&nbsp;Anular <i class="material-icons"  (click)="anularProducto(data)" >add_circle</i>
+              <button  mat-icon-button color="warn" matTooltip="Anular">
+         <i class="material-icons"  (click)="anularProducto(data)" >delete</i>
       </button>
 
             </span></mat-cell>
