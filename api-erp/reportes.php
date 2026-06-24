@@ -523,7 +523,6 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
                     'VENTA' AS movimiento,
                     u.nombre AS usuario,
                     s.nombre AS sucursal,
-                    tp.nombre AS tipopago,
                     c.nombre AS cuenta,
                     vp.numero_operacion,
                     vp.monto,
@@ -534,7 +533,6 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
                 JOIN clientes cl ON cl.id = v.id_cliente
                 JOIN sucursales s ON s.id = v.id_sucursal
                 JOIN usuarios u ON u.id = vp.usuario
-                JOIN tipoPago tp ON tp.id = vp.tipoPago
                 JOIN cajas c ON c.id = vp.cuentaPago
                 WHERE vp.fecha_registro BETWEEN :ini AND :fin
 
@@ -549,7 +547,6 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
                     'COMPRA',
                     u.nombre,
                     s.nombre,
-                    tp.nombre,
                     c.nombre,
                     vp.numero_operacion,
                     vp.monto,
@@ -560,13 +557,14 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
                 JOIN proveedores cl ON cl.id = v.id_proveedor
                 JOIN sucursales s ON s.id = v.id_sucursal
                 JOIN usuarios u ON u.id = vp.usuario
-                JOIN tipoPago tp ON tp.id = vp.tipoPago
                 JOIN cajas c ON c.id = vp.cuentaPago
                 WHERE vp.fecha_registro BETWEEN :ini AND :fin
 
                 ORDER BY fecha_registro DESC";
 
         $stmt = $pdo->prepare($sql);
+
+
         $stmt->execute([
             'ini' => $ini,
             'fin' => $fin
@@ -578,7 +576,7 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        $headers = ['ID','Fecha','Fecha Registro','Documento','Cli/Prov','Movimiento','Usuario','Sucursal','Medio pago','Cuenta','Operacion','Monto','Monto Pendiente','Observacion'];
+        $headers = ['ID','Fecha','Fecha Registro','Documento','Cli/Prov','Movimiento','Usuario','Sucursal','Cuenta','Operacion','Monto','Monto Pendiente','Observacion'];
 
         $col = 'A';
         foreach ($headers as $header) {
@@ -610,12 +608,11 @@ $app->post('/exportarcaja', function (Request $request, Response $response) use 
             $sheet->setCellValue("F{$rowIndex}", $row['movimiento']);
             $sheet->setCellValue("G{$rowIndex}", $row['usuario']);
             $sheet->setCellValue("H{$rowIndex}", $row['sucursal']);
-            $sheet->setCellValue("I{$rowIndex}", $row['tipopago']);
-            $sheet->setCellValue("J{$rowIndex}", $row['cuenta']);
-            $sheet->setCellValue("K{$rowIndex}", $row['numero_operacion']);
-            $sheet->setCellValue("L{$rowIndex}", $row['monto']);
-            $sheet->setCellValue("M{$rowIndex}", $row['monto_pendiente']);
-            $sheet->setCellValue("N{$rowIndex}", $row['observacion']);
+            $sheet->setCellValue("I{$rowIndex}", $row['cuenta']);
+            $sheet->setCellValue("J{$rowIndex}", $row['numero_operacion']);
+            $sheet->setCellValue("K{$rowIndex}", $row['monto']);
+            $sheet->setCellValue("L{$rowIndex}", $row['monto_pendiente']);
+            $sheet->setCellValue("M{$rowIndex}", $row['observacion']);
 
             $rowIndex++;
         }
