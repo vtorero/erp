@@ -40,7 +40,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
   public id_compra:any;
   public id_venta:any;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['contador','fecha_registro','almacen','comentario','id_venta','id_compra','cantidad_ingreso','cantidad_salida','precio','promedio','p_total'];
+  displayedColumns = ['contador','fecha_registro','almacen','comentario','id_venta','id_compra','cantidad_ingreso','cantidad_salida','precio','promedio','p_total','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
 
@@ -262,6 +262,12 @@ agregar(art:AddInventario) {
   }
 }
 */
+
+anularMovimiento(datos:any){
+  console.log(datos);
+
+}
+
 eliminar(art:Productos) {
   console.log("art",art);
   if(art){
