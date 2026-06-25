@@ -264,10 +264,16 @@ agregar(art:AddInventario) {
 */
 
 anularMovimiento(datos:any,prod:any){
+
+  this.api.movkardex(datos,prod).subscribe(
+    data=>{
+      //this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+      //this.renderDataTable();
+      },
+    erro=>{console.log(erro)}
+      );
   console.log(datos);
   console.log(prod);
-
-
 }
 
 eliminar(art:Productos) {

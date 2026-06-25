@@ -825,6 +825,15 @@ public guardarCompras(datos,detalle){
     { json:json,detalle:det }, { headers: headers });
 }
 
+public movkardex(datos,prod){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(prod);
+  let det = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/movimiento-kardex',
+    { json:json,detalle:det }, { headers: headers });
+}
+
+
 public GetDetalleCompra(id: any) {
   return this._http.get(Global.BASE_API_URL + 'api.php/compra/' + id,
     { headers: this.headers }
