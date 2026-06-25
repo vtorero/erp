@@ -263,8 +263,10 @@ agregar(art:AddInventario) {
 }
 */
 
-anularMovimiento(datos:any){
+anularMovimiento(datos:any,prod:any){
   console.log(datos);
+  console.log(prod);
+
 
 }
 

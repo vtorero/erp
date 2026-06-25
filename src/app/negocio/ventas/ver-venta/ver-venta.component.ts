@@ -18,7 +18,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class VerVentaComponent implements OnInit {
   displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal','opciones'];
-  displayedColumnsPago = ['id','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro','opciones'];
   dataClientes:any;
   dataDetalle:any;
   dataVendedores:any;

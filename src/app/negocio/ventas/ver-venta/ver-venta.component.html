@@ -120,7 +120,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
           <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
               <button  mat-icon-button color="warn" matTooltip="Anular">
-         <i class="material-icons"  (click)="anularProducto(data)" >delete</i>
+         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
       </button>
 
             </span></mat-cell>
@@ -145,6 +145,7 @@
           <mat-cell *matCellDef="let row">S/.{{ row.subtotal | number }}
           </mat-cell>
         </ng-container>
+
          <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
@@ -187,6 +188,17 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.fecha_registro}}</mat-cell>
         </ng-container>
+        <ng-container matColumnDef="opciones">
+          <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
+          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
+              <button  mat-icon-button color="warn" matTooltip="Anular">
+         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
+      </button>
+
+            </span></mat-cell>
+
+        </ng-container>
+
          <mat-header-row *matHeaderRowDef="displayedColumnsPago" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumnsPago;"></mat-row>
       </mat-table>
