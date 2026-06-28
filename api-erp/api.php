@@ -1011,6 +1011,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
                 m.id,
                 m.codigo_prod,
                 m.tipo_movimiento,
+                s.id AS id_almacen,
                 s.nombre AS almacen,
                 m.id_compra,
                 m.id_venta,
@@ -1068,6 +1069,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             $detallePorProducto[$detalle['codigo_prod']][] = [
                 'id'                 => $detalle['id'],
                 'tipo_movimiento'    => $detalle['tipo_movimiento'],
+                'id_almacen'            => $detalle['id_almacen'],
                 'almacen'            => $detalle['almacen'],
                 'id_compra'          => $detalle['id_compra'],
                 'id_venta'           => $detalle['id_venta'],
@@ -1262,6 +1264,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 m.codigo_prod,
                 m.tipo_movimiento,
                 s.nombre AS almacen,
+                s.id AS id_almacen,
                 m.id_compra,
                 m.id_venta,
                 m.cantidad_acumulada,
@@ -1348,6 +1351,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             $detallePorProducto[$detalle['codigo_prod']][] = [
                 'id'                 => $detalle['id'],
                 'tipo_movimiento'    => $detalle['tipo_movimiento'],
+                'id_almacen'            => $detalle['id_almacen'],
                 'almacen'            => $detalle['almacen'],
                 'id_compra'          => $detalle['id_compra'],
                 'id_venta'           => $detalle['id_venta'],
@@ -3373,6 +3377,63 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
 
     return $response
         ->withHeader('Content-Type', 'application/json');
+});
+
+
+$app->post('/movimiento-kardex',function(Request $request,Response $response) use ($pdo){
+
+    $body = $request->getBody()->getContents();
+    $j = json_decode($body, true);
+    $data = json_decode($j['json']);
+    $detalle = json_decode($j['detalle']);
+
+    //echo $data;
+  //  print_r($detalle->cantidad_movimiento);
+
+  //exit;
+
+$stmtInv = $pdo->prepare("
+UPDATE inventario  SET cantidad = cantidad - ?,
+fecha_actualizacion = NOW()
+WHERE producto_id = ?  AND id_almacen = ?;
+");
+$stmtInv->execute([
+    $detalle->cantidad_movimiento,
+    $data,
+    $detalle->id_almacen
+]);
+
+//var_dump($stmtInv);
+//exit;
+
+$result = [
+    'STATUS' => true,
+    'messaje' => 'Inventario actualizado correctamente'
+];
+
+$response->getBody()->write(json_encode($result));
+
+return $response
+    ->withHeader('Content-Type', 'application/json');
+
+/*
+// movimiento
+$stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
+$stmtMov->execute([
+    $item->id,
+    $ultimo_id->ultimo_id,
+    'Salida',
+    $item->despacho,
+    $item->precio,
+    $data->usuario,
+    $data->sucursal
+]);
+$stmtMov->closeCursor();
+
+*/
+
+
+
 });
 
 
