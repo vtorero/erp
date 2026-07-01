@@ -980,7 +980,8 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             FROM movimiento_articulos m
             INNER JOIN productos p ON p.id = m.codigo_prod
 
-            WHERE m.fecha_registro BETWEEN :ini AND :fin
+            WHERE m.estado='activo' and m.fecha_registro BETWEEN :ini AND :fin
+
 
             ORDER BY p.id DESC
         ";
@@ -1038,7 +1039,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             INNER JOIN unidad u
                 ON u.codigo = p.unidad
 
-            WHERE m.codigo_prod IN ($placeholders)
+            WHERE m.estado='activo' and m.codigo_prod IN ($placeholders)
 
             AND m.fecha_registro BETWEEN ? AND ?
 
@@ -3403,8 +3404,25 @@ $stmtInv->execute([
     $detalle->id_almacen
 ]);
 
-//var_dump($stmtInv);
-//exit;
+// 🔹 Obtener ID (mejor si tu SP lo devuelve)
+$ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos")->fetch();
+
+
+// movimiento
+$stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
+$stmtMov->execute([
+    $data,
+    $ultimo_id->ultimo_id,
+    $detalle->tipo_movimiento,
+    $detalle->cantidad_movimiento,
+    $detalle->precio,
+    'admin',
+    $detalle->id_almacen
+]);
+//var_dump( $data,$ultimo_id->ultimo_id,$detalle->tipo_movimiento,$detalle->cantidad_movimiento,$detalle->precio,$detalle->id_almacen);
+ //exit;
+$stmtMov->closeCursor();
+
 
 $result = [
     'STATUS' => true,
@@ -3415,23 +3433,6 @@ $response->getBody()->write(json_encode($result));
 
 return $response
     ->withHeader('Content-Type', 'application/json');
-
-/*
-// movimiento
-$stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
-$stmtMov->execute([
-    $item->id,
-    $ultimo_id->ultimo_id,
-    'Salida',
-    $item->despacho,
-    $item->precio,
-    $data->usuario,
-    $data->sucursal
-]);
-$stmtMov->closeCursor();
-
-*/
-
 
 
 });
