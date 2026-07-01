@@ -3409,12 +3409,22 @@ $ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos"
 
 
 // movimiento
+
+$tipo='';
+$cantidad=0;
+if($detalle->tipo_movimiento=='Salida'){
+    $tipo='Ingreso';
+     $cantidad = abs($detalle->cantidad_movimiento);
+}else{
+    $tipo='Salida';
+     $cantidad = -abs($detalle->cantidad_movimiento);
+}
 $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
 $stmtMov->execute([
     $data,
-    $ultimo_id->ultimo_id,
-    $detalle->tipo_movimiento,
-    $detalle->cantidad_movimiento,
+    00000000,
+    $tipo,
+    $cantidad,
     $detalle->precio,
     'admin',
     $detalle->id_almacen
