@@ -217,7 +217,7 @@ openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void 
   dialogo1.afterClosed().subscribe(us => {
     if (us!= undefined)
      this.agregar(us);
-     //this.renderDataTable();
+     this.Busqueda();
    });
 
 }
@@ -265,6 +265,7 @@ agregar(art:AddInventario) {
 
 anularMovimiento(datos:any,prod:any){
 
+  if(datos.estado!='anulado'){
   this.api.movkardex(datos,prod).subscribe(
     data=>{
       //this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
@@ -272,8 +273,11 @@ anularMovimiento(datos:any,prod:any){
       },
     erro=>{console.log(erro)}
       );
-  console.log(datos);
-  console.log(prod);
+  //console.log(datos);
+  //console.log(prod);
+  this.Busqueda();
+  //this.renderDataTable();
+}
 }
 
 eliminar(art:Productos) {

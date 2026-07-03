@@ -940,6 +940,8 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
     $ini = date('Y-m-d') . ' 00:00:00';
     $fin = date('Y-m-d') . ' 23:59:59';
 
+
+
     try {
 
         /*
@@ -980,11 +982,10 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             FROM movimiento_articulos m
             INNER JOIN productos p ON p.id = m.codigo_prod
 
-            WHERE m.estado='activo' and m.fecha_registro BETWEEN :ini AND :fin
+            WHERE m.fecha_registro BETWEEN :ini AND :fin
 
 
-            ORDER BY p.id DESC
-        ";
+            ORDER BY p.id DESC";
 
         $stmt = $pdo->prepare($sqlProductos);
         $stmt->execute([
@@ -1012,6 +1013,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
                 m.id,
                 m.codigo_prod,
                 m.tipo_movimiento,
+                m.estado,
                 s.id AS id_almacen,
                 s.nombre AS almacen,
                 m.id_compra,
@@ -1039,7 +1041,7 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             INNER JOIN unidad u
                 ON u.codigo = p.unidad
 
-            WHERE m.estado='activo' and m.codigo_prod IN ($placeholders)
+            WHERE m.codigo_prod IN ($placeholders)
 
             AND m.fecha_registro BETWEEN ? AND ?
 
@@ -1070,7 +1072,8 @@ $app->get('/kardex', function (Request $request, Response $response) use ($pdo) 
             $detallePorProducto[$detalle['codigo_prod']][] = [
                 'id'                 => $detalle['id'],
                 'tipo_movimiento'    => $detalle['tipo_movimiento'],
-                'id_almacen'            => $detalle['id_almacen'],
+                'estado'             => $detalle['estado'],
+                'id_almacen'         => $detalle['id_almacen'],
                 'almacen'            => $detalle['almacen'],
                 'id_compra'          => $detalle['id_compra'],
                 'id_venta'           => $detalle['id_venta'],
@@ -1264,6 +1267,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 m.id,
                 m.codigo_prod,
                 m.tipo_movimiento,
+                m.estado,
                 s.nombre AS almacen,
                 s.id AS id_almacen,
                 m.id_compra,
@@ -1352,7 +1356,8 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             $detallePorProducto[$detalle['codigo_prod']][] = [
                 'id'                 => $detalle['id'],
                 'tipo_movimiento'    => $detalle['tipo_movimiento'],
-                'id_almacen'            => $detalle['id_almacen'],
+                'estado'             => $detalle['estado'],
+                'id_almacen'         => $detalle['id_almacen'],
                 'almacen'            => $detalle['almacen'],
                 'id_compra'          => $detalle['id_compra'],
                 'id_venta'           => $detalle['id_venta'],
@@ -1367,7 +1372,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 'costo'              => $detalle['costo'],
                 'comentario'         => $detalle['comentario'],
                 'fecha_registro'     => date(
-                    'd-m-Y',
+                    'd-m-Y H:i:s',
                     strtotime($detalle['fecha_registro'])
                 )
             ];
@@ -3223,6 +3228,7 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
                     promedio,
                     total,
                     id_sucursal,
+                    estado,
                     usuario
                 )
                 VALUES
@@ -3238,6 +3244,7 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
                     :promedio,
                     :total,
                     :id_sucursal,
+                    :estado,
                     :usuario
                 )
             ";
@@ -3246,13 +3253,14 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
                 ':codigo_prod' => $data->id_producto,
                 ':tipo_movimiento' => $data->operacion,
                 ':id_almacen' => $data->id_sucursal,
-                ':comentario' => $data->comentario,
+                ':comentario' => 'Modificación manual -'.$data->comentario,
                 ':cantidad_movimiento' => $data->cantidad,
                 ':cantidad_ingreso' => $data->cantidad,
                 ':cantidad_acumulada' => $data->cantidad,
                 ':precio' => $data->precio,
                 ':promedio' => $promedio,
                 ':total' => $data->cantidad * $data->precio,
+                ':estado'=>'activo',
                 ':id_sucursal' => $data->id_sucursal,
                 ':usuario' => $data->usuario
             ];
@@ -3339,7 +3347,7 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
                 ':codigo_prod' => $data->id_producto,
                 ':tipo_movimiento' => $data->operacion,
                 ':id_almacen' => $data->id_sucursal,
-                ':comentario' => $data->comentario,
+                ':comentario' => 'Modificación manual -'.$data->comentario,
                 ':cantidad_movimiento' => $data->cantidad,
                 ':cantidad_ingreso' => $cantidad_ingreso,
                 ':cantidad_acumulada' => $cantidad_acumulada,
@@ -3369,6 +3377,108 @@ $app->post('/agregar-inventario', function (Request $request, Response $response
         ]);
     }
 
+    if ($data->operacion === 'Salida') {
+
+        if ($inv["precio"] != "0.00") {
+
+            $total = number_format(
+                $inv["total"] - ($data->cantidad * $inv["promedio"]),
+                2,
+                '.',
+                ''
+            );
+
+            $cantidadAcumulada = $inv["cantidad_acumulada"] - $data->cantidad;
+
+            try {
+
+                $pdo->beginTransaction();
+
+                // Actualizar inventario
+                $sqlInventario = "
+                    UPDATE inventario
+                    SET
+                        cantidad = cantidad - :cantidad,
+                        fecha_actualizacion = NOW()
+                    WHERE
+                        producto_id = :producto_id
+                    AND id_almacen = :almacen
+                ";
+
+                $stmtInventario = $pdo->prepare($sqlInventario);
+
+                $stmtInventario->execute([
+                    ':cantidad'    => $data->cantidad,
+                    ':producto_id' => $data->id_producto,
+                    ':almacen'     => $data->id_sucursal
+                ]);
+
+                // Registrar movimiento
+                $sqlMovimiento = "
+                    INSERT INTO movimiento_articulos
+                    (
+                        codigo_prod,
+                        tipo_movimiento,
+                        id_almacen,
+                        comentario,
+                        cantidad_movimiento,
+                        cantidad_salida,
+                        cantidad_acumulada,
+                        precio,
+                        promedio,
+                        total,
+                        id_sucursal,
+                        usuario
+                    )
+                    VALUES
+                    (
+                        :codigo_prod,
+                        :tipo_movimiento,
+                        :id_almacen,
+                        :comentario,
+                        :cantidad_movimiento,
+                        :cantidad_salida,
+                        :cantidad_acumulada,
+                        :precio,
+                        :promedio,
+                        :total,
+                        :id_sucursal,
+                        :usuario
+                    )
+                ";
+
+                $stmtMovimiento = $pdo->prepare($sqlMovimiento);
+
+                $stmtMovimiento->execute([
+                    ':codigo_prod'         => $data->id_producto,
+                    ':tipo_movimiento'     => $data->operacion,
+                    ':id_almacen'          => $data->id_sucursal,
+                    ':comentario'          => 'Modificación manual -'.$data->comentario,
+                    ':cantidad_movimiento' => $data->cantidad,
+                    ':cantidad_salida'     => -$data->cantidad,
+                    ':cantidad_acumulada'  => $cantidadAcumulada,
+                    ':precio'              => $inv["promedio"],
+                    ':promedio'            => $inv["promedio"],
+                    ':total'               => $total,
+                    ':id_sucursal'         => $data->id_sucursal,
+                    ':usuario'             => $data->usuario
+                ]);
+
+                $pdo->commit();
+
+            } catch (PDOException $e) {
+
+                $pdo->rollBack();
+
+                throw $e;
+
+            }
+
+        }
+
+    }
+
+
     $result = [
         'STATUS' => true,
         'messaje' => 'Inventario registrado correctamente'
@@ -3393,19 +3503,11 @@ $app->post('/movimiento-kardex',function(Request $request,Response $response) us
 
   //exit;
 
-$stmtInv = $pdo->prepare("
-UPDATE inventario  SET cantidad = cantidad - ?,
-fecha_actualizacion = NOW()
-WHERE producto_id = ?  AND id_almacen = ?;
-");
-$stmtInv->execute([
-    $detalle->cantidad_movimiento,
-    $data,
-    $detalle->id_almacen
-]);
+
 
 // 🔹 Obtener ID (mejor si tu SP lo devuelve)
-$ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos")->fetch();
+//$ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos")->fetch();
+
 
 
 // movimiento
@@ -3415,11 +3517,36 @@ $cantidad=0;
 if($detalle->tipo_movimiento=='Salida'){
     $tipo='Ingreso';
      $cantidad = abs($detalle->cantidad_movimiento);
+     $stmtInv = $pdo->prepare("
+     UPDATE inventario  SET cantidad = cantidad + (cantidad + ?),
+     fecha_actualizacion = NOW()
+     WHERE producto_id = ?  AND id_almacen = ?;
+     ");
+     $stmtInv->execute([
+         $cantidad,
+         $data,
+         $detalle->id_almacen
+     ]);
+     $stmtInv->closeCursor();
+
 }else{
     $tipo='Salida';
-     $cantidad = -abs($detalle->cantidad_movimiento);
+     $cantidad = abs($detalle->cantidad_movimiento);
+     $stmtInv = $pdo->prepare("
+     UPDATE inventario  SET cantidad = - (cantidad - ?),
+     fecha_actualizacion = NOW()
+     WHERE producto_id = ?  AND id_almacen = ?;
+     ");
+
+     $stmtInv->execute([
+         $cantidad,
+         $data,
+         $detalle->id_almacen
+     ]);
+     $stmtInv->closeCursor();
 }
-$stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
+
+$stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?,?)");
 $stmtMov->execute([
     $data,
     00000000,
@@ -3427,12 +3554,16 @@ $stmtMov->execute([
     $cantidad,
     $detalle->precio,
     'admin',
-    $detalle->id_almacen
+    $detalle->id_almacen,
+    'Modificación manual'
 ]);
 //var_dump( $data,$ultimo_id->ultimo_id,$detalle->tipo_movimiento,$detalle->cantidad_movimiento,$detalle->precio,$detalle->id_almacen);
  //exit;
 $stmtMov->closeCursor();
 
+$smtEstado=$pdo->prepare("UPDATE movimiento_articulos SET estado=? where id=?");
+$smtEstado->execute(['anulado',$detalle->id]);
+$smtEstado->closeCursor();
 
 $result = [
     'STATUS' => true,
