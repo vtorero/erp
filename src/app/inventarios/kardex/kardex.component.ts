@@ -12,6 +12,7 @@ import { AddProductoComponent } from '../../dialog/add-producto/add-producto.com
 import { Kardex } from 'app/modelos/kardex';
 import { AgregarInventarioComponent } from 'app/dialog/agregar-inventario/agregar-inventario.component';
 import { AddInventario } from 'app/modelos/addinventario';
+import { Global } from 'app/global';
 
 @Component({
   selector: 'app-kardex',
@@ -279,6 +280,13 @@ anularMovimiento(datos:any,prod:any){
   //this.renderDataTable();
 }
 }
+
+enviaExcel(){
+
+  console.log(this.fec1,this.fec2)
+  this.api.sendInvoice({fecha1:this.fec1,fecha2:this.fec2},Global.BASE_API_URL+'reportes.php/kardex','kardex.xlsx');
+    }
+
 
 eliminar(art:Productos) {
   console.log("art",art);

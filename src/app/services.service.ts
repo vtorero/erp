@@ -8,7 +8,7 @@ export class ServicesService {
 
   constructor() {}
   public ruta_a_guardar:string="";
-  public rutas=[];
+  public rutas:any=[];
 
 
   add(ruta:never): Array<string> {
@@ -29,4 +29,8 @@ export class ServicesService {
   getRutas() {
         return this.rutas;
   }
+
+
+
+
 }

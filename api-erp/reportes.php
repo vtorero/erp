@@ -1051,5 +1051,161 @@ $app->post('/productos', function (Request $request, Response $response) use ($p
 
 
 
+$app->post('/kardex', function (Request $request, Response $response) use ($pdo) {
+
+
+    $body = $request->getBody()->getContents();
+    $j = json_decode($body, true);
+    var_dump($body);
+    exit;
+    $data = json_decode($j['json'], true);
+
+    $arraymeses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    $arraynros  = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+
+    $mes1 = substr($data['inicio'], 0, 3);
+    $mes2 = substr($data['fin'], 0, 3);
+
+    $dia1 = substr($data['inicio'], 3, 2);
+    $dia2 = substr($data['fin'], 3, 2);
+
+    $ano1 = substr($data['inicio'], 5, 4);
+    $ano2 = substr($data['fin'], 5, 4);
+
+    $ini = $ano1 . '-' . str_replace($arraymeses, $arraynros, $mes1) . '-' . $dia1 . ' 00:00:01';
+    $fin = $ano2 . '-' . str_replace($arraymeses, $arraynros, $mes2) . '-' . $dia2 . ' 23:59:59';
+
+    try {
+
+        $sql = " SELECT
+                m.id,
+                p.nombre,
+                m.codigo_prod,
+                m.tipo_movimiento,
+                m.estado,
+                s.id AS id_almacen,
+                s.nombre AS almacen,
+                m.id_compra,
+                m.id_venta,
+                m.cantidad_acumulada,
+                u.nombre AS unidad,
+                m.cantidad_movimiento,
+                ROUND(m.cantidad_acumulada * m.promedio,2) AS p_total,
+                m.cantidad_ingreso,
+                m.cantidad_salida,
+                m.precio,
+                m.promedio,
+                ROUND(m.cantidad_acumulada * m.precio,2) AS costo,
+                m.comentario,
+                m.fecha_registro
+
+            FROM movimiento_articulos m
+			
+            INNER JOIN sucursales s
+                ON s.id = m.id_sucursal
+
+            INNER JOIN productos p
+                ON p.id = m.codigo_prod
+
+            INNER JOIN unidad u
+                ON u.codigo = p.unidad
+
+            WHERE
+
+             m.fecha_registro BETWEEN '2026-07-01' AND '2026-07-03'
+
+            AND NOT (
+                m.cantidad_ingreso = 0
+                AND m.cantidad_salida = 0
+            )
+
+            AND m.precio <> 0
+
+            ORDER BY
+                m.codigo_prod,
+                m.id DESC";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // ---- Crear Excel ----
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // ---- Cabeceras ----
+        $headers = [
+            'ID',
+            'CODIGO',
+            'DESCRIPCION',
+            'CATEGORIA',
+            'SUBCATEGORIA',
+            'FAMILIA',
+            'UNIDAD',
+            'PRECIO',
+            'PRECIO_COMPRA'
+        ];
+
+        $col = 'A';
+
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $col++;
+        }
+
+        // ---- Datos ----
+        $rowIndex = 2;
+
+        foreach ($rows as $row) {
+
+            $sheet->setCellValue("A{$rowIndex}", $row['id']);
+            $sheet->setCellValue("B{$rowIndex}", $row['codigo']);
+            $sheet->setCellValue("C{$rowIndex}", limpiarCadena($row['nombre']));
+            $sheet->setCellValue("D{$rowIndex}", $row['categoria']);
+            $sheet->setCellValue("E{$rowIndex}", $row['subcategoria']);
+            $sheet->setCellValue("F{$rowIndex}", $row['familia']);
+            $sheet->setCellValue("G{$rowIndex}", $row['unidad']);
+            $sheet->setCellValue("H{$rowIndex}", $row['precio']);
+            $sheet->setCellValue("I{$rowIndex}", $row['precio_compra']);
+
+            $rowIndex++;
+        }
+
+        // ---- Exportar ----
+        $writer = new Xlsx($spreadsheet);
+
+        ob_start();
+        $writer->save('php://output');
+        $excelOutput = ob_get_clean();
+
+        $fileName = "productos_" . date('Y-m-d') . ".xls";
+
+        $response->getBody()->write($excelOutput);
+
+        return $response
+            ->withHeader(
+                'Content-Type',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+            ->withHeader(
+                'Content-Disposition',
+                'attachment; filename="' . $fileName . '"'
+            );
+
+    } catch (Exception $e) {
+
+        $response->getBody()->write(json_encode([
+            "STATUS" => false,
+            "message" => $e->getMessage()
+        ]));
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(500);
+    }
+});
+
+
 
 $app->run();

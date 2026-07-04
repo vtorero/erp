@@ -25,7 +25,7 @@ import { Compra } from "./modelos/compra";
 export class ApiService {
 
   constructor(public _http: HttpClient) {}
-  public articulos=[];
+  public articulos:any=[];
   public chart:Chart;
 
   headers: HttpHeaders = new HttpHeaders({
@@ -247,7 +247,7 @@ getSucursalUsuario(){
 }
 
 
-  getApiTabla(criterio){
+  getApiTabla(criterio:any){
     return this._http
       .get(Global.BASE_API_URL + "api.php/tabla" + criterio, { headers: this.headers })
       .pipe(map((result) => result));
@@ -807,7 +807,7 @@ getLinea(){
 
 /*Apis usuarios*/
 
-public guardaVentas(datos,detalle){
+public guardaVentas(datos:any,detalle:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(datos);
   let det = JSON.stringify(detalle);
@@ -817,7 +817,7 @@ public guardaVentas(datos,detalle){
 
 /**Guardar Compras */
 
-public guardarCompras(datos,detalle){
+public guardarCompras(datos:any,detalle:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(datos);
   let det = JSON.stringify(detalle);
@@ -825,7 +825,7 @@ public guardarCompras(datos,detalle){
     { json:json,detalle:det }, { headers: headers });
 }
 
-public movkardex(datos,prod){
+public movkardex(datos:any,prod:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(prod);
   let det = JSON.stringify(datos);
@@ -1299,4 +1299,21 @@ enviaFactura(id): Observable<any> {
     )
 
   }*/
+
+      sendInvoice(data:any,url:any,archivo:any) {
+  fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/vnd.ms-excel'
+    },
+    body:JSON.stringify(data)
+  })
+    .then(response => response.blob())
+    .then(blob => {
+      var link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = archivo;
+      link.click();
+    });
+}
 }
