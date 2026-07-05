@@ -1052,36 +1052,32 @@ $app->post('/productos', function (Request $request, Response $response) use ($p
 
 
 $app->post('/kardex', function (Request $request, Response $response) use ($pdo) {
-
-
     $body = $request->getBody()->getContents();
-    $j = json_decode($body, true);
-    var_dump($body);
-    exit;
-    $data = json_decode($j['json'], true);
+    $data = json_decode($body, true);
 
     $arraymeses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     $arraynros  = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 
-    $mes1 = substr($data['inicio'], 0, 3);
-    $mes2 = substr($data['fin'], 0, 3);
+    $mes1 = substr($data['inicio'], 5, 2);
+    $mes2 = substr($data['fin'], 5, 2);
 
-    $dia1 = substr($data['inicio'], 3, 2);
-    $dia2 = substr($data['fin'], 3, 2);
+    $dia1 = substr($data['inicio'], 8, 2);
+    $dia2 = substr($data['fin'], 8, 2);
 
-    $ano1 = substr($data['inicio'], 5, 4);
-    $ano2 = substr($data['fin'], 5, 4);
+    $ano1 = substr($data['inicio'], 0, 4);
+    $ano2 = substr($data['fin'], 0, 4);
 
     $ini = $ano1 . '-' . str_replace($arraymeses, $arraynros, $mes1) . '-' . $dia1 . ' 00:00:01';
     $fin = $ano2 . '-' . str_replace($arraymeses, $arraynros, $mes2) . '-' . $dia2 . ' 23:59:59';
 
+
     try {
 
-        $sql = " SELECT
+        $sql = "SELECT
                 m.id,
-                p.nombre,
                 m.codigo_prod,
-                m.tipo_movimiento,
+                p.nombre,
+			    m.tipo_movimiento,
                 m.estado,
                 s.id AS id_almacen,
                 s.nombre AS almacen,
@@ -1100,7 +1096,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 m.fecha_registro
 
             FROM movimiento_articulos m
-			
+
             INNER JOIN sucursales s
                 ON s.id = m.id_sucursal
 
@@ -1110,9 +1106,9 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             INNER JOIN unidad u
                 ON u.codigo = p.unidad
 
-            WHERE
+            WHERE m.estado='activo' and m.codigo_prod IN (2805)
 
-             m.fecha_registro BETWEEN '2026-07-01' AND '2026-07-03'
+            AND m.fecha_registro BETWEEN  :ini AND :fin
 
             AND NOT (
                 m.cantidad_ingreso = 0
@@ -1125,8 +1121,13 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 m.codigo_prod,
                 m.id DESC";
 
+$params = [
+    ':ini' => "$ini 00:00:00",
+    ':fin' => "$fin 23:59:59"
+];
+
         $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+        $stmt->execute($params);
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

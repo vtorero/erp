@@ -283,8 +283,8 @@ anularMovimiento(datos:any,prod:any){
 
 enviaExcel(){
 
-  console.log(this.fec1,this.fec2)
-  this.api.sendInvoice({fecha1:this.fec1,fecha2:this.fec2},Global.BASE_API_URL+'reportes.php/kardex','kardex.xlsx');
+  console.log(this.selectedMoment,this.selectedMoment2)
+  this.api.sendInvoice({inicio:this.selectedMoment,fin:this.selectedMoment2},Global.BASE_API_URL+'reportes.php/kardex','kardex.xlsx');
     }
 
 
