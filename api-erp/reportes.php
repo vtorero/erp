@@ -1076,7 +1076,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
         $sql = "SELECT
                 m.id,
                 m.codigo_prod,
-                p.nombre,
+                p.nombre as producto,
 			    m.tipo_movimiento,
                 m.estado,
                 s.id AS id_almacen,
@@ -1106,9 +1106,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             INNER JOIN unidad u
                 ON u.codigo = p.unidad
 
-            WHERE m.estado='activo' and m.codigo_prod IN (2805)
-
-            AND m.fecha_registro BETWEEN  :ini AND :fin
+            WHERE m.fecha_registro BETWEEN  :ini AND :fin
 
             AND NOT (
                 m.cantidad_ingreso = 0
@@ -1120,6 +1118,8 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
             ORDER BY
                 m.codigo_prod,
                 m.id DESC";
+
+              
 
 $params = [
     ':ini' => "$ini 00:00:00",
@@ -1139,13 +1139,23 @@ $params = [
         $headers = [
             'ID',
             'CODIGO',
-            'DESCRIPCION',
-            'CATEGORIA',
-            'SUBCATEGORIA',
-            'FAMILIA',
+            'PRODUCTO',
+            'MOVIMIENTO',
+            'ESTADO',
+            'ALMACEN',
+            'ID_COMPRA',
+            'ID_VENTA',
+            'CANTIDAD ACUMULADA',
             'UNIDAD',
+            'CANTIDAD MOVIMIENTO',
+            'PRECIO TOTAL',
+            'CANTIDAD INGRESO',
+            'CANTIDAD SALIDA',
             'PRECIO',
-            'PRECIO_COMPRA'
+            'PROMEDIO',
+            'COMENTARIO',
+            'FECHA REGISTRO'
+
         ];
 
         $col = 'A';
@@ -1161,14 +1171,24 @@ $params = [
         foreach ($rows as $row) {
 
             $sheet->setCellValue("A{$rowIndex}", $row['id']);
-            $sheet->setCellValue("B{$rowIndex}", $row['codigo']);
-            $sheet->setCellValue("C{$rowIndex}", limpiarCadena($row['nombre']));
-            $sheet->setCellValue("D{$rowIndex}", $row['categoria']);
-            $sheet->setCellValue("E{$rowIndex}", $row['subcategoria']);
-            $sheet->setCellValue("F{$rowIndex}", $row['familia']);
-            $sheet->setCellValue("G{$rowIndex}", $row['unidad']);
-            $sheet->setCellValue("H{$rowIndex}", $row['precio']);
-            $sheet->setCellValue("I{$rowIndex}", $row['precio_compra']);
+            $sheet->setCellValue("B{$rowIndex}", $row['codigo_prod']);
+            $sheet->setCellValue("C{$rowIndex}", limpiarCadena($row['producto']));
+            $sheet->setCellValue("D{$rowIndex}", $row['tipo_movimiento']);
+            $sheet->setCellValue("E{$rowIndex}", $row['estado']);
+            $sheet->setCellValue("F{$rowIndex}", $row['almacen']);
+            $sheet->setCellValue("G{$rowIndex}", $row['id_compra']);
+            $sheet->setCellValue("H{$rowIndex}", $row['id_venta']);
+            $sheet->setCellValue("I{$rowIndex}", $row['cantidad_acumulada']);
+            $sheet->setCellValue("J{$rowIndex}", $row['unidad']);
+            $sheet->setCellValue("K{$rowIndex}", $row['cantidad_movimiento']);
+            $sheet->setCellValue("L{$rowIndex}", $row['p_total']);
+            $sheet->setCellValue("M{$rowIndex}", $row['cantidad_ingreso']);
+            $sheet->setCellValue("N{$rowIndex}", $row['cantidad_salida']);
+            $sheet->setCellValue("O{$rowIndex}", $row['precio']);
+            $sheet->setCellValue("P{$rowIndex}", $row['promedio']);
+              $sheet->setCellValue("Q{$rowIndex}", $row['costo']);
+                $sheet->setCellValue("R{$rowIndex}", $row['comentario']);
+                  $sheet->setCellValue("S{$rowIndex}", $row['fecha_registro']);
 
             $rowIndex++;
         }
