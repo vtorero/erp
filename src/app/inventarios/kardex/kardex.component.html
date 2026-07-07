@@ -187,7 +187,7 @@
                     <ng-container matColumnDef="opciones">
                       <th mat-header-cell *matHeaderCellDef>Opciones</th>
                       <td mat-cell *matCellDef="let element">
-                        <button [disabled]="element.estado=='anulado'"  mat-icon-button color="warn" matTooltip="Anular">
+                        <button [disabled]="element.estado=='anulado'"  mat-icon-button color="warn"  matTooltip="Anular" [matTooltipDisabled]="element.estado == 'anulado'">
                           <i class="material-icons"  (click)="anularMovimiento(element,datos.id)" >delete</i>
                        </button>
                       </td>
