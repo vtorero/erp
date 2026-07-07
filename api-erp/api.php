@@ -1613,7 +1613,7 @@ $app->post('/venta', function (Request $request, Response $response) use ($pdo) 
             ]);
 
             // movimiento
-            $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
+            $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?,?)");
             $stmtMov->execute([
                 $item->id,
                 $ultimo_id->ultimo_id,
@@ -1621,7 +1621,9 @@ $app->post('/venta', function (Request $request, Response $response) use ($pdo) 
                 $item->despacho,
                 $item->precio,
                 $data->usuario,
-                $data->sucursal
+                $data->sucursal,
+                'Venta realizada nro'. $ultimo_id->ultimo_id
+
             ]);
             $stmtMov->closeCursor();
         }
@@ -2134,7 +2136,7 @@ $app->post('/actualiza-pendiente-venta', function (Request $request, Response $r
         // Obtener detalle de venta
         $stmt = $pdo->prepare("
             SELECT d.*
-            FROM aprendea_erp.venta_detalle d
+            FROM venta_detalle d
             WHERE id = :id AND id_venta = :id_venta
         ");
 
@@ -2165,22 +2167,26 @@ $app->post('/actualiza-pendiente-venta', function (Request $request, Response $r
         $stmtCall = $pdo->prepare("CALL p_registrar_movimiento(
             :id_producto,
             :id_venta,
-            'Salida',
+            :salida,
             :cantidad,
             :precio,
             :usuario,
-            :sucursal
+            :sucursal,
+            :comentario
         )");
 
         $stmtCall->execute([
             'id_producto' => $data->id_producto,
             'id_venta' => $data->id_venta,
+            'salida'=>'Salida',
             'cantidad' => $cantidad,
             'precio' => $prod['precio'],
             'usuario' => $data->usuario,
-            'sucursal' => $data->sucursal
+            'sucursal' => $data->sucursal,
+            'comentario'=>'Entrega pendiente producto '.$data->id_producto.' de venta '.$data->id_venta
         ]);
 
+        $stmtCall->closeCursor();
         // Actualizar pendiente
         $stmtUpdate = $pdo->prepare("
             UPDATE venta_detalle
@@ -2194,7 +2200,7 @@ $app->post('/actualiza-pendiente-venta', function (Request $request, Response $r
             'id_venta' => $data->id_venta,
             'id_producto' => $data->id_producto
         ]);
-
+        $stmtUpdate->closeCursor();
         // Actualizar inventario
         $stmtInv = $pdo->prepare("
             UPDATE inventario
@@ -2210,6 +2216,7 @@ $app->post('/actualiza-pendiente-venta', function (Request $request, Response $r
             'sucursal' => $data->sucursal
         ]);
 
+        $stmtInv->closeCursor();
         $pdo->commit();
 
         $result = [
@@ -3498,20 +3505,10 @@ $app->post('/movimiento-kardex',function(Request $request,Response $response) us
     $data = json_decode($j['json']);
     $detalle = json_decode($j['detalle']);
 
-    //echo $data;
-  //  print_r($detalle->cantidad_movimiento);
 
-  //exit;
-
-
-
-// 🔹 Obtener ID (mejor si tu SP lo devuelve)
+ // 🔹 Obtener ID (mejor si tu SP lo devuelve)
 //$ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos")->fetch();
-
-
-
 // movimiento
-
 $tipo='';
 $cantidad=0;
 if($detalle->tipo_movimiento=='Salida'){
@@ -3528,6 +3525,15 @@ if($detalle->tipo_movimiento=='Salida'){
          $detalle->id_almacen
      ]);
      $stmtInv->closeCursor();
+
+     $sqlVenta=$pdo->prepare("UPDATE venta_detalle set pendiente=? WHERE id_venta=? and id_producto=?");
+     $sqlVenta->execute([
+        $cantidad,
+        $detalle->id_venta,
+        $data
+    ]);
+
+     $sqlVenta->closeCursor();
 
 }else{
     $tipo='Salida';
