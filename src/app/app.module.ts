@@ -59,6 +59,8 @@ import { AddFamiliaComponent } from './dialog/add-familia/add-familia.component'
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { EditProductoComponent } from './dialog/edit-producto/edit-producto.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TesoreriaComponent } from './tesoreria/tesoreria.component';
+import { MaintesoreriaComponent } from './tesoreria/maintesoreria/maintesoreria.component';
 
 
 
@@ -129,6 +131,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
      AddSubCategoriaComponent,
      AddFamiliaComponent,
      EditProductoComponent,
+     TesoreriaComponent,
+     MaintesoreriaComponent,
 
   ],
   providers: [],

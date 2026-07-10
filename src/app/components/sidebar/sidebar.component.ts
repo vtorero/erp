@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ServicesService } from '../../services.service';
 
+
 declare const $: any;
 declare interface RouteInfo {
     path: string;
@@ -19,7 +20,7 @@ declare interface Child {
     admin:string;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class:'', admin:'si',child:[]},
+    { path: '/dashboard/', title: 'Dashboard',  icon: 'dashboard', class:'', admin:'si',child:[]},
     { path: '/ventas/main', title: 'Ventas',  icon: 'library_books', class: '',admin:'no',
     child:[{pat:'/ventas/venta-rapida', tit: 'Venta Rápida',  icn:'bubble_chart',cls:'notifications', admin:'no'},
     {pat:'/ventas/clientes', tit: 'Clientes',  icn:'person',cls:'notifications', admin:'no'}]},
@@ -32,7 +33,9 @@ export const ROUTES: RouteInfo[] = [
       {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person', admin:'si'},
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person', admin:'si'},
        {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person', admin:'si'}]},
-    { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class:'' ,admin:'si',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person', admin:'si'},
+       {path:'/tesoreria/main',title:'Tesoreria', icon:'dashboard',class:'',admin:'si',child:[
+       {pat:'tesoreria/movimientos',tit:'Movimiento',icn:'bubble_chart',cls:'notifications', admin:'si'}]},
+        { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class:'' ,admin:'si',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person', admin:'si'},
     {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person', admin:'si'},{pat:'/configuracion/pagos', tit: 'Modo de pago',  icn:'bubble_chart',cls:'person', admin:'si'}]},
 ];
 

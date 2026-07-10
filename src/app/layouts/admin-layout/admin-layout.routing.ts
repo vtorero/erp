@@ -29,6 +29,8 @@ import { ListadoComprasComponent } from 'app/negocio/compras/listado-compras/lis
 import { VendedoresComponent } from '../../negocio/vendedores/vendedores.component';
 import { AuthGuard } from 'app/seguridad/auth/auth.guards';
 import { ModoPagoComponent } from '../../seguridad/modo-pago/modo-pago.component';
+import { TesoreriaComponent } from 'app/tesoreria/tesoreria.component';
+import { MaintesoreriaComponent } from 'app/tesoreria/maintesoreria/maintesoreria.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -101,13 +103,17 @@ canMatch: [ AuthGuard ]*/ }]},
       {path:'kardex',component:KardexComponent,
       canActivate: [ AuthGuard ],
       canMatch: [ AuthGuard ]},
-    { path: 'seguridad',      component: UsuarioComponent,
+    { path: 'seguridad',component: UsuarioComponent,
     canActivate: [ AuthGuard ],
     canMatch: [ AuthGuard ] },
     { path: 'usuarios',      component: UsuarioComponent },
     { path: 'sucursales',      component: SucursalesComponent },
     { path: 'vendedores',      component: VendedoresComponent },
     { path: 'productos',      component: ProductosComponent },
+    {path: 'tesoreria',
+      children:[ {path:'main',component:MaintesoreriaComponent},
+      {path:'movimientos',component:TesoreriaComponent}
+      ]},
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },
     { path: 'typography',     component: TypographyComponent },

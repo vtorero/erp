@@ -39,6 +39,7 @@ export class DashboardComponent implements OnInit {
 
 public selectedMoment = new Date();
 public selectedMoment2 = new Date();
+currentname:any;
 ventaTotal:any;
 montoPendiente:any;
 montoCompras:any;
@@ -253,8 +254,15 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
   ngOnInit() {
       /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+      this.currentname=localStorage.getItem("currentNombre");
 
-      const dataDailySalesChart: any = {
+      setTimeout(()=>this.enviaFechas(),1000);
+
+
+
+
+
+      /*const dataDailySalesChart: any = {
           labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
           series: [
               [12, 17, 7, 17, 23, 18, 38]
@@ -275,7 +283,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       //this.startAnimationForLineChart(dailySalesChart);
 
 
-      /* ----------==========     Completed Tasks Chart initialization    ==========---------- */
+      /* ----------==========     Completed Tasks Chart initialization    ==========----------
 
       const dataCompletedTasksChart: any = {
           labels: ['12p', '3p', '6p', '9p', '12p', '3a', '6a', '9a'],
@@ -300,7 +308,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
 
 
-      /* ----------==========     Emails Subscription Chart initialization    ==========---------- */
+      /* ----------==========     Emails Subscription Chart initialization    ==========----------
 
       var datawebsiteViewsChart = {
         labels: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
@@ -315,7 +323,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
           },
           low: 0,
           high: 1000,
-          chartPadding: { top: 0, right: 5, bottom: 0, left: 0}
+          chartPadding: { top:0,right:5, bottom: 0, left: 0}
       };
       var responsiveOptions: any[] = [
         ['screen and (max-width: 640px)', {
@@ -331,6 +339,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
       //start animation for the Emails Subscription Chart
       this.startAnimationForBarChart(websiteViewsChart);
+      */
   }
 
   resetChart(){

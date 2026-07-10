@@ -22,7 +22,7 @@
             <i class="material-icons">file_upload</i>
           </button>
           <mat-form-field *ngIf="buscador">
-            <input matInput width="350" (keyup)="applyFilter($event.target.value)"
+            <input matInput width="350" (keyup)="applyFilter($event)"
            placeholder="Escriba algo para filtrar">
          </mat-form-field>
         </div>

@@ -37,7 +37,8 @@ export class ProveedoresComponent implements OnInit {
     this.renderDataTable();
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter( event:Event) {
+    var filterValue=(event.target as HTMLSelectElement).value;
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
