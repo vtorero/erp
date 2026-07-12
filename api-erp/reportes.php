@@ -350,6 +350,7 @@ $app->post('/exportar', function (Request $request, Response $response) use ($pd
 
         // ---- Consulta ----
         $sql = "SELECT v.id,
+        v.tipoDoc, v.nro_comprobante as serie,
                        cl.num_documento,
                        cl.nombre,
                        p.codigo,
@@ -377,10 +378,9 @@ $app->post('/exportar', function (Request $request, Response $response) use ($pd
                 JOIN sub_sub_categorias fa ON p.id_sub_sub_categoria = fa.id
                 WHERE v.estado = 1
                 AND v.fecha_registro BETWEEN :ini AND :fin
-
                 UNION ALL
-
-                SELECT v.id,
+                 SELECT v.id,
+                v.tipoDoc,v.serie_documento as serie,
                        cl.num_documento,
                        cl.nombre,
                        p.codigo,
@@ -410,6 +410,9 @@ $app->post('/exportar', function (Request $request, Response $response) use ($pd
 
                 ORDER BY fecha_registro DESC";
 
+
+
+
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'ini' => $ini,
@@ -423,7 +426,7 @@ $app->post('/exportar', function (Request $request, Response $response) use ($pd
         $sheet = $spreadsheet->getActiveSheet();
 
         // Encabezados
-        $headers = ['ID','Fecha','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Familia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal','Observacion'];
+        $headers = ['ID','Fecha','Tipo Documento','Serie','Documento','Razon Social','Codigo','Producto','Categoria','Subcategoria','Familia','Cantidad','Unidad','Precio','Total','Movimiento','Usuario','Sucursal','Observacion'];
 
         $col = 'A';
         foreach ($headers as $header) {
@@ -448,21 +451,23 @@ $app->post('/exportar', function (Request $request, Response $response) use ($pd
 
             $sheet->setCellValueExplicit("A{$rowIndex}", $row['id'], DataType::TYPE_NUMERIC);
             $sheet->setCellValue("B{$rowIndex}", $row['fecha_registro']);
-            $sheet->setCellValueExplicit("C{$rowIndex}", $doc, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
-            $sheet->setCellValue("D{$rowIndex}", $row['nombre']);
-            $sheet->setCellValue("E{$rowIndex}", $row['codigo']);
-            $sheet->setCellValue("F{$rowIndex}", $row['producto']);
-            $sheet->setCellValue("G{$rowIndex}", $row['categoria']);
-            $sheet->setCellValue("H{$rowIndex}", $row['subcategoria']);
-            $sheet->setCellValue("I{$rowIndex}", $row['familia']);
-            $sheet->setCellValue("J{$rowIndex}", $row['cantidad']);
-            $sheet->setCellValue("K{$rowIndex}", $row['unidad']);
-            $sheet->setCellValue("L{$rowIndex}", $row['precio']);
-            $sheet->setCellValue("M{$rowIndex}", $row['valor_total']);
-            $sheet->setCellValue("N{$rowIndex}", $row['movimiento']);
-            $sheet->setCellValue("O{$rowIndex}", $row['usuario']);
-            $sheet->setCellValue("P{$rowIndex}", $row['sucursal']);
-            $sheet->setCellValue("Q{$rowIndex}", $row['observacion']);
+            $sheet->setCellValue("C{$rowIndex}", $row['tipoDoc']);
+            $sheet->setCellValue("D{$rowIndex}", $row['serie']);
+            $sheet->setCellValueExplicit("E{$rowIndex}", $doc, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+            $sheet->setCellValue("F{$rowIndex}", $row['nombre']);
+            $sheet->setCellValue("G{$rowIndex}", $row['codigo']);
+            $sheet->setCellValue("H{$rowIndex}", $row['producto']);
+            $sheet->setCellValue("I{$rowIndex}", $row['categoria']);
+            $sheet->setCellValue("J{$rowIndex}", $row['subcategoria']);
+            $sheet->setCellValue("K{$rowIndex}", $row['familia']);
+            $sheet->setCellValue("L{$rowIndex}", $row['cantidad']);
+            $sheet->setCellValue("M{$rowIndex}", $row['unidad']);
+            $sheet->setCellValue("N{$rowIndex}", $row['precio']);
+            $sheet->setCellValue("O{$rowIndex}", $row['valor_total']);
+            $sheet->setCellValue("P{$rowIndex}", $row['movimiento']);
+            $sheet->setCellValue("Q{$rowIndex}", $row['usuario']);
+            $sheet->setCellValue("R{$rowIndex}", $row['sucursal']);
+            $sheet->setCellValue("S{$rowIndex}", $row['observacion']);
 
             $rowIndex++;
         }
@@ -1119,7 +1124,7 @@ $app->post('/kardex', function (Request $request, Response $response) use ($pdo)
                 m.codigo_prod,
                 m.id DESC";
 
-              
+
 
 $params = [
     ':ini' => "$ini 00:00:00",

@@ -1916,7 +1916,7 @@ $app->post('/compra', function (Request $request, Response $response) use ($pdo)
             ]);
 
             // movimiento
-            $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?)");
+            $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?,?)");
             $stmtMov->execute([
                 $item->id,
                 $ultimo_id->ultimo_id,
@@ -1924,7 +1924,8 @@ $app->post('/compra', function (Request $request, Response $response) use ($pdo)
                 ($item->cantidad - $item->pendiente),
                 $item->precio,
                 $data->usuario,
-                $data->sucursal
+                $data->sucursal,
+                'Compra nro:'.$ultimo_id->ultimo_id
             ]);
             $stmtMov->closeCursor();
         }
@@ -3504,8 +3505,6 @@ $app->post('/movimiento-kardex',function(Request $request,Response $response) us
     $j = json_decode($body, true);
     $data = json_decode($j['json']);
     $detalle = json_decode($j['detalle']);
-
-
  // 🔹 Obtener ID (mejor si tu SP lo devuelve)
 //$ultimo_id = $pdo->query("SELECT MAX(id) AS ultimo_id FROM movimiento_articulos")->fetch();
 // movimiento
@@ -3550,6 +3549,16 @@ if($detalle->tipo_movimiento=='Salida'){
          $detalle->id_almacen
      ]);
      $stmtInv->closeCursor();
+
+     $sqlCompra=$pdo->prepare("UPDATE compra_detalle set pendiente=? WHERE id_compra=? and id_producto=?");
+     $sqlCompra->execute([
+        $cantidad,
+        $detalle->id_compra,
+        $data
+    ]);
+
+     $sqlCompra->closeCursor();
+
 }
 
 $stmtMov = $pdo->prepare("CALL p_registrar_movimiento(?,?,?,?,?,?,?,?)");
@@ -3566,6 +3575,8 @@ $stmtMov->execute([
 //var_dump( $data,$ultimo_id->ultimo_id,$detalle->tipo_movimiento,$detalle->cantidad_movimiento,$detalle->precio,$detalle->id_almacen);
  //exit;
 $stmtMov->closeCursor();
+
+
 
 $smtEstado=$pdo->prepare("UPDATE movimiento_articulos SET estado=? where id=?");
 $smtEstado->execute(['anulado',$detalle->id]);
