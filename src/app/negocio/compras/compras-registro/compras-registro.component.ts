@@ -39,7 +39,7 @@ interface Elemento {
 export class ComprasRegistroComponent implements OnInit {
   selectedRowIndex:any;
   usuario:string;
-
+currentName:string;
   criterio:string='';
   categoria:string='';
   subcategoria:string='';
@@ -72,6 +72,7 @@ export class ComprasRegistroComponent implements OnInit {
 
   ngOnInit(): void {
     let suc=  localStorage.getItem("sucursal_id");
+    this.currentName=localStorage.getItem("currentNombre")
     if(suc==null){
     this.openTerminal('20ms','20ms');
     }else{

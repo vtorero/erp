@@ -47,6 +47,7 @@ export class ListadoComprasComponent implements OnInit {
   public selectedMoment2 = new Date();
   position = new FormControl('below');
   buscador:boolean=false;
+  currentName:any;
   dataSource: any;
   selectedRowIndex:any;
   cancela: boolean = false;
@@ -63,6 +64,7 @@ export class ListadoComprasComponent implements OnInit {
       ) { }
 
   ngOnInit(): void {
+    this.currentName=localStorage.getItem("currentNombre")
     this.renderDataTable();
   }
 
