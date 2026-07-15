@@ -26,5 +26,239 @@
     </div>
   </section>
   </div>
-<p>tesoreria works!</p>
+  <div class="container mt-4">
+
+    <h2>Tesorería</h2>
+
+    <div class="card mb-3">
+
+    <div class="card-header">
+    Presupuesto Inicial
+    </div>
+
+    <div class="card-body">
+
+    <div class="row">
+
+    <div class="col-md-4">
+
+    <label>Presupuesto Inicial</label>
+
+    <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="presupuestoInicial">
+
+    </div>
+
+    <div class="col-md-8">
+
+    <div class="row text-center">
+
+    <div class="col">
+
+    <h6>Ingresos</h6>
+
+    <h3 class="text-success">
+    {{totalIngresos | currency:'PEN'}}
+    </h3>
+
+    </div>
+
+    <div class="col">
+
+    <h6>Egresos</h6>
+
+    <h3 class="text-danger">
+    {{totalEgresos | currency:'PEN'}}
+    </h3>
+
+    </div>
+
+    <div class="col">
+
+    <h6>Saldo</h6>
+
+    <h3
+    [class.text-success]="saldo>=0"
+    [class.text-danger]="saldo<0">
+
+    {{saldo | currency:'PEN'}}
+
+    </h3>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    <div class="card">
+
+    <div class="card-header">
+
+    Nuevo Movimiento
+
+    </div>
+
+    <div class="card-body">
+
+    <div class="row">
+
+    <div class="col-md-2">
+
+    <label>Fecha</label>
+
+    <input
+    type="date"
+    class="form-control"
+    [(ngModel)]="movimiento.fecha">
+
+    </div>
+
+    <div class="col-md-2">
+
+    <label>Tipo</label>
+
+    <select
+    class="form-control"
+    [(ngModel)]="movimiento.tipo">
+
+    <option>Ingreso</option>
+    <option>Egreso</option>
+
+    </select>
+
+    </div>
+
+    <div class="col-md-3">
+
+    <label>Concepto</label>
+
+    <input
+    class="form-control"
+    [(ngModel)]="movimiento.concepto">
+
+    </div>
+
+    <div class="col-md-2">
+
+    <label>Monto</label>
+
+    <input
+    type="number"
+    class="form-control"
+    [(ngModel)]="movimiento.monto">
+
+    </div>
+
+    <div class="col-md-3">
+
+    <label>Observación</label>
+
+    <input
+    class="form-control"
+    [(ngModel)]="movimiento.observacion">
+
+    </div>
+
+    </div>
+
+    <div class="mt-3">
+
+    <button
+    class="btn btn-primary"
+    (click)="guardar()">
+
+    Guardar Movimiento
+
+    </button>
+
+    </div>
+
+    </div>
+
+    </div>
+
+    <div class="card mt-4">
+
+    <div class="card-header">
+
+    Movimientos
+
+    </div>
+
+    <div class="table-responsive">
+
+    <table class="table table-hover">
+
+    <thead>
+
+    <tr>
+
+    <th>Fecha</th>
+    <th>Tipo</th>
+    <th>Concepto</th>
+    <th>Monto</th>
+    <th>Observación</th>
+    <th></th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    <tr *ngFor="let item of movimientos; let i=index">
+
+    <td>{{item.fecha}}</td>
+
+    <td>
+
+    <span
+    class="badge"
+    [class.bg-success]="item.tipo=='Ingreso'"
+    [class.bg-danger]="item.tipo=='Egreso'">
+
+    {{item.tipo}}
+
+    </span>
+
+    </td>
+
+    <td>{{item.concepto}}</td>
+
+    <td>{{item.monto | currency:'PEN'}}</td>
+
+    <td>{{item.observacion}}</td>
+
+    <td>
+
+    <button
+    class="btn btn-danger btn-sm"
+    (click)="eliminar(i)">
+
+    Eliminar
+
+    </button>
+
+    </td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    </div>
+
+    </div>
+
+    </div>
 </div>
