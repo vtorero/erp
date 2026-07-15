@@ -1873,7 +1873,7 @@ $app->post('/compra', function (Request $request, Response $response) use ($pdo)
             $stmtP = $pdo->prepare("CALL p_compra_pago(?,?,?,?,?,?,?)");
             $stmtP->execute([
                 $ultimo_id->ultimo_id,
-                $pago->tipoPago,
+                '',
                 $pago->numero,
                 $pago->cuentaPago,
                 $pago->montoPago,
@@ -1925,7 +1925,7 @@ $app->post('/compra', function (Request $request, Response $response) use ($pdo)
                 $item->precio,
                 $data->usuario,
                 $data->sucursal,
-                'Compra nro:'.$ultimo_id->ultimo_id
+                'Compra nro:'.$ultimo_id->ultimo_id.' Tipo Doc:'.$data->tipoDoc.' Nro:'.$data->nrodocumento.' Serie:'.$data->seriedoc
             ]);
             $stmtMov->closeCursor();
         }
@@ -3593,6 +3593,35 @@ return $response
     ->withHeader('Content-Type', 'application/json');
 
 
+});
+
+
+$app->get('/numeroletras/{cantidad}', function (
+    Request $request,
+    Response $response,
+    array $args
+) {
+
+    $cantidad = $args['cantidad'];
+
+    $json = @file_get_contents("http://nal.azurewebsites.net/api/Nal?num=" . urlencode($cantidad));
+
+    if ($json === false) {
+        $response->getBody()->write(json_encode([
+            'error' => 'No se pudo obtener la conversión a letras.'
+        ]));
+        return $response
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
+            ->withStatus(500);
+    }
+
+    $data = json_decode($json, true);
+
+    $resultado = $data['letras'] ?? '';
+
+    $response->getBody()->write(json_encode($resultado));
+
+    return $response->withHeader('Content-Type', 'application/json; charset=utf-8');
 });
 
 
