@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from 'app/api.service';
 
 interface MovimientoTesoreria{
 
@@ -12,20 +13,22 @@ interface MovimientoTesoreria{
 
 }
 
+
+
 @Component({
-    selector:'app-tesoreria',
-    standalone:false,
-      templateUrl:'./tesoreria.component.html',
-    styleUrls:['./tesoreria.component.css']
-})
-export class TesoreriaComponent{
+    selector: 'app-tesoreria',
+    templateUrl: './tesoreria.component.html',
+    styleUrls: ['./tesoreria.component.css']
+  })
+
+
+export class TesoreriaComponent implements OnInit{
+
 
     presupuestoInicial:number=0;
-
+    dataCajas:any;
     movimientos:MovimientoTesoreria[]=[];
-
     movimiento:MovimientoTesoreria={
-
         fecha:new Date().toISOString().substring(0,10),
         tipo:'Ingreso',
         concepto:'',
@@ -33,6 +36,31 @@ export class TesoreriaComponent{
         observacion:''
 
     };
+
+    constructor(
+
+         private api:ApiService,
+
+         ) { }
+         ngOnInit(): void {
+            this.getCajas();
+         }
+
+    getCajas(): void {
+        let usuario = localStorage.getItem("currentId");
+        this.api.getCajasUsuario(usuario).subscribe(data => {
+          if(data) {
+            this.dataCajas = data;
+          }
+        } );
+      }
+
+      seleccionarCuenta(cuenta:any){
+        const value = cuenta.value;
+        console.log(value);
+
+
+}
 
     guardar(){
 

@@ -28,12 +28,20 @@
   </div>
   <div class="container mt-4">
 
-    <h2>Tesorería</h2>
+    <h2>Realizar movimientos de Tesorería</h2>
 
     <div class="card mb-3">
 
     <div class="card-header">
-    Presupuesto Inicial
+      Presupuesto Inicial de la Cuenta:
+      <mat-form-field appearance="outline">
+        <mat-label>Cuenta</mat-label>
+        <mat-select name="cuentaPago" formControlName="cuentaPago"  (selectionChange)="seleccionarCuenta($event)" required>
+            <mat-option value="">Seleccionar</mat-option>
+            <mat-option *ngFor="let caj of dataCajas" [value]="caj.id">{{caj.nombre}}</mat-option>
+        </mat-select>
+
+    </mat-form-field>
     </div>
 
     <div class="card-body">
