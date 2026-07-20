@@ -3625,4 +3625,13 @@ $app->get('/numeroletras/{cantidad}', function (
 });
 
 
+$app->post('/consulta-cuenta', function (Request $request, Response $response) use ($pdo) {
+    $body = $request->getBody()->getContents();
+ $j = json_decode($body, true);
+
+ print_r($j['cuenta']);
+ exit;
+});
+
+
 $app->run();
