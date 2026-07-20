@@ -58,8 +58,9 @@ export class TesoreriaComponent implements OnInit{
       seleccionarCuenta(cuenta:any){
         const value = cuenta.value;
         console.log(value);
-
-
+        this.api.consultaCuenta(value).subscribe(x => {
+            console.log(x);
+          });
 }
 
     guardar(){

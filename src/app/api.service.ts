@@ -252,6 +252,15 @@ getSucursalUsuario(){
       .get(Global.BASE_API_URL + "api.php/tabla" + criterio, { headers: this.headers })
       .pipe(map((result) => result));
   }
+
+
+  consultaCuenta(cuenta: string) {
+    const url = Global.BASE_API_URL + 'api.php/consulta-cuenta';
+    return this._http.post(url,{
+        cuenta: cuenta,
+    }, { headers: this.headers }).pipe(map(data => data));
+}
+
 /**usuario  */
 
   loginUser(usuario: string, password: string) {
