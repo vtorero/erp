@@ -14,6 +14,7 @@ import { AddInventario } from "./modelos/addinventario";
 import { Venta } from './modelos/venta';
 import {Chart} from 'chart.js/auto';
 import { Compra } from "./modelos/compra";
+import { Movimiento } from "./modelos/movimiento";
 
 
 
@@ -253,11 +254,23 @@ getSucursalUsuario(){
       .pipe(map((result) => result));
   }
 
-
+/*ver cuenta tesoreria**/
   consultaCuenta(cuenta: string) {
     const url = Global.BASE_API_URL + 'api.php/consulta-cuenta';
     return this._http.post(url,{
         cuenta: cuenta,
+    }, { headers: this.headers }).pipe(map(data => data));
+}
+
+/*Guardar movimiento tesoreria*/
+
+  guardarMovimiento(mov:Movimiento) {
+    const url = Global.BASE_API_URL + 'api.php/guardamovimiento';
+    return this._http.post(url,{
+        cuenta: mov.cuenta,
+        monto: mov.monto,
+        usuario:mov.usuario,
+        concepto:mov.concepto
     }, { headers: this.headers }).pipe(map(data => data));
 }
 

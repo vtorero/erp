@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'app/api.service';
+import { Movimiento } from 'app/modelos/movimiento';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface MovimientoTesoreria{
 
@@ -27,6 +29,9 @@ export class TesoreriaComponent implements OnInit{
 
     presupuestoInicial:number=0;
     dataCajas:any;
+    totalIngreso:any=0.00;
+    totalEgreso:any=0.00;
+    totalSaldo:any=0.00;
     movimientos:MovimientoTesoreria[]=[];
     movimiento:MovimientoTesoreria={
         fecha:new Date().toISOString().substring(0,10),
@@ -38,8 +43,8 @@ export class TesoreriaComponent implements OnInit{
     };
 
     constructor(
-
          private api:ApiService,
+         private _snackBar: MatSnackBar,
 
          ) { }
          ngOnInit(): void {
@@ -57,19 +62,28 @@ export class TesoreriaComponent implements OnInit{
 
       seleccionarCuenta(cuenta:any){
         const value = cuenta.value;
-            this.api.consultaCuenta(value).subscribe(x => {
-            console.log(x);
+            this.api.consultaCuenta(value).subscribe((data: any)  => {
+            this.totalIngreso= Number(data.ingresos[0].total);
+            this.totalEgreso=Number(data.egresos[0].total);
+            this.totalSaldo=this.totalIngreso-this.totalEgreso;
           });
 }
 
-    guardar(){
+    guardar(mov:Movimiento){
 
         if(this.movimiento.concepto.trim()=='' || this.movimiento.monto<=0){
             alert("Complete la información");
             return;
         }
-
-        this.movimientos.unshift({...this.movimiento});
+      this.api.guardarMovimiento(mov).subscribe(
+        data=>{
+          this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+          },
+        erro=>{console.log(erro)}
+          );
+        //this.renderDataTable();
+    }
+        /*this.movimientos.unshift({...this.movimiento});
 
         this.movimiento={
             fecha:new Date().toISOString().substring(0,10),
@@ -78,8 +92,8 @@ export class TesoreriaComponent implements OnInit{
             monto:0,
             observacion:''
         };
+*/
 
-    }
 
     eliminar(i:number){
 
