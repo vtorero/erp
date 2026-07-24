@@ -267,9 +267,11 @@ getSucursalUsuario(){
   guardarMovimiento(mov:Movimiento) {
     const url = Global.BASE_API_URL + 'api.php/guardamovimiento';
     return this._http.post(url,{
+       fecha:mov.fecha,
         cuenta: mov.cuenta,
+        tipo:mov.tipo,
         monto: mov.monto,
-        usuario:mov.usuario,
+        usuario:localStorage.getItem("currentNombre"),
         concepto:mov.concepto
     }, { headers: this.headers }).pipe(map(data => data));
 }

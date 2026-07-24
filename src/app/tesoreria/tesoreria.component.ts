@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
 import { ApiService } from 'app/api.service';
 import { Movimiento } from 'app/modelos/movimiento';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 interface MovimientoTesoreria{
 
@@ -15,8 +14,6 @@ interface MovimientoTesoreria{
 
 }
 
-
-
 @Component({
     selector: 'app-tesoreria',
     templateUrl: './tesoreria.component.html',
@@ -26,6 +23,14 @@ interface MovimientoTesoreria{
 
 export class TesoreriaComponent implements OnInit{
 
+    mov: Movimiento = new Movimiento(
+        '',
+        1,      // 1 = Ingreso
+        0,      // Cuenta
+        0,
+        '',
+        ''
+      );
 
     presupuestoInicial:number=0;
     dataCajas:any;
@@ -43,7 +48,7 @@ export class TesoreriaComponent implements OnInit{
     };
 
     constructor(
-         private api:ApiService,
+          private api:ApiService,
          private _snackBar: MatSnackBar,
 
          ) { }
@@ -69,13 +74,14 @@ export class TesoreriaComponent implements OnInit{
           });
 }
 
-    guardar(mov:Movimiento){
+    guardar(){
 
-        if(this.movimiento.concepto.trim()=='' || this.movimiento.monto<=0){
-            alert("Complete la información");
+        if(this.mov.concepto.trim()=='' || this.mov.monto<=0){
+             this._snackBar.open("Complete la información",'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             return;
         }
-      this.api.guardarMovimiento(mov).subscribe(
+        console.log(this.mov)
+      this.api.guardarMovimiento(this.mov).subscribe(
         data=>{
           this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
           },
