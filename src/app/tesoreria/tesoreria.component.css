@@ -31,3 +31,18 @@ mat-cell{font-size: 13px;  font-weight: 400;color: black !important}
   font-weight:bold;
 
   }
+
+  mat-datepicker-toggle[_ngcontent-vkj-c238] {
+    float: right !important;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+mat-datepicker-toggle
+{
+    float: right !important;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}

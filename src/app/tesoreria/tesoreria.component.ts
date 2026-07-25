@@ -40,6 +40,12 @@ export class TesoreriaComponent implements OnInit{
       );
 
     presupuestoInicial:number=0;
+    public selectedMoment = new Date();
+  public selectedMoment2 = new Date();
+fec1= this.selectedMoment.toDateString().split(" ",4);
+fec2 = this.selectedMoment2.toDateString().split(" ",4);
+fecha1:string=this.fec1[2]+'-'+this.fec1[1]+'-'+this.fec1[3];
+fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
     dataCajas:any;
     totalIngreso:any=0.00;
     totalEgreso:any=0.00;
@@ -118,6 +124,26 @@ export class TesoreriaComponent implements OnInit{
             this.movimientos.splice(i,1);
 
     }
+
+    enviaFechas(){
+
+      var empresa = sessionStorage.getItem("CurrentUser");
+      var fec1 = this.selectedMoment.toDateString().split(" ",4);
+      var fec2 = this.selectedMoment2.toDateString().split(" ",4);
+      let ini=fec1[1]+fec1[2]+fec1[3];
+      let fin=fec2[1]+fec2[2]+fec2[3];
+
+      this.fecha1=fec1[2]+'-'+fec1[1]+'-'+fec1[3];;
+      this.fecha2=fec2[2]+'-'+fec2[1]+'-'+fec2[3];;
+
+      console.log(this.fecha1)
+      console.log(this.fecha2)
+
+     // this.loadVentas(this.fecha1,this.fecha2,empresa);
+
+
+      //this.renderDataTableConsulta(ini,fin,empresa);
+      }
 
     get totalIngresos(){
 
