@@ -1,7 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'app/api.service';
 import { Movimiento } from 'app/modelos/movimiento';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 
 interface MovimientoTesoreria{
@@ -22,11 +25,15 @@ interface MovimientoTesoreria{
 
 
 export class TesoreriaComponent implements OnInit{
-
+  displayedColumns = ['id','fecha_registro','tipo','concepto','monto'];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('empTbSort') empTbSort = new MatSort();
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  dataSource: any;
     mov: Movimiento = new Movimiento(
         '',
         1,      // 1 = Ingreso
-        0,      // Cuenta
+        '',      // Cuenta
         0,
         '',
         ''
@@ -52,8 +59,11 @@ export class TesoreriaComponent implements OnInit{
          private _snackBar: MatSnackBar,
 
          ) { }
+
+
          ngOnInit(): void {
             this.getCajas();
+
          }
 
     getCajas(): void {
@@ -67,6 +77,7 @@ export class TesoreriaComponent implements OnInit{
 
       seleccionarCuenta(cuenta:any){
         const value = cuenta.value;
+        this.renderDataTable(value);
             this.api.consultaCuenta(value).subscribe((data: any)  => {
             this.totalIngreso= Number(data.ingresos[0].total);
             this.totalEgreso=Number(data.egresos[0].total);
@@ -87,7 +98,7 @@ export class TesoreriaComponent implements OnInit{
           },
         erro=>{console.log(erro)}
           );
-        //this.renderDataTable();
+        this.renderDataTable(this.mov.cuenta);
     }
         /*this.movimientos.unshift({...this.movimiento});
 
@@ -130,6 +141,19 @@ export class TesoreriaComponent implements OnInit{
         this.totalIngresos-
         this.totalEgresos;
 
+    }
+
+    renderDataTable(cuenta:string) {
+      this.api.getSelectApi('movimiento_caja/',cuenta).subscribe(x => {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.data = x;
+        this.empTbSort.disableClear = true;
+        this.dataSource.sort = this.empTbSort;
+        this.dataSource.paginator = this.paginator;
+        },
+        error => {
+          console.log('Error de conexion de datatable!' + error);
+        });
     }
 
 }

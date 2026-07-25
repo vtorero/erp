@@ -122,7 +122,7 @@
 
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
 
     <label>Concepto</label>
 
@@ -143,15 +143,7 @@
 
     </div>
 
-    <div class="col-md-3">
 
-    <label>Observación</label>
-
-    <input
-    class="form-control"
-    [(ngModel)]="mov.concepto">
-
-    </div>
 
     </div>
 
@@ -180,66 +172,38 @@
     </div>
 
     <div class="table-responsive">
+      <mat-table  [dataSource]="dataSource"  matSort #empTbSort="matSort">
+        <!--  Columna ID-->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fecha_registro">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.fecha_registro}}</mat-cell>
+</ng-container>
+<ng-container matColumnDef="tipo">
+  <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
+  <mat-cell *matCellDef="let row"> {{row.tipo}}</mat-cell>
+</ng-container>
+       <ng-container matColumnDef="concepto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Concepto</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.concepto}} </mat-cell>
+    </ng-container>
+        <ng-container matColumnDef="monto">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>Monto</mat-header-cell>
+          <mat-cell *matCellDef="let row">{{row.monto}} </mat-cell>
+    </ng-container>
 
-    <table class="table table-hover">
 
-    <thead>
+          <!-- Columna Nacionalidad -->
 
-    <tr>
+        <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 
-    <th>Fecha</th>
-    <th>Tipo</th>
-    <th>Concepto</th>
-    <th>Monto</th>
-    <th>Observación</th>
-    <th></th>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="10" [showFirstLastButtons]></mat-paginator>
 
-    </tr>
-
-    </thead>
-
-    <tbody>
-
-    <tr *ngFor="let item of movimientos; let i=index">
-
-    <td>{{item.fecha}}</td>
-
-    <td>
-
-    <span
-    class="badge"
-    [class.bg-success]="item.tipo=='Ingreso'"
-    [class.bg-danger]="item.tipo=='Egreso'">
-
-    {{item.tipo}}
-
-    </span>
-
-    </td>
-
-    <td>{{item.concepto}}</td>
-
-    <td>{{item.monto | currency:'PEN'}}</td>
-
-    <td>{{item.observacion}}</td>
-
-    <td>
-
-    <button
-    class="btn btn-danger btn-sm"
-    (click)="eliminar(i)">
-
-    Eliminar
-
-    </button>
-
-    </td>
-
-    </tr>
-
-    </tbody>
-
-    </table>
 
     </div>
 

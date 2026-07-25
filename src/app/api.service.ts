@@ -219,6 +219,11 @@ export class ApiService {
       .pipe(map((result) => result));
   }
 
+  apiMovimiento(criterio:string){
+    return this._http
+      .get(Global.BASE_API_URL + "api.php/movimiento_caja/" + criterio, { headers: this.headers })
+      .pipe(map((result) => result));
+  }
 
 
   apiBuscadorProveedor(criterio:string){

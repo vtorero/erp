@@ -116,7 +116,17 @@ seleccionarProducto(event){
   });
 }
 onKey(value) {
+  const texto = value.trim();
+
+  if (texto.length < 3) {
+    return;
+  }
+if (value.length < 3) {
+  this.dataProductos = [];
+  return;
+}
   this.selectSearch(value);
+
 }
 selectSearch(value: string) {
   this.api.apiBuscadorProducto(value).subscribe(data => {
