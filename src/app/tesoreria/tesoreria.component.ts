@@ -132,17 +132,23 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       var fec2 = this.selectedMoment2.toDateString().split(" ",4);
       let ini=fec1[1]+fec1[2]+fec1[3];
       let fin=fec2[1]+fec2[2]+fec2[3];
-
       this.fecha1=fec1[2]+'-'+fec1[1]+'-'+fec1[3];;
       this.fecha2=fec2[2]+'-'+fec2[1]+'-'+fec2[3];;
-
       console.log(this.fecha1)
       console.log(this.fecha2)
 
-     // this.loadVentas(this.fecha1,this.fecha2,empresa);
+      this.api.getConsultarMovimientos(this.fecha1,this.fecha2,this.mov.cuenta)
+      .subscribe(data => {
+        this.dataSource = new MatTableDataSource();
+        this.dataSource.data = data;
+        this.empTbSort.disableClear = true;
+        this.dataSource.sort = this.empTbSort;
+        this.dataSource.paginator = this.paginator;
+        },
+        error => {
+          console.log('Error de conexion de datatable!' + error);
+        });
 
-
-      //this.renderDataTableConsulta(ini,fin,empresa);
       }
 
     get totalIngresos(){

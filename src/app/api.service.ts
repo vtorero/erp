@@ -898,6 +898,16 @@ public GetDetalleMovimiento(id: any) {
 ).pipe(map(result => result));
 }
 
+getConsultarMovimientos(inicio: string, final: string, cuenta: string){
+  const url = Global.BASE_API_URL + 'api.php/consulta-movimientos';
+  return this._http.post(url, {
+    ini: inicio,
+    fin: final,
+    cuenta: cuenta
+  }, { headers: this.headers }).pipe(map(data => data));
+
+}
+
 getVentaBoletas(inicio: string, final: string, empresa: string) {
   const url = Global.BASE_API_URL + 'reportes.php/reporte';
   return this._http.post(url, {

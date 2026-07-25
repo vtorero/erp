@@ -156,7 +156,7 @@
                     <mat-hint>DD/MM/YYYY</mat-hint>
                     <mat-datepicker-toggle
                       matIconSuffix
-                      [for]="picker"
+                      [for]="picker2"
                     ></mat-datepicker-toggle>
                     <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
@@ -185,12 +185,9 @@
                   <mat-cell *matCellDef="let row"> {{ row.id }} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="fecha_registro">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header
-                    >Fecha</mat-header-cell
-                  >
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
                   <mat-cell *matCellDef="let row">
-                    {{ row.fecha_registro }}</mat-cell
-                  >
+                    {{ row.fecha_registro }}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="tipo">
                   <mat-header-cell *matHeaderCellDef mat-sort-header
