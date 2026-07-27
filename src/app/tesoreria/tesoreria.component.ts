@@ -100,7 +100,7 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
         console.log(this.mov)
       this.api.guardarMovimiento(this.mov).subscribe(
         data=>{
-          this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+          this._snackBar.open("Se registro el movimiento correctamente",'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
           },
         erro=>{console.log(erro)}
           );

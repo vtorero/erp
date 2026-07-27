@@ -205,7 +205,11 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header
                     >Monto</mat-header-cell
                   >
-                  <mat-cell *matCellDef="let row">{{ row.monto }} </mat-cell>
+                  <mat-cell *matCellDef="let row"  [ngClass]="{
+    'monto-negativo': row.monto < 0,
+    'monto-positivo': row.monto > 0,
+    'monto-cero': row.monto === 0
+  }">{{ row.monto }} </mat-cell>
                 </ng-container>
 
                 <!-- Columna Nacionalidad -->

@@ -46,3 +46,11 @@ mat-datepicker-toggle
     top: 0px;
     right: 0px;
 }
+
+.monto-negativo {
+  color: red !important;
+}
+
+.monto-positivo {
+  color: green !important;
+}
