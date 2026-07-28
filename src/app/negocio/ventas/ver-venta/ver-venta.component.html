@@ -114,20 +114,8 @@
         <ng-container matColumnDef="cantidad">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
-
-        </ng-container>
-        <ng-container matColumnDef="opciones">
-          <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
-          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
-              <button  mat-icon-button color="warn" matTooltip="Anular">
-         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
-      </button>
-
-            </span></mat-cell>
-
-        </ng-container>
-
-        <ng-container matColumnDef="pendiente">
+       </ng-container>
+         <ng-container matColumnDef="pendiente">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
           <mat-cell *matCellDef="let row">
             <a *ngIf="row.pendiente>0 && data.estado=='Registrado'" class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.nombre,data.id)">{{row.pendiente | number}}</a>
@@ -145,7 +133,14 @@
           <mat-cell *matCellDef="let row">S/.{{ row.subtotal | number }}
           </mat-cell>
         </ng-container>
-
+        <ng-container matColumnDef="opciones">
+          <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
+          <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
+              <button  mat-icon-button color="warn" matTooltip="Anular">
+         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
+      </button>
+            </span></mat-cell>
+        </ng-container>
          <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
