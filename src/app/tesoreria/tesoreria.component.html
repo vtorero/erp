@@ -3,8 +3,8 @@
   <div class="container-fluid">
     <div class="card">
       <div class="card-header card-header-danger">
-        <h4 class="card-title">Realizar movimientos de Tesorería</h4>
-        <p class="card-category"></p>
+        <h4 class="card-title">Tesorería</h4>
+        <p class="card-category">Realizar movimientos de Tesorería</p>
       </div>
       <div class="card-body">
         <div class="container mt-4">
@@ -211,8 +211,15 @@
     'monto-cero': row.monto === 0
   }">{{ row.monto }} </mat-cell>
                 </ng-container>
+                <ng-container matColumnDef="opciones">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                    >Opciones</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row"><button  mat-icon-button color="warn" matTooltip="Anular">
+                    <i class="material-icons" (click)="anularMovimiento(row)" >delete</i>
+                 </button> </mat-cell>
+                </ng-container>
 
-                <!-- Columna Nacionalidad -->
 
                 <mat-header-row
                   *matHeaderRowDef="displayedColumns"

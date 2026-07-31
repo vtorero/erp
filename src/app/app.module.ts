@@ -61,6 +61,7 @@ import { EditProductoComponent } from './dialog/edit-producto/edit-producto.comp
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TesoreriaComponent } from './tesoreria/tesoreria.component';
 import { MaintesoreriaComponent } from './tesoreria/maintesoreria/maintesoreria.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
@@ -68,6 +69,7 @@ import { MaintesoreriaComponent } from './tesoreria/maintesoreria/maintesoreria.
 
 @NgModule({
   imports: [
+    MatAutocompleteModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,

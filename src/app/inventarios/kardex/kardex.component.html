@@ -52,7 +52,7 @@
                         <mat-label>Producto</mat-label>
 
                         <mat-select name="id_producto" [(ngModel)]="id_producto">
-                            <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre">
+                            <input matInput class="buscador" (keyup)="onKey($event.target.value)"(keydown.space)="$event.stopPropagation()" placeholder="Buscar por nombre">
                             <mat-option  value="">Seleccionar</mat-option>
                           <mat-option *ngFor="let pro of dataProductos" [value]="pro.id">{{pro.nombre}}</mat-option>
                         </mat-select>

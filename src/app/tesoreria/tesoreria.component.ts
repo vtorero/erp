@@ -25,7 +25,7 @@ interface MovimientoTesoreria{
 
 
 export class TesoreriaComponent implements OnInit{
-  displayedColumns = ['id','fecha_registro','tipo','concepto','monto'];
+  displayedColumns = ['id','fecha_registro','tipo','concepto','monto','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -100,11 +100,14 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
         console.log(this.mov)
       this.api.guardarMovimiento(this.mov).subscribe(
         data=>{
+        this.seleccionarCuenta(this.mov.cuenta)
           this._snackBar.open("Se registro el movimiento correctamente",'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
           },
         erro=>{console.log(erro)}
           );
-        this.renderDataTable(this.mov.cuenta);
+
+
+
     }
         /*this.movimientos.unshift({...this.movimiento});
 
@@ -124,6 +127,26 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
             this.movimientos.splice(i,1);
 
     }
+
+    anularMovimiento(data:any){
+      console.log(data)
+
+      this.api.anularMovimiento(data).subscribe(
+        data=>{
+          this.renderDataTable(this.mov.cuenta);
+          this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+          },
+        erro=>{console.log(erro)}
+          );
+
+          this.api.consultaCuenta(this.mov.cuenta).subscribe((data: any)  => {
+            this.totalIngreso= Number(data.ingresos[0].total);
+            this.totalEgreso=Number(data.egresos[0].total);
+            this.totalSaldo=this.totalIngreso-this.totalEgreso;
+          });
+
+      }
+
 
     enviaFechas(){
 

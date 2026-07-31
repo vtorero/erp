@@ -1,11 +1,14 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { ApiService } from 'app/api.service';
 import { Details } from 'app/modelos/details';
 import { FormArray, FormBuilder,  Validators, FormControl, Form } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EntregaParcialComponent } from '../entrega-parcial/entrega-parcial.component';
 import { Global } from 'app/global';
+import { Clientes } from 'app/modelos/clientes';
+import { debounceTime, map, Observable, startWith } from 'rxjs';
 declare function connetor_plugin(): void;
 declare function NumerosALetras(numero:number):any;
 declare function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticket,reciboneto,reciboigv,recibototal,vuelto,monto_vuelto):void;
@@ -19,7 +22,8 @@ declare function imprimirTicket(datos,form,cliente,direccion,telefono,pago,ticke
 
 export class RegistroVentaComponent implements OnInit {
   public modeselect = 'Ticket';
-
+  clienteControl = new FormControl();
+  clientesFiltrados!: Observable<Clientes[]>;
   public MyForm = this.fb.group({
     tipoDoc: [''],
     vendedor: ['', Validators.required],
@@ -64,6 +68,7 @@ reciboigv:number=0;
 recibototal:number=0;
 habilitarPagos:boolean=true;
 public id_documento:number=0
+clientes: Clientes[] = [];
 
 
   constructor(public dialog: MatDialog,
@@ -91,6 +96,11 @@ isValidField(field:string):boolean | null{
 isValidFieldInArray(formArray:FormArray,index:number){
   return formArray.controls[index].errors
   && formArray.controls[index].touched;
+}
+mostrarCliente(clientes: Clientes): string {
+
+  return clientes ? clientes.nombre : '';
+
 }
 
 openEntrega(enterAnimationDuration: string, exitAnimationDuration: string){
@@ -206,8 +216,29 @@ borrarItems(){
 }
 
   ngOnInit(): void {
+/*
+    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+
+      startWith(''),
+
+      debounceTime(300),
+
+      map(value => {
+
+          const texto = typeof value === 'string'
+              ? value
+              : value?.nombre;
+
+          return texto
+              ? this.filtrar(texto)
+              : this.clientes.slice();
+
+      })
+
+  );
+*/
     this.getMedioPago();
-    this.getCliente();
+    //this.getCliente();
     this.getData();
     this.getCajas();
     this.getVendedor();
@@ -231,7 +262,21 @@ borrarItems(){
 
   }
 
+  filtrar(valor: string): Clientes[] {
 
+    const filtro = valor.toLowerCase();
+
+    return this.clientes.filter(c =>
+
+        c.nombre.toLowerCase().includes(filtro)
+
+        ||
+
+        c.num_documento.includes(filtro)
+
+    );
+
+}
   getVendedor(): void {
     this.api.getApi('vendedores').subscribe(data => {
       if(data) {
@@ -264,6 +309,19 @@ this.dataMedios=data;
       }
     } );
   }
+/*
+  seleccionarCliente(cliente: Clientes) {
+
+    console.log(cliente);
+
+
+  /*  this.MyForm.patchValue(
+
+
+
+    });
+
+}*/
 
 seleccionarCliente(event){
   this.api.getApiTablaCriterio('clientes',event.value).subscribe(data => {

@@ -29,16 +29,45 @@
                 </mat-form-field>
 
             </div>
-            <div class="col-4">
-                <!--<input matInput class="form-control" placeholder="Buscar categoria..">-->
+            <div class="col-4"><!--
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Cliente</mat-label>
 
+                    <input
+                        type="text"
+                        matInput
+                        placeholder="Buscar por nombre o RUC"
+                        [formControl]="clienteControl"
+                        [matAutocomplete]="auto">
+                    <mat-autocomplete
+                        #auto="matAutocomplete"
+                        [displayWith]="mostrarCliente"
+                        (optionSelected)="seleccionarCliente($event.option.value)">
+
+                        <mat-option [value]="null">
+                            Sin cliente
+                        </mat-option>
+
+                        <mat-option
+                            *ngFor="let cliente of clientesFiltrados | async"
+                            [value]="cliente">
+
+                            <b>{{cliente.num_documento}}</b> -
+                            {{cliente.nombre}}
+
+                        </mat-option>
+
+                    </mat-autocomplete>
+
+                </mat-form-field>
+                <input matInput class="form-control" placeholder="Buscar categoria.."
+            -->
                 <mat-form-field appearance="outline">
                     <mat-label>Cliente</mat-label>
 
                     <mat-select name="id_cliente" formControlName="cliente"  (selectionChange)="seleccionarCliente($event)">
-                        <input matInput class="buscador" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o RUC">
-                        <mat-option  value="">Seleccionar</mat-option>
-                        <mat-option  value="0">Sin cliente</mat-option>
+                        <input matInput class="buscador" (keydown.space)="$event.stopPropagation()" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o RUC">
+                       <mat-option  value="0">Sin cliente</mat-option>
                         <mat-option *ngFor="let cat of dataClientes" [value]="cat.id">{{cat.nombre}}</mat-option>
                     </mat-select>
 

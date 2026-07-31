@@ -33,8 +33,7 @@ export const ROUTES: RouteInfo[] = [
       {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person', admin:'si'},
        {pat:'/sucursales', tit: 'Sucursales',  icn:'person',cls:'person', admin:'si'},
        {pat:'/vendedores', tit: 'Vendedores',  icn:'person',cls:'person', admin:'si'}]},
-       {path:'/tesoreria/main',title:'Tesoreria', icon:'dashboard',class:'',admin:'si',child:[
-       {pat:'tesoreria/movimientos',tit:'Movimiento',icn:'bubble_chart',cls:'notifications', admin:'si'}]},
+       {path:'/tesoreria/movimientos',title:'Tesoreria', icon:'dashboard',class:'',admin:'si',child:[]},
         { path: '/configuracion/permisos', title: 'Configuración',  icon: 'dashboard', class:'' ,admin:'si',child:[{pat:'/configuracion/permisos', tit: 'Permisos',  icn:'person',cls:'person', admin:'si'},
     {pat:'/configuracion/cajas', tit: 'Cajas',  icn:'dashboard',cls:'person', admin:'si'},{pat:'/configuracion/pagos', tit: 'Modo de pago',  icn:'bubble_chart',cls:'person', admin:'si'}]},
 ];

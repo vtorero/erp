@@ -854,6 +854,16 @@ public guardarCompras(datos:any,detalle:any){
     { json:json,detalle:det }, { headers: headers });
 }
 
+/*Anular movimiento */
+
+public anularMovimiento(datos:any){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/anular-movimiento',
+    { json:json }, { headers: headers });
+}
+
+
 public movkardex(datos:any,prod:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(prod);
