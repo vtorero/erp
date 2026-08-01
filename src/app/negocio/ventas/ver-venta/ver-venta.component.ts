@@ -11,6 +11,8 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 import { VentaVer } from 'app/modelos/ventaVer';
 import { lastValueFrom } from 'rxjs';
 
+
+
 @Component({
   selector: 'app-ver-venta',
   templateUrl: './ver-venta.component.html',
@@ -20,6 +22,7 @@ export class VerVentaComponent implements OnInit {
   displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal','opciones'];
   displayedColumnsPago = ['id','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro','opciones'];
   dataClientes:any;
+  dataenvio:any;
   dataDetalle:any;
   dataVendedores:any;
   dataPagos:any;
@@ -49,7 +52,6 @@ export class VerVentaComponent implements OnInit {
       });
 
       await this.getDataCliente(this.data.id_cliente);
-
 
       this.api.GetDetallePago(this.data.id).subscribe(d => {
         this.dataPagos = new MatTableDataSource();
@@ -92,8 +94,48 @@ save(d){
 
 }
 
-anularProducto(data:any){
-console.log(data)
+guardarCambios(d:any){
+  this.dataenvio = {
+    venta: d,
+    pagos: this.dataPagos
+  };
+
+  this.api.actualizaVenta(this.dataenvio).subscribe(d=>{
+  console.log(d);
+  },
+  error=>{
+    console.log(error)
+  });
+  //console.log(this.dataenvio,d.id);
+}
+
+
+
+anularPago(pago: any) {
+  if (!confirm('¿Desea eliminar este pago?')) {
+    return;
+  }
+console.log(pago)
+      this.dataPagos = this.dataPagos.filter(x => x.id != pago.id);
+      // Si manejas estado de pago
+      // Si deseas refrescar la tabla
+      //this.dataPagos._updateChangeSubscription();
+
+    }
+
+
+
+
+
+anularProducto(id:any){
+
+  if (!confirm('¿Desea eliminar este producto?')) {
+    return;
+  }
+console.log(id)
+//this.dataDetalle.splice(id,1)
+this.dataDetalle = this.dataDetalle.filter(x => x.id != id);
+this.data.detalleVenta=this.dataDetalle.filter(x => x.id != id);
 }
 
   getVendedor(): void {

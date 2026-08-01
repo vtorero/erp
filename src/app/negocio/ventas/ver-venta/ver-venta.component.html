@@ -92,6 +92,7 @@
                   <input matInput name="valor_total" type="number"   [(ngModel)]="data.valor_total" readonly>
               </mat-form-field>
                   </div>
+
             </div>
 
     </div>
@@ -100,6 +101,7 @@
 
   <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
   <div style="display:flex;width: 100%;">
+
   <div style="height:200px;margin-top:10px;flex-grow:1;">
     <h4>Detalle de pedido</h4>
       <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
@@ -137,7 +139,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
           <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
               <button  mat-icon-button color="warn" matTooltip="Anular">
-         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
+         <i class="material-icons"  (click)="anularProducto(row.id)" >delete</i>
       </button>
             </span></mat-cell>
         </ng-container>
@@ -187,7 +189,7 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
           <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
               <button  mat-icon-button color="warn" matTooltip="Anular">
-         <i class="material-icons"  (click)="anularProducto(row)" >delete</i>
+         <i class="material-icons"  (click)="anularPago(row)" >delete</i>
       </button>
 
             </span></mat-cell>
@@ -201,4 +203,5 @@
     </div>
 
   </div>
+  <button *ngIf="esadmin" class="enviar float-right mt-3" mat-raised-button (click)="guardarCambios(data)" color="primary" dkFocusInitial ><i class="material-icons">save</i> Guardar Cambios</button>
 </div>

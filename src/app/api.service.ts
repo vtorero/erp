@@ -267,6 +267,14 @@ getSucursalUsuario(){
     }, { headers: this.headers }).pipe(map(data => data));
 }
 
+/*Guardar carmbios de venta*/
+
+actualizaVenta(venta:any) {
+  const url = Global.BASE_API_URL + 'api.php/venta';
+  return this._http.put(url,venta
+     , { headers: this.headers }).pipe(map(data => data));
+}
+
 /*Guardar movimiento tesoreria*/
 
   guardarMovimiento(mov:Movimiento) {
