@@ -5,7 +5,8 @@
   <div class="spinner"></div>
 </div>
 
-<div *ngIf="!cargando">  <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
+<div *ngIf="!cargando">
+  <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
   <button *ngIf="esadmin" class="enviar float-right mt-3" mat-raised-button (click)="guardarCambios(data)" color="primary" dkFocusInitial ><i class="material-icons">save</i> Guardar Cambios</button>
 
     <form #formGeneral="ngForm">
