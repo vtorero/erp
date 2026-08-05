@@ -119,6 +119,13 @@ anularPago(pago: any) {
   }
 console.log(pago)
       this.dataPagos = this.dataPagos.filter(x => x.id != pago.id);
+      this.api.EliminarPago(pago.id_venta,pago.id).subscribe(data=>{
+        console.log(data);
+        this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+
+      },error=>{
+        console.log(error)
+      })
       // Si manejas estado de pago
       // Si deseas refrescar la tabla
       //this.dataPagos._updateChangeSubscription();
@@ -167,17 +174,21 @@ if(array){
            this.api.actualizaMonto(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+                this.api.GetDetallePago(this.data.id).subscribe(d => {
+          console.log("d",d)
+        this.dataPagos = new MatTableDataSource();
+        this.exampleArray=d;
+        this.dataPagos=this.exampleArray
             },
           erro=>{console.log(erro)}
             );
 
-            this.api.GetDetallePago(id).subscribe(d => {
-              this.dataPagos = new MatTableDataSource();
-              this.exampleArray=d;
-              this.dataPagos=this.exampleArray
+        
+    
 
 
-              });
+        });
+
 
      });
 

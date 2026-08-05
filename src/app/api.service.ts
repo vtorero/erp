@@ -935,6 +935,11 @@ getVentaBoletas(inicio: string, final: string, empresa: string) {
   }, { headers: this.headers }).pipe(map(data => data));
 }
 
+  public EliminarPago(idVenta:number,idPago:number): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.delete(`${Global.BASE_API_URL}api.php/venta-pago/${idVenta}/${idPago}`,{headers:headers});
+  }
+  
 /**
 
 
