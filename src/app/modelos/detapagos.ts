@@ -2,8 +2,7 @@ export class DetaPagos {
     constructor(
         public id: number,
         public nombre: string,
-        public tipoPago: string,
-        public cuentaPago:string,
+          public cuentaPago:string,
         public numero:string,
         public monto:number,
         public monto_pendiente:number,

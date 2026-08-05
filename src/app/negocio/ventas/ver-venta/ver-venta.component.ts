@@ -27,6 +27,7 @@ export class VerVentaComponent implements OnInit {
   dataVendedores:any;
   dataPagos:any;
   exampleArray:any;
+  totalMonto:number=0;
   sucursales:any;
   cargando:boolean=true;
   esadmin:boolean=false;
@@ -102,6 +103,7 @@ guardarCambios(d:any){
 
   this.api.actualizaVenta(this.dataenvio).subscribe(d=>{
   console.log(d);
+  this._snackBar.open(d['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
   },
   error=>{
     console.log(error)
@@ -136,6 +138,16 @@ console.log(id)
 //this.dataDetalle.splice(id,1)
 this.dataDetalle = this.dataDetalle.filter(x => x.id != id);
 this.data.detalleVenta=this.dataDetalle.filter(x => x.id != id);
+this.sumarMonto(this.data.detalleVenta);
+this.data.valor_total=this.totalMonto;
+}
+
+sumarMonto(array: Details[]){
+  this.totalMonto=0;
+
+if(array){
+  array.forEach(item =>{(this.totalMonto+=item.cantidad*item.precio-(item.descuento*item.cantidad)).toFixed(2)});
+}
 }
 
   getVendedor(): void {
