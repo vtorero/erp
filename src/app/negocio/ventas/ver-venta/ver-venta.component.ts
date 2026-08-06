@@ -10,6 +10,7 @@ import { DetaPagos } from '../../../modelos/detapagos';
 import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente.component';
 import { VentaVer } from 'app/modelos/ventaVer';
 import { lastValueFrom } from 'rxjs';
+import { BuscaProductoComponent } from 'app/dialog/busca-producto/busca-producto.component';
 
 
 
@@ -165,29 +166,52 @@ if(array){
     } );
   }
 
+openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
+  const dialogo=this.dialog.open(BuscaProductoComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
+    data: {clase:'modPendiente',id:id},
+    });
+    dialogo.afterClosed().subscribe(ux => {
+ console.log("ux",ux);
+
+
+});
+
+
+}
+
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
     let index=0;
     const dialogo2=this.dialog.open(PagoPendienteComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
     data: {clase:'modPendiente',id:id},
     });
      dialogo2.afterClosed().subscribe(ux => {
-           this.api.actualizaMonto(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
+           this.api.actualizaMonto(id,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
+            console.log("data",data)
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
                 this.api.GetDetallePago(this.data.id).subscribe(d => {
-          console.log("d",d)
-        this.dataPagos = new MatTableDataSource();
+                 this.dataPagos = new MatTableDataSource();
         this.exampleArray=d;
         this.dataPagos=this.exampleArray
-            },
-          erro=>{console.log(erro)}
-            );
+            });
+        },
+        err => {
 
-        
-    
+          console.log(err);
 
+          this._snackBar.open(
+            err.error.messaje,
+            'OK',
+            {
+              duration: 5000,
+              horizontalPosition: 'center',
+              verticalPosition: 'top'
+            }
+          );
 
-        });
+        }
+
+      );
 
 
      });

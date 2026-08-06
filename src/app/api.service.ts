@@ -506,14 +506,14 @@ public consultaVentas(finicio:string,ffin:string,estado:string):Observable<any>{
 
 
 
-public actualizaMonto(id_venta:number,tipoPago:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
+public actualizaMonto(id_venta:number,numero:string,cuentaPago:number,pendiente:number,monto:number):Observable<any>{
   let headers = new HttpHeaders().set(
     "Content-Type",
     "application/x-www-form-urlencoded"
   );
   let datos = {
     'id_venta':id_venta,
-    'tipo_pago':tipoPago,
+    'tipo_pago':0,
     'numero':numero,
     'cuenta_pago':cuentaPago,
     'pendiente':pendiente,
@@ -939,7 +939,7 @@ getVentaBoletas(inicio: string, final: string, empresa: string) {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(`${Global.BASE_API_URL}api.php/venta-pago/${idVenta}/${idPago}`,{headers:headers});
   }
-  
+
 /**
 
 

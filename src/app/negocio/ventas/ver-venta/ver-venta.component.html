@@ -6,9 +6,10 @@
 </div>
 
 <div *ngIf="!cargando">
-  <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
-  <button *ngIf="esadmin" class="enviar float-right mt-3" mat-raised-button (click)="guardarCambios(data)" color="primary" dkFocusInitial ><i class="material-icons">save</i> Guardar Cambios</button>
-
+  <div class="row float-right">
+    <button *ngIf="esadmin" class="enviar " mat-raised-button (click)="guardarCambios(data)" color="primary" dkFocusInitial ><i class="material-icons">save</i> Guardar Cambios</button>
+      <button class="close" mat-button mat-dialog-title (click)="cancelar()">X</button>
+  </div>
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
         <h3>Visualizar Venta Nro:({{data.id}})</h3>
@@ -107,7 +108,7 @@
   <div style="height:200px;margin-top:10px;flex-grow:1;">
     <h4>Detalle de pedido</h4>
     <button  mat-icon-button color="warn">
-      &nbsp;&nbsp;Agregar Productos: <i class="material-icons"  (click)="openMontoPendiente('20ms','20ms',data.id)" >add_circle</i>
+      &nbsp;&nbsp;Agregar Productos: <i class="material-icons"  (click)="openProductos('20ms','20ms',data.id)" >add_circle</i>
     </button>
       <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
         <ng-container matColumnDef="codigo">

@@ -62,6 +62,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TesoreriaComponent } from './tesoreria/tesoreria.component';
 import { MaintesoreriaComponent } from './tesoreria/maintesoreria/maintesoreria.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { BuscaProductoComponent } from './dialog/busca-producto/busca-producto.component';
 
 
 
@@ -135,6 +136,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
      EditProductoComponent,
      TesoreriaComponent,
      MaintesoreriaComponent,
+     BuscaProductoComponent,
 
   ],
   providers: [],
