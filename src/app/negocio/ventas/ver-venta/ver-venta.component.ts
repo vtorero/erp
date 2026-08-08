@@ -157,6 +157,8 @@ this.sumarMonto(this.data.detalleVenta);
 this.data.valor_total=this.totalMonto;
 this.api.EliminarProducto(this.data.id,id).subscribe(data=>{
   console.log(data);
+  this.data.valor_total=data['valor_total']
+  this.data.monto_pendiente=data['monto_pendiente']
   this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
   this.getDetalle();
   this.getPagos();
@@ -187,27 +189,28 @@ openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:n
     data: {clase:'modPendiente',id:id},
     });
     dialogo.afterClosed().subscribe(ux => {
+      if (!ux) {
+        return;
+      }
 
       const dataEnvio = {
         id_venta: this.data.id,
         prod:ux,
         sucursal:localStorage.getItem("id_suc")
       };
-      console.log(dataEnvio)
-
       this.api.itemProducto(dataEnvio).subscribe(
         data=>{
+          console.log(data)
+          this.data.valor_total=data['total']
+          this.data.monto_pendiente=data['pendiente']
              this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
               this.getDetalle();
-
+              this.getPagos();
       },
       err => {
-
-        console.log(err);
-
         this._snackBar.open(
-          err.error.messaje,
-          'KO',
+          err.error.message,
+          'Cerrar',
           {
             duration: 5000,
             horizontalPosition: 'center',
@@ -230,6 +233,9 @@ openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:n
     data: {clase:'modPendiente',id:id},
     });
      dialogo2.afterClosed().subscribe(ux => {
+      if (!ux) {
+        return;
+      }
            this.api.actualizaMonto(id,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
                this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
