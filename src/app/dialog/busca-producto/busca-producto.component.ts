@@ -25,7 +25,7 @@ export class BuscaProductoComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    @Inject(MAT_DIALOG_DATA) public data: Details
+    @Inject(MAT_DIALOG_DATA) public dataprod: Details
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +92,11 @@ export class BuscaProductoComponent implements OnInit {
 
   seleccionarProducto(event) {
     console.log(event.value);
-    this.data.precio = 12;
+    this.api.getApiTablaCriterio('productos',event.value).subscribe(x=>{
+      console.log(x[0].precio)
+      this.dataprod.precio = x[0].precio
+    })
+
   }
 
   onKey(value) {

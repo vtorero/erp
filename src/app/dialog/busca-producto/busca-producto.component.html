@@ -30,7 +30,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Buscar Producto</mat-label>
 
-            <mat-select name="id_producto" formControlName="producto"  (selectionChange)="seleccionarProducto(
+            <mat-select name="id_" [(ngModel)]="dataprod.id"  (selectionChange)="seleccionarProducto(
                 $event)">
 
                 <input matInput class="buscador" (keydown.space)="$event.stopPropagation()" (keyup)="onKey($event.target.value)" placeholder="Buscar por nombre o código">
@@ -43,20 +43,26 @@
     </div>
 </div>
 <div class="row">
-<div class="col-6"><mat-form-field appearance="outline">
+<div class="col-4"><mat-form-field appearance="outline">
     <mat-label>Cantidad</mat-label>
-      <input matInput  name="cantidad" [(ngModel)]="data.cantidad" type="number">
-    </mat-form-field></div>
-<div class="col-6">
+      <input matInput  name="cantidad" [(ngModel)]="dataprod.cantidad" type="number">
+    </mat-form-field>
+</div>
+<div class="col-4"><mat-form-field appearance="outline">
+    <mat-label>Despacho</mat-label>
+      <input matInput  name="despacho" [(ngModel)]="dataprod.despacho" type="number">
+    </mat-form-field>
+</div>
+<div class="col-4">
     <mat-form-field appearance="outline">
         <mat-label>Precio</mat-label>
-          <input matInput  [(ngModel)]="data.precio" name="precio" type="number">
+          <input matInput  [(ngModel)]="dataprod.precio" name="precio" type="number">
         </mat-form-field>
 </div>
 <div class="col-12">
     <div mat-dialog-actions>
         <button mat-button (click)="cancelar()">Cancelar</button>
-        <button mat-raised-button [mat-dialog-close]="data" cdkFocusInitial>Agregar</button>
+        <button mat-raised-button [mat-dialog-close]="dataprod" cdkFocusInitial>Agregar</button>
     </div>
 </div>
 </div>

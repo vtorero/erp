@@ -871,6 +871,13 @@ public anularMovimiento(datos:any){
     { json:json }, { headers: headers });
 }
 
+public itemProducto(datos:any){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/item-producto',
+    { json:json }, { headers: headers });
+}
+
 
 public movkardex(datos:any,prod:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
@@ -938,6 +945,11 @@ getVentaBoletas(inicio: string, final: string, empresa: string) {
   public EliminarPago(idVenta:number,idPago:number): Observable<any> {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(`${Global.BASE_API_URL}api.php/venta-pago/${idVenta}/${idPago}`,{headers:headers});
+  }
+
+  public EliminarProducto(idVenta:number,idDetalle:number): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.delete(`${Global.BASE_API_URL}api.php/venta-detalle/${idVenta}/${idDetalle}`,{headers:headers});
   }
 
 /**

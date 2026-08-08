@@ -11,6 +11,7 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 import { VentaVer } from 'app/modelos/ventaVer';
 import { lastValueFrom } from 'rxjs';
 import { BuscaProductoComponent } from 'app/dialog/busca-producto/busca-producto.component';
+import { dataproc } from 'googleapis/build/src/apis/dataproc';
 
 
 
@@ -43,25 +44,11 @@ export class VerVentaComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-
-
-    this.api.GetDetalleVenta(this.data.id).subscribe(x => {
-      this.dataDetalle = new MatTableDataSource();
-      this.exampleArray=x;
-      this.dataDetalle=this.exampleArray
-      this.data.detalleVenta=this.exampleArray;
-
-      });
-
+    this.getDetalle();
+    this.getPagos();
       await this.getDataCliente(this.data.id_cliente);
 
-      this.api.GetDetallePago(this.data.id).subscribe(d => {
-        this.dataPagos = new MatTableDataSource();
-        this.exampleArray=d;
-        this.dataPagos=this.exampleArray
 
-
-        });
 
     this.getCliente();
     this.cargaSucursales();
@@ -69,6 +56,26 @@ export class VerVentaComponent implements OnInit {
     if(localStorage.getItem("currentNombre")=="admin"){
       this.esadmin=true;
     }
+  }
+
+  getDetalle(){
+    this.api.GetDetalleVenta(this.data.id).subscribe(x => {
+      this.dataDetalle = new MatTableDataSource();
+      this.exampleArray=x;
+      this.dataDetalle=this.exampleArray
+      this.data.detalleVenta=this.exampleArray;
+
+      });
+  }
+
+  getPagos(){
+    this.api.GetDetallePago(this.data.id).subscribe(d => {
+      this.dataPagos = new MatTableDataSource();
+      this.exampleArray=d;
+      this.dataPagos=this.exampleArray
+
+
+      });
   }
 
   async getDataCliente(id: any) {
@@ -123,7 +130,7 @@ console.log(pago)
       this.api.EliminarPago(pago.id_venta,pago.id).subscribe(data=>{
         console.log(data);
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-
+        this.getPagos();
       },error=>{
         console.log(error)
       })
@@ -148,6 +155,15 @@ this.dataDetalle = this.dataDetalle.filter(x => x.id != id);
 this.data.detalleVenta=this.dataDetalle.filter(x => x.id != id);
 this.sumarMonto(this.data.detalleVenta);
 this.data.valor_total=this.totalMonto;
+this.api.EliminarProducto(this.data.id,id).subscribe(data=>{
+  console.log(data);
+  this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+  this.getDetalle();
+  this.getPagos();
+},error=>{
+  console.log(error)
+})
+
 }
 
 sumarMonto(array: Details[]){
@@ -171,8 +187,37 @@ openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:n
     data: {clase:'modPendiente',id:id},
     });
     dialogo.afterClosed().subscribe(ux => {
- console.log("ux",ux);
 
+      const dataEnvio = {
+        id_venta: this.data.id,
+        prod:ux,
+        sucursal:localStorage.getItem("id_suc")
+      };
+      console.log(dataEnvio)
+
+      this.api.itemProducto(dataEnvio).subscribe(
+        data=>{
+             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+              this.getDetalle();
+
+      },
+      err => {
+
+        console.log(err);
+
+        this._snackBar.open(
+          err.error.messaje,
+          'KO',
+          {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          }
+        );
+
+      }
+
+    );
 
 });
 
@@ -187,8 +232,7 @@ openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:n
      dialogo2.afterClosed().subscribe(ux => {
            this.api.actualizaMonto(id,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
-            console.log("data",data)
-            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+               this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
                 this.api.GetDetallePago(this.data.id).subscribe(d => {
                  this.dataPagos = new MatTableDataSource();
         this.exampleArray=d;
@@ -201,7 +245,7 @@ openProductos(enterAnimationDuration: string, exitAnimationDuration: string,id:n
 
           this._snackBar.open(
             err.error.messaje,
-            'OK',
+            'Cerrar',
             {
               duration: 5000,
               horizontalPosition: 'center',
