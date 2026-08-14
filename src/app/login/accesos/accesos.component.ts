@@ -65,10 +65,10 @@ setTimeout(() => {
 loginUser(usuario,password){
   this.loading=true;
   event.preventDefault();
-    if(usuario){
+    if(usuario!=null && password!=null){
         this.api.loginUser(usuario,password).subscribe(data=>{
           if(data['rows']>=1) {
-            console.log(data['data'][0]);
+            console.log(data);
             localStorage.removeItem("currentId");
             sessionStorage.removeItem("currentUser");
             localStorage.removeItem("currentNombre");
@@ -93,15 +93,10 @@ loginUser(usuario,password){
             if(data['data'][0]['nombre']=='admin'){
             this.router.navigate(['/dashboard']);
           }else{
-            this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             this.router.navigate(['/ventas/venta-rapida']);
           }
-
           }else{
-this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             this.error();
-
-
           }
 
         });

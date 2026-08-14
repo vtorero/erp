@@ -130,6 +130,7 @@ openBusqueda(){
     dialogo1.afterClosed().subscribe(us => {
       if (us!= undefined)
        this.agregar(us)
+      this.renderDataTable();
      });
 
 
