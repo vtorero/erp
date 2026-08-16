@@ -2,6 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component,  OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
@@ -15,6 +16,7 @@ import { VerCompraComponent } from '../ver-compra/ver-compra.component';
 import { Compra } from '../../../modelos/compra';
 import { ExportarComprasComponent } from '../../../dialog/exportar-compras/exportar-compras.component';
 import { Global } from 'app/global';
+import { NotaCreditoComponent } from '../nota-credito/nota-credito.component';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -142,6 +144,25 @@ consultar(){
     this._snackBar.open('Debe seleccionar un registro','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
   }
   }
+
+  openNotaCredito(enterAnimationDuration: string, exitAnimationDuration: string){
+    if(this.selectedRowIndex){
+      const dialog= this.dialog.open(NotaCreditoComponent, {
+        width: 'auto',
+        enterAnimationDuration,
+        exitAnimationDuration,
+        data: this.selectedRowIndex
+        ,
+      });
+
+     dialog.afterClosed().subscribe(ux => {
+      console.log(ux);
+     // this.facturar(ux);
+     });
+
+  }
+}
+
 
   openFacturar(enterAnimationDuration: string, exitAnimationDuration: string){
     const dialogo2=this.dialog.open(AddClienteComponent, {

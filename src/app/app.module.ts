@@ -62,7 +62,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TesoreriaComponent } from './tesoreria/tesoreria.component';
 import { MaintesoreriaComponent } from './tesoreria/maintesoreria/maintesoreria.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatRadioModule } from '@angular/material/radio';
 import { BuscaProductoComponent } from './dialog/busca-producto/busca-producto.component';
+import { NotaCreditoComponent } from './negocio/compras/nota-credito/nota-credito.component';
 
 
 
@@ -82,6 +84,7 @@ import { BuscaProductoComponent } from './dialog/busca-producto/busca-producto.c
     SharedModule,
     ComponentsModule,
     MatTooltipModule,
+    MatRadioModule,
     NgxMaskModule.forRoot()
   ],
   declarations: [
@@ -137,6 +140,7 @@ import { BuscaProductoComponent } from './dialog/busca-producto/busca-producto.c
      TesoreriaComponent,
      MaintesoreriaComponent,
      BuscaProductoComponent,
+     NotaCreditoComponent,
 
   ],
   providers: [],
