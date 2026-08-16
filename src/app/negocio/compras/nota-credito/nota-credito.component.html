@@ -1,0 +1,173 @@
+<div>
+    <button class="enviar " mat-raised-button (click)="guardarCambios()" color="primary" dkFocusInitial ><i class="material-icons">save</i> Guardar Cambios</button>
+    <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
+      <form #formGeneral="ngForm">
+        <div mat-dialog-content>
+          <h3>Nota de crédito de Compra Nro:({{data.id}})</h3>
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Tipo de Documento</mat-label>
+                <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
+                    <mat-option >Seleccionar</mat-option>
+                    <mat-option value="Ticket">Ticket</mat-option>
+                    <mat-option value="Boleta">Boleta</mat-option>
+                    <mat-option value="Factura">Factura</mat-option>
+                </mat-select>
+            </mat-form-field>
+              </div>
+
+            <div class="col-6">
+              <mat-form-field appearance="outline">
+                  <mat-label>Proveedor</mat-label>
+                    <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
+                  </mat-form-field>
+
+            </div>
+            <div class="col-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Terminal</mat-label>
+                <mat-select matInput matInput [(ngModel)]="data.id_sucursal" name="id" required>
+                    <mat-option value="">Seleccionar</mat-option>
+                  <mat-option  *ngFor="let subcat of sucursales" [value]="subcat.id">
+                    {{subcat.nombre}}
+                  </mat-option>
+                  </mat-select>
+              </mat-form-field>
+        <div class="row">
+                <div class="col-10"> <mat-form-field appearance="outline">
+                  <mat-label>Observación</mat-label>
+                  <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
+
+                  </mat-form-field></div>
+                <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
+              </div>
+
+            </div>
+            <div class="col-6">
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                    <mat-label>RUC</mat-label>
+                    <input matInput [(ngModel)]="data.num_documento" name="num_documento" maxlength="110" minlength="2" type="text"  readonly>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field appearance="outline">
+                    <mat-label>Teléfono</mat-label>
+                    <input matInput [(ngModel)]="data.telefono" name="telefono" maxlength="110" minlength="2" type="text"  readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col-6">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Serie Doc</mat-label>
+                          <input matInput [(ngModel)]="data.serie_documento" name="serie_documento" maxlength="110" minlength="2" type="text"  readonly>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Numero Documento</mat-label>
+                          <input matInput [(ngModel)]="data.nro_documento" name="nro_documento" maxlength="110" minlength="2" type="text"  readonly>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-12">
+                      <mat-card>
+                        <mat-card-header>
+                          <mat-card-title>Motivo</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                          <mat-radio-group>
+                            <mat-radio-button value="defectuoso">
+                              Producto defectuoso
+                            </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="error">
+                              Error de compra
+                            </mat-radio-button>&nbsp;&nbsp;&nbsp;
+
+
+
+                            <mat-radio-button value="vencido">
+                              Producto vencido
+                            </mat-radio-button>&nbsp;&nbsp;&nbsp;
+                            <mat-radio-button value="otro">
+                              Otro
+                            </mat-radio-button>
+                          </mat-radio-group>
+
+                        </mat-card-content>
+                      </mat-card>
+
+                    </div>
+                  </div>
+            </div>
+               <div class="row">
+              <div class="col-4 offset-1">
+                <mat-form-field>
+                  <mat-label>Valor Compra</mat-label>
+                  <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_neto" readonly>
+                </mat-form-field>
+                 </div>
+              <div class="col-3">
+                <mat-form-field>
+                  <mat-label>Total devolución</mat-label>
+                    <input matInput name="monto_igv"  type="number" [(ngModel)]="data.monto_igv" readonly>
+                </mat-form-field>
+                </div>
+
+              <div class="col-4">
+                <mat-form-field>
+                  <mat-label>Fecha Nota de Credito</mat-label>
+                    <input matInput name="valor_total" type="number" [(ngModel)]="data.fecha" readonly>
+                </mat-form-field>
+                    </div>
+              </div>
+      </div>
+          </div>
+      </form>
+
+    <!-- <button mat-raised-button class="btn btn-success" (click)="abrirDialog()" [disabled]="!formGeneral.form.valid">Agregar Items</button>-->
+    <div style="display:flex;width: 100%;">
+    <div style="height:200px;margin-top:10px;flex-grow:1;">
+      <h4>Detalle de Productos</h4>
+        <mat-table [dataSource]="dataDetalle" matSort style="overflow-y:scroll">
+          <ng-container matColumnDef="codigo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.codigo}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="cantidad">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Compro</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
+
+          </ng-container>
+          <ng-container matColumnDef="pendiente">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Devuelve</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <a class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.nombre,data.id)">{{row.pendiente | number}}</a>
+
+            </mat-cell>
+
+          </ng-container>
+          <ng-container matColumnDef="precio">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
+            <mat-cell *matCellDef="let row">S/ {{row.precio | number }} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="subtotal">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Subtotal</mat-header-cell>
+            <mat-cell *matCellDef="let row">S/ {{ row.subtotal | number }}
+            </mat-cell>
+          </ng-container>
+           <mat-header-row *matHeaderRowDef="displayedColumns" class="encabezado"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" [pageSize]="5" [showFirstLastButtons]></mat-paginator>
+      </div>
+
+
+    </div>
+  </div>
