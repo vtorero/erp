@@ -26,6 +26,7 @@ export class NotaCreditoComponent implements OnInit {
   dataPagos:any;
   exampleArray:any;
   sucursales:any;
+  devolucion:any=0;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
@@ -75,8 +76,10 @@ export class NotaCreditoComponent implements OnInit {
   }
 
   guardarCambios(){
-    console.log(this.dataDetalle);
-    console.log(this.data)
+    console.log(this.data);
+    this.api.enviaNotaCredito(this.data).subscribe(datos=>{
+    console.log(datos);
+    });
   }
 
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
@@ -115,6 +118,7 @@ export class NotaCreditoComponent implements OnInit {
        if(element.id==id){
           if(ux.cantidad <= this.dataDetalle[index].cantidad) {
            this.dataDetalle[index].pendiente=ux.cantidad;
+           this.devolucion=element.pendiente*element.precio;
            this.api.actualizaPendientesCompra(id_venta,id_producto,id,ux.cantidad).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});

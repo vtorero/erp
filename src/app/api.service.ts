@@ -851,6 +851,15 @@ public guardaVentas(datos:any,detalle:any){
   return this._http.post(Global.BASE_API_URL + 'api.php/venta',
     { json:json,detalle:det }, { headers: headers });
 }
+/** Generar nota de credito */
+
+public enviaNotaCredito(datos:any){
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(datos);
+  return this._http.post(Global.BASE_API_URL + 'api.php/nota-credito-compra',
+    { json:json}, { headers: headers });
+}
+
 
 /**Guardar Compras */
 

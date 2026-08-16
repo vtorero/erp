@@ -39,10 +39,31 @@
                   <mat-label>Observación</mat-label>
                   <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
 
-                  </mat-form-field></div>
+                  </mat-form-field>
+                </div>
                 <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
               </div>
+              <div class="row">
+                <div class="col-4">
+                  <mat-form-field>
+                    <mat-label>Valor Compra S/</mat-label>
+                    <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_neto" readonly>
+                  </mat-form-field>
+                   </div>
+                <div class="col-3">
+                  <mat-form-field>
+                    <mat-label>Total devolución S/</mat-label>
+                      <input matInput name="devolucion"  type="number" [(ngModel)]="devolucion" readonly>
+                  </mat-form-field>
+                  </div>
 
+                <div class="col-4">
+                  <mat-form-field>
+                    <mat-label>Fecha de Venta</mat-label>
+                      <input matInput name="fecha" type="text" [(ngModel)]="data.fecha" readonly>
+                  </mat-form-field>
+                      </div>
+                </div>
             </div>
             <div class="col-6">
                 <div class="row">
@@ -102,27 +123,7 @@
                     </div>
                   </div>
             </div>
-               <div class="row">
-              <div class="col-4 offset-1">
-                <mat-form-field>
-                  <mat-label>Valor Compra</mat-label>
-                  <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_neto" readonly>
-                </mat-form-field>
-                 </div>
-              <div class="col-3">
-                <mat-form-field>
-                  <mat-label>Total devolución</mat-label>
-                    <input matInput name="monto_igv"  type="number" [(ngModel)]="data.monto_igv" readonly>
-                </mat-form-field>
-                </div>
 
-              <div class="col-4">
-                <mat-form-field>
-                  <mat-label>Fecha Nota de Credito</mat-label>
-                    <input matInput name="valor_total" type="number" [(ngModel)]="data.fecha" readonly>
-                </mat-form-field>
-                    </div>
-              </div>
       </div>
           </div>
       </form>
@@ -148,7 +149,7 @@
           <ng-container matColumnDef="pendiente">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Devuelve</mat-header-cell>
             <mat-cell *matCellDef="let row">
-              <a class="numero_edicion" (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.nombre,data.id)">{{row.pendiente | number}}</a>
+              <a class="numero_edicion"  (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.nombre,data.id)">{{row.pendiente | number}}</a>
 
             </mat-cell>
 
