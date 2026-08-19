@@ -12,6 +12,5 @@ export class Details {
         public precio_compra:number,
         public descuento: number,
         public detalle:any
-
 ){}
 }
