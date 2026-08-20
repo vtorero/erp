@@ -99,7 +99,7 @@
                           <mat-card-title>Motivo</mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-                          <mat-radio-group>
+                          <mat-radio-group  [(ngModel)]="dataNota.motivo" name="motivo">
                             <mat-radio-button value="defectuoso">
                               Producto defectuoso
                             </mat-radio-button>&nbsp;&nbsp;&nbsp;

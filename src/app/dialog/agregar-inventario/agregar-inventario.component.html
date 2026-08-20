@@ -13,7 +13,7 @@
         <div class="col-6">
           <mat-form-field appearance="outline">
             <mat-label>Almacen Destino</mat-label>
-            <mat-select  formControlName="almacen" required>
+            <mat-select  formControlName="almacen" [(ngModel)]="data.id_sucursal" required>
              <mat-option value="">Seleccionar</mat-option>
              <mat-option *ngFor="let suc of dataSucursales" [value]="suc.id">{{suc.nombre}}</mat-option>
              </mat-select>
@@ -49,7 +49,7 @@
 
         <mat-form-field class="example-full-width">
           <mat-label>Comentario</mat-label>
-          <textarea matInput placeholder="Motivo de salida" [(ngModel)]="data.comentario"  formControlName="comentario"></textarea>
+          <textarea matInput placeholder="" [(ngModel)]="data.comentario"  formControlName="comentario"></textarea>
         </mat-form-field>
       </div>
              <div mat-dialog-actions>

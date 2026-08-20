@@ -10,6 +10,7 @@ import { DetaPagos } from '../../../modelos/detapagos';
 import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente.component';
 import { Compra } from '../../../modelos/compra';
 import { lastValueFrom } from 'rxjs';
+import { Notacredito } from 'app/modelos/notacredito';
 
 @Component({
   selector: 'app-nota-credito',
@@ -31,6 +32,7 @@ export class NotaCreditoComponent implements OnInit {
     public dialog: MatDialog,
     private api:ApiService,
     private _snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public dataNota:Notacredito,
     @Inject(MAT_DIALOG_DATA) public data:Compra,
     @Inject(MAT_DIALOG_DATA) public detalle:Details,
     @Inject(MAT_DIALOG_DATA) public detapago:DetaPagos,
@@ -76,10 +78,14 @@ export class NotaCreditoComponent implements OnInit {
   }
 
   guardarCambios(){
-    console.log(this.data);
+    console.log(this.dataNota);
     this.api.enviaNotaCredito(this.data).subscribe(datos=>{
-    console.log(datos);
-    });
+        this._snackBar.open(datos['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        this.cancelar();
+        },
+      erro=>{console.log(erro)}
+        );
+
   }
 
   openMontoPendiente(enterAnimationDuration: string, exitAnimationDuration: string,id:number){
@@ -88,7 +94,7 @@ export class NotaCreditoComponent implements OnInit {
     data: {clase:'modPendiente',id:id},
   });
      dialogo2.afterClosed().subscribe(ux => {
-      console.log("wsss",ux)
+
        this.api.actualizaMontoCompra(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
@@ -168,6 +174,7 @@ export class NotaCreditoComponent implements OnInit {
       }
     } );
   }
+
   cancelar() {
     this.dialog.closeAll();
 
