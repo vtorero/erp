@@ -125,12 +125,7 @@ export class NotaCreditoComponent implements OnInit {
           if(ux.cantidad <= this.dataDetalle[index].cantidad) {
            this.dataDetalle[index].pendiente=ux.cantidad;
            this.devolucion=element.pendiente*element.precio;
-           this.api.actualizaPendientesCompra(id_venta,id_producto,id,ux.cantidad).subscribe(
-          data=>{
-            this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-            },
-            erro=>{console.log(erro)}
-            );
+           this._snackBar.open('Cantidad actualizada','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
           }else{
 
           this._snackBar.open('Error en la cantidad ingresada','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'bottom'});
