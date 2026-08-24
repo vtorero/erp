@@ -903,6 +903,13 @@ public GetDetalleCompra(id: any) {
   ).pipe(map(result => result));
 }
 
+public GetDetalleNota(id: any) {
+  return this._http.get(Global.BASE_API_URL + 'api.php/nota-detalle/' + id,
+    { headers: this.headers }
+  ).pipe(map(result => result));
+}
+
+
 
 public GetDetalleVenta(id: any) {
   return this._http.get(Global.BASE_API_URL + 'api.php/venta/' + id,

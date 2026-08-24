@@ -11,6 +11,7 @@ import { PagoPendienteComponent } from 'app/dialog/pago-pendiente/pago-pendiente
 import { Compra } from '../../../modelos/compra';
 import { lastValueFrom } from 'rxjs';
 import { Notacredito } from 'app/modelos/notacredito';
+import { cloudfunctions } from 'googleapis/build/src/apis/cloudfunctions';
 
 @Component({
   selector: 'app-nota-credito',
@@ -18,7 +19,7 @@ import { Notacredito } from 'app/modelos/notacredito';
   styleUrls: ['./nota-credito.component.css']
 })
 export class NotaCreditoComponent implements OnInit {
-  displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad','devuelto','pendiente','precio','subtotal'];
   displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataAdicional:any;
@@ -40,7 +41,8 @@ export class NotaCreditoComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.api.GetDetalleCompra(this.data.id).subscribe(x => {
+    this.dataNota.motivo='error';
+    this.api.GetDetalleNota(this.data.id).subscribe(x => {
 
       this.dataDetalle = new MatTableDataSource();
       this.exampleArray=x;
@@ -113,18 +115,25 @@ export class NotaCreditoComponent implements OnInit {
   }
 
 
-  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_producto:number,cantidad:number,nombre:string,id_venta:number){
+  openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_producto:number,cantidad:number,
+    precio:number,nombre:string,id_venta:number){
     let index=0;
+    let total=0;
     const dialogo2=this.dialog.open(ModCantidadComponent, {width: 'auto',enterAnimationDuration,exitAnimationDuration,
     data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
     });
      dialogo2.afterClosed().subscribe(ux => {
-
+      console.log("uxcantidad",ux);
       this.dataDetalle.forEach(element => {
+        console.log("element",element);
+        console.log("ux",ux)
        if(element.id==id){
-          if(ux.cantidad <= this.dataDetalle[index].cantidad) {
-           this.dataDetalle[index].pendiente=ux.cantidad;
-           this.devolucion=element.pendiente*element.precio;
+        //if(ux.cantidad <= this.dataDetalle[index].cantidad) {
+          if(ux.cantidad <= (element.cantidad-element.devuelto) || ux.cantidad>0) {
+            this.dataDetalle[index].devuelto=ux.cantidad;
+           this.dataDetalle[index].pendiente=element.cantidad-ux.cantidad
+           this.dataDetalle[index].subtotal=ux.cantidad*element.precio;
+          this.devolucion+=element.pendiente*element.precio;
            this._snackBar.open('Cantidad actualizada','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
           }else{
 
