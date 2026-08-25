@@ -129,7 +129,7 @@ export class NotaCreditoComponent implements OnInit {
         console.log("ux",ux)
        if(element.id==id){
         //if(ux.cantidad <= this.dataDetalle[index].cantidad) {
-          if(ux.cantidad <= (element.cantidad-element.devuelto) || ux.cantidad>0) {
+          if((ux.cantidad <= element.cantidad) || ux.cantidad<element.devuelto) {
             this.dataDetalle[index].devuelto=ux.cantidad;
            this.dataDetalle[index].pendiente=element.cantidad-ux.cantidad
            this.dataDetalle[index].subtotal=ux.cantidad*element.precio;
