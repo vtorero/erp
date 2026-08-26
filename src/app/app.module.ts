@@ -70,6 +70,7 @@ import { NotaCreditoComponent } from './negocio/compras/nota-credito/nota-credit
 
 
 
+
 @NgModule({
   imports: [
     MatAutocompleteModule,
@@ -140,7 +141,8 @@ import { NotaCreditoComponent } from './negocio/compras/nota-credito/nota-credit
      TesoreriaComponent,
      MaintesoreriaComponent,
      BuscaProductoComponent,
-     NotaCreditoComponent,
+     NotaCreditoComponent
+
 
   ],
   providers: [],

@@ -123,15 +123,19 @@ export class NotaCreditoComponent implements OnInit {
     data: {clase:'modCantidad',producto:id,cantidad:cantidad,nombre:nombre},
     });
      dialogo2.afterClosed().subscribe(ux => {
-      console.log("uxcantidad",ux);
+
       this.dataDetalle.forEach(element => {
-        console.log("element",element);
-        console.log("ux",ux)
+
        if(element.id==id){
         //if(ux.cantidad <= this.dataDetalle[index].cantidad) {
-          if((ux.cantidad <= element.cantidad) || ux.cantidad<element.devuelto) {
+
+          if((ux.cantidad <= element.cantidad) || ux.cantidad<element.devuelto || ux.cantidad<=(element.cantidad-element.pendiente)) {
+            console.log("ux",ux)
+            console.log("element",Number(element.cantidad)-ux.cantidad);
+
+
             this.dataDetalle[index].devuelto=ux.cantidad;
-           this.dataDetalle[index].pendiente=element.cantidad-ux.cantidad
+           this.dataDetalle[index].pendiente=+(Number(element.cantidad)-Number(ux.cantidad));
            this.dataDetalle[index].subtotal=ux.cantidad*element.precio;
           this.devolucion+=element.pendiente*element.precio;
            this._snackBar.open('Cantidad actualizada','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});

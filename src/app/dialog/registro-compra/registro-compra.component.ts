@@ -281,12 +281,11 @@ async getData() {
         //total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
         //igv2.setValue(dato.precio * Global.BASE_IGV);
         });
-        total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV))
-        igv2.setValue(total2.value * Global.BASE_IGV)
+        total2.setValue(parseFloat(total2.value))
+        //igv2.setValue(total2.value * Global.BASE_IGV)
       }
       if(value=='Ticket'){
         total2.setValue(this.data.precio);
-
       }
       neto.setValue(this.data.precio)
   }

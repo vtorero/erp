@@ -146,17 +146,16 @@
             <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
 
           </ng-container>
-          <ng-container matColumnDef="pendiente">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
-            <mat-cell *matCellDef="let row">{{row.pendiente | number}} </mat-cell>
-
-          </ng-container>
           <ng-container matColumnDef="devuelto">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Devuelto</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <a *ngIf="row.pendiente>0" class="numero_edicion"  (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.precio,row.nombre,data.id)">{{row.devuelto | number}}</a>
               <span *ngIf="row.pendiente == 0">{{row.devuelto | number}}</span>
             </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="pendiente">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.pendiente | number}} </mat-cell>
 
           </ng-container>
           <ng-container matColumnDef="precio">
