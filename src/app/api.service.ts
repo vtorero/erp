@@ -32,6 +32,14 @@ export class ApiService {
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
+
+
+  getTipoDocumento(tipo: string) {
+    return this._http.get(Global.BASE_API_URL + 'api.php/tipo-documento?tipo=' + tipo,
+      { headers: this.headers }
+    ).pipe(map(result => result));
+  }
+
   getSelectApi(tabla: string,criterio:string) {
     return this._http.get(Global.BASE_API_URL + 'api.php/' + tabla+criterio,
       { headers: this.headers }
@@ -45,6 +53,12 @@ export class ApiService {
 
   descargarFactura(id: number) {
     return this._http.get(Global.BASE_API_URL + "reportes.php/boleta/" + id, {
+      responseType: 'blob'  // importante para PDFs
+    });
+  }
+
+  descargaDeclaracion(id: number) {
+    return this._http.get(Global.BASE_API_URL + "reportes.php/declaracion/" + id, {
       responseType: 'blob'  // importante para PDFs
     });
   }

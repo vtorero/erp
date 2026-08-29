@@ -21,6 +21,11 @@
           <button mat-icon-button color="primary" matTooltip="Exportar" (click)="openExportar('10ms','10ms')"  aria-label="Example icon button with a menu icon">
             <i class="material-icons">file_download</i>
             </button>
+
+          <button mat-icon-button color="primary" (click)="openPDF()" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon"  matTooltip="Declaración de Gastos">
+         <i class="material-icons">edit_note</i>
+
+       </button>
           <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
             <i class="material-icons">search</i>
           </button>

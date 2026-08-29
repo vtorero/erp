@@ -51,6 +51,7 @@ export class ListadoComprasComponent implements OnInit {
   buscador:boolean=false;
   currentName:any;
   dataSource: any;
+  datos:any;
   selectedRowIndex:any;
   cancela: boolean = false;
   public id_estado:any=1;
@@ -82,6 +83,27 @@ openBusqueda(){
   }else{
     this.buscador=true;
   }
+}
+
+openPDF(){
+  console.log(this.selectedRowIndex);
+  this.datos=this.selectedRowIndex;
+  console.log(this.datos.id);
+ this.api.descargaDeclaracion(this.datos.id) // id de factura1
+      .subscribe((pdfBlob: Blob) => {
+        const fileURL = URL.createObjectURL(pdfBlob);
+
+        // Opción 1: Abrir en nueva pestaña
+        window.open(fileURL);
+
+        // Opción 2: Descargar directamente
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = 'boleta-'+this.datos.id+'.pdf';
+        a.click();
+        URL.revokeObjectURL(fileURL);
+      });
+
 }
 
 

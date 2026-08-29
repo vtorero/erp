@@ -64,6 +64,7 @@ vuelto:string='';
 dataCajas:any;
 dataMedios:any;
 dataSucursales:any;
+documentos:any
 montoVuelto:any=0;
 montoRecibido:any=0;
 impresoras:any;
@@ -211,6 +212,7 @@ async getData() {
 
   ngOnInit(): void {
     this.getProveedores();
+    this.tipoDocumento();
     //this.getData();
     this.getCajas();
     this.getSucursales();
@@ -259,6 +261,13 @@ async getData() {
     } );
   }
 
+  tipoDocumento(){
+    this.api.getTipoDocumento('todos').subscribe(data=>{
+      console.log(data['data']);
+      this.documentos=data['data'];
+
+    });
+  }
 
   cancelar() {
     this.dialogRef.close();

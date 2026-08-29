@@ -9,16 +9,7 @@
                     <mat-label>Tipo de Documento</mat-label>
                     <mat-select name="id_documento" formControlName="tipoDoc" required>
                         <mat-option >Seleccionar</mat-option>
-                        <mat-option (click)="cambiaTicket('Ticket')" value="Ticket">Ticket</mat-option>
-                        <mat-option (click)="cambiaTicket('Boleta')" value="Boleta">Boleta</mat-option>
-                        <mat-option (click)="cambiaTicket('Factura')" value="Factura">Factura</mat-option>
-                        <mat-option (click)="cambiaTicket('Honorario')" value="Factura">Honorario</mat-option>
-                        <mat-option (click)="cambiaTicket('Honorario')" value="Factura">Honorario</mat-option>
-                        <mat-option (click)="cambiaTicket('Recibo')" value="Factura">Recibo Servicio</mat-option>
-                        <mat-option (click)="cambiaTicket('NotaCredito')" value="Factura">Nota Credito</mat-option>
-                        <mat-option (click)="cambiaTicket('NotaDebito')" value="Factura">Nota Debito</mat-option>
-                        <mat-option (click)="cambiaTicket('Otros')" value="Factura">Otros autorizados</mat-option>
-                        <mat-option (click)="cambiaTicket('Devoluciones')" value="Factura">Devoluciones</mat-option>
+                        <mat-option *ngFor="let cat of documentos" (click)="cambiaTicket(cat.valor)" [value]="cat.valor">{{cat.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>

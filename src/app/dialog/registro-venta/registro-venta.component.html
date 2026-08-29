@@ -10,9 +10,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo de Documento</mat-label>
                     <mat-select name="id_documento" formControlName="tipoDoc">
-                         <mat-option (click)="cambiaTicket('Ticket')" value="Ticket">Ticket</mat-option>
-                        <mat-option (click)="cambiaTicket('Boleta')" value="Boleta">Boleta</mat-option>
-                        <mat-option (click)="cambiaTicket('Factura')" value="Factura">Factura</mat-option>
+                        <mat-option *ngFor="let cat of documentos" (click)="cambiaTicket(cat.valor)" [value]="cat.valor">{{cat.nombre}}</mat-option>
                     </mat-select>
 
                 </mat-form-field>

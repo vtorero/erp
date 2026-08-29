@@ -67,6 +67,7 @@ reciboneto:number=0;
 reciboigv:number=0;
 recibototal:number=0;
 habilitarPagos:boolean=true;
+documentos:any;
 public id_documento:number=0
 clientes: Clientes[] = [];
 
@@ -237,6 +238,7 @@ borrarItems(){
 
   );
 */
+    this.tipoDocumento();
     this.getMedioPago();
     //this.getCliente();
     this.getData();
@@ -260,6 +262,14 @@ borrarItems(){
 
 
 
+  }
+
+  tipoDocumento(){
+    this.api.getTipoDocumento('venta').subscribe(data=>{
+      console.log(data['data']);
+      this.documentos=data['data'];
+
+    });
   }
 
   filtrar(valor: string): Clientes[] {
