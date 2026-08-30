@@ -26,6 +26,18 @@
          <i class="material-icons">edit_note</i>
 
        </button>
+       <button mat-icon-button color="primary" aria-label="Example icon button with a open in new tab icon" (click)="seleccionarExcel()" matTooltip="Importar Compras">
+        <i class="material-icons">file_upload</i>
+      </button>
+      <input
+      #fileInput
+      type="file"
+      accept=".xlsx,.xls"
+      style="display:none"
+      (change)="cargarExcel($event)"
+    >
+
+
           <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
             <i class="material-icons">search</i>
           </button>

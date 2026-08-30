@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component,  OnInit, ViewChild } from '@angular/core';
+import { Component,  ElementRef,  OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
@@ -16,7 +16,9 @@ import { VerCompraComponent } from '../ver-compra/ver-compra.component';
 import { Compra } from '../../../modelos/compra';
 import { ExportarComprasComponent } from '../../../dialog/exportar-compras/exportar-compras.component';
 import { Global } from 'app/global';
+import * as XLSX from 'xlsx';
 import { NotaCreditoComponent } from '../nota-credito/nota-credito.component';
+import { HttpClient } from '@angular/common/http';
 
 function sendInvoice(data,url) {
   fetch(url, {
@@ -60,10 +62,12 @@ export class ListadoComprasComponent implements OnInit {
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
+  @ViewChild('fileInput') fileInput!: ElementRef;
   constructor(public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private api: ApiService,
-    public dialog2: MatDialog
+    public dialog2: MatDialog,
+    private http: HttpClient
       ) { }
 
   ngOnInit(): void {
@@ -106,6 +110,47 @@ openPDF(){
 
 }
 
+seleccionarExcel() {
+  this.fileInput.nativeElement.click();
+}
+
+
+cargarExcel(event: any) {
+  const archivo = event.target.files[0];
+  if (!archivo) {
+    console.log("retorna")
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
+    const data = e.target.result;
+    const workbook = XLSX.read(data, {
+      type: 'binary'
+    });
+    const hoja = workbook.Sheets[workbook.SheetNames[0]];
+    const filas = XLSX.utils.sheet_to_json(hoja);
+
+    console.log(filas);
+
+    this.http.post(
+      Global.BASE_API_URL+'reportes.php/importar-compras',
+      { productos: filas }
+    ).subscribe({
+      next: (resp) => {
+        this._snackBar.open('Datos actualizados correctamente','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        this.renderDataTable();
+        event.target.value = '';
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+
+  };
+
+  reader.readAsBinaryString(archivo);
+}
 
 consultar(){
   var fec1 = this.selectedMoment.toDateString().split(" ",4);
