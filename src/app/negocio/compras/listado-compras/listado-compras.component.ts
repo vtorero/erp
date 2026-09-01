@@ -144,6 +144,7 @@ cargarExcel(event: any) {
       },
       error: (err) => {
         console.error(err);
+        this._snackBar.open(err,'Error',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
       }
     });
 
