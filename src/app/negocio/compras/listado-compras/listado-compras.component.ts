@@ -131,20 +131,21 @@ cargarExcel(event: any) {
     const hoja = workbook.Sheets[workbook.SheetNames[0]];
     const filas = XLSX.utils.sheet_to_json(hoja);
 
-    console.log(filas);
+    //console.log(filas);
 
     this.http.post(
       Global.BASE_API_URL+'reportes.php/importar-compras',
       { productos: filas }
     ).subscribe({
       next: (resp) => {
-        this._snackBar.open('Datos actualizados correctamente','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        console.log(resp)
+        this._snackBar.open(resp+'Datos actualizados correctamente','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         this.renderDataTable();
         event.target.value = '';
       },
       error: (err) => {
         console.error(err);
-        this._snackBar.open(err,'Error',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        //this._snackBar.open(err['message'],'Error',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
       }
     });
 
