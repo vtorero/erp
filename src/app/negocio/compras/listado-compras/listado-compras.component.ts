@@ -116,39 +116,131 @@ seleccionarExcel() {
 
 
 cargarExcel(event: any) {
+
   const archivo = event.target.files[0];
+
   if (!archivo) {
-    console.log("retorna")
+    console.log("retorna");
     return;
   }
 
   const reader = new FileReader();
+
   reader.onload = (e: any) => {
+
     const data = e.target.result;
+
     const workbook = XLSX.read(data, {
       type: 'binary'
     });
+
     const hoja = workbook.Sheets[workbook.SheetNames[0]];
+
     const filas = XLSX.utils.sheet_to_json(hoja);
 
     //console.log(filas);
 
     this.http.post(
-      Global.BASE_API_URL+'reportes.php/importar-compras',
-      { productos: filas }
+      Global.BASE_API_URL + 'reportes.php/importar-compras',
+      {
+        productos: filas,
+        usuario:localStorage.getItem("currentId"),
+        sucursal:localStorage.getItem("sucursal_id")
+
+      }
     ).subscribe({
-      next: (resp) => {
-        console.log(resp)
-        this._snackBar.open(resp+'Datos actualizados correctamente','OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+
+      next: (resp: any) => {
+
+        console.log('RESPUESTA:', resp);
+
+        this._snackBar.open(
+
+          'Filas recibidas: ' + resp.filas_recibidas +
+          '\n Compras encontradas: ' + resp.compras_encontradas +
+          '\n Compras insertadas: ' + resp.compras_insertadas +
+          '\n Detalles insertados: ' + resp.detalles_insertados +
+          '\n Pagos insertados: '+ resp.pagos_insertados +
+          '\n Compras duplicadas: '+ resp.compras_duplicadas ,
+          'OK',
+          {
+            duration: 15000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          }
+        );
+
         this.renderDataTable();
+
         event.target.value = '';
       },
+
       error: (err) => {
-        console.error(err);
-        //this._snackBar.open(err['message'],'Error',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+
+        console.error('ERROR HTTP:', err);
+
+        let mensaje = 'Ocurrió un error al importar el Excel';
+
+        /*
+        ============================================================
+        ERROR HTTP 500 DEVUELTO POR SLIM
+        ============================================================
+        */
+
+        if (err.status === 500) {
+
+          if (
+            err.error &&
+            typeof err.error === 'object' &&
+            err.error.message
+          ) {
+
+            mensaje = err.error.message;
+
+          } else if (
+            typeof err.error === 'string'
+          ) {
+
+            /*
+             * Por si PHP devuelve el JSON como texto
+             */
+            try {
+
+              const respuesta = JSON.parse(err.error);
+
+              mensaje =
+                respuesta.message ||
+                mensaje;
+
+            } catch (e) {
+
+              mensaje = err.error;
+            }
+          }
+        }
+
+        /*
+        ============================================================
+        MOSTRAR ERROR
+        ============================================================
+        */
+
+        this._snackBar.open(
+          mensaje,
+          'Error',
+          {
+            duration: 8000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          }
+        );
+
+        /*
+        * Limpiar input para poder seleccionar nuevamente
+        */
+        event.target.value = '';
       }
     });
-
   };
 
   reader.readAsBinaryString(archivo);
