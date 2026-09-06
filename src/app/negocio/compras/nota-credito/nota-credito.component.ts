@@ -80,10 +80,9 @@ export class NotaCreditoComponent implements OnInit {
   }
 
   guardarCambios(){
-    console.log(this.dataNota);
     this.api.enviaNotaCredito(this.data).subscribe(datos=>{
         this._snackBar.open(datos['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
-        this.cancelar();
+       this.cancelar();
         },
       erro=>{console.log(erro)}
         );
@@ -99,6 +98,7 @@ export class NotaCreditoComponent implements OnInit {
 
        this.api.actualizaMontoCompra(id,ux.tipoPago,ux.numero,ux.cuentaPago,ux.monto_pendiente,ux.monto).subscribe(
           data=>{
+            this.api
             this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             },
           erro=>{console.log(erro)}

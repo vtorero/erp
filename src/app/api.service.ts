@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { async, map, Observable } from "rxjs";
+import { async, map, Observable, switchMap } from "rxjs";
 import { Global } from "./global";
 import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
@@ -17,7 +17,17 @@ import { Compra } from "./modelos/compra";
 import { Movimiento } from "./modelos/movimiento";
 
 
-
+export interface NumeroDocumento {
+  success: boolean;
+  codigo: string;
+  nombre: string;
+  serie: string;
+  correlativo: number;
+  numero: string;
+  tipo: string;
+  afecta_stock: number;
+  afecta_caja: number;
+}
 
 @Injectable({
   providedIn: "root",
@@ -32,6 +42,17 @@ export class ApiService {
   headers: HttpHeaders = new HttpHeaders({
     "Content-type": "application/json",
   });
+
+
+  siguienteNumero(codigo: string): Observable<NumeroDocumento> {
+
+    return this._http.post<NumeroDocumento>(
+      `${Global.BASE_API_URL}api.php/siguienteNumero`,
+      {
+        codigo: codigo
+      }
+    );
+  }
 
 
   getTipoDocumento(tipo: string) {
@@ -867,11 +888,32 @@ public guardaVentas(datos:any,detalle:any){
 }
 /** Generar nota de credito */
 
-public enviaNotaCredito(datos:any){
-  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+public enviaNotaCredito(datos: any) {
+
+  let headers = new HttpHeaders()
+    .set('Content-Type', 'application/x-www-form-urlencoded');
+
   let json = JSON.stringify(datos);
-  return this._http.post(Global.BASE_API_URL + 'api.php/nota-credito-compra',
-    { json:json}, { headers: headers });
+
+  return this.siguienteNumero('07').pipe(
+    switchMap((numero: any) => {
+
+      const correlativo = numero.numero;
+
+      console.log('Correlativo obtenido:', correlativo);
+
+      return this._http.post(
+        Global.BASE_API_URL + 'api.php/nota-credito-compra',
+        {
+          json: json,
+          correlativo: correlativo
+        },
+        {
+          headers: headers
+        }
+      );
+    })
+  )
 }
 
 
