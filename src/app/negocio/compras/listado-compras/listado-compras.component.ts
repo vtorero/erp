@@ -349,7 +349,8 @@ consultar(){
       enterAnimationDuration,
       exitAnimationDuration,
       data: {
-        clase:'Exportar'
+        clase:'Exportar',
+        titulo:'Exportar las compras'
       },
     });
     dialogo2.afterClosed().subscribe(ux => {
@@ -459,6 +460,37 @@ eliminar(art:Compra) {
       );
     this.renderDataTable();
 }
+}
+
+
+exportarpagos(enterAnimationDuration: string, exitAnimationDuration: string){
+  const dialogo2=this.dialog.open(ExportarComprasComponent, {
+    width: 'auto',
+    enterAnimationDuration,
+    exitAnimationDuration,
+    data: {
+      clase:'Exportar',
+      titulo:'Exportar cuentas por pagar'
+    },
+  });
+  dialogo2.afterClosed().subscribe(ux => {
+    console.log(ux);
+    var fec1 = ux.fechainicio.toDateString().split(" ",4);
+    var fec2 = ux.fechafin.toDateString().split(" ",4);
+    let ini=fec1[1]+fec1[2]+fec1[3];
+    let fin=fec2[1]+fec2[2]+fec2[3];
+    console.log("inicio",ini);
+    console.log("fin",fin);
+   const datos ={
+    fechaincio:ini,
+    fechafin:fin
+   }
+   let json = JSON.stringify(datos);
+    sendInvoice(json,Global.BASE_API_URL+'reportes.php/exportarpagos');
+
+    //this.facturar(ux);
+   });
+
 }
 
 

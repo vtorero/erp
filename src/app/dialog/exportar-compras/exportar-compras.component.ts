@@ -8,16 +8,21 @@ import { Exportar } from 'app/modelos/exportar';
   styleUrls: ['./exportar-compras.component.css']
 })
 export class ExportarComprasComponent implements OnInit {
+  titulo:string='';
 
   constructor(
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: Exportar
+    @Inject(MAT_DIALOG_DATA) public data: Exportar,
+    @Inject(MAT_DIALOG_DATA) public datos: any
 
   ) { }
 
   ngOnInit(): void {
     this.data.fechafin =new Date();
     this.data.fechainicio=new Date();
+    this.datos.titulo;
+    console.log(this.datos.titulo);
+
   }
 
 }

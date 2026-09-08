@@ -880,11 +880,44 @@ getLinea(){
 /*Apis usuarios*/
 
 public guardaVentas(datos:any,detalle:any){
-  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let tipodocumento:string='';
+  let headers = new HttpHeaders().
+  set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(datos);
   let det = JSON.stringify(detalle);
-  return this._http.post(Global.BASE_API_URL + 'api.php/venta',
-    { json:json,detalle:det }, { headers: headers });
+  console.log("datos-venta",datos);
+  switch (datos.tipoDoc) {
+    case 'Ticket':
+      tipodocumento = '00';
+      break;
+
+    case 'Factura':
+      tipodocumento = '01';
+      break;
+
+    case 'Boleta':
+      tipodocumento = '03';
+      break;
+
+    default:
+      tipodocumento = '';
+      break;
+  }
+
+  return this.siguienteNumero(tipodocumento).pipe(
+    switchMap((numero: any) => {
+
+      const correlativo = numero.numero;
+
+      console.log('Correlativo obtenido:', correlativo);
+
+
+      return this._http.post(Global.BASE_API_URL + 'api.php/venta',
+        { json:json,detalle:det,correlativo:correlativo }, { headers: headers });
+    })
+  )
+
+
 }
 /** Generar nota de credito */
 
@@ -923,6 +956,7 @@ public guardarCompras(datos:any,detalle:any){
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(datos);
   let det = JSON.stringify(detalle);
+
   return this._http.post(Global.BASE_API_URL + 'api.php/compra',
     { json:json,detalle:det }, { headers: headers });
 }
