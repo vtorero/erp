@@ -79,10 +79,21 @@ export class ApiService {
   }
 
   descargaDeclaracion(id: number) {
-    return this._http.get(Global.BASE_API_URL + "reportes.php/declaracion/" + id, {
-      responseType: 'blob'  // importante para PDFs
-    });
-  }
+
+    return this.siguienteNumero('11').pipe(
+      switchMap((numero: any) => {
+
+        const correlativo = numero.numero;
+
+        console.log('Correlativo obtenido:', correlativo);
+
+        return this._http.get(Global.BASE_API_URL + `reportes.php/declaracion/${id}/${correlativo}`, {
+          responseType: 'blob'  // importante para PDFs
+        });
+
+      })
+    )
+ }
 
   get getCurrentUser(){
     let user = sessionStorage.getItem("currentUser");

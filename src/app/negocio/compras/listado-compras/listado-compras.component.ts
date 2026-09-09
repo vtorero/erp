@@ -58,7 +58,7 @@ export class ListadoComprasComponent implements OnInit {
   cancela: boolean = false;
   public id_estado:any=1;
   selection = new SelectionModel(false, []);
-  displayedColumns = ['id','cliente','tipoDoc','nro_documento','serie_documento','fechaPago','nombre','valor_total','monto_pendiente','fecha','observacion','opciones'];
+  displayedColumns = ['id','cliente','tipoDoc','serie_documento','nro_documento','fechaPago','nombre','valor_total','monto_pendiente','fecha','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
@@ -90,9 +90,11 @@ openBusqueda(){
 }
 
 openPDF(){
-  console.log(this.selectedRowIndex);
+  //console.log(this.selectedRowIndex);
   this.datos=this.selectedRowIndex;
   console.log(this.datos.id);
+
+
  this.api.descargaDeclaracion(this.datos.id) // id de factura1
       .subscribe((pdfBlob: Blob) => {
         const fileURL = URL.createObjectURL(pdfBlob);

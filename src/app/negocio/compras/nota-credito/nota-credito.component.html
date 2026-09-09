@@ -5,7 +5,7 @@
         <div mat-dialog-content>
           <h3>Nota de crédito de Compra Nro:({{data.id}})</h3>
           <div class="row">
-            <div class="col-6">
+            <div class="col-3">
               <mat-form-field appearance="outline">
                 <mat-label>Tipo de Documento</mat-label>
                 <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
@@ -13,8 +13,15 @@
                     <mat-option value="Ticket">Ticket</mat-option>
                     <mat-option value="Boleta">Boleta</mat-option>
                     <mat-option value="Factura">Factura</mat-option>
+                    <mat-option value="Nota">Nota Credito</mat-option>
                 </mat-select>
             </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field appearance="outline">
+                <mat-label>Documento</mat-label>
+                <input matInput [(ngModel)]="data.nro_documento" name="nro_documento" maxlength="110" minlength="2" type="text" placeholder="Documento">
+              </mat-form-field>
               </div>
 
             <div class="col-6">
