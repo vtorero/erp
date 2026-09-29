@@ -734,6 +734,19 @@ public anularVenta(datos:Venta): Observable<any> {
   );
 }
 
+public restaurarVenta(datos:Venta): Observable<any> {
+  let headers = new HttpHeaders().set(
+    "Content-Type",
+    "application/x-www-form-urlencoded"
+  );
+  let json = JSON.stringify(datos);
+  return this._http.post(
+    Global.BASE_API_URL + "api.php/restaurarventa",
+    { json: json },
+    { headers: headers }
+  );
+}
+
 public delCliente(datos:Clientes): Observable<any> {
   let headers = new HttpHeaders().set(
     "Content-Type",

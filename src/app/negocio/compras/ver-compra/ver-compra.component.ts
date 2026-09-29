@@ -26,6 +26,7 @@ export class VerCompraComponent implements OnInit {
   dataPagos:any;
   exampleArray:any;
   sucursales:any;
+  documentos:any;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
@@ -37,6 +38,7 @@ export class VerCompraComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.tipoDocumento();
     this.api.GetDetalleCompra(this.data.id).subscribe(x => {
 
       this.dataDetalle = new MatTableDataSource();
@@ -94,6 +96,14 @@ export class VerCompraComponent implements OnInit {
               });
      });
 
+  }
+
+  tipoDocumento(){
+    this.api.getTipoDocumento('todos').subscribe(data=>{
+      console.log(data['data']);
+      this.documentos=data['data'];
+
+    });
   }
 
 

@@ -19,6 +19,7 @@ export class Compra {
         public valor_total:number,
         public detalleVenta:Array<Details>,
         public imprimir:boolean,
+        public idTipoDoc:number,
         public tipoDoc:string,
         public valor_neto:number,
         public observacion:string,

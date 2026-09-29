@@ -69,7 +69,7 @@
                 </ng-container>
                        <ng-container matColumnDef="cantidad">
                           <mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad Actual</mat-header-cell>
-                          <mat-cell *matCellDef="let row">{{row.cantidad}} </mat-cell>
+                          <mat-cell style="text-align: center;" *matCellDef="let row" [ngClass]="{'cantidad-negativa': row.cantidad < 0}">{{row.cantidad}} </mat-cell>
                     </ng-container>
                     <ng-container matColumnDef="almacen">
                       <mat-header-cell *matHeaderCellDef mat-sort-header>Almacen</mat-header-cell>

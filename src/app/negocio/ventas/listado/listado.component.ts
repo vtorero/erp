@@ -154,9 +154,11 @@ export class ListadoComponent implements OnInit {
   reciboigv:number=0;
   recibototal:number=0;
   selectedRowIndex:any;
+  estadoVenta:any;
   cancela: boolean = false;
   selection = new SelectionModel(false, []);
   selectedIds = new Set<number>();
+  consultaRealizada = false;
 
   displayedColumns = ['selec','id','num_documento','cliente','tipoDoc','fechaPago','nombre','valor_total','monto_pendiente','pendientes','estado','observacion','opciones'];
   dataEstados = [{ id: 1, value: 'Registrado' }, { id: 2, value: 'Anulado'}];
@@ -200,7 +202,10 @@ openBusqueda(){
 
   selected(row) {
     this.selectedRowIndex=row;
-    console.log('selectedRow',row)
+    this.consultaRealizada = false;
+    this.estadoVenta=row.estado;
+    console.log("estado venta",this.estadoVenta);
+
   }
 
   editar(){
@@ -250,13 +255,13 @@ openBusqueda(){
   }
 
   consultar(){
+    this.estadoVenta = '';
+    this.consultaRealizada = true;
+   console.log("estado venta", this.estadoVenta);
     var fec1 = this.selectedMoment.toDateString().split(" ",4);
     var fec2 = this.selectedMoment2.toDateString().split(" ",4);
     let ini=fec1[1]+fec1[2]+fec1[3];
     let fin=fec2[1]+fec2[2]+fec2[3];
-    console.log("inicio",ini);
-    console.log("fin",fin);
-    console.log("estado",this.id_estado)
     this.api.consultaVentas(ini,fin,this.id_estado).subscribe(data=>{
       this.dataSource = new MatTableDataSource();
       this.dataSource.data = data;
@@ -370,6 +375,24 @@ this.api.descargarFactura(this.datos.id) // id de factura
 
   }
 
+  openRestaurar(enterAnimationDuration: string, exitAnimationDuration: string){
+    const dialogo2=this.dialog.open(AddClienteComponent, {
+      width: 'auto',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: {
+        datos:this.selectedRowIndex,
+        clase:'Restaurar',
+        cliente:this.selectedRowIndex
+      },
+    });
+    dialogo2.afterClosed().subscribe(ux => {
+      console.log("revertir",ux);
+      this.revertir(ux);
+     });
+
+  }
+
 
   openDelete(enterAnimationDuration: string, exitAnimationDuration: string){
   const dialogo2=this.dialog.open(AddClienteComponent, {
@@ -436,7 +459,6 @@ this.api.descargarFactura(this.datos.id) // id de factura
 }
 
 anular(art:Venta) {
-  console.log("art",art);
   if(art){
   this.api.anularVenta(art).subscribe(
     data=>{
@@ -446,6 +468,16 @@ anular(art:Venta) {
       );
     this.renderDataTable();
 }
+}
+
+revertir(art:Venta){
+this.api.restaurarVenta(art).subscribe(
+  data=>{
+    this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+    },
+  erro=>{console.log(erro)}
+    );
+  this.renderDataTable();
 }
 
 

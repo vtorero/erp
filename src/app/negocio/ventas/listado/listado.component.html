@@ -18,8 +18,13 @@
              <button mat-icon-button color="primary" (click)="openPDF()" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon"  matTooltip="Descargar">
             <i class="material-icons">download</i>
           </button>
-          <button mat-icon-button color="primary" (click)="openAnular('10ms','10ms')" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon"  matTooltip="Anular Ticket">
+          <button  *ngIf="selectedRowIndex != null && estadoVenta == 'Registrado'"  mat-icon-button color="primary" (click)="openAnular('10ms','10ms')" [disabled]="consultaRealizada || estadoVenta == 'Anulado'"
+    aria-label="Anular Venta" aria-label="Example icon button with a menu icon"  matTooltip="Anular Ticket">
             <i class="material-icons">delete</i>
+             </button>
+            <button  *ngIf="selectedRowIndex != null && estadoVenta == 'Anulado'"  mat-icon-button color="primary" (click)="openRestaurar('10ms','10ms')" [disabled]="consultaRealizada || estadoVenta == 'Registrado'"
+            aria-label="Restaurar Venta" aria-label="Example icon button with a menu icon"  matTooltip="Anular Ticket">
+            <i class="material-icons">restore</i>
           </button>
       <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon"  matTooltip="Busqueda">
             <i class="material-icons">search</i>
