@@ -331,7 +331,8 @@ actualizaVenta(venta:any) {
         tipo:mov.tipo,
         monto: mov.monto,
         usuario:localStorage.getItem("currentNombre"),
-        concepto:mov.concepto
+        concepto:mov.concepto,
+        operacion:mov.operacion
     }, { headers: this.headers }).pipe(map(data => data));
 }
 

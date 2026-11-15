@@ -5,6 +5,7 @@ export class Movimiento{
         public cuenta:string,
         public monto:number,
         public concepto:string,
+        public operacion:string,
          public usuario:string,
 
     ){}

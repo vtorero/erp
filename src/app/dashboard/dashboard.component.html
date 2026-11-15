@@ -606,6 +606,10 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Observación</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.observacion}} </mat-cell>
     </ng-container>
+    <ng-container matColumnDef="operacion">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Nro operación</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{row.operacion}} </mat-cell>
+  </ng-container>
     <ng-container matColumnDef="fecha_registro">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
     <mat-cell *matCellDef="let row"> {{row.fecha_registro}} </mat-cell>

@@ -139,7 +139,7 @@
     </div>
 
     <div  style="height:200px;margin-top:10px;flex-grow:1;">
-      <h4>Detalle Pagos</h4>
+      <h4>Detalle de Pagos</h4>
       <button *ngIf="data.monto_pendiente>0 && data.estado!='Anulado'"  mat-icon-button color="warn">
         &nbsp;&nbsp;Agregar pago: <i class="material-icons"  (click)="openMontoPendiente('20ms','20ms',data.id)" >add_circle</i>
       </button>
@@ -174,6 +174,16 @@
           <mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
           <mat-cell *matCellDef="let row">{{row.fecha_registro}} </mat-cell>
         </ng-container>
+      <ng-container matColumnDef="opciones">
+        <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
+        <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
+            <button  mat-icon-button color="warn" matTooltip="Anular">
+       <i class="material-icons"  (click)="anularPago(row)" >delete</i>
+    </button>
+
+          </span></mat-cell>
+
+      </ng-container>
          <mat-header-row *matHeaderRowDef="displayedColumnsPago" class="encabezado"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumnsPago;"></mat-row>
       </mat-table>

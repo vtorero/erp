@@ -20,7 +20,7 @@
                     <mat-label>Cuenta</mat-label>
                     <mat-select
                       [(ngModel)]="mov.cuenta"
-                      (selectionChange)="seleccionarCuenta($event)"
+                      (selectionChange)="seleccionarCuenta(mov.cuenta)"
                       required
                     >
                       <mat-option value="">Seleccionar</mat-option>
@@ -91,12 +91,16 @@
                   </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-3">
                   <label>Concepto</label>
 
                   <input class="form-control" [(ngModel)]="mov.concepto" />
                 </div>
+                <div class="col-md-3">
+                  <label>Nro Operación</label>
 
+                  <input class="form-control" [(ngModel)]="mov.operacion" />
+                </div>
                 <div class="col-md-2">
                   <label>Monto</label>
 
@@ -200,6 +204,12 @@
                     >Concepto</mat-header-cell
                   >
                   <mat-cell *matCellDef="let row">{{ row.concepto }} </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="operacion">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header
+                    >Nro. Operación</mat-header-cell
+                  >
+                  <mat-cell *matCellDef="let row">{{ row.operacion }} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="monto">
                   <mat-header-cell *matHeaderCellDef mat-sort-header

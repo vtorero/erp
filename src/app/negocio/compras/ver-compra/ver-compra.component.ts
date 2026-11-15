@@ -18,7 +18,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class VerCompraComponent implements OnInit {
   displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
+  displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro','opciones'];
   dataClientes:any;
   dataAdicional:any;
   dataDetalle:any;
@@ -27,6 +27,7 @@ export class VerCompraComponent implements OnInit {
   exampleArray:any;
   sucursales:any;
   documentos:any;
+  esadmin:boolean=false;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
@@ -38,6 +39,10 @@ export class VerCompraComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+
+    if(localStorage.getItem("currentNombre")=="admin"){
+      this.esadmin=true;
+    }
     this.tipoDocumento();
     this.api.GetDetalleCompra(this.data.id).subscribe(x => {
 

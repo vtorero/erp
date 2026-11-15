@@ -25,7 +25,7 @@ interface MovimientoTesoreria{
 
 
 export class TesoreriaComponent implements OnInit{
-  displayedColumns = ['id','fecha_registro','tipo','concepto','monto','opciones'];
+  displayedColumns = ['id','fecha_registro','tipo','concepto','operacion','monto','opciones'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('empTbSort') empTbSort = new MatSort();
   @ViewChild('fileInput') fileInput!: ElementRef;
@@ -33,10 +33,12 @@ export class TesoreriaComponent implements OnInit{
     mov: Movimiento = new Movimiento(
         '',
         1,      // 1 = Ingreso
-        '',      // Cuenta
+        '',// Cuenta
         0,
         '',
-        ''
+        '',
+        '',
+
       );
 
     presupuestoInicial:number=0;
@@ -82,9 +84,9 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
       }
 
       seleccionarCuenta(cuenta:any){
-        const value = cuenta.value;
-        this.renderDataTable(value);
-            this.api.consultaCuenta(value).subscribe((data: any)  => {
+
+        this.renderDataTable(cuenta);
+            this.api.consultaCuenta(cuenta).subscribe((data: any)  => {
             this.totalIngreso= Number(data.ingresos[0].total);
             this.totalEgreso=Number(data.egresos[0].total);
             this.totalSaldo=this.totalIngreso-this.totalEgreso;
@@ -93,15 +95,18 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
 
     guardar(){
 
-        if(this.mov.concepto.trim()=='' || this.mov.monto<=0){
+        if(this.mov.concepto.trim()=='' || this.mov.operacion=='' || this.mov.monto<=0){
              this._snackBar.open("Complete la información",'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
             return;
         }
         console.log(this.mov)
       this.api.guardarMovimiento(this.mov).subscribe(
         data=>{
-        this.seleccionarCuenta(this.mov.cuenta)
+          const datos:any= data;
+          console.log("guarda movimiento",datos.cuenta)
+          this.seleccionarCuenta(datos.cuenta)
           this._snackBar.open("Se registro el movimiento correctamente",'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+
           },
         erro=>{console.log(erro)}
           );
@@ -129,8 +134,6 @@ fecha2:string=this.fec2[2]+'-'+this.fec2[1]+'-'+this.fec2[3];
     }
 
     anularMovimiento(data:any){
-      console.log(data)
-
       this.api.anularMovimiento(data).subscribe(
         data=>{
           this.renderDataTable(this.mov.cuenta);
