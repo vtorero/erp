@@ -177,7 +177,7 @@
       <ng-container matColumnDef="opciones">
         <mat-header-cell *matHeaderCellDef mat-sort-header><span *ngIf="esadmin">Opciones</span></mat-header-cell>
         <mat-cell *matCellDef="let row"><span *ngIf="esadmin">
-            <button  mat-icon-button color="warn" matTooltip="Anular">
+            <button  mat-icon-button color="warn" matTooltip="Anular"  matTooltip="Anular pago">
        <i class="material-icons"  (click)="anularPago(row)" >delete</i>
     </button>
 

@@ -1078,6 +1078,11 @@ getVentaBoletas(inicio: string, final: string, empresa: string) {
     return this._http.delete(`${Global.BASE_API_URL}api.php/venta-pago/${idVenta}/${idPago}`,{headers:headers});
   }
 
+    public EliminarPagoCompra(idCompra:number,idPago:number): Observable<any> {
+    let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this._http.delete(`${Global.BASE_API_URL}api.php/compra-pago/${idCompra}/${idPago}`,{headers:headers});
+  }
+
   public EliminarProducto(idVenta:number,idDetalle:number): Observable<any> {
     let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this._http.delete(`${Global.BASE_API_URL}api.php/venta-detalle/${idVenta}/${idDetalle}`,{headers:headers});

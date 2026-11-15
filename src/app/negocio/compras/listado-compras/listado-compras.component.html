@@ -9,7 +9,7 @@
           matTooltipHideDelay="100000">
             <i class="material-icons">edit_note</i>
           </button>
-        <button mat-icon-button color="primary" (click)="openDelete('10ms','10ms')" [disabled]="!selectedRowIndex " aria-label="Example icon button with a menu icon">
+        <button mat-icon-button color="primary" (click)="openDelete('10ms','10ms')" [disabled]="!selectedRowIndex " matTooltip="Anular registro">
             <i class="material-icons">delete</i>
           </button>
           <button mat-icon-button color="primary" matTooltip="Facturar" (click)="openFacturar('10ms','10ms')" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon">
@@ -22,7 +22,7 @@
             <i class="material-icons">file_download</i>
             </button>
 
-          <button mat-icon-button color="primary" (click)="openPDF()" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon"  matTooltip="Declaración de Gastos">
+          <button mat-icon-button color="primary" matTooltip="Ver documento" (click)="openPDF()" [disabled]="!selectedRowIndex" aria-label="Example icon button with a menu icon"  matTooltip="Declaración de Gastos">
          <i class="material-icons">edit_note</i>
 
        </button>
@@ -40,7 +40,7 @@
 <button mat-icon-button color="primary" (click)="exportarpagos('10ms','10ms')" aria-label="Example icon button with a heart icon">
   <i class="material-icons" matTooltip="Cuentas por pagar">description</i>
 </button>
-          <button mat-icon-button color="primary" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
+          <button mat-icon-button color="primary" matTooltip="Busqueda Avanzada" (click)="openBusqueda()" aria-label="Example icon button with a heart icon">
             <i class="material-icons">search</i>
           </button>
           <div style="height:80px" class="row" *ngIf="buscador">

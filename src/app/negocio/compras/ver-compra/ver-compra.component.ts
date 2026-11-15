@@ -53,21 +53,31 @@ export class VerCompraComponent implements OnInit {
 
       });
 
-      this.api.GetDetallePagoCompra(this.data.id).subscribe(d => {
-        this.dataPagos = new MatTableDataSource();
-        this.exampleArray=d;
-        this.dataPagos=this.exampleArray
+   this.getPagos(this.data.id);
+
+   /*  this.api.GetDetallePagoCompra(this.data.id).subscribe(d => {
+      this.dataPagos = new MatTableDataSource();
+      this.exampleArray=d;
+      this.dataPagos=this.exampleArray
 
 
-        });
+      });*/
 
     this.getProveedor();
     this.cargaSucursales();
     await this.getDataProveedor(this.data.id_proveedor);
-    console.log(this.data.id_proveedor)
-    console.log(this.data.num_documento)
-    console.log(this.data.telefono)
 
+
+  }
+
+
+
+    getPagos(id:number){
+    this.api.GetDetallePagoCompra(id).subscribe(d => {
+      this.dataPagos = new MatTableDataSource();
+      this.exampleArray=d;
+      this.dataPagos=this.exampleArray
+      });
   }
 
   async getDataProveedor(id: any) {
@@ -104,12 +114,34 @@ export class VerCompraComponent implements OnInit {
   }
 
   tipoDocumento(){
-    this.api.getTipoDocumento('todos').subscribe(data=>{
+    this.api.getTipoDocumento('todos').subscribe((data: any)=>{
       console.log(data['data']);
+           
       this.documentos=data['data'];
 
     });
   }
+
+anularPago(pago: any) {
+  if (!confirm('¿Desea eliminar este pago?')) {
+    return;
+  }
+console.log(pago)
+      this.dataPagos = this.dataPagos.filter((x:any) => x.id != pago.id);
+      this.api.EliminarPagoCompra(pago.id,pago.id).subscribe(data=>{
+        console.log(data);
+        this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
+        this.getPagos(pago.id);
+        
+        //this.GetDetallePagoCompra(pago.id)
+      },error=>{
+        console.log(error)
+      })
+      // Si manejas estado de pago
+      // Si deseas refrescar la tabla
+      //this.dataPagos._updateChangeSubscription();
+
+    }
 
 
   openCantidad(enterAnimationDuration: string, exitAnimationDuration: string,id:number,id_producto:number,cantidad:number,nombre:string,id_venta:number){
@@ -119,7 +151,7 @@ export class VerCompraComponent implements OnInit {
     });
      dialogo2.afterClosed().subscribe(ux => {
 
-      this.dataDetalle.forEach(element => {
+      this.dataDetalle.forEach((element:any) => {
        if(element.id==id){
           if(ux.cantidad <= this.dataDetalle[index].cantidad) {
            this.dataDetalle[index].pendiente=ux.cantidad;
@@ -166,7 +198,7 @@ export class VerCompraComponent implements OnInit {
   }
 
   getProveedor(): void {
-    this.api.getApi('proveedores').subscribe(data => {
+    this.api.getApi('proveedores').subscribe((data:any) => {
       if(data) {
         this.dataProveedores = data;
       }
@@ -177,10 +209,10 @@ export class VerCompraComponent implements OnInit {
 
   }
 
-  save(d){
+  save(d:any){
   console.log(d);
     this.api.observacioncompra(d).subscribe(
-      data=>{
+      (data:any)=>{
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
            },
       erro=>{console.log(erro)}
