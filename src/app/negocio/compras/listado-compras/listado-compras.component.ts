@@ -309,6 +309,9 @@ consultar(){
   }
 
   openNotaCredito(enterAnimationDuration: string, exitAnimationDuration: string){
+    if(this.selectedRowIndex.tipoDoc!=='FACTURA'){
+      alert('El documento seleccionado no es una Factura'); return;
+    }
     if(this.selectedRowIndex){
       const dialog= this.dialog.open(NotaCreditoComponent, {
         width: 'auto',

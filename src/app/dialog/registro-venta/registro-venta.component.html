@@ -153,4 +153,17 @@
     </div>
 </form>
 <!--<pre>{{impresoras| json}}</pre>
-<pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>-->
+<pre>{{MyForm.value.pagos[0].montoPago | json}}</pre>
+<pre>Formulario válido: {{ MyForm.valid }}</pre>
+
+<pre>Estado de pagos:
+{{ Pagos.status | json }}
+</pre>
+
+<pre>Errores del formulario:
+{{ MyForm.errors | json }}
+</pre>
+
+<pre>Valores de pagos:
+{{ Pagos.value | json }}
+</pre>-->

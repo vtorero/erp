@@ -116,7 +116,7 @@ export class VerCompraComponent implements OnInit {
   tipoDocumento(){
     this.api.getTipoDocumento('todos').subscribe((data: any)=>{
       console.log(data['data']);
-           
+
       this.documentos=data['data'];
 
     });
@@ -126,13 +126,13 @@ anularPago(pago: any) {
   if (!confirm('¿Desea eliminar este pago?')) {
     return;
   }
-console.log(pago)
+console.log("pagooo",pago)
       this.dataPagos = this.dataPagos.filter((x:any) => x.id != pago.id);
-      this.api.EliminarPagoCompra(pago.id,pago.id).subscribe(data=>{
+      this.api.EliminarPagoCompra(pago.id_compra,pago.id).subscribe(data=>{
         console.log(data);
         this._snackBar.open(data['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
         this.getPagos(pago.id);
-        
+
         //this.GetDetallePagoCompra(pago.id)
       },error=>{
         console.log(error)

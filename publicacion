@@ -1,1 +1,2 @@
 ng build --configuration production --aot --output-hashing=all
+npm run  build --configuration -production --aot --output-hashing=all

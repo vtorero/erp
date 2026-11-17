@@ -158,8 +158,7 @@ this.dataMedios=data;
 
 onAddToPago():void{
   const PagoGroup = this.fb.group({
-		tipoPago: ['', Validators.required],
-    cuentaPago:['',Validators.required],
+		cuentaPago:['',Validators.required],
     numero:['', Validators.required],
     montoPago: ['', [Validators.required, Validators.min(0.1)]],
 	});
@@ -263,7 +262,7 @@ async getData() {
 
   tipoDocumento(){
     this.api.getTipoDocumento('todos').subscribe(data=>{
-      console.log(data['data']);
+      console.log("tipo_docu",data['data']);
       this.documentos=data['data'];
 
     });
@@ -286,7 +285,7 @@ async getData() {
       const neto = this.MyForm.get('neto') as FormControl;
       if(value=='Factura'){
       this.data.detalle.map(function(dato){
-          console.log("datoooooo",dato.prec)
+          console.log("datoooooo",dato)
         //total2.setValue(parseFloat(total2.value) + (total2.value * Global.BASE_IGV));
         //igv2.setValue(dato.precio * Global.BASE_IGV);
         });
