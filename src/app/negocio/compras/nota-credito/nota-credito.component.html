@@ -7,18 +7,24 @@
           <div class="row">
             <div class="col-3">
               <mat-form-field appearance="outline">
-                <mat-label>Tipo de Documento</mat-label>
+                <mat-label>Tipo de Documento {{data.tipoDoc}}</mat-label>
                 <mat-select name="tipoDoc" [(ngModel)]="data.tipoDoc" >
-                    <mat-option >Seleccionar</mat-option>
-                    <mat-option value="07">Nota de Credito</mat-option>
-                    <mat-option value="08">Nota de Debito</mat-option>
+                   <mat-option value="07">Nota de Credito</mat-option>
                 </mat-select>
             </mat-form-field>
               </div>
               <div class="col-3">
                 <mat-form-field appearance="outline">
-                <mat-label>Documento</mat-label>
-                <input matInput [(ngModel)]="data.nro_documento" name="nro_documento" maxlength="110" minlength="2" type="text" placeholder="Documento">
+                <mat-label>Factura a aplicar</mat-label>
+                <mat-select name="tipoDoc" [(ngModel)]="data.id_compra" required>
+                  <mat-option value="">Seleccionar</mat-option>
+                  <mat-option  *ngFor="let fact of facturasProveedor" [value]="fact.id">
+                    {{fact.serie_documento}}-{{fact.nro_documento}} (S/ {{fact.valor_total}})
+                  </mat-option>
+               </mat-select>
+
+
+                <!--<input matInput [(ngModel)]="data.nro_documento" name="nro_documento" maxlength="110" minlength="2" type="text" placeholder="Documento">-->
               </mat-form-field>
               </div>
 
@@ -30,15 +36,7 @@
 
             </div>
             <div class="col-6">
-              <mat-form-field appearance="outline">
-                <mat-label>Terminal</mat-label>
-                <mat-select matInput matInput [(ngModel)]="data.id_sucursal" name="id" required>
-                    <mat-option value="">Seleccionar</mat-option>
-                  <mat-option  *ngFor="let subcat of sucursales" [value]="subcat.id">
-                    {{subcat.nombre}}
-                  </mat-option>
-                  </mat-select>
-              </mat-form-field>
+
         <div class="row">
                 <div class="col-10"> <mat-form-field appearance="outline">
                   <mat-label>Observación</mat-label>
@@ -49,20 +47,13 @@
                 <div class="col-2"> <i (click)="save(data)" class="material-icons" style="cursor: pointer;margin-top: 10px;font-size:30px;color: darkgray;">save</i></div>
               </div>
               <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                   <mat-form-field>
-                    <mat-label>Valor Compra S/</mat-label>
-                    <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_neto" readonly>
+                    <mat-label>Valor total S/</mat-label>
+                    <input matInput name="valor_neto"  type="number" [(ngModel)]="data.valor_total" readonly>
                   </mat-form-field>
                    </div>
-                <div class="col-3">
-                  <mat-form-field>
-                    <mat-label>Total devolución S/</mat-label>
-                      <input matInput name="devolucion"  type="number" [(ngModel)]="devolucion" readonly>
-                  </mat-form-field>
-                  </div>
-
-                <div class="col-4">
+                 <div class="col-6">
                   <mat-form-field>
                     <mat-label>Fecha de Venta</mat-label>
                       <input matInput name="fecha" type="text" [(ngModel)]="data.fecha" readonly>
@@ -151,7 +142,7 @@
             <mat-cell *matCellDef="let row">{{row.cantidad | number}} </mat-cell>
 
           </ng-container>
-          <ng-container matColumnDef="devuelto">
+          <!--<ng-container matColumnDef="devuelto">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Devuelto</mat-header-cell>
             <mat-cell *matCellDef="let row">
               <a *ngIf="row.pendiente>0" class="numero_edicion"  (click)="openCantidad('20ms','20ms',row.id,row.id_producto,row.pendiente,row.precio,row.nombre,data.id)">{{row.devuelto | number}}</a>
@@ -162,7 +153,7 @@
             <mat-header-cell *matHeaderCellDef mat-sort-header>Pendiente</mat-header-cell>
             <mat-cell *matCellDef="let row">{{row.pendiente | number}} </mat-cell>
 
-          </ng-container>
+          </ng-container>-->
           <ng-container matColumnDef="precio">
             <mat-header-cell *matHeaderCellDef mat-sort-header>Precio</mat-header-cell>
             <mat-cell *matCellDef="let row">S/ {{row.precio | number }} </mat-cell>

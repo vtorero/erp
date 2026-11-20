@@ -26,8 +26,10 @@ export const ROUTES: RouteInfo[] = [
     {pat:'/ventas/clientes', tit: 'Clientes',  icn:'person',cls:'notifications', admin:'no'}]},
     { path: '/compras/main', title: 'Compras',  icon: 'library_books', class: '',admin:'no',
     child:[{pat:'/compras/registro-compras', tit: 'Registrar',  icn:'bubble_chart',cls:'notifications', admin:'no'},
-   // {pat:'/compras/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications', admin:'si'},
-    {pat:'/compras/proveedores', tit: 'Proveedores',  icn:'person',cls:'notifications', admin:'no'}]},
+    {pat:'/compras/listado', tit: 'Listado',  icn:'bubble_chart',cls:'notifications', admin:'si'},
+    {pat:'/compras/proveedores', tit: 'Proveedores',  icn:'person',cls:'notifications', admin:'no'},
+    {pat:'/compras/listado-notas', tit: 'Nota Crédito',  icn:'library_books',cls:'notifications', admin:'si'}
+   ]},
     { path: '/inventarios', title: 'Inventarios',  icon:'library_books', class: '',admin:'no' ,child:[{pat:'/productos', tit: 'Productos',  icn:'bubble_chart',cls:'notifications', admin:'no'},{pat:'/kardex', tit: 'Kardex',  icn:'bubble_chart',cls:'notifications', admin:'si'}]},
     { path: '/seguridad', title: 'Seguridad',  icon:'notifications', class: '' ,admin:'si',child:[
       {pat:'/usuarios', tit: 'Usuarios',  icn:'person',cls:'person', admin:'si'},
@@ -57,7 +59,7 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentname = localStorage.getItem("currentNombre");
+    this.currentname = localStorage.getItem("rol");
     this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
   isMobileMenu() {

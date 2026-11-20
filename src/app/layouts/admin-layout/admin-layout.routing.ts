@@ -31,6 +31,7 @@ import { AuthGuard } from 'app/seguridad/auth/auth.guards';
 import { ModoPagoComponent } from '../../seguridad/modo-pago/modo-pago.component';
 import { TesoreriaComponent } from 'app/tesoreria/tesoreria.component';
 import { MaintesoreriaComponent } from 'app/tesoreria/maintesoreria/maintesoreria.component';
+import { ListadoNotasComponent } from 'app/negocio/compras/listado-notas/listado-notas.component';
 
 export const AdminLayoutRoutes: Routes = [
     // {
@@ -85,12 +86,11 @@ export const AdminLayoutRoutes: Routes = [
     {path:'venta-rapida',component:VentasComponent},
     { path: 'clientes', component: ClienteComponent }]},
     {path:'compras',
-    children:[{path:'main',component:ListadoComprasComponent,
-    /*canActivate: [ AuthGuard ],
-    canMatch: [ AuthGuard ]*/
-  },
+    children:
+    [{path:'main',component:ListadoComprasComponent},
     {path:'listado',component:ListadoComprasComponent},
     {path:'registro-compras',component:ComprasRegistroComponent},
+    {path:'listado-notas',component:ListadoNotasComponent},
     { path: 'proveedores', component: ProveedoresComponent,
    /* canActivate: [ AuthGuard ],
 canMatch: [ AuthGuard ]*/ }]},

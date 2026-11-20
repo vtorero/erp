@@ -1,4 +1,4 @@
-import { Component,  OnInit } from '@angular/core';
+import { Component,  ElementRef,  OnInit, ViewChild,NgZone} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ function activarEnvio(event){
   console.log(event)
 
   }
-
+  declare const grecaptcha: any;
 @Component({
   selector: 'app-accesos',
   templateUrl: './accesos.component.html',
@@ -23,11 +23,24 @@ function activarEnvio(event){
 
 
 export class AccesosComponent implements OnInit {
+
+  @ViewChild('recaptchaContainer')
+  recaptchaContainer!: ElementRef;
+
+  captchaValid = false;
+  widgetId: number | null = null;
+
+  ngAfterViewInit(): void {
+    this.loadRecaptcha();
+  }
+
+
 form:FormGroup;
 loading = false;
 
   constructor(
     private router:Router,
+    private ngZone: NgZone,
     private api:ApiService,
     private fb:FormBuilder,
     private _snackBar: MatSnackBar,
@@ -78,6 +91,7 @@ loginUser(usuario,password){
             sessionStorage.removeItem("sucursal_id");
             localStorage.removeItem("sucursal_id");
             localStorage.setItem("currentId",data['data'][0]['id']);
+            localStorage.setItem("rol",data['data'][0]['rol']);
             localStorage.setItem("id_suc",data['data'][0]['id_sucursal']);
             localStorage.setItem("sucursal",data['data'][0]['sucursal']);
             localStorage.setItem("direccion",data['data'][0]['direccion']);
@@ -90,7 +104,7 @@ loginUser(usuario,password){
             sessionStorage.setItem("hashsession",data['data'][0]['hash']);
             sessionStorage.setItem("sucursal_id",data['data'][0]['id_sucursal']);
             localStorage.setItem("sucursal_id",data['data'][0]['id_sucursal']);
-            if(data['data'][0]['nombre']=='admin'){
+            if(data['data'][0]['rol']=='administrador'){
             this.router.navigate(['/dashboard']);
           }else{
             this.router.navigate(['/ventas/venta-rapida']);
@@ -110,7 +124,79 @@ this._snackBar.open('Usuario o contraseña son inválidos','OK',{duration:5000,h
 this.loading=false;
 }
 
-  ngOnInit(): void {
+
+renderCaptcha(): void {
+
+  if (this.widgetId !== null) return;
+
+  this.widgetId = grecaptcha.render(
+    this.recaptchaContainer.nativeElement,
+    {
+      sitekey: '6LeXLUonAAAAAE01suSHv1GYg7C8aIf2qD5Jfl-v',
+
+      callback: (response: string) => {
+        this.ngZone.run(() => {
+          this.captchaValid = !!response;
+        });
+      },
+
+      'expired-callback': () => {
+        this.ngZone.run(() => {
+          this.captchaValid = false;
+        });
+      },
+
+      'error-callback': () => {
+        this.ngZone.run(() => {
+          this.captchaValid = false;
+        });
+      }
+    }
+  );
+}
+
+
+loadRecaptcha(): void {
+
+  if (window['grecaptcha' as keyof Window]) {
+    this.renderCaptcha();
+    return;
   }
 
+  if (document.getElementById('recaptcha-script')) {
+    return;
+  }
+
+  const script = document.createElement('script');
+
+  script.id = 'recaptcha-script';
+  script.src =
+    'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit';
+
+  script.async = true;
+  script.defer = true;
+
+  (window as any).onRecaptchaLoad = () => {
+    this.renderCaptcha();
+  };
+
+  document.body.appendChild(script);
 }
+
+ngOnDestroy(): void {
+  this.captchaValid = false;
+}
+
+
+ngOnInit(): void {
+}
+
+}
+
+
+
+
+
+
+
+

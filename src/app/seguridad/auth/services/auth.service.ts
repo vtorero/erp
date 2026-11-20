@@ -12,7 +12,7 @@ import { Observable, of } from "rxjs";
 
     checkAuthentication(): Observable<boolean> {
 
-        if (!(localStorage.getItem('currentNombre')=="admin")) return of(false);
+        if (!(localStorage.getItem('rol')=="administrador")) return of(false);
 
 
 

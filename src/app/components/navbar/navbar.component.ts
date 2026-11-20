@@ -33,6 +33,7 @@ cerrar(){
     localStorage.removeItem("direccion");
     localStorage.removeItem("email");
     localStorage.removeItem("sucursal");
+    localStorage.removeItem("rol");
     localStorage.removeItem("telefono");
     /*Session manage*/
     sessionStorage.removeItem("hashsession");

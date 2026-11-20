@@ -52,7 +52,7 @@ export class VerVentaComponent implements OnInit {
     this.getCliente();
     this.cargaSucursales();
     this.getVendedor();
-    if(localStorage.getItem("currentNombre")=="admin"){
+    if(localStorage.getItem("rol")=="administrador"){
       this.esadmin=true;
     }
   }

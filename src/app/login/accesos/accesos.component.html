@@ -7,7 +7,7 @@
         </div><div style="text-align: center;font-weight: bold;font-size: 18px;">Inicio de sesión</div>
         </mat-card-header>
         <mat-card-content>
-         <form [formGroup]="form" (ngSubmit)="ingresar()">
+               <form [formGroup]="form" (ngSubmit)="ingresar()">
         <mat-form-field appearance="outline">
             <mat-label>Usuario</mat-label>
             <input matInput placeholder="Ingresar usuario" autocomplete="off" formControlName="usuario">
@@ -20,8 +20,11 @@
             <mat-icon matSuffix></mat-icon>
             <mat-hint></mat-hint>
         </mat-form-field>
-        <div class="g-recaptcha mb-10" data-sitekey="6LeXLUonAAAAAE01suSHv1GYg7C8aIf2qD5Jfl-v" data-callback="enabledSubmit"></div>
-        <button class="btn btn-primary mt-2"  name="enviar" id="enviar" type="submit" color="primary" disabled>Ingresar</button>
+        <div class="g-recaptcha mb-10" #recaptchaContainer></div>
+        <!--<div class="g-recaptcha mb-10" data-sitekey="" data-callback="enabledSubmit"></div>-->
+        <button class="btn btn-primary mt-2"  name="enviar" id="enviar" type="submit" color="primary"
+          [disabled]="!captchaValid"
+        >Ingresar</button>
       </form>
     </mat-card-content>
       </mat-card>

@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 import { ModDespachoComponent } from '../../dialog/mod-despacho/mod-despacho.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-
+import {  debounceTime,  distinctUntilChanged,  switchMap,  catchError,  finalize} from 'rxjs/operators';
+import { Subject,of } from 'rxjs';
 
 
 interface Elemento {
@@ -41,6 +41,10 @@ interface Elemento {
 
 
 export class VentasComponent implements OnInit {
+
+  private buscarSubject = new Subject<string>();
+
+  dataSource: any[] = [];
   selectedRowIndex:any;
   usuario:string;
 
@@ -54,7 +58,7 @@ export class VentasComponent implements OnInit {
   dataCategoria:any;
   dataSubCategoria:any;
   dataFamilia:any;
-  dataSource: any;
+ // dataSource: any;
   dataTabla:any;
   totalMonto:number=0;
   totalDescuento:number=0;
@@ -78,7 +82,35 @@ export class VentasComponent implements OnInit {
   ngOnInit(): void {
     if(this.api.getCurrentUser==false){
       this.router.navigate(['']);
-      }
+    }
+      this.buscarSubject.pipe(
+        debounceTime(900),
+        distinctUntilChanged(),
+
+        switchMap(termino => {
+
+          if (!termino) {
+            this.loading = false;
+            return of([]);
+          }
+
+          this.loading = true;
+
+          return this.api.BuscarProducto(termino).pipe(
+            catchError(error => {
+              console.error(error);
+              return of([]);
+            }),
+            finalize(() => this.loading = false)
+          );
+
+        })
+
+      ).subscribe(productos => {
+        this.dataSource = productos;
+      });
+
+
 
     let suc = sessionStorage.getItem("sucursal_id");
 
@@ -99,7 +131,7 @@ export class VentasComponent implements OnInit {
     }
 
     this.usuario=localStorage.getItem("currentNombre");
-    this.renderDataTable()
+    this.renderDataTable();
     this.dataTabla = this.api.getLinea();
     this.getCate();
   }
@@ -170,15 +202,10 @@ public seleccionarFamilia(event:any) {
 renderDataTable() {
   this.loading=true;
   this.selectedRowIndex=null
-  this.api.getApi('articulos').subscribe(x => {
+  this.api.getApi('articulos').subscribe((x:any)=> {
     this.loading=false;
-   // this.dataSource = new MatTableDataSource();
-     this.dataSource = x;
-   //this.empTbSort.disableClear = true;
-    //this.dataSource.sort = this.empTbSort;
-    //this.dataSource.paginator = this.paginator;
-
-    },
+    this.dataSource = x;
+   },
     error => {
       console.log('Error de conexion de datatable!' + error);
     });
@@ -204,6 +231,13 @@ onEnter(event: KeyboardEvent): void {
 }
 
 applyFilter(filterValue: string) {
+  this.criterio = filterValue;
+  const termino = filterValue.trim().toLowerCase();
+  this.buscarSubject.next(termino);
+
+}
+/*
+applyFilter(filterValue: string) {
   this.criterio=filterValue;
   this.loading=true;
   filterValue = filterValue.trim();
@@ -221,6 +255,8 @@ applyFilter(filterValue: string) {
 }
 
 }
+*/
+
 existeElemento(array: Details[], elemento: Details): boolean {
   //return array.some(item => item.id === elemento.id);
   return array && array.length > 0 ? array.some(item => item.id === elemento.id) : false;

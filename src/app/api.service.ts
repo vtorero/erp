@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { async, map, Observable, switchMap } from "rxjs";
+import { async, map, Observable, switchMap,of, defer, throwError  } from "rxjs";
 import { Global } from "./global";
 import { Proveedor } from "./modelos/proveedor";
 import { Usuario } from "./modelos/usuario";
@@ -15,6 +15,18 @@ import { Venta } from './modelos/venta';
 import {Chart} from 'chart.js/auto';
 import { Compra } from "./modelos/compra";
 import { Movimiento } from "./modelos/movimiento";
+
+import {
+  tap,
+  shareReplay,
+  catchError,
+  finalize
+} from 'rxjs/operators';
+
+interface CacheItem<T> {
+  data: T;
+  expiresAt: number;
+}
 
 
 export interface NumeroDocumento {
@@ -34,6 +46,14 @@ export interface NumeroDocumento {
 })
 
 export class ApiService {
+
+  private cache = new Map<string, CacheItem<any>>();
+
+  private solicitudes = new Map<string, Observable<any>>();
+
+  // Máximo de registros en memoria
+  private maxCache = 100;
+
 
   constructor(public _http: HttpClient) {}
   public articulos:any=[];
@@ -312,6 +332,17 @@ getSucursalUsuario(){
         cuenta: cuenta,
     }, { headers: this.headers }).pipe(map(data => data));
 }
+
+/*ver facturas-proveedor*/
+
+facturasProveedor(proveedor: string) {
+  const url = Global.BASE_API_URL + 'api.php/facturas-proveedor';
+  return this._http.post(url,{
+      proveedor: proveedor,
+  }, { headers: this.headers }).pipe(map(data => data));
+}
+
+
 
 /*Guardar carmbios de venta*/
 
@@ -844,12 +875,32 @@ public delProducto(datos: Productos): Observable<any> {
     { headers: headers }
   );
 }
-
+/*old*
 public BuscarProducto(datos:string): Observable<any> {
   let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
   let json = JSON.stringify(datos);
   return this._http.post(Global.BASE_API_URL + 'api.php/buscaarticulos',
     { json: json }, { headers: headers });
+}*/
+
+BuscarProducto(termino: string) {
+
+  const clave = termino.trim().toLowerCase();
+  let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+  let json = JSON.stringify(clave);
+  return this.getCached(
+    'productos:' + clave,
+
+    () => this._http.post<any>(
+      Global.BASE_API_URL + 'api.php/buscaarticulos/' + encodeURIComponent(clave),
+    { json: json }, { headers: headers }
+
+
+    ),
+
+    300000 // Caché de 15 segundos
+  );
+
 }
 
 public BuscarPorSubCategoriaCategoria(id:string): Observable<any> {
@@ -1526,4 +1577,90 @@ enviaFactura(id): Observable<any> {
       link.click();
     });
 }
+
+ // Método centralizado de caché
+ getCached<T>(
+  key: string,
+  request: () => Observable<T>,
+  ttl: number = 30000
+): Observable<T> {
+
+  const cached = this.cache.get(key);
+
+  // 1. Si existe y no expiró, devolver caché
+  if (cached && cached.expiresAt > Date.now()) {
+    console.log('CACHE:', key);
+    return of(cached.data);
+  }
+
+  // 2. Si hay una petición en curso, reutilizarla
+  const pendiente = this.solicitudes.get(key);
+
+  if (pendiente) {
+    return pendiente;
+  }
+
+  // 3. Ejecutar petición HTTP
+  const solicitud$ = defer(request).pipe(
+
+    tap(data => {
+
+      // Evitar crecimiento ilimitado
+      if (this.cache.size >= this.maxCache) {
+        const primeraClave = this.cache.keys().next().value;
+
+        if (primeraClave !== undefined) {
+          this.cache.delete(primeraClave);
+        }
+      }
+
+      this.cache.set(key, {
+        data,
+        expiresAt: Date.now() + ttl
+      });
+
+      console.log('HTTP:', key);
+
+    }),
+
+    catchError(error => {
+      return throwError(() => error);
+    }),
+
+    finalize(() => {
+      this.solicitudes.delete(key);
+    }),
+
+    shareReplay({
+      bufferSize: 1,
+      refCount: false
+    })
+
+  );
+
+  this.solicitudes.set(key, solicitud$);
+
+  return solicitud$;
+}
+
+// Eliminar una entrada específica
+limpiarCache(key: string): void {
+  this.cache.delete(key);
+}
+
+// Eliminar todas las entradas
+limpiarTodoCache(): void {
+  this.cache.clear();
+}
+
+// Eliminar por prefijo
+limpiarCachePrefijo(prefijo: string): void {
+  for (const key of this.cache.keys()) {
+    if (key.startsWith(prefijo)) {
+      this.cache.delete(key);
+    }
+  }
+}
+
+
 }

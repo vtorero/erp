@@ -2,36 +2,27 @@
   <button class="close" mat-button mat-dialog-title (click)="cancelar()">x</button>
     <form #formGeneral="ngForm">
       <div mat-dialog-content>
-        <h3>Visualizar Compra Nro:({{data.id}})</h3>
+        <h3>{{data.tipoDoc}} Nro {{data.serie_documento +'-'+ data.nro_documento}}</h3>
         <div class="row">
           <div class="col-6">
             <mat-form-field appearance="outline">
               <mat-label>Tipo de Documento</mat-label>
-             <mat-select name="idTipoDoc"  [(ngModel)]="data.idTipoDoc" required>
+             <mat-select name="idTipoDoc"  [(ngModel)]="data.idTipoDoc" disabled>
                 <mat-option >Seleccionar</mat-option>
                 <mat-option *ngFor="let cat of documentos" (click)="cambiaTicket(cat.valor)" [value]="cat.codigo">{{cat.nombre}}</mat-option>
             </mat-select>
           </mat-form-field>
-            </div>
+          </div>
 
           <div class="col-6">
             <mat-form-field appearance="outline">
                 <mat-label>Proveedor</mat-label>
-                  <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" readonly>
+                  <input matInput [(ngModel)]="data.cliente" name="nombre" maxlength="110" minlength="2" type="text" placeholder="Nombre producto" disabled>
                 </mat-form-field>
 
           </div>
           <div class="col-6">
-            <mat-form-field appearance="outline">
-              <mat-label>Terminal</mat-label>
-              <mat-select matInput matInput [(ngModel)]="data.id_sucursal" name="id" required>
-                  <mat-option value="">Seleccionar</mat-option>
-                <mat-option  *ngFor="let subcat of sucursales" [value]="subcat.id">
-                  {{subcat.nombre}}
-                </mat-option>
-                </mat-select>
-            </mat-form-field>
-      <div class="row">
+               <div class="row">
               <div class="col-10"> <mat-form-field appearance="outline">
                 <mat-label>Observación</mat-label>
                 <input matInput [(ngModel)]="data.observacion" name="observacion" maxlength="110" minlength="2" type="text" placeholder="Observación">
@@ -147,10 +138,6 @@
         <ng-container matColumnDef="id">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Código</mat-header-cell>
           <mat-cell *matCellDef="let row"> {{row.id}} </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="nombre">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</mat-header-cell>
-          <mat-cell *matCellDef="let row">{{row.nombre}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="caja">
           <mat-header-cell *matHeaderCellDef mat-sort-header>Caja</mat-header-cell>

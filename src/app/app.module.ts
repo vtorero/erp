@@ -65,6 +65,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatRadioModule } from '@angular/material/radio';
 import { BuscaProductoComponent } from './dialog/busca-producto/busca-producto.component';
 import { NotaCreditoComponent } from './negocio/compras/nota-credito/nota-credito.component';
+import { ListadoNotasComponent } from './negocio/compras/listado-notas/listado-notas.component';
 
 
 
@@ -141,9 +142,8 @@ import { NotaCreditoComponent } from './negocio/compras/nota-credito/nota-credit
      TesoreriaComponent,
      MaintesoreriaComponent,
      BuscaProductoComponent,
-     NotaCreditoComponent
-
-
+     NotaCreditoComponent,
+     ListadoNotasComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

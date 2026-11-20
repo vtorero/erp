@@ -19,7 +19,7 @@ import { cloudfunctions } from 'googleapis/build/src/apis/cloudfunctions';
   styleUrls: ['./nota-credito.component.css']
 })
 export class NotaCreditoComponent implements OnInit {
-  displayedColumns = ['codigo', 'nombre', 'cantidad','devuelto','pendiente','precio','subtotal'];
+  displayedColumns = ['codigo', 'nombre', 'cantidad','precio','subtotal'];
   displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro'];
   dataClientes:any;
   dataAdicional:any;
@@ -29,12 +29,13 @@ export class NotaCreditoComponent implements OnInit {
   exampleArray:any;
   sucursales:any;
   devolucion:any=0;
+  facturasProveedor:any;
   constructor(
     public dialog: MatDialog,
     private api:ApiService,
     private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public dataNota:Notacredito,
-    @Inject(MAT_DIALOG_DATA) public data:Compra,
+    @Inject(MAT_DIALOG_DATA) public data:Notacredito,
     @Inject(MAT_DIALOG_DATA) public detalle:Details,
     @Inject(MAT_DIALOG_DATA) public detapago:DetaPagos,
 
@@ -42,31 +43,29 @@ export class NotaCreditoComponent implements OnInit {
 
   async ngOnInit() {
     this.dataNota.motivo='error';
-    this.api.GetDetalleNota(this.data.id).subscribe(x => {
 
+    this.api.GetDetalleNota(this.data.id).subscribe(x => {
       this.dataDetalle = new MatTableDataSource();
       this.exampleArray=x;
       this.dataDetalle=this.exampleArray
       this.data.detalleVenta=this.exampleArray;
-
+      this.dataNota.tipoDoc="07";
       });
 
-      this.api.GetDetallePagoCompra(this.data.id).subscribe(d => {
+     /* this.api.GetDetallePagoCompra(this.data.id).subscribe(d => {
         this.dataPagos = new MatTableDataSource();
         this.exampleArray=d;
         this.dataPagos=this.exampleArray
-
-
-        });
-
-
-
-    this.getProveedor();
-    this.cargaSucursales();
+        });*/
+    //this.getProveedor();
+    //this.cargaSucursales();
     await this.getDataProveedor(this.data.id_proveedor);
-    console.log(this.data.id_proveedor)
-    console.log(this.data.num_documento)
-    console.log(this.data.telefono)
+    this.api.facturasProveedor(this.data.id_proveedor).subscribe((data)=>{
+    console.log("facturas proveedor",data);
+    this.facturasProveedor=data;
+    })
+
+
 
   }
 
@@ -81,6 +80,7 @@ export class NotaCreditoComponent implements OnInit {
 
   guardarCambios(){
     this.api.enviaNotaCredito(this.data).subscribe(datos=>{
+      console.log("first",this.data);
         this._snackBar.open(datos['messaje'],'OK',{duration:5000,horizontalPosition:'center',verticalPosition:'top'});
        this.cancelar();
         },

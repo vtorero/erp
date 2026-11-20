@@ -18,7 +18,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class VerCompraComponent implements OnInit {
   displayedColumns = ['codigo', 'nombre', 'cantidad','pendiente','precio','subtotal'];
-  displayedColumnsPago = ['id', 'nombre','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro','opciones'];
+  displayedColumnsPago = ['id','caja','numero_operacion', 'monto','monto_pendiente','fecha_registro','opciones'];
   dataClientes:any;
   dataAdicional:any;
   dataDetalle:any;
@@ -40,7 +40,7 @@ export class VerCompraComponent implements OnInit {
 
   async ngOnInit() {
 
-    if(localStorage.getItem("currentNombre")=="admin"){
+    if(localStorage.getItem("rol")=="administrador"){
       this.esadmin=true;
     }
     this.tipoDocumento();
